@@ -1,0 +1,17 @@
+{
+	"extends": "@tsconfig/svelte/tsconfig.json",
+	"compilerOptions": {
+		"target": "ES2022",
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"types": [
+			"svelte",
+			"@league-of-foundry-developers/foundry-vtt-types",
+			"@typhonjs-fvtt/runtime/types/fvtt-shim/league"
+		],
+		"strict": true,
+		"sourceMap": true,
+		"isolatedModules": true
+	},
+	"include": ["src/**/*"]
+}

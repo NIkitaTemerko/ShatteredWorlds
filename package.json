@@ -1,12 +1,10 @@
 {
-	"description": "Provides a bare-bones Foundry module template repo to get set up with using the TyphonJS Runtime Library and Svelte with ES Modules.",
+	"description": "Shattered Worlds System @HwanDr",
 	"license": "MIT",
 	"private": true,
 	"type": "module",
-	"author": "YOUR INFO HERE",
-	"contributors": [
-		"YOUR INFO HERE"
-	],
+	"author": "Nikita Temerko",
+	"contributors": ["Nikita Temerko"],
 	"imports": {
 		"#runtime/*": "@typhonjs-fvtt/runtime/*",
 		"#standard/*": "@typhonjs-fvtt/standard/*"
@@ -25,10 +23,7 @@
 		"svelte-preprocess": "^6.0.3",
 		"typescript": "^5.8.3"
 	},
-	"browserslist": [
-		">5%",
-		"not IE 11"
-	],
+	"browserslist": [">5%", "not IE 11"],
 	"scripts": {
 		"build": "vite build",
 		"dev": "vite",

@@ -6,10 +6,9 @@ on:
       - main
   workflow_dispatch: {}
 
-# Даем права на запись контента и артефактов
 permissions:
-  contents: write
-  actions: write
+  contents: write     # нужно для создания тегов и релизов
+  actions: write      # нужно для загрузки артефактов
 
 jobs:
   release:
@@ -36,22 +35,24 @@ jobs:
         shell: bash
         run: |
           VERSION=$(node -p "require('./package.json').version")
-          echo "VERSION: $VERSION"
+          echo "VERSION=$VERSION"
           echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v${{ steps.vars.outputs.VERSION }}
           release_name: v${{ steps.vars.outputs.VERSION }}
           draft: false
           prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Release ZIP
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./shattered-worlds.zip

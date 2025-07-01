@@ -1,33 +1,41 @@
-name: 📦 Build & Release on PR merge
+name: 📦 Build & Release on push to main
 
 on:
-  pull_request:
-    types: [closed]
-    branches: [ main ]
+  push:
+    branches:
+      - main
+
+# Даем права на запись контента и артефактов
+permissions:
+  contents: write
+  actions: write
 
 jobs:
   release:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
 
-      - run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-      - run: npm run pack
+      - name: Build and pack
+        run: npm run pack
 
       - name: Извлечь версию из package.json
         id: vars
         shell: bash
         run: |
           VERSION=$(node -p "require('./package.json').version")
-          echo "Версия: $VERSION"
+          echo "VERSION: $VERSION"
           echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Create GitHub Release

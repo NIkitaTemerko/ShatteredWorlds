@@ -1,24 +1,28 @@
-import { SvelteApp } from "#runtime/svelte/application";
-import { deepMerge } from "#runtime/util/object";
+import { SvelteApp } from '#runtime/svelte/application';
+import { deepMerge } from '#runtime/util/object';
 
-import BasicAppShell from "./BasicAppShell.svelte";
+import BasicAppShell from './BasicAppShell.svelte';
 
 export class BasicApp extends SvelteApp {
-	/**
-	 * Default Application options
-	 *
-	 * @returns {SvelteApp.Options} options - SvelteApp options.
-	 * @see https://typhonjs-fvtt-lib.github.io/api-docs/interfaces/_runtime_svelte_application.SvelteApp.Options.html
-	 */
-	static get defaultOptions() {
-		return deepMerge(SvelteApp.defaultOptions, {
-			title: "TemplateESM.title", // Automatically localized from `lang/en.json`.
-			width: 300,
+   /**
+    * Default Application options
+    *
+    * @returns {SvelteApp.Options} options - SvelteApp options.
+    * @see https://typhonjs-fvtt-lib.github.io/api-docs/interfaces/_runtime_svelte_application.SvelteApp.Options.html
+    */
+   static get defaultOptions() {
+      return deepMerge(SvelteApp.defaultOptions, {
+         title: 'TemplateESM.title', // Automatically localized from `lang/en.json`.
+         width: 300,
+         height: 200,
+         resizable: true,
+         minHeight: 200,
+         minWidth: 300,
 
-			svelte: {
-				class: BasicAppShell,
-				target: document.body,
-			},
-		});
-	}
+         svelte: {
+            class: BasicAppShell,
+            target: document.body,
+         },
+      });
+   }
 }

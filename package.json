@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "author": "Nikita Temerko",
+  "version": "0.0.4",
   "contributors": [
     "Nikita Temerko"
   ],
@@ -35,6 +36,9 @@
     "dev": "vite",
     "watch": "vite build --watch",
     "eslint": "eslint .",
-    "pack": "npm run build && zip -r shattered-worlds.zip dist/ lang/ template.json system.json"
+    "pack": "npm run build && zip -r shattered-worlds.zip dist/ lang/ template.json system.json",
+    "bump:patch": "npm version patch --no-git-tag-version && node scripts/update-system-version.js",
+    "bump:minor": "npm version minor --no-git-tag-version && node scripts/update-system-version.js",
+    "bump:major": "npm version major --no-git-tag-version && node scripts/update-system-version.js"
   }
 }

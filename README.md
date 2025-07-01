@@ -61,3 +61,9 @@ TRL is innovative as it delivers a runtime library module for Foundry that packa
 can be shared across any number of modules / game systems utilizing it thereby saving a lot of space in any given
 module or game system. Optionally, it is possible to also bundle TRL directly into your module or game system. The TRL
 is both a Foundry library module and an NPM package providing the development dependency utilized for code
+
+<!-- manifest-start -->
+**Manifest**: https://raw.githubusercontent.com/NIkitaTemerko/ShatteredWorlds/v0.0.8/system.json
+
+**Changelog**: [v0.0.8](https://github.com/NIkitaTemerko/ShatteredWorlds/releases/tag/v0.0.8)
+<!-- manifest-end -->

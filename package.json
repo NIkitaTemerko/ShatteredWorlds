@@ -34,6 +34,7 @@
     "build": "vite build",
     "dev": "vite",
     "watch": "vite build --watch",
-    "eslint": "eslint ."
+    "eslint": "eslint .",
+    "pack": "npm run build && zip -r shattered-worlds.zip dist/ lang/ template.json system.json"
   }
 }

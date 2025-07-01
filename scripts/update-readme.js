@@ -1,37 +1,43 @@
-/**
- * Обновляет в README.md секцию с manifest и changelog
- */
+#!/usr/bin/env node
+
+// Скрипт обновляет README.md: вставляет или обновляет блок манифеста и changelog вверху файла.
 
 import { readFileSync, writeFileSync } from "fs";
 import { resolve } from "path";
 
-const pkg = JSON.parse(readFileSync("package.json", "utf8"));
+const pkgPath = resolve(process.cwd(), "package.json");
+const readmePath = resolve(process.cwd(), "README.md");
+
+const pkg = JSON.parse(readFileSync(pkgPath, "utf8"));
 const version = pkg.version;
 const manifestUrl = `https://raw.githubusercontent.com/NIkitaTemerko/ShatteredWorlds/v${version}/system.json`;
 const changelogUrl = `https://github.com/NIkitaTemerko/ShatteredWorlds/releases/tag/v${version}`;
 
-const readmePath = resolve(process.cwd(), "README.md");
 let readme = readFileSync(readmePath, "utf8");
 
-const start = "<!-- manifest-start -->";
-const end   = "<!-- manifest-end -->";
-
-const block = [
-  start,
+// Метки для блока манифеста
+const topStart = "<!-- manifest-top-start -->";
+const topEnd = "<!-- manifest-top-end -->";
+// Формируем новый блок
+const topBlock = [
+  topStart,
   `**Manifest**: ${manifestUrl}`,
-  ``,
   `**Changelog**: [v${version}](${changelogUrl})`,
-  end
+  topEnd
 ].join("\n");
 
-if (readme.includes(start) && readme.includes(end)) {
-  // Замена существующего блока
-  const regex = new RegExp(`${start}[\\s\\S]*?${end}`, "m");
-  readme = readme.replace(regex, block);
+if (readme.includes(topStart) && readme.includes(topEnd)) {
+  // Заменяем существующий блок по regex, корректно эскейпим \s\S
+  const regex = new RegExp(`${topStart}[\\s\\S]*?${topEnd}`, "m");
+  readme = readme.replace(regex, topBlock);
 } else {
-  // Добавление в конец
-  readme = readme.trimEnd() + "\n\n" + block + "\n";
+  // Вставляем новый блок после заголовка
+  const lines = readme.split("\n");
+  const insertIndex = lines.findIndex(line => line.startsWith("# ")) + 1;
+  lines.splice(insertIndex, 0, "", topBlock, "");
+  readme = lines.join("\n");
 }
 
-writeFileSync(readmePath, readme);
-console.log(`✅ README.md updated for version ${version}`);
+// Пишем обратно
+writeFileSync(readmePath, readme, "utf8");
+console.log(`✅ README.md updated: manifest=${manifestUrl}`);

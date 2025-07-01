@@ -1,0 +1,64 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "files": {
+    "include": ["src/**/*.ts"]
+  },
+  "css": {
+    "formatter": {
+      "enabled": true,
+      "indentWidth": 2
+    },
+    "linter": {
+      "enabled": true
+    },
+    "parser": {
+      "allowWrongLineComments": true,
+      "cssModules": true
+    }
+  },
+  "formatter": {
+    "useEditorconfig": true,
+    "enabled": true,
+    "lineEnding": "lf",
+    "lineWidth": 100,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "attributePosition": "multiline",
+    "formatWithErrors": false
+  },
+  "javascript": {
+    "formatter": {
+      "bracketSpacing": true,
+      "jsxQuoteStyle": "double",
+      "quoteStyle": "single"
+    }
+  },
+	"linter": {
+    "enabled": true,
+    "rules": {
+      "style": {
+        "noDefaultExport": "off",
+        "useImportType": "error"
+      },
+      "suspicious": {
+        "noExplicitAny": "warn",
+        "noConsoleLog": "warn",
+        "noImplicitAnyLet": "warn",
+        "noArrayIndexKey": "warn"
+      },
+      "correctness": {
+        "noUnusedImports": "error"
+      },
+      "a11y": {
+        "useKeyWithClickEvents": "off"
+      },
+      "complexity": {
+        "noBannedTypes": "warn",
+        "noForEach": "off"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "warn"
+      }
+    }
+	}
+}

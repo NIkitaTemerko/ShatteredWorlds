@@ -1,1 +1,1 @@
-import "@league-of-foundry-developers/foundry-vtt-types";
+import '@league-of-foundry-developers/foundry-vtt-types';

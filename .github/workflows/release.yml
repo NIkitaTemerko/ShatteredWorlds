@@ -7,8 +7,8 @@ on:
   workflow_dispatch: {}
 
 permissions:
-  contents: write     # нужно для создания тегов и релизов
-  actions: write      # нужно для загрузки артефактов
+  contents: write
+  actions: write
 
 jobs:
   check-version:
@@ -32,6 +32,9 @@ jobs:
         id: check-patch
         shell: bash
         run: |
+          # Берём версию из вывода предыдущего шага
+          VERSION="${{ steps.get-version.outputs.VERSION }}"
+          echo "Got version: $VERSION"
           PATCH=${VERSION##*.}
           if [[ "$PATCH" == "0" ]]; then
             echo "IS_MM=true" >> "$GITHUB_OUTPUT"
@@ -40,6 +43,7 @@ jobs:
           fi
 
   release:
+    name: Публикация релиза (минор+)
     needs: check-version
     if: needs.check-version.outputs.is_mm == 'true'
     runs-on: ubuntu-latest
@@ -54,19 +58,10 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build and pack
-        run: npm run pack
-
-      - name: Извлечь версию из package.json
-        id: vars
-        shell: bash
+      - name: Install dependencies & pack
         run: |
-          VERSION=$(node -p "require('./package.json').version")
-          echo "VERSION=$VERSION"
-          echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
+          npm ci
+          npm run pack
 
       - name: Create GitHub Release
         id: create_release
@@ -74,8 +69,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ steps.vars.outputs.VERSION }}
-          release_name: v${{ steps.vars.outputs.VERSION }}
+          tag_name: v${{ needs.check-version.outputs.version }}
+          release_name: v${{ needs.check-version.outputs.version }}
           draft: false
           prerelease: false
 

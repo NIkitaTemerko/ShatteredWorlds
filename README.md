@@ -1,8 +1,8 @@
 # Shattered Worlds ⚡️🌌
 
 <!-- manifest-top-start -->
-**Manifest**: https://raw.githubusercontent.com/NIkitaTemerko/ShatteredWorlds/v0.4.0/system.json
-**Changelog**: [v0.4.0](https://github.com/NIkitaTemerko/ShatteredWorlds/releases/tag/v0.4.0)
+**Manifest**: https://raw.githubusercontent.com/NIkitaTemerko/ShatteredWorlds/v0.5.0/system.json
+**Changelog**: [v0.5.0](https://github.com/NIkitaTemerko/ShatteredWorlds/releases/tag/v0.5.0)
 <!-- manifest-top-end -->
 
 

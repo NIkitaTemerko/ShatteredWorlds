@@ -1,69 +1,86 @@
-![template-svelte-esm](https://i.imgur.com/rmfWSrs.jpg)
+# Shattered Worlds ⚡️🌌
+
+<!-- manifest-top-start -->
+**Manifest**: https://raw.githubusercontent.com/NIkitaTemerko/ShatteredWorlds/v0.4.0/system.json
+**Changelog**: [v0.4.0](https://github.com/NIkitaTemerko/ShatteredWorlds/releases/tag/v0.4.0)
+<!-- manifest-top-end -->
 
 
-[![TyphonJS Discord](https://img.shields.io/discord/737953117999726592?label=TyphonJS%20Discord)](https://typhonjs.io/discord/)
-[![Twitch](https://img.shields.io/twitch/status/typhonrt?style=social)](https://www.twitch.tv/typhonrt)
-[![Code Style](https://img.shields.io/badge/code%20style-allman-yellowgreen.svg?style=flat)](https://en.wikipedia.org/wiki/Indent_style#Allman_style)
-[![License](https://img.shields.io/badge/license-MIT-yellowgreen.svg?style=flat)](https://github.com/typhonjs-fvtt-demo/template-svelte-esm/blob/main/LICENSE)
+**Техно-фэнтези RPG с элементами роглайта и динамическим распределением умений**
 
-Provides a bare-bones Foundry module template repo to get set up with using
-[TyphonJS Runtime Library](https://github.com/typhonjs-fvtt-lib/runtime) and [Svelte](https://svelte.dev/) on
-[Foundry VTT](https://foundryvtt.com/) with ES Modules.
+> 🛰️ Добро пожаловать в осколки миров, где магия пересекается с кибернетикой, а каждый сеанс — это непредсказуемое приключение!
 
-Triple licensed under the [CC0](https://github.com/typhonjs-fvtt-demo/template-svelte-esm/blob/main/LICENSE-CC0),
-[MIT](https://github.com/typhonjs-fvtt-demo/template-svelte-esm/blob/main/LICENSE-MIT), or
-[Unlicense](https://github.com/typhonjs-fvtt-demo/template-svelte-esm/blob/main/LICENSE-UNLICENSE). This repo is
-intended as public domain / freely available starter code that you can use for any project you choose and licensed
-however you see fit with no restrictions.
+---
 
-## About:
-Getting started with a new library or development methodology can be difficult. This template repo contains a
-bare-bones setup suitable to start working on your own module. Certainly do check out
-[Essential Svelte (ESM)](https://github.com/typhonjs-fvtt-demo/essential-svelte-esm) for more involved demos that show specific
-concepts available with Svelte and TRL. Please stop by the
-[![TyphonJS Discord](https://img.shields.io/discord/737953117999726592?label=TyphonJS)](https://typhonjs.io/discord/)
-Discord server to ask any questions.
+## 🚀 Быстрый старт
 
-## Installation (Requires Foundry VTT version 10):
-1. Create your version of the template in a new repo by clicking on the "template" button above. In this process rename
-the repo to your new module name.
-2. Use WebStorm or VSCode to clone your repo into the Foundry VTT data / modules directory (make sure to keep the name
-of your repo as the folder installed in your module directory).
-3. Modify the module `id` in `module.json` to match your new Foundry package ID.
-4. You may of course also change the title of the module in `module.json` to your new module name.
-5. In `./vite.config.mjs` update `s_PACKAGE_ID` which references `modules/template-svelte-esm` to your new module ID.
-in step #3 above. Also provide a short unique hash ID for `s_SVELTE_HASH_ID`; suggestion: base it off your package ID.
-6. Open in your IDE or via command line and proceed to run `npm install`
-7. Run the NPM script `build` to create the production bundle or `dev` to run in developer mode which uses `esbuild` &
-HMR (hot module replacement) to dynamically update your running module in real time for all Svelte related components.
-8. Restart Foundry VTT. This is necessary for Foundry to load the new module.
-9. You should now have a new module installed `Template Svelte (ESM)` or whatever title you set in step #4 visible in
-your modules list.
-10. Launch a game / world of your choice.
-11. Enable your new module under `Manage Modules`.
-12. On reload the basic application will appear instantly as it is rendered in the `ready` Foundry hook from the entry
-point: [./src/index.js](https://github.com/typhonjs-fvtt-demo/template-svelte-esm/blob/main/src/index.js)
+1. **Установка**
+   В Foundry VTT → **Setup** → **Install System** → вставьте манифест.
+2. **Создание мира**
+   Выберите “Shattered Worlds” и нажмите **Create World**.
+3. **Запуск**
+   Перейдите в ваш мир, настройте персонажей и начинайте погружаться в осколки миров!
 
-## What Is Happening Here?
-Not a lot as this is a bare-bones setup allowing you to further modify this module to your own liking. It provides
-the basic build setup and a "dummy" SvelteApplication instance. The best thing to do is to change your repo name to the
-ID of your new module and update `id` in `module.json` to match your new module ID.
+---
 
-## About the TyphonJS Runtime Library:
-The TyphonJS Runtime Library (TRL) brings an exciting new library resource for all Foundry VTT developers to build
-advanced modules and game systems using Svelte. A Svelte UI component library built for Foundry and extensions to the
-core Foundry UI / Application framework make it easy to create declarative Svelte based UIs in a method familiar to
-Foundry VTT developers. The core UI component framework contains reactive "application shells" that provide an enhanced
-ability to control your UI / window experience including intro and outro transitions along with support key UI elements
-like context menus and a new backward compatible and API compliant Dialog component that features a modal dialog option.
+## 🎲 Геймплей
 
-TRL is innovative as it delivers a runtime library module for Foundry that packages up the runtime in a way that
-can be shared across any number of modules / game systems utilizing it thereby saving a lot of space in any given
-module or game system. Optionally, it is possible to also bundle TRL directly into your module or game system. The TRL
-is both a Foundry library module and an NPM package providing the development dependency utilized for code
+* 🛠 **Техно-магия & кибернетика**
+  От плазменных жезлов до имплантов с энергощитами – собери свой уникальный билд!
+* 🔄 **Роглайт-элементы**
+  Случайные встречи, процедурная генерация локаций и перманентная смерть.
+* 🎛 **Динамика навыков**
+  Забыть про фикс-классы! Игроки получают очки умений в процессе, а Мастер раздаёт их по ситуации.
 
-<!-- manifest-start -->
-**Manifest**: https://raw.githubusercontent.com/NIkitaTemerko/ShatteredWorlds/v0.0.8/system.json
+---
 
-**Changelog**: [v0.0.8](https://github.com/NIkitaTemerko/ShatteredWorlds/releases/tag/v0.0.8)
-<!-- manifest-end -->
+## 🌟 Ключевые фичи
+
+* 🎚 **Гибкая система навыков**
+  Выбирай любые умения — от взлома дронов до заклинаний электричества.
+* 🗺 **Процедурная генерация**
+  Каждый раз другие руины, события и трофеи.
+* 📦 **Модульная архитектура**
+  Легко подключай новые артефакты, врагов и сценарии.
+* 🔊 **Аудио-атмосфера**
+  Поддержка звуковых панорам (mp3/ogg) прямо в мире.
+
+---
+
+## 🧙‍♂️ Инструменты Мастера
+
+* 🎛 **Панель управления**
+  Мгновенное добавление/удаление навыков, управление сложностью.
+* 📊 **Живая статистика**
+  Следи за здоровьем, энергией и эффектами на одном экране.
+* 📝 **Кейс-менеджмент**
+  Создавай собственные события и квесты на лету.
+
+---
+
+## 🛠 Настройка и кастомизация
+
+1. **system.json**
+
+   * `version` — версия системы
+   * `download` — ссылка на ZIP-архив
+   * `manifest` — URL манифеста
+
+---
+
+## 📚 Документация и поддержка
+
+* 📖 [Руководство по системе (Wiki)](https://github.com/NIkitaTemerko/ShatteredWorlds/wiki)
+* 🐞 [Трекер багов](https://github.com/NIkitaTemerko/ShatteredWorlds/issues)
+* 💬 Наш Discord: **discord.gg/shattered-worlds**
+
+---
+
+## 🤝 Вклад и лицензия
+
+Этот проект распространяется под лицензией
+[CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/).
+
+---
+
+> Удачных приключений в обломках миров! 🚀

@@ -1,11 +1,5 @@
 # Shattered Worlds ⚡️🌌
 
-<!-- manifest-top-start -->
-**Manifest**: https://raw.githubusercontent.com/NIkitaTemerko/ShatteredWorlds/v0.6.0/system.json
-**Changelog**: [v0.6.0](https://github.com/NIkitaTemerko/ShatteredWorlds/releases/tag/v0.6.0)
-<!-- manifest-top-end -->
-
-
 **Техно-фэнтези RPG с элементами роглайта и динамическим распределением умений**
 
 > 🛰️ Добро пожаловать в осколки миров, где магия пересекается с кибернетикой, а каждый сеанс — это непредсказуемое приключение!
@@ -16,6 +10,7 @@
 
 1. **Установка**
    В Foundry VTT → **Setup** → **Install System** → вставьте манифест.
+   **Manifest**: https://raw.githubusercontent.com/NIkitaTemerko/ShatteredWorlds/main/system.json
 2. **Создание мира**
    Выберите “Shattered Worlds” и нажмите **Create World**.
 3. **Запуск**
@@ -84,3 +79,7 @@
 ---
 
 > Удачных приключений в обломках миров! 🚀
+
+<!-- manifest-start -->
+**Changelog**: [v0.7.0](https://github.com/NIkitaTemerko/ShatteredWorlds/releases/tag/v0.7.0)
+<!-- manifest-end -->

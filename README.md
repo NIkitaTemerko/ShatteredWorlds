@@ -81,5 +81,5 @@
 > Удачных приключений в обломках миров! 🚀
 
 <!-- manifest-start -->
-**Changelog**: [v0.8.0](https://github.com/NIkitaTemerko/ShatteredWorlds/releases/tag/v0.8.0)
+**Changelog**: [v0.9.0](https://github.com/NIkitaTemerko/ShatteredWorlds/releases/tag/v0.9.0)
 <!-- manifest-end -->

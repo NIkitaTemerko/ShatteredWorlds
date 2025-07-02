@@ -11,41 +11,8 @@ permissions:
   actions: write
 
 jobs:
-  check-version:
-    name: Проверка версии
-    runs-on: ubuntu-latest
-    outputs:
-      version: ${{ steps.get-version.outputs.VERSION }}
-      is_mm: ${{ steps.check-patch.outputs.IS_MM }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Извлечь версию из package.json
-        id: get-version
-        shell: bash
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
-
-      - name: Проверить, минор или выше
-        id: check-patch
-        shell: bash
-        run: |
-          # Берём версию из вывода предыдущего шага
-          VERSION="${{ steps.get-version.outputs.VERSION }}"
-          echo "Got version: $VERSION"
-          PATCH=${VERSION##*.}
-          if [[ "$PATCH" == "0" ]]; then
-            echo "IS_MM=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "IS_MM=false" >> "$GITHUB_OUTPUT"
-          fi
-
   release:
-    name: Публикация релиза (минор+)
-    needs: check-version
-    if: needs.check-version.outputs.is_mm == 'true'
+    name: Публикация релиза
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

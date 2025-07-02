@@ -1,0 +1,141 @@
+<form class="{{cssClass}} {{actor.type}} shw-character-sheet-root" autocomplete="off">
+  <!-- ─── Sheet Header ─── -->
+  <header class="sheet-header">
+    <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="72" width="72"/>
+
+    <div class="header-fields">
+      <h1 class="charname">
+        <input name="name" type="text" value="{{actor.name}}" placeholder="Name" />
+      </h1>
+
+      <div class="stats-wrapper">
+        <!-- HP progress bar -->
+        <div class="hp-wrapper">
+          <progress
+            class="hp-bar"
+            value="{{actor.system.health.value}}"
+            max="{{actor.system.health.max}}"
+          ></progress>
+          <span class="hp-label">
+            <input
+              name="system.health.value"
+              type="number"
+              data-dtype="Number"
+              min="0"
+              max="{{actor.system.health.max}}"
+              oninput="this.value=Math.min(Math.max(this.value, this.min), this.max)"
+              value="{{actor.system.health.value}}"
+              style="width:3rem;text-align:right;"
+            />
+            /
+            <input
+              name="system.health.max"
+              type="number"
+              data-dtype="Number"
+              min="0"
+              oninput="this.value=Math.max(this.min, this.value)"
+              value="{{actor.system.health.max}}"
+              style="width:3rem;text-align:right;"
+            />
+          </span>
+        </div>
+        <div class="speed-wrapper">
+          <span>Скорость:</span>
+          <input
+            name="system.utility.speed"
+            type="number"
+            data-dtype="Number"
+            value="{{actor.system.utility.speed}}"
+            style="width:3rem;text-align:right;"
+          />
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ─── Body ─── -->
+  <section id="svelte-sheet-body"></section>
+</form>
+
+<style>
+/* root layout */
+.shw-character-sheet-root{
+  display:flex;
+  flex-direction:column;
+  gap:0.5rem;
+  height:100%;
+}
+.sheet-header{
+  display:flex;
+  align-items:center;
+  gap:0.75rem;
+  flex:0 0 auto;
+}
+.profile-img{
+  flex:0 0 72px;
+  border:1px solid var(--color-border-light-1);
+  border-radius:3px;
+  object-fit:cover;
+  cursor:pointer;
+}
+.header-fields{
+  flex:1 1 auto;
+  display:flex;
+  flex-direction:column;
+  gap:0.35rem;
+}
+.charname input{
+  width: 100%;
+  font-size:var(--font-size-20);
+  border:1px solid var(--color-border-light-1);
+  padding:0.2rem 0.4rem;
+  border-radius:3px;
+  margin: 0;
+}
+/* stats */
+.stats-wrapper{
+  display:flex;
+  align-items:center;
+  gap:0.5rem;
+}
+/* HP progress */
+.hp-wrapper{
+  display:flex;
+  align-items:center;
+  gap:0.5rem;
+}
+.hp-bar{
+  width:200px;
+  height:12px;
+  appearance:none;
+  border:1px solid var(--color-border-light-2);
+  border-radius:4px;
+  background:#ff9aa5;
+}
+.hp-bar::-webkit-progress-bar{
+  background:#ff9aa5;
+  border-radius:4px;
+}
+.hp-bar::-webkit-progress-value{
+  background:#d7263d;
+  border-radius:4px;
+}
+.hp-bar::-moz-progress-bar{
+  background:#d7263d;
+}
+.hp-label{
+  font-size:var(--font-size-12);
+  font-family:var(--font-primary);
+}
+.speed-wrapper{
+  margin-left:auto;
+  display:flex;
+  align-items:center;
+  gap:0.5rem;
+}
+/* body placeholder so that Svelte content can stretch */
+#svelte-sheet-body{
+  flex:1 1 auto;
+  overflow:auto;
+}
+</style>

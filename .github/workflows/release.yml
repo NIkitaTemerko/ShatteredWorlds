@@ -2,8 +2,7 @@ name: 📦 Build & Release on push to main
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   workflow_dispatch: {}
 
 permissions:
@@ -12,15 +11,18 @@ permissions:
 
 jobs:
   check-version:
-    name: Проверка версии
+    name: Проверка необходимости релиза
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.get-version.outputs.VERSION }}
-      is_mm: ${{ steps.check-patch.outputs.IS_MM }}
+      release_needed: ${{ steps.check-tag.outputs.RELEASE_NEEDED }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0           # нужны теги, поэтому полный клонинг
 
+      # 1. берём версию из package.json
       - name: Извлечь версию из package.json
         id: get-version
         shell: bash
@@ -28,24 +30,34 @@ jobs:
           VERSION=$(node -p "require('./package.json').version")
           echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
 
-      - name: Проверить, минор или выше
-        id: check-patch
+      # 2. ищем последний тег (vX.Y.Z)
+      - name: Найти последний тег
+        id: get-tag
         shell: bash
         run: |
-          # Берём версию из вывода предыдущего шага
+          git fetch --tags --force
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          echo "LATEST_TAG=$LATEST_TAG" >> "$GITHUB_OUTPUT"
+
+      # 3. сравниваем
+      - name: Нужен ли релиз?
+        id: check-tag
+        shell: bash
+        run: |
           VERSION="${{ steps.get-version.outputs.VERSION }}"
-          echo "Got version: $VERSION"
-          PATCH=${VERSION##*.}
-          if [[ "$PATCH" == "0" ]]; then
-            echo "IS_MM=true" >> "$GITHUB_OUTPUT"
+          LATEST="${{ steps.get-tag.outputs.LATEST_TAG }}"
+          if [[ "v$VERSION" == "$LATEST" ]]; then
+            echo "RELEASE_NEEDED=false" >> "$GITHUB_OUTPUT"
+            echo "Версия $VERSION уже опубликована в теге $LATEST"
           else
-            echo "IS_MM=false" >> "$GITHUB_OUTPUT"
+            echo "RELEASE_NEEDED=true" >> "$GITHUB_OUTPUT"
+            echo "Будем релизить v$VERSION (последний тег: $LATEST)"
           fi
 
   release:
-    name: Публикация релиза (минор+)
+    name: Публикация релиза
     needs: check-version
-    if: needs.check-version.outputs.is_mm == 'true'
+    if: needs.check-version.outputs.release_needed == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

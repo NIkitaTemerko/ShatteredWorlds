@@ -2,7 +2,7 @@
   /** StatsPanel.svelte — редактируемые характеристики
    *  ➜ теперь три отдельные кнопки ▲ ● ▼ для выбора режима
    */
-  import type { ShwActor } from "../../documents/ShwActor";
+  import type { ShwActor } from "../../../documents/ShwActor";
   export let actor: ShwActor;
 
   const sys = actor.system;
@@ -83,14 +83,12 @@
 .stats-panel{
   display:flex;
   gap:2px;
-  border:2px solid var(--color-border-light-2);
   padding:2px;
   background:var(--color-border-light-3);
 }
 .stat-col{
   flex:1 1 0;
   min-width:6rem;
-  border-right:2px solid var(--color-border-light-2);
 }
 .stat-col:last-child{
   border-right:none;

@@ -1,5 +1,5 @@
 import { SvelteActorSheet } from '../../lib/SvelteActorSheet';
-import CharacterShell from './CharacterShell.svelte';
+import CharacterShell from './ui/RootCharacterShell.svelte';
 
 export class CharacterApp extends SvelteActorSheet {
    /* обязательное статическое свойство, чтобы оболочка знала, какой Shell монтировать */

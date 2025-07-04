@@ -8,6 +8,10 @@ import { CharacterApp } from './view/BaseCharacter/CharacterApp.js';
 Hooks.once('init', () => {
    CONFIG.Actor.documentClass = ShwActor;
    CONFIG.Token.documentClass = ShwTokenDocument;
+   CONFIG.Combat.initiative = {
+      formula: '1d20 + @system.utility.initiative',
+      decimals: 0,
+   };
 });
 
 Hooks.once('setup', () => {

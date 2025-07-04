@@ -10,7 +10,8 @@ export abstract class SvelteActorSheet extends ActorSheet {
    }
 
    _renderSvelte() {
-      const target = document.querySelector('#svelte-sheet-body');
+      const target = this.element[0].querySelector('.svelte-sheet-body');
+      if (!target) return;
       this._svelte?.$destroy();
 
       /*  Shell — статическое свойство потомка (CharacterApp.Shell)  */

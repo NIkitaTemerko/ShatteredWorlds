@@ -18,6 +18,7 @@ export interface ShwActorSystem {
       bonusActions: number;
       impulses: number;
       speed: number;
+      initiative: number;
    };
 }
 

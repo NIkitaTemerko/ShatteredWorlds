@@ -22,7 +22,7 @@ export function prepareCharacterDerivedData(sys: ShwActorSystem) {
    } as const;
 
    const saveMap = {
-      fortune: attrs?.fortune.value >= 25 ? 1 : 0 + attrs?.force.value >= 25 ? 1 : 0,
+      fortune: (attrs?.fortune.value >= 25 ? 1 : 0) + (attrs?.force.value >= 25 ? 1 : 0),
       force: attrs?.force.value >= 25 ? 1 : 0,
       perception: attrs?.force.value >= 25 ? 1 : 0,
       psyDefence: attrs?.force.value >= 25 ? 1 : 0,

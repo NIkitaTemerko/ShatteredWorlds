@@ -3,7 +3,7 @@ import type { ShwActorSystem } from '../documents/ShwActor';
 
 const STAT_NAMES = {
    fortune: 'Фортуна',
-   force: 'Сила',
+   force: 'Напор',
    perception: 'Восприятие',
    psyDefence: 'Пси-защита',
    diplomacy: 'Дипломатия',

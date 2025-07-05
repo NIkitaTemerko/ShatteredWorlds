@@ -6,7 +6,7 @@ export class CharacterApp extends SvelteActorSheet {
    static Shell = CharacterShell;
 
    get template() {
-      return 'systems/shattered-worlds/templates/actor/ShwCharacterSheet.html';
+      return 'systems/shattered-worlds/templates/actor/ShwCharacterSheet.hbs';
    }
 
    getData() {

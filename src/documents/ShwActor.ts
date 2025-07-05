@@ -4,7 +4,6 @@ import { prepareCharacterDerivedData } from '../helpers/prepareCharacterDerivedD
 
 export interface ShwActorSystem {
    health: { value: number; max: number };
-   speed: number;
    attributes: {
       fortune: { value: number; extra: number; charBonus: number; saveBonus: number };
       force: { value: number; extra: number; charBonus: number; saveBonus: number };
@@ -12,13 +11,23 @@ export interface ShwActorSystem {
       psyDefence: { value: number; extra: number; charBonus: number; saveBonus: number };
       diplomacy: { value: number; extra: number; charBonus: number; saveBonus: number };
    };
-   utility: {
+   additionalAttributes: {
       actions: number;
-      reactions: number;
       bonusActions: number;
-      impulses: number;
-      speed: number;
+      reactions: number;
+      impulse: number;
       initiative: number;
+
+      damage: string | number;
+      range: number;
+      discount: string | number;
+      damageReduction: number;
+      armorClass: number;
+      aoeResist: string | number;
+   };
+   utility: {
+      speed: number;
+      level: number;
    };
 }
 
@@ -69,5 +78,18 @@ export class ShwActor extends Actor {
             break;
          }
       }
+   }
+
+   override getRollData() {
+      // берём базовый набор, который делает Foundry
+      const data: any = super.getRollData();
+
+      // гарантируем, что initiative — число
+      const init = Number(this.system?.additionalAttributes?.initiative ?? 0);
+      // одновременно кладём дублирующее короткое поле,
+      // чтобы формула '1d20 + @initiative' тоже работала
+      data.initiative = init;
+
+      return data;
    }
 }

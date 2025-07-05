@@ -9,7 +9,7 @@ Hooks.once('init', () => {
    CONFIG.Actor.documentClass = ShwActor;
    CONFIG.Token.documentClass = ShwTokenDocument;
    CONFIG.Combat.initiative = {
-      formula: '1d20 + @system.utility.initiative',
+      formula: '1d20 + @initiative',
       decimals: 0,
    };
 });

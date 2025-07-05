@@ -12,5 +12,9 @@
 
 <div>
   <CharacterStats actor={actor} />
-  <CharacterAdditionalStats stats={actor.system.additionalAttributes} on:change={handleChange} />
+  <CharacterAdditionalStats
+    stats={actor.system.additionalAttributes}
+    helpers={actor.system.helpers}
+    on:change={handleChange}
+  />
 </div>

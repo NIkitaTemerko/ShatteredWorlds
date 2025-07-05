@@ -27,7 +27,7 @@
               type="number"
               data-dtype="Number"
               min="0"
-              max="{{actor.system.health.max}}"
+              max="{{actor.system.helpers.totalHealth}}"
               oninput="this.value=Math.min(Math.max(this.value, this.min), this.max)"
               value="{{actor.system.health.value}}"
               style="width:3rem;text-align:right;"
@@ -42,6 +42,7 @@
               value="{{actor.system.health.max}}"
               style="width:3rem;text-align:right;"
             />
+            <span>({{actor.system.helpers.totalHealth}})</span>
           </span>
         </div>
         <div class="speed-wrapper">
@@ -53,6 +54,7 @@
             value="{{actor.system.utility.speed}}"
             style="width:3rem;text-align:right;"
           />
+          <span>({{actor.system.helpers.totalSpeed}})</span>
         </div>
       </div>
     </div>

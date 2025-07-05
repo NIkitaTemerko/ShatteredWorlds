@@ -18,16 +18,21 @@ export interface ShwActorSystem {
       impulse: number;
       initiative: number;
 
-      damage: string | number;
+      damage: number;
       range: number;
-      discount: string | number;
+      discount: number;
       damageReduction: number;
       armorClass: number;
-      aoeResist: string | number;
+      aoeResist: number;
    };
    utility: {
       speed: number;
       level: number;
+   };
+   helpers: {
+      totalHealth: number;
+      totalImpulse: number;
+      totalSpeed: number;
    };
 }
 

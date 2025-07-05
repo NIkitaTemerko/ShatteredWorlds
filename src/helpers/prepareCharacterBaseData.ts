@@ -15,6 +15,7 @@ const ADDITIONAL_KEYS = [
    'armorClass',
    'aoeResist',
 ] as const;
+const HELPER_KEYS = ['totalHealth', 'totalImpulse', 'totalSpeed'] as const;
 
 const emptyAttr = () => ({ value: 0, extra: 0, charBonus: 0, saveBonus: 0 });
 const emptyUtilMap = {
@@ -39,6 +40,11 @@ const emptyAdditionalMap = {
    armorClass: 0,
    aoeResist: 0,
 };
+const emptyHelperMap = {
+   totalHealth: 0,
+   totalImpulse: 0,
+   totalSpeed: 0,
+};
 
 export function prepareCharacterBaseData(sys: ShwActorSystem) {
    sys.health ??= {} as ShwActorSystem['health'];
@@ -48,8 +54,10 @@ export function prepareCharacterBaseData(sys: ShwActorSystem) {
    sys.attributes ??= {} as ShwActorSystem['attributes'];
    sys.utility ??= {} as ShwActorSystem['utility'];
    sys.additionalAttributes ??= {} as ShwActorSystem['additionalAttributes'];
+   sys.helpers ??= {} as ShwActorSystem['helpers'];
 
    for (const k of STAT_KEYS) sys.attributes[k] ??= emptyAttr();
    for (const k of UTIL_KEYS) sys.utility[k] ??= emptyUtilMap[k];
    for (const k of ADDITIONAL_KEYS) sys.additionalAttributes[k] ??= emptyAdditionalMap[k];
+   for (const k of HELPER_KEYS) sys.helpers[k] ??= emptyHelperMap[k];
 }

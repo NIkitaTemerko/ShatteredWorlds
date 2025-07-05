@@ -18,13 +18,13 @@ export class ShwTokenDocument extends TokenDocument {
 
       // 2. берём скорость из актора
       const steps = (this as any)._movementHistory.length;
-      const actions = this.actor.system.utility.actions;
+      const actions = this.actor.system.additionalAttributes.actions;
       const scene = canvas.scene;
       const { units: unitName, distance: unitsPerCell } = scene.grid;
-      const stepLimit = (this.actor.system.utility.speed / unitsPerCell) * (actions + 1);
+      const stepLimit = (this.actor.system.helpers.totalSpeed / unitsPerCell) * (actions + 1);
 
       // если игрок превысил лимит — отменяем действие
-      if (distance / unitsPerCell + steps > stepLimit) {
+      if (distance / unitsPerCell + steps > stepLimit + 1) {
          ui.notifications.warn(
             `${(this as any).name} может пройти только ${stepLimit * unitsPerCell} ${unitName} за раунд.`,
          );

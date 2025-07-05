@@ -16,6 +16,12 @@
     aoeResist: string | number;
   }
 
+  export interface Helpers {
+    totalImpulse: number;
+    totalHealth: number;
+    totalSpeed: number;
+  }
+
   /** Подписи */
   export const LABELS: Record<keyof Stats, string> = {
     actions: "Действия",
@@ -67,6 +73,7 @@
   import type { Stats } from "./StatsBlock.svelte";
 
   export let stats: Stats;
+  export let helpers: Helpers;
   const dispatch = createEventDispatcher();
 
   // какие поля редактируемы
@@ -97,6 +104,7 @@
   $: editableEntries = allEntries.filter(([k]) => isEditable(k));
   $: readonlyEntries = allEntries.filter(([k]) => !isEditable(k));
   $: orderedEntries = [...editableEntries, ...readonlyEntries];
+  $: totalImpulse = helpers.totalImpulse;
 </script>
 
 <!-- GRID 4×N Плитки -->
@@ -116,6 +124,9 @@
           value={value}
           on:change={(e) => handleChange(key, e)}
         />
+        {#if key === "impulse"}
+          <span>({totalImpulse})</span>
+        {/if}
       {:else}
         <span class="value">{value}</span>
       {/if}

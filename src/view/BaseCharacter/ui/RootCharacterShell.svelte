@@ -1,13 +1,13 @@
 <script lang="ts">
-  import CharacterStats from "./CharacterStats.svelte";
-  import type { ShwActor } from "../../../documents/ShwActor";
-  import CharacterAdditionalStats from "./CharacterAdditionalStats.svelte";
-  export let actor: ShwActor;
+import type { ShwActor } from '../../../documents/ShwActor';
+import CharacterAdditionalStats from './CharacterAdditionalStats.svelte';
+import CharacterStats from './CharacterStats.svelte';
+export let actor: ShwActor;
 
-  function handleChange(event: CustomEvent) {
-    const { value, path } = event.detail;
-    actor.update({ [path]: value });
-  }
+function handleChange(event: CustomEvent) {
+   const { value, path } = event.detail;
+   actor.update({ [path]: value });
+}
 </script>
 
 <div>

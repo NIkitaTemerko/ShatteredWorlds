@@ -128,7 +128,11 @@
           <span>({totalImpulse})</span>
         {/if}
       {:else}
-        <span class="value">{value}</span>
+        {#if key === "discount" || key === "aoeResist"}
+          <span class="value">{value} %</span>
+        {:else}
+          <span class="value">{value}</span>
+        {/if}
       {/if}
     </div>
   {/each}

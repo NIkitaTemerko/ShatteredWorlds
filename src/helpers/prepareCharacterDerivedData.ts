@@ -1,6 +1,7 @@
 import type { ShwActorSystem } from '../documents/ShwActor';
 
 const STAT_KEYS = ['fortune', 'force', 'perception', 'psyDefence', 'diplomacy'] as const;
+const ADDITIONAL_KEYS = ['damageReduction', 'range', 'discount', 'damage', 'aoeResist'] as const;
 
 export function prepareCharacterDerivedData(sys: ShwActorSystem) {
    const attrs = sys.attributes;
@@ -29,14 +30,13 @@ export function prepareCharacterDerivedData(sys: ShwActorSystem) {
       diplomacy: attrs?.force.value >= 25 ? 1 : 0,
    };
 
-   sys.additionalAttributes.range += addAttrMap.range;
-   sys.additionalAttributes.damage += addAttrMap.damage;
-   sys.additionalAttributes.discount += addAttrMap.discount;
-   sys.additionalAttributes.damageReduction += addAttrMap.damageReduction;
-   sys.additionalAttributes.aoeResist += addAttrMap.aoeResist;
    sys.helpers.totalImpulse += addAttrMap.impulse += add.impulse;
    sys.helpers.totalHealth += addAttrMap.health += sys.health.max;
    sys.helpers.totalSpeed += addAttrMap.speed += sys.utility.speed;
+
+   for (const k of ADDITIONAL_KEYS) {
+      sys.additionalAttributes[k] += addAttrMap[k];
+   }
 
    for (const k of STAT_KEYS) {
       const a = attrs[k];

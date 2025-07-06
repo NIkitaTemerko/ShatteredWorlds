@@ -1,8 +1,6 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
-  "files": {
-    "include": ["src/**/*.ts"]
-  },
+  "files": {},
   "css": {
     "formatter": {
       "enabled": true,
@@ -33,7 +31,7 @@
       "quoteStyle": "single"
     }
   },
-	"linter": {
+  "linter": {
     "enabled": true,
     "rules": {
       "style": {
@@ -42,7 +40,6 @@
       },
       "suspicious": {
         "noExplicitAny": "warn",
-        "noConsoleLog": "warn",
         "noImplicitAnyLet": "warn",
         "noArrayIndexKey": "warn"
       },
@@ -60,5 +57,5 @@
         "noDangerouslySetInnerHtml": "warn"
       }
     }
-	}
+  }
 }

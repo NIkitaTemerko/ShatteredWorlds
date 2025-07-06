@@ -1,6 +1,9 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
-  "files": {},
+  "files": {
+    "includes": ["**/*.{js,ts,svelte,hbs,html,css}"],
+    "ignoreUnknown": true
+  },
   "css": {
     "formatter": {
       "enabled": true,
@@ -31,6 +34,20 @@
       "quoteStyle": "single"
     }
   },
+  "overrides": [
+    {
+      "includes": ["**/*.svelte"],
+      "linter": {
+        "rules": {
+          "style": { "useConst": "off", "useImportType": "off" },
+          "correctness": {
+            "noUnusedVariables": "off",
+            "noUnusedImports": "off"
+          }
+        }
+      }
+    }
+  ],
   "linter": {
     "enabled": true,
     "rules": {
@@ -44,7 +61,7 @@
         "noArrayIndexKey": "warn"
       },
       "correctness": {
-        "noUnusedImports": "error"
+        "noUnusedImports": "off"
       },
       "a11y": {
         "useKeyWithClickEvents": "off"

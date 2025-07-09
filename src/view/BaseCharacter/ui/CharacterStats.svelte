@@ -1,52 +1,52 @@
 <script lang="ts">
-  /** StatsPanel.svelte — редактируемые характеристики
-   *  ➜ теперь три отдельные кнопки ▲ ● ▼ для выбора режима
-   */
-  import type { ShwActor } from "../../../documents/ShwActor";
-  export let actor: ShwActor;
+/** StatsPanel.svelte — редактируемые характеристики
+ *  ➜ теперь три отдельные кнопки ▲ ● ▼ для выбора режима
+ */
+import type { ShwActor } from '../../../documents/Actor/ShwActor';
+export let actor: ShwActor;
 
-  const sys = actor.system;
-  const n = (v: unknown, d = 0) => (typeof v === "number" && !Number.isNaN(v) ? v : d);
+const sys = actor.system;
+const n = (v: unknown, d = 0) => (typeof v === 'number' && !Number.isNaN(v) ? v : d);
 
-  type Mode = "adv" | "normal" | "dis";
-  let m: Record<string, Mode> = {
-    fortune: "normal",
-    force: "normal",
-    perception: "normal",
-    psyDefence: "normal",
-    diplomacy: "normal"
-  };
+type Mode = 'adv' | 'normal' | 'dis';
+let m: Record<string, Mode> = {
+   fortune: 'normal',
+   force: 'normal',
+   perception: 'normal',
+   psyDefence: 'normal',
+   diplomacy: 'normal',
+};
 
-  $: columns = [
-    { key: "fortune",    label: "Фортуна",    dark: "#f08c00", light: "#ffd580" },
-    { key: "force",      label: "Напор",      dark: "#d7263d", light: "#ff9aa5" },
-    { key: "perception", label: "Восприятие", dark: "#198754", light: "#80d9b3" },
-    { key: "psyDefence", label: "Пси‑защита", dark: "#8e44ad", light: "#c39bd3" },
-    { key: "diplomacy",  label: "Дипломатия", dark: "#6c757d", light: "#dee2e6" }
-  ].map(c => ({
-    ...c,
-    base      : n((sys as any).attributes[c.key].value),
-    extra     : n((sys as any).attributes[c.key].extra),
-    charBonus : n((sys as any).attributes[c.key].charBonus),
-    saveBonus : n((sys as any).attributes[c.key].saveBonus),
-    mode      : m[c.key] as Mode,
-    saveLabel : `СБ‑${c.label}`
-  }));
+$: columns = [
+   { key: 'fortune', label: 'Фортуна', dark: '#f08c00', light: '#ffd580' },
+   { key: 'force', label: 'Напор', dark: '#d7263d', light: '#ff9aa5' },
+   { key: 'perception', label: 'Восприятие', dark: '#198754', light: '#80d9b3' },
+   { key: 'psyDefence', label: 'Пси‑защита', dark: '#8e44ad', light: '#c39bd3' },
+   { key: 'diplomacy', label: 'Дипломатия', dark: '#6c757d', light: '#dee2e6' },
+].map((c) => ({
+   ...c,
+   base: n((sys as any).attributes[c.key].value),
+   extra: n((sys as any).attributes[c.key].extra),
+   charBonus: n((sys as any).attributes[c.key].charBonus),
+   saveBonus: n((sys as any).attributes[c.key].saveBonus),
+   mode: m[c.key] as Mode,
+   saveLabel: `СБ‑${c.label}`,
+}));
 
-  function updateBase(key: string, value: number) {
-    actor.update({ [`system.attributes.${key}.value`]: value });
-  }
-  const onChangeValue = (key: string, ev: Event) => {
-    updateBase(key, Number((ev.currentTarget as HTMLInputElement).value));
-  };
+function updateBase(key: string, value: number) {
+   actor.update({ [`system.attributes.${key}.value`]: value });
+}
+const onChangeValue = (key: string, ev: Event) => {
+   updateBase(key, Number((ev.currentTarget as HTMLInputElement).value));
+};
 
-  const setMode = (key: string, mode: Mode) => {
-    m = { ...m, [key]: mode };
-  };
+const setMode = (key: string, mode: Mode) => {
+   m = { ...m, [key]: mode };
+};
 
-  const roll = (k: string, isSave = false) => {
-    actor.roll?.(k as any, isSave, m[k]);
-  };
+const roll = (k: string, isSave = false) => {
+   actor.roll?.(k as any, isSave, m[k]);
+};
 </script>
 
 <section class="stats-panel">

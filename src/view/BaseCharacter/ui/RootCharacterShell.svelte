@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { ShwActor } from '../../../documents/ShwActor';
+import type { ShwActor } from '../../../documents/Actor/ShwActor';
 import CharacterAdditionalStats from './CharacterAdditionalStats.svelte';
 import CharacterStats from './CharacterStats.svelte';
 export let actor: ShwActor;

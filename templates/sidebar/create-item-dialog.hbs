@@ -1,0 +1,66 @@
+<form>
+  <!-- Имя -->
+  <div class="form-group">
+    <label for="item-name">Имя</label>
+    <input
+      id="item-name"
+      name="name"
+      type="text"
+      value="{{createData.name}}"
+      required
+      autofocus
+    />
+  </div>
+
+  <!-- Тип -->
+  <div class="form-group">
+    <label for="item-type">Тип</label>
+    <select id="item-type" name="type" required>
+      {{!-- createData.types должен быть массивом {value,label} --}}
+      {{#each createData.types}}
+        <option value="{{this.value}}" {{#if (eq this.value ../createData.type)}}selected{{/if}}>
+          {{this.label}}
+        </option>
+      {{/each}}
+    </select>
+  </div>
+
+  {{!-- Блок подтипа, скрыт по-умолчанию --}}
+  <div class="form-group" id="subtype-group" style="display: none;">
+    <label for="item-subtype">Подтип</label>
+    <select id="item-subtype" name="subtype"></select>
+  </div>
+
+  <!-- Скрипт для динамической подгрузки подтипов -->
+  <script>
+    window.addEventListener("DOMContentLoaded", () =>
+    {
+      const typeSelect = document.getElementById("item-type");
+      const subtypeGroup = document.getElementById("subtype-group");
+      const subtypeSelect = document.getElementById("item-subtype");
+      // createData._subtypesRaw — заранее в _renderCreateDialog пробросьте JSON.stringify({ type: [ {value,label}, … ], … })
+      const subtypes = {{{createData._subtypesRaw}}};
+
+      function refreshSubtypes()
+      {
+        const opts = subtypes[typeSelect.value] || [];
+        if (opts.length)
+        {
+          // создаём <option> для каждого подтипа
+          subtypeSelect.innerHTML = opts
+            .map(o => `<option value="${o.value}">${o.label}</option>`)
+            .join("");
+          subtypeGroup.style.display = "";
+        }
+        else
+        {
+          subtypeGroup.style.display = "none";
+        }
+      }
+
+      // инициализировать сразу и при каждом изменении типа
+      typeSelect.addEventListener("change", refreshSubtypes);
+      refreshSubtypes();
+    });
+  </script>
+</form>

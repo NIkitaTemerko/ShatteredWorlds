@@ -6,7 +6,7 @@
     <div class="header-fields">
       <div class="introduction-info">
         <h1 class="charname">
-          <input name="name" type="text" value="{{actor.name}}" placeholder="Name" />
+          <input name="name" type="text" value="{{actor.name}}" placeholder="Name"/>
         </h1>
         <h1 class="level">
           LVL<input name="system.utility.level" type="number" value="{{actor.system.utility.level}}"/>
@@ -65,106 +65,114 @@
 </form>
 
 <style>
-/* root layout */
-.shw-character-sheet-root{
-  display:flex;
-  flex-direction:column;
-  gap:0.5rem;
-  height:100%;
-}
-.sheet-header{
-  display:flex;
-  align-items:center;
-  gap:0.75rem;
-  flex:0 0 auto;
-}
-.profile-img{
-  flex:0 0 72px;
-  border:1px solid var(--color-border-light-1);
-  border-radius:3px;
-  object-fit:cover;
-  cursor:pointer;
-  height: 100%;
-}
+  /* root layout */
+  .shw-character-sheet-root {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    height: 100%;
+  }
 
-.introduction-info{
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-}
-.level{
-  display: flex;
-  align-items: center;
-  flex-grow: 0;
-}
-.level input{
-  font-size:var(--font-size-20);
-  border:1px solid var(--color-border-light-1);
-  padding:0.2rem 0.4rem;
-  border-radius:3px;
-  width: fit-content;
-  max-width: 5rem;
-  text-align: center;
-}
+  .sheet-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 0 0 auto;
+  }
 
-.header-fields{
-  flex:1 1 auto;
-  display:flex;
-  flex-direction:column;
-  gap:0.35rem;
-}
-.charname input{
-  width: 100%;
-  font-size:var(--font-size-20);
-  border:1px solid var(--color-border-light-1);
-  padding:0.2rem 0.4rem;
-  border-radius:3px;
-  margin: 0;
-}
-/* stats */
-.stats-wrapper{
-  display:flex;
-  align-items:center;
-  gap:0.5rem;
-}
-/* HP progress */
-.hp-wrapper{
-  display:flex;
-  align-items:center;
-  gap:0.5rem;
-}
-.hp-bar{
-  width:200px;
-  height:12px;
-  appearance:none;
-  border:1px solid var(--color-border-light-2);
-  border-radius:4px;
-  background:#ff9aa5;
-}
-.hp-bar::-webkit-progress-bar{
-  background:#ff9aa5;
-  border-radius:4px;
-}
-.hp-bar::-webkit-progress-value{
-  background:#d7263d;
-  border-radius:4px;
-}
-.hp-bar::-moz-progress-bar{
-  background:#d7263d;
-}
-.hp-label{
-  font-size:var(--font-size-12);
-  font-family:var(--font-primary);
-}
-.speed-wrapper{
-  margin-left:auto;
-  display:flex;
-  align-items:center;
-  gap:0.5rem;
-}
-/* body placeholder so that Svelte content can stretch */
-#svelte-sheet-body{
-  flex:1 1 auto;
-  overflow:auto;
-}
+  .profile-img {
+    flex: 0 0 72px;
+    border: 1px solid var(--color-border-light-1);
+    border-radius: 3px;
+    object-fit: cover;
+    cursor: pointer;
+    height: 100%;
+  }
+
+  .introduction-info {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .level {
+    display: flex;
+    align-items: center;
+    flex-grow: 0;
+  }
+
+  .level input {
+    font-size: var(--font-size-20);
+    border: 1px solid var(--color-border-light-1);
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    width: fit-content;
+    max-width: 5rem;
+    text-align: center;
+  }
+
+  .header-fields {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .charname input {
+    width: 100%;
+    font-size: var(--font-size-20);
+    border: 1px solid var(--color-border-light-1);
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    margin: 0;
+  }
+
+  /* stats */
+  .stats-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  /* HP progress */
+  .hp-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .hp-bar {
+    width: 200px;
+    height: 12px;
+    appearance: none;
+    border: 1px solid var(--color-border-light-2);
+    border-radius: 4px;
+    background: #ff9aa5;
+  }
+
+  .hp-bar::-webkit-progress-bar {
+    background: #ff9aa5;
+    border-radius: 4px;
+  }
+
+  .hp-bar::-webkit-progress-value {
+    background: #d7263d;
+    border-radius: 4px;
+  }
+
+  .hp-bar::-moz-progress-bar {
+    background: #d7263d;
+  }
+
+  .hp-label {
+    font-size: var(--font-size-12);
+    font-family: var(--font-primary);
+  }
+
+  .speed-wrapper {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
 </style>

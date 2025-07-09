@@ -1,4 +1,4 @@
-import type { ShwActorSystem } from '../documents/ShwActor';
+import type { ShwActorSystem } from '../../documents/Actor/types/ShwActorSystem';
 
 const STAT_KEYS = ['fortune', 'force', 'perception', 'psyDefence', 'diplomacy'] as const;
 const UTIL_KEYS = ['speed', 'level'] as const;

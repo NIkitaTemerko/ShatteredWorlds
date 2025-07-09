@@ -1,5 +1,5 @@
-import type { ShwActor } from '../documents/ShwActor';
-import type { ShwActorSystem } from '../documents/ShwActor';
+import type { ShwActor } from '../../documents/Actor/ShwActor';
+import type { ShwActorSystem } from '../../documents/Actor/types/ShwActorSystem';
 
 const STAT_NAMES = {
    fortune: 'Фортуна',

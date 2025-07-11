@@ -155,20 +155,6 @@ const roll = (k: string, isSave = false) => {
   line-height:1;
   width: 100%;
 }
-
-.switch button.active{
-  outline:none;
-  box-shadow:none;
-}
-.switch .adv.active{
-  background-color: var(--dark);
-}
-.switch .dis.active{
-  background-color: var(--dark);
-}
-.switch .norm.active{
-  background-color: var(--dark);
-}
 @media (max-width:900px){
   .stats-panel{
     flex-wrap:wrap;

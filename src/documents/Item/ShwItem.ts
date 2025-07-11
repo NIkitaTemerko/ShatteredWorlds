@@ -1,5 +1,5 @@
 import { ItemFactory } from './ItemFactory';
-import type { ConsumableData, ConsumableType } from './types/ConsumableDataTypes';
+import type { ConsumableData } from './types/ConsumableDataTypes';
 
 interface ShwItemSystem {
    consumable: ConsumableData;

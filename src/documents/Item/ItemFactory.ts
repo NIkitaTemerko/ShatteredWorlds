@@ -45,12 +45,12 @@ export class ItemFactory {
                img: 'icons/weapons/thrown/bomb-fuse-black-grey.webp',
                consumableType: 'bomb',
                damage: {
-                  amount: '1d6',
+                  amount: 50,
                   type: 'fire',
                },
                radius: 5,
                save: {
-                  type: 'dexterity',
+                  type: 'perception',
                   dc: 13,
                },
             };
@@ -94,7 +94,7 @@ export class ItemFactory {
                   duration: 3,
                },
                save: {
-                  type: 'constitution',
+                  type: 'psyDefence',
                   dc: 13,
                },
                application: 'injury',

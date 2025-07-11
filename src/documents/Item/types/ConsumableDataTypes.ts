@@ -9,6 +9,11 @@ interface BaseConsumableData extends BaseItemData {
       type: 'action' | 'bonus' | 'reaction';
       cost: number;
    };
+   uses: {
+      value: number;
+      max: number;
+      per: 'charges' | 'uses' | 'turns';
+   };
 }
 
 export interface PotionData extends BaseConsumableData {
@@ -24,7 +29,7 @@ export interface PotionData extends BaseConsumableData {
 export interface BombData extends BaseConsumableData {
    consumableType: 'bomb';
    damage: {
-      amount: string;
+      amount: string | number;
       type: 'fire' | 'acid' | 'cold' | 'lightning' | 'thunder' | 'force';
    };
    radius: number;

@@ -11,6 +11,7 @@
       typeColors,
    } from '../constants/consumableConstats';
    import ItemHeader from "./ItemHeader.svelte";
+   import BasicStats from "./BasicStats.svelte";
 
 
    export let item: ShwItem;
@@ -84,65 +85,7 @@
    <ItemHeader item={item} />
 
    <!-- ===== BASIC STATS ===== -->
-   <section class="section-grid third">
-      <div class="stat-block">
-         <label for="rarity">Редкость</label>
-         <select
-            id="rarity"
-            bind:value={item.system.consumable.rarity}
-            on:change={(e) => updateConsumable('rarity', e.currentTarget.value)}
-         >
-            {#each rarityTypes as rarity}
-               <option value={rarity.value}>{rarity.label}</option>
-            {/each}
-         </select>
-      </div>
-
-      <div class="stat-block">
-         <label for="price">Цена</label>
-         <input
-            id="price"
-            type="number"
-            min="0"
-            bind:value={item.system.consumable.price}
-            on:change={(e) => updateConsumable('price', Number(e.currentTarget.value))}
-         />
-      </div>
-
-      <div class="stat-block">
-         <label for="weight">Вес</label>
-         <input
-            id="weight"
-            type="number"
-            min="0"
-            step="0.01"
-            bind:value={item.system.consumable.weight}
-            on:change={(e) => updateConsumable('weight', Number(e.currentTarget.value))}
-         />
-      </div>
-
-      <div class="stat-block">
-         <label for="quantity">Кол-во</label>
-         <input
-            id="quantity"
-            type="number"
-            min="0"
-            bind:value={item.system.consumable.quantity}
-            on:change={(e) => updateConsumable('quantity', Number(e.currentTarget.value))}
-         />
-      </div>
-
-      <div class="stat-block">
-         <label for="stackLimit">Стек</label>
-         <input
-            id="stackLimit"
-            type="number"
-            min="1"
-            bind:value={item.system.consumable.stackLimit}
-            on:change={(e) => updateConsumable('stackLimit', Number(e.currentTarget.value))}
-         />
-      </div>
-   </section>
+   <BasicStats item={item} />
 
    <!-- ===== USES & ACTIVATION ===== -->
    <section class="section-grid small-gap">

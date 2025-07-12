@@ -42,13 +42,6 @@ const updateConsumable = getUpdateConsumable(item)
 </header>
 
 <style>
-   h3 {
-      margin: 0;
-      padding: 0;
-      border: none;
-      font-size: var(--font-size-16);
-   }
-
    /* header */
    .card-header {
       display: flex;

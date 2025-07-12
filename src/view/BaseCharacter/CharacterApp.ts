@@ -1,4 +1,4 @@
-import { SvelteActorSheet } from '../../lib/SvelteActorSheet';
+import { SvelteActorSheet } from '../../lib/Actor/SvelteActorSheet';
 import CharacterShell from './ui/RootCharacterShell.svelte';
 
 export class CharacterApp extends SvelteActorSheet {

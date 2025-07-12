@@ -68,8 +68,8 @@ export interface FoodData extends BaseConsumableData {
 export interface PoisonData extends BaseConsumableData {
    consumableType: 'poison';
    damage: {
-      initial: string;
-      recurring: string;
+      initial: string | number;
+      recurring: string | number;
       duration: number;
    };
    save: {

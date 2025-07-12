@@ -89,8 +89,8 @@ export class ItemFactory {
                img: 'icons/consumables/potions/potion-jar-corked-labeled-poison-skull-green.webp',
                consumableType: 'poison',
                damage: {
-                  initial: '1d4',
-                  recurring: '1d4',
+                  initial: 10,
+                  recurring: 10,
                   duration: 3,
                },
                save: {

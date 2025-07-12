@@ -12,6 +12,7 @@
    } from '../constants/consumableConstats';
    import ItemHeader from "./ItemHeader.svelte";
    import BasicStats from "./BasicStats.svelte";
+   import UsesAndActivations from "./UsesAndActivations.svelte";
 
 
    export let item: ShwItem;
@@ -88,54 +89,7 @@
    <BasicStats item={item} />
 
    <!-- ===== USES & ACTIVATION ===== -->
-   <section class="section-grid small-gap">
-      <div class="stat-block">
-         <label for="uses">Заряды</label>
-         <div class="input-group">
-            <input
-               id="uses"
-               type="number"
-               min="0"
-               bind:value={item.system.consumable.uses.value}
-               on:change={(e) => updateConsumable('uses.value', Number(e.currentTarget.value))}
-            />
-            <div class="devider">из</div>
-            <input
-               type="number"
-               min="0"
-               bind:value={item.system.consumable.uses.max}
-               on:change={(e) => updateConsumable('uses.max', Number(e.currentTarget.value))}
-            />
-         </div>
-         <select
-            bind:value={item.system.consumable.uses.per}
-            on:change={(e) => updateConsumable('uses.per', e.currentTarget.value)}
-         >
-            {#each perTypes as per}
-               <option value={per.value}>{per.label}</option>
-            {/each}
-         </select>
-      </div>
-
-      <div class="stat-block">
-         <label for="activation">Активация</label>
-         <select
-            bind:value={item.system.consumable.activation.type}
-            on:change={(e) => updateConsumable('activation.type', e.currentTarget.value)}
-         >
-            {#each activationTypes as act}
-               <option value={act.value}>{act.label}</option>
-            {/each}
-         </select>
-         <input
-            id="activation"
-            type="number"
-            min="0"
-            bind:value={item.system.consumable.activation.cost}
-            on:change={(e) => updateConsumable('activation.cost', Number(e.currentTarget.value))}
-         />
-      </div>
-   </section>
+   <UsesAndActivations item={item} />
 
    <!-- ===== DESCRIPTION ===== -->
    <section class="description">

@@ -29,6 +29,13 @@
       { value: 'inhaled', label: 'вдох' },
    ];
 
+   export const effectTypes = [
+      { value: 'heal', label: 'лечение' },
+      { value: 'buff',  label: 'баф' },
+      { value: 'damage', label: 'урон' }
+   ];
+
+
    export let item: ShwItem;
 
    /**
@@ -58,6 +65,37 @@
          [`system.consumable.${path}`]: value,
       });
    }
+
+   // 1) Всегда возвращает массив эффектов
+   function getEffects() {
+      return (item.system.consumable as any).effects as any[];
+   }
+
+   // 2) Добавляем новый элемент, подставляя шаблон по типу
+   function addEffect() {
+      const effects = [...getEffects()];
+      if (item.system.consumable.consumableType === 'potion') {
+         effects.push({ type: 'heal', amount: 0, duration: 1, attribute: '' });
+      } else {
+         effects.push({ type: 'бафф', value: 0, duration: 1 });
+      }
+      updateConsumable('effects', effects);
+   }
+
+   // 3) Удаляем по индексу
+   function removeEffect(idx: number) {
+      const effects = getEffects().filter((_, i) => i !== idx);
+      updateConsumable('effects', effects);
+   }
+
+   // 4) Обновляем любое поле
+   function updateEffect(idx: number, field: string, value: any) {
+      const effects = getEffects().map((e, i) =>
+         i === idx ? { ...e, [field]: value } : e
+      );
+      updateConsumable('effects', effects);
+   }
+
 </script>
 
 <!-- ======================== МАКЕТ ======================== -->
@@ -101,8 +139,9 @@
    <!-- ===== BASIC STATS ===== -->
    <section class="section-grid third">
       <div class="stat-block">
-         <label>Редкость</label>
+         <label for="rarity">Редкость</label>
          <select
+            id="rarity"
             bind:value={item.system.consumable.rarity}
             on:change={(e) => updateConsumable('rarity', e.currentTarget.value)}
          >
@@ -113,8 +152,9 @@
       </div>
 
       <div class="stat-block">
-         <label>Цена</label>
+         <label for="price">Цена</label>
          <input
+            id="price"
             type="number"
             min="0"
             bind:value={item.system.consumable.price}
@@ -123,8 +163,9 @@
       </div>
 
       <div class="stat-block">
-         <label>Вес</label>
+         <label for="weight">Вес</label>
          <input
+            id="weight"
             type="number"
             min="0"
             step="0.01"
@@ -134,8 +175,9 @@
       </div>
 
       <div class="stat-block">
-         <label>Кол-во</label>
+         <label for="quantity">Кол-во</label>
          <input
+            id="quantity"
             type="number"
             min="0"
             bind:value={item.system.consumable.quantity}
@@ -144,8 +186,9 @@
       </div>
 
       <div class="stat-block">
-         <label>Стек</label>
+         <label for="stackLimit">Стек</label>
          <input
+            id="stackLimit"
             type="number"
             min="1"
             bind:value={item.system.consumable.stackLimit}
@@ -157,9 +200,10 @@
    <!-- ===== USES & ACTIVATION ===== -->
    <section class="section-grid small-gap">
       <div class="stat-block">
-         <label>Заряды</label>
+         <label for="uses">Заряды</label>
          <div class="input-group">
             <input
+               id="uses"
                type="number"
                min="0"
                bind:value={item.system.consumable.uses.value}
@@ -184,7 +228,7 @@
       </div>
 
       <div class="stat-block">
-         <label>Активация</label>
+         <label for="activation">Активация</label>
          <select
             bind:value={item.system.consumable.activation.type}
             on:change={(e) => updateConsumable('activation.type', e.currentTarget.value)}
@@ -194,6 +238,7 @@
             {/each}
          </select>
          <input
+            id="activation"
             type="number"
             min="0"
             bind:value={item.system.consumable.activation.cost}
@@ -217,8 +262,9 @@
       && item.system.consumable.save !== undefined}
       <section class="section-grid type-specific">
          <div class="stat-block">
-            <label>Урон</label>
+            <label for="damage">Урон</label>
             <input
+               id="damage"
                type="number"
                min="0"
                value={item.system.consumable.damage.amount}
@@ -226,8 +272,9 @@
             />
          </div>
          <div class="stat-block">
-            <label>Тип урона</label>
+            <label for="damage-type">Тип урона</label>
             <select
+               id="damage-type"
                value={item.system.consumable.damage.type}
                on:change={(e) => updateConsumable('damage.type', e.currentTarget.value)}
             >
@@ -237,8 +284,9 @@
             </select>
          </div>
          <div class="stat-block">
-            <label>Радиус (футы)</label>
+            <label for="radius">Радиус (футы)</label>
             <input
+               id="radius"
                type="number"
                min="0"
                value={item.system.consumable.radius}
@@ -246,8 +294,9 @@
             />
          </div>
          <div class="stat-block">
-            <label>Спасбросок</label>
+            <label for="save">Спасбросок</label>
             <select
+               id="save"
                value={item.system.consumable.save.type}
                on:change={(e) => updateConsumable('save.type', e.currentTarget.value)}
             >
@@ -257,8 +306,9 @@
             </select>
          </div>
          <div class="stat-block">
-            <label>Сложность</label>
+            <label for="save-dc">Сложность</label>
             <input
+               id="save-dc"
                type="number"
                min="0"
                value={item.system.consumable.save.dc}
@@ -269,18 +319,111 @@
 
 
    {:else if item.system.consumable.consumableType === 'potion' || item.system.consumable.consumableType === 'food'}
-      <section class="section-grid type-specific">
-         <!-- Для simplicity показываем только список эффектов кол‑вом -->
-         <div class="stat-block full">
-            <label>Эффекты (кол-во)</label>
-            <input
-               type="number"
-               min="0"
-               disabled
-            />
-            <small class="hint">Редактируется в отдельном окне эффектов</small>
+      <section class="section-grid fourth type-specific effects-section">
+         {#if item.system.consumable.consumableType === 'food' && item.system.consumable.nutrition !== undefined}
+            <div class="stat-block full header">
+               <h3>Пищевая ценность</h3>
+            </div>
+            <div class="stat-block full nutrition-section">
+               <div class="stat-block">
+                  <label for="nutrition-duration">Длительность насыщения</label>
+                  <input
+                     id="nutrition-duration"
+                     type="text"
+                     bind:value={item.system.consumable.nutrition.duration}
+                     on:change={(e) => updateConsumable('nutrition.duration', e)}
+                  />
+               </div>
+               <div class="stat-block">
+                  <label for="nutrition-duration">Сила насыщения</label>
+                  <input
+                     id="nutrition-duration"
+                     type="text"
+                     bind:value={item.system.consumable.nutrition.value}
+                     on:change={(e) => updateConsumable('nutrition.duration', e)}
+                  />
+               </div>
+            </div>
+         {/if}
+         <!-- заголовок на всю ширину -->
+         <div class="stat-block full header">
+            <h3>Эффекты</h3>
+            <button type="button" class="add-btn" on:click={addEffect}>+ Добавить эффект</button>
          </div>
+
+         {#each getEffects() as eff, idx}
+            <!-- Тип эффекта -->
+            <div class="stat-block">
+               <label for="effect-type">{item.system.consumable.consumableType === 'potion' ? 'Тип' : 'Бонус'}</label>
+               {#if item.system.consumable.consumableType === 'potion'}
+                  <select
+                     id="effect-type"
+                     bind:value={eff.type}
+                     on:change={(e) => updateEffect(idx, 'type', e.currentTarget.value)}
+                  >
+                     {#each effectTypes as et}
+                        <option value={et.value}>{et.label}</option>
+                     {/each}
+                  </select>
+               {:else}
+                  <input
+                     id="effect-type"
+                     type="text"
+                     bind:value={eff.type}
+                     on:change={(e) => updateEffect(idx, 'type', e.currentTarget.value)}
+                  />
+               {/if}
+            </div>
+
+            <!-- Сила или Значение -->
+            <div class="stat-block">
+               <label for="effect-value">
+                  Сила
+               </label>
+               <input
+                  id="effect-value"
+                  type="number"
+                  min="0"
+                  value={item.system.consumable.consumableType === 'potion' ? eff.amount : eff.value}
+                  on:change={(e) => updateEffect(idx, item.system.consumable.consumableType === 'potion' ? 'amount' : 'value', Number(e.currentTarget.value))}
+               />
+            </div>
+
+            <!-- Длительность -->
+            <div class="stat-block">
+               <label for="effect-duration">Длительность</label>
+               <input
+                  id="effect-duration"
+                  type="number"
+                  min="1"
+                  bind:value={eff.duration}
+                  on:change={(e) => updateEffect(idx, 'duration', Number(e.currentTarget.value))}
+               />
+            </div>
+
+            <!-- Кнопка удаления -->
+            <div class="stat-block">
+               <button type="button" class="delete-btn" on:click={() => removeEffect(idx)}>×</button>
+            </div>
+
+            <!-- Атрибут только для зелья -->
+            {#if item.system.consumable.consumableType === 'potion'}
+               <div class="stat-block full">
+                  <label for="effect-attribute">Атрибут</label>
+                  <input
+                     id="effect-attribute"
+                     type="text"
+                     bind:value={eff.attribute}
+                     on:change={(e) => updateEffect(idx, 'attribute', e.currentTarget.value)}
+                  />
+               </div>
+            {/if}
+
+         {/each}
       </section>
+
+
+
 
 
 
@@ -289,16 +432,18 @@
    item.system.consumable?.requirements !== undefined}
       <section class="section-grid type-specific">
          <div class="stat-block full">
-            <label>Название заклинания</label>
+            <label for="spell-name">Название заклинания</label>
             <input
+               id="spell-name"
                type="text"
                value={item.system.consumable.spell.name}
                on:change={(e) => updateConsumable('spell.name', e.currentTarget.value)}
             />
          </div>
          <div class="stat-block">
-            <label>Уровень</label>
+            <label for="spell-level">Уровень</label>
             <input
+               id="spell-level"
                type="number"
                min="0"
                max="9"
@@ -307,24 +452,27 @@
             />
          </div>
          <div class="stat-block">
-            <label>Школа</label>
+            <label for="spell-school">Школа</label>
             <input
+               id="spell-school"
                type="text"
                value={item.system.consumable.spell.school}
                on:change={(e) => updateConsumable('spell.school', e.currentTarget.value)}
             />
          </div>
          <div class="stat-block">
-            <label>Треб. характеристика</label>
+            <label for="spell-requirements">Треб. характеристика</label>
             <input
+               id="spell-requirements"
                type="text"
                value={item.system.consumable.requirements.ability}
                on:change={(e) => updateConsumable('requirements.ability', e.currentTarget.value)}
             />
          </div>
          <div class="stat-block">
-            <label>Сложность</label>
+            <label for="spell-difficulty">Сложность</label>
             <input
+               id="spell-difficulty"
                type="number"
                min="0"
                value={item.system.consumable.requirements.dc}
@@ -339,24 +487,27 @@
       && item.system.consumable.save !== undefined}
       <section class="section-grid type-specific">
          <div class="stat-block">
-            <label>Начальный урон</label>
+            <label for="damage-initial">Начальный урон</label>
             <input
+               id="damage-initial"
                type="text"
                value={item.system.consumable.damage.initial}
                on:change={(e) => updateConsumable('damage.initial', e.currentTarget.value)}
             />
          </div>
          <div class="stat-block">
-            <label>Повтор. урон</label>
+            <label for="damage-recurring">Повтор. урон</label>
             <input
+               id="damage-recurring"
                type="text"
                value={item.system.consumable.damage.recurring}
                on:change={(e) => updateConsumable('damage.recurring', e.currentTarget.value)}
             />
          </div>
          <div class="stat-block">
-            <label>Длительность (раунд)</label>
+            <label for="damage-duration">Длительность (раунд)</label>
             <input
+               id="damage-duration"
                type="number"
                min="1"
                value={item.system.consumable.damage.duration}
@@ -364,8 +515,9 @@
             />
          </div>
          <div class="stat-block">
-            <label>Спасбросок</label>
+            <label for="save">Спасбросок</label>
             <select
+               id="save"
                value={item.system.consumable.save.type}
                on:change={(e) => updateConsumable('save.type', e.currentTarget.value)}
             >
@@ -375,8 +527,9 @@
             </select>
          </div>
          <div class="stat-block">
-            <label>Сложность</label>
+            <label for="save-dc">Сложность</label>
             <input
+               id="save-dc"
                type="number"
                min="0"
                value={item.system.consumable.save.dc}
@@ -384,8 +537,9 @@
             />
          </div>
          <div class="stat-block full">
-            <label>Применение</label>
+            <label for="application">Применение</label>
             <select
+               id="application"
                bind:value={item.system.consumable.application}
                on:change={(e) => updateConsumable('application', e.currentTarget.value, e)}
             >
@@ -400,6 +554,12 @@
 
 <!-- ======================== СТИЛИ ======================== -->
 <style>
+   h3 {
+      margin: 0;
+      padding: 0;
+      border: none;
+      font-size: var(--font-size-16);
+   }
    /* overall card */
    .consumable-card {
       background: var(--light);
@@ -460,6 +620,13 @@
       gap: 0.5rem;
    }
 
+   .section-grid.fourth {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr) 20px;
+      gap: 0.5rem;
+      align-items: end;
+   }
+
    .section-grid.small-gap {
       gap: 0.25rem;
    }
@@ -506,15 +673,66 @@
       padding: 0.5rem;
    }
 
-   /* hints */
-   .hint {
-      font-size: var(--font-size-10);
-      opacity: 0.6;
-      margin-top: 0.25rem;
+   /* повторяем секционный фон/бордюр */
+   .effects-section {
+      background: rgba(255, 255, 255, 0.5);
+      border: 1px solid var(--color-border-light-2);
+      border-radius: var(--radius);
+      padding: 0.75rem;
+   }
+
+   /* делаем грид с автоматическим переносом в нужных местах */
+   .effects-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 0.5rem;
+   }
+
+   .effects-section .stat-block.full {
+      grid-column: 1 / -1;
+   }
+
+   .stat-block.full.header {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: baseline;
+   }
+
+   /* кнопки «+» и «×» можно оставить в том же стиле, что и в других блоках */
+   .add-btn {
+      background: var(--dark);
+      width: auto;
+      border: none;
+      cursor: pointer;
+   }
+   .add-btn:hover {
+      opacity: 0.8;
+   }
+   .delete-btn {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      color: var(--dark);
+      cursor: pointer;
+   }
+   .delete-btn:hover {
+      color: #c00;
    }
 
    /* type‑specific emphasiser */
    .type-specific {
       border-left: 4px solid var(--dark);
    }
+
+   .nutrition-section {
+      display: flex;
+      gap: 0.5rem;
+      flex-direction: row;
+   }
+   .nutrition-section .stat-block {
+      flex: 1;
+   }
+
 </style>

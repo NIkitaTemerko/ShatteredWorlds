@@ -13,6 +13,7 @@
    import ItemHeader from "./ItemHeader.svelte";
    import BasicStats from "./BasicStats.svelte";
    import UsesAndActivations from "./UsesAndActivations.svelte";
+   import BombStats from "./BombStats.svelte";
 
 
    export let item: ShwItem;
@@ -101,68 +102,10 @@
    </section>
 
    <!-- ===== TYPE‑SPECIFIC DETAILS ===== -->
-   {#if item.system.consumable.consumableType === 'bomb'
-      && item.system.consumable.damage !== undefined
-      && item.system.consumable.save !== undefined}
-      <section class="section-grid type-specific">
-         <div class="stat-block">
-            <label for="damage">Урон</label>
-            <input
-               id="damage"
-               type="number"
-               min="0"
-               value={item.system.consumable.damage.amount}
-               on:change={(e) => updateConsumable('damage.amount', Number(e.currentTarget.value))}
-            />
-         </div>
-         <div class="stat-block">
-            <label for="damage-type">Тип урона</label>
-            <select
-               id="damage-type"
-               value={item.system.consumable.damage.type}
-               on:change={(e) => updateConsumable('damage.type', e.currentTarget.value)}
-            >
-               {#each damageTypes as type}
-                  <option value={type.value}>{type.label}</option>
-               {/each}
-            </select>
-         </div>
-         <div class="stat-block">
-            <label for="radius">Радиус (футы)</label>
-            <input
-               id="radius"
-               type="number"
-               min="0"
-               value={item.system.consumable.radius}
-               on:change={(e) => updateConsumable('radius', Number(e.currentTarget.value))}
-            />
-         </div>
-         <div class="stat-block">
-            <label for="save">Спасбросок</label>
-            <select
-               id="save"
-               value={item.system.consumable.save.type}
-               on:change={(e) => updateConsumable('save.type', e.currentTarget.value)}
-            >
-               {#each saveTypes as type}
-                  <option value={type.value}>{type.label}</option>
-               {/each}
-            </select>
-         </div>
-         <div class="stat-block">
-            <label for="save-dc">Сложность</label>
-            <input
-               id="save-dc"
-               type="number"
-               min="0"
-               value={item.system.consumable.save.dc}
-               on:change={(e) => updateConsumable('save.dc', Number(e.currentTarget.value))}
-            />
-         </div>
-      </section>
+   <BombStats item={item} />
 
 
-   {:else if item.system.consumable.consumableType === 'potion' || item.system.consumable.consumableType === 'food'}
+   {#if item.system.consumable.consumableType === 'potion' || item.system.consumable.consumableType === 'food'}
       <section class="section-grid fourth type-specific effects-section">
          {#if item.system.consumable.consumableType === 'food' && item.system.consumable.nutrition !== undefined}
             <div class="stat-block full header">

@@ -1,7 +1,7 @@
 import { ShwItemSheet } from '../../lib/Item/SveltItemSheet';
 import ItemShell from './ui/RootItemShell.svelte';
 
-export class ItemApp extends ShwItemSheet {
+export class ConsumableItemApp extends ShwItemSheet {
    /* обязательное статическое свойство, чтобы оболочка знала, какой Shell монтировать */
    static Shell = ItemShell;
 

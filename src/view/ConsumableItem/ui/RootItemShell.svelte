@@ -3,37 +3,14 @@
    import type { ConsumableType } from '../../../documents/Item/types/ConsumableDataTypes';
    import { ItemFactory } from '../../../documents/Item/ItemFactory';
    import {
+      activationTypes, applicationTypes,
       consumableTypes,
-      damageTypes,
+      damageTypes, effectTypes, perTypes,
       rarityTypes,
       saveTypes,
       typeColors,
    } from '../constants/consumableConstats';
-
-   // Доп‑константы для новой вёрстки
-   export const activationTypes = [
-      { value: 'action', label: 'действие' },
-      { value: 'bonus', label: 'бонус' },
-      { value: 'reaction', label: 'реакция' },
-   ];
-   export const perTypes = [
-      { value: 'charges', label: 'заряды' },
-      { value: 'day', label: 'день' },
-      { value: 'combat', label: 'бой' },
-   ];
-
-   export const applicationTypes = [
-      { value: 'injury', label: 'рана' },
-      { value: 'contact', label: 'контакт' },
-      { value: 'ingested', label: 'иньекция' },
-      { value: 'inhaled', label: 'вдох' },
-   ];
-
-   export const effectTypes = [
-      { value: 'heal', label: 'лечение' },
-      { value: 'buff',  label: 'баф' },
-      { value: 'damage', label: 'урон' }
-   ];
+   import ItemHeader from "./ItemHeader.svelte";
 
 
    export let item: ShwItem;
@@ -104,37 +81,7 @@
    style="--dark:{typeColors[item.system.consumable.consumableType]?.dark}; --light:{typeColors[item.system.consumable.consumableType]?.light}"
 >
    <!-- ===== HEADER ===== -->
-   <header class="card-header">
-      <img
-         src={item.img}
-         data-edit="img"
-         title={item.name}
-         height="72"
-         width="72"
-         alt="img"
-      />
-
-      <div class="header-main">
-         <input
-            class="item-name"
-            type="text"
-            bind:value={item.name}
-            placeholder="Название предмета"
-            on:change={(e) => item.update({ name: e.currentTarget.value })}
-         />
-
-         <div class="type-select">
-            <select
-               bind:value={item.system.consumable.consumableType}
-               on:change={(e) => updateConsumable('consumableType', e.currentTarget.value, e)}
-            >
-               {#each consumableTypes as type}
-                  <option value={type.value}>{type.label}</option>
-               {/each}
-            </select>
-         </div>
-      </div>
-   </header>
+   <ItemHeader item={item} />
 
    <!-- ===== BASIC STATS ===== -->
    <section class="section-grid third">

@@ -36,3 +36,27 @@ export const typeColors = {
    food: { dark: '#f08c00', light: '#ffd580' },
    poison: { dark: '#6c757d', light: '#dee2e6' },
 };
+
+export const activationTypes = [
+   { value: 'action', label: 'действие' },
+   { value: 'bonus', label: 'бонус' },
+   { value: 'reaction', label: 'реакция' },
+];
+export const perTypes = [
+   { value: 'charges', label: 'заряды' },
+   { value: 'day', label: 'день' },
+   { value: 'combat', label: 'бой' },
+];
+
+export const applicationTypes = [
+   { value: 'injury', label: 'рана' },
+   { value: 'contact', label: 'контакт' },
+   { value: 'ingested', label: 'иньекция' },
+   { value: 'inhaled', label: 'вдох' },
+];
+
+export const effectTypes = [
+   { value: 'heal', label: 'лечение' },
+   { value: 'buff', label: 'баф' },
+   { value: 'damage', label: 'урон' },
+];

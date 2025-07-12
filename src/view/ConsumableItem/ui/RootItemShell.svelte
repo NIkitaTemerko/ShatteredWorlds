@@ -15,6 +15,7 @@
    import UsesAndActivations from "./UsesAndActivations.svelte";
    import BombStats from "./BombStats.svelte";
    import PotionsAndFood from "./PotionsAndFood.svelte";
+   import Scroll from "./Scroll.svelte";
 
 
    export let item: ShwItem;
@@ -107,62 +108,9 @@
 
    <PotionsAndFood item={item} />
 
-   {#if item.system.consumable.consumableType === 'scroll' &&
-   item.system.consumable?.spell !== undefined &&
-   item.system.consumable?.requirements !== undefined}
-      <section class="section-grid type-specific">
-         <div class="stat-block full">
-            <label for="spell-name">Название заклинания</label>
-            <input
-               id="spell-name"
-               type="text"
-               value={item.system.consumable.spell.name}
-               on:change={(e) => updateConsumable('spell.name', e.currentTarget.value)}
-            />
-         </div>
-         <div class="stat-block">
-            <label for="spell-level">Уровень</label>
-            <input
-               id="spell-level"
-               type="number"
-               min="0"
-               max="9"
-               value={item.system.consumable.spell.level}
-               on:change={(e) => updateConsumable('spell.level', Number(e.currentTarget.value))}
-            />
-         </div>
-         <div class="stat-block">
-            <label for="spell-school">Школа</label>
-            <input
-               id="spell-school"
-               type="text"
-               value={item.system.consumable.spell.school}
-               on:change={(e) => updateConsumable('spell.school', e.currentTarget.value)}
-            />
-         </div>
-         <div class="stat-block">
-            <label for="spell-requirements">Треб. характеристика</label>
-            <input
-               id="spell-requirements"
-               type="text"
-               value={item.system.consumable.requirements.ability}
-               on:change={(e) => updateConsumable('requirements.ability', e.currentTarget.value)}
-            />
-         </div>
-         <div class="stat-block">
-            <label for="spell-difficulty">Сложность</label>
-            <input
-               id="spell-difficulty"
-               type="number"
-               min="0"
-               value={item.system.consumable.requirements.dc}
-               on:change={(e) => updateConsumable('requirements.dc', Number(e.currentTarget.value))}
-            />
-         </div>
-      </section>
+   <Scroll item={item} />
 
-
-   {:else if item.system.consumable.consumableType === 'poison'
+   {#if item.system.consumable.consumableType === 'poison'
       && item.system.consumable.damage !== undefined
       && item.system.consumable.save !== undefined}
       <section class="section-grid type-specific">

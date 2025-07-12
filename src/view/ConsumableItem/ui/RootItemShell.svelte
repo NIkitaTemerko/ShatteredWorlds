@@ -14,6 +14,7 @@
    import BasicStats from "./BasicStats.svelte";
    import UsesAndActivations from "./UsesAndActivations.svelte";
    import BombStats from "./BombStats.svelte";
+   import PotionsAndFood from "./PotionsAndFood.svelte";
 
 
    export let item: ShwItem;
@@ -104,117 +105,9 @@
    <!-- ===== TYPE‑SPECIFIC DETAILS ===== -->
    <BombStats item={item} />
 
+   <PotionsAndFood item={item} />
 
-   {#if item.system.consumable.consumableType === 'potion' || item.system.consumable.consumableType === 'food'}
-      <section class="section-grid fourth type-specific effects-section">
-         {#if item.system.consumable.consumableType === 'food' && item.system.consumable.nutrition !== undefined}
-            <div class="stat-block full header">
-               <h3>Пищевая ценность</h3>
-            </div>
-            <div class="stat-block full nutrition-section">
-               <div class="stat-block">
-                  <label for="nutrition-duration">Длительность насыщения</label>
-                  <input
-                     id="nutrition-duration"
-                     type="text"
-                     bind:value={item.system.consumable.nutrition.duration}
-                     on:change={(e) => updateConsumable('nutrition.duration', e)}
-                  />
-               </div>
-               <div class="stat-block">
-                  <label for="nutrition-duration">Сила насыщения</label>
-                  <input
-                     id="nutrition-duration"
-                     type="text"
-                     bind:value={item.system.consumable.nutrition.value}
-                     on:change={(e) => updateConsumable('nutrition.duration', e)}
-                  />
-               </div>
-            </div>
-         {/if}
-         <!-- заголовок на всю ширину -->
-         <div class="stat-block full header">
-            <h3>Эффекты</h3>
-            <button type="button" class="add-btn" on:click={addEffect}>+ Добавить эффект</button>
-         </div>
-
-         {#each getEffects() as eff, idx}
-            <!-- Тип эффекта -->
-            <div class="stat-block">
-               <label for="effect-type">{item.system.consumable.consumableType === 'potion' ? 'Тип' : 'Бонус'}</label>
-               {#if item.system.consumable.consumableType === 'potion'}
-                  <select
-                     id="effect-type"
-                     bind:value={eff.type}
-                     on:change={(e) => updateEffect(idx, 'type', e.currentTarget.value)}
-                  >
-                     {#each effectTypes as et}
-                        <option value={et.value}>{et.label}</option>
-                     {/each}
-                  </select>
-               {:else}
-                  <input
-                     id="effect-type"
-                     type="text"
-                     bind:value={eff.type}
-                     on:change={(e) => updateEffect(idx, 'type', e.currentTarget.value)}
-                  />
-               {/if}
-            </div>
-
-            <!-- Сила или Значение -->
-            <div class="stat-block">
-               <label for="effect-value">
-                  Сила
-               </label>
-               <input
-                  id="effect-value"
-                  type="number"
-                  min="0"
-                  value={item.system.consumable.consumableType === 'potion' ? eff.amount : eff.value}
-                  on:change={(e) => updateEffect(idx, item.system.consumable.consumableType === 'potion' ? 'amount' : 'value', Number(e.currentTarget.value))}
-               />
-            </div>
-
-            <!-- Длительность -->
-            <div class="stat-block">
-               <label for="effect-duration">Длительность</label>
-               <input
-                  id="effect-duration"
-                  type="number"
-                  min="1"
-                  bind:value={eff.duration}
-                  on:change={(e) => updateEffect(idx, 'duration', Number(e.currentTarget.value))}
-               />
-            </div>
-
-            <!-- Кнопка удаления -->
-            <div class="stat-block">
-               <button type="button" class="delete-btn" on:click={() => removeEffect(idx)}>×</button>
-            </div>
-
-            <!-- Атрибут только для зелья -->
-            {#if item.system.consumable.consumableType === 'potion'}
-               <div class="stat-block full">
-                  <label for="effect-attribute">Атрибут</label>
-                  <input
-                     id="effect-attribute"
-                     type="text"
-                     bind:value={eff.attribute}
-                     on:change={(e) => updateEffect(idx, 'attribute', e.currentTarget.value)}
-                  />
-               </div>
-            {/if}
-
-         {/each}
-      </section>
-
-
-
-
-
-
-   {:else if item.system.consumable.consumableType === 'scroll' &&
+   {#if item.system.consumable.consumableType === 'scroll' &&
    item.system.consumable?.spell !== undefined &&
    item.system.consumable?.requirements !== undefined}
       <section class="section-grid type-specific">

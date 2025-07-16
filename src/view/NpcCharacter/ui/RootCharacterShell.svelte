@@ -2,7 +2,7 @@
 import type { ShwActor } from '../../../documents/Actor/ShwActor';
 import CharacterAdditionalStats from './CharacterAdditionalStats.svelte';
 import CharacterStats from './CharacterStats.svelte';
-export let actor: ShwActor<'character'>;
+export let actor: ShwActor<'npc'>;
 
 function handleChange(event: CustomEvent) {
    const { value, path } = event.detail;

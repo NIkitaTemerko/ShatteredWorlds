@@ -1,44 +1,48 @@
 import { characterRoll } from '../../helpers/Character/characterRoll';
 import { prepareCharacterBaseData } from '../../helpers/Character/prepareCharacterBaseData';
 import { prepareCharacterDerivedData } from '../../helpers/Character/prepareCharacterDerivedData';
-import type { ShwActorSystem } from './types/ShwActorSystem';
+import { prepareNpcBaseData } from '../../helpers/Npc/prepareNpcBaseData';
+import { prepareNpcDerivedData } from '../../helpers/Npc/prepareNpcDerivedData';
+import type { ShwActorSystem, ShwNpcSystem } from './types/ShwActorSystem';
 
-// -----------------------------------------------------------------------
+type ActorKind = 'character' | 'npc'; // можно расширять
 
-export class ShwActor extends Actor {
-   declare system: ShwActorSystem;
-   declare type: 'character';
+type SystemByKind = {
+   character: ShwActorSystem;
+   npc: ShwNpcSystem;
+};
+
+export class ShwActor<K extends keyof SystemByKind = ActorKind> extends Actor {
+   declare type: K;
+   declare system: SystemByKind[K];
    declare update: (
       data?: object,
       operation?: Partial<Omit<foundry.abstract.types.DatabaseUpdateOperation, 'updates'>>,
    ) => Promise<undefined | foundry.abstract.Document<object, any>>;
 
-   /* ---------- базовые данные ---------- */
+   isCharacter(): this is ShwActor<'character'> {
+      return this.type === 'character';
+   }
+   isNpc(): this is ShwActor<'npc'> {
+      return this.type === 'npc';
+   }
+
    prepareBaseData(): void {
-      switch (this.type) {
-         /* единственный кейс — персонаж */
-         case 'character': {
-            prepareCharacterBaseData(this.system);
-            break;
-         }
-
-         /* другие типы — добавите позже */
-         // case 'npc': …
-         // case 'vehicle': …
+      if (this.isCharacter()) {
+         prepareCharacterBaseData(this.system);
+      } else if (this.isNpc()) {
+         prepareNpcBaseData(this.system);
       }
    }
 
-   /* ---------- производные данные ---------- */
    prepareDerivedData(): void {
-      switch (this.type) {
-         case 'character': {
-            prepareCharacterDerivedData(this.system);
-            break;
-         }
+      if (this.isCharacter()) {
+         prepareCharacterDerivedData(this.system);
+      } else if (this.isNpc()) {
+         prepareNpcDerivedData(this.system);
       }
    }
 
-   /* ---------- бросок характеристики / спасброска ---------- */
    async roll(
       key: keyof ShwActorSystem['attributes'],
       isSave = false,
@@ -46,7 +50,11 @@ export class ShwActor extends Actor {
    ) {
       switch (this.type) {
          case 'character': {
-            characterRoll(this, isSave, key, advantage);
+            await characterRoll(this, isSave, key, advantage);
+            break;
+         }
+         case 'npc': {
+            await characterRoll(this, isSave, key, advantage);
             break;
          }
       }

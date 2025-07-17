@@ -2,7 +2,7 @@
   "id": "shattered-worlds",
   "title": "Shattered Worlds",
   "description": "Shattered Worlds System",
-  "version": "0.10.6",
+  "version": "0.10.7",
   "authors": [
     {
       "name": "Nikita Temerko",
@@ -41,7 +41,7 @@
   "readme": "https://github.com/NIkitaTemerko/ShatteredWorlds/blob/master/README.md",
   "bugs": "https://github.com/NIkitaTemerko/ShatteredWorlds/issues",
   "manifest": "https://raw.githubusercontent.com/NIkitaTemerko/ShatteredWorlds/main/system.json",
-  "download": "https://github.com/NIkitaTemerko/ShatteredWorlds/releases/download/v0.10.6/shattered-worlds.zip",
+  "download": "https://github.com/NIkitaTemerko/ShatteredWorlds/releases/download/v0.10.7/shattered-worlds.zip",
   "protected": false,
   "coreTranslation": false,
   "library": false

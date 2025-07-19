@@ -18,11 +18,11 @@ let m: Record<string, Mode> = {
 };
 
 $: columns = [
-   { key: 'fortune', label: 'Фортуна', dark: '#f08c00', light: '#ffd580' },
-   { key: 'force', label: 'Напор', dark: '#d7263d', light: '#ff9aa5' },
-   { key: 'perception', label: 'Восприятие', dark: '#198754', light: '#80d9b3' },
-   { key: 'psyDefence', label: 'Пси‑защита', dark: '#8e44ad', light: '#c39bd3' },
-   { key: 'diplomacy', label: 'Дипломатия', dark: '#6c757d', light: '#dee2e6' },
+   {key: 'fortune', label: 'Фортуна', dark: '#f08c00', light: '#ffd580', hover: '#ffae40'},
+   {key: 'force', label: 'Напор', dark: '#d7263d', light: '#ff9aa5', hover: '#eb607f'},
+   {key: 'perception', label: 'Восприятие', dark: '#198754', light: '#80d9b3', hover: '#4db083'},
+   {key: 'psyDefence', label: 'Пси‑защита', dark: '#8e44ad', light: '#c39bd3', hover: '#a86fc0'},
+   {key: 'diplomacy', label: 'Дипломатия', dark: '#6c757d', light: '#dee2e6', hover: '#a5acb2'},
 ].map((c) => ({
    ...c,
    base: n((sys as any).attributes[c.key].value),
@@ -51,7 +51,7 @@ const roll = (k: string, isSave = false) => {
 
 <section class="stats-panel">
   {#each columns as col}
-    <div class="stat-col flexcol" style="--dark:{col.dark}; --light:{col.light};">
+    <div class="stat-col flexcol" style="--dark:{col.dark}; --light:{col.light}; --hover:{col.hover};">
       <div class="cell header">{col.label}</div>
       <div class="cell value"><input type="number" value={col.base} min="-999" max="999" on:change={(e)=>onChangeValue(col.key,e)} /></div>
 
@@ -103,6 +103,11 @@ const roll = (k: string, isSave = false) => {
   font-family:var(--font-primary);
   font-size:var(--font-size-14);
 }
+
+.cell:hover {
+   background: var(--hover);
+}
+
 .header,.subheader{
   background:var(--dark);
   color:#000;
@@ -126,6 +131,7 @@ const roll = (k: string, isSave = false) => {
   padding: 0;
 }
 .roll{
+   --color-shadow-primary: transparent;
   flex:1 1 0;
   border:none;
   border-radius:0;
@@ -136,8 +142,13 @@ const roll = (k: string, isSave = false) => {
   background-color: var(--dark);
   margin: 0;
 }
+
+.roll:hover{
+   background: var(--hover);
+}
 /* колонка переключателя */
 .switch{
+   --color-shadow-primary: transparent;
   display:flex;
   flex-direction:column;
   flex:1 1 0;
@@ -145,6 +156,8 @@ const roll = (k: string, isSave = false) => {
   margin-left: -1px;
 }
 .switch button{
+   --color-shadow-primary: transparent;
+   outline: none;
   border:none;
   border-radius:0;
   padding:0.15rem;
@@ -155,6 +168,19 @@ const roll = (k: string, isSave = false) => {
   line-height:1;
   width: 100%;
 }
+.switch button:hover{
+   background: var(--hover);
+}
+
+.switch button.active{
+   box-shadow: none;
+   background:var(--dark);
+}
+
+.switch button.active:hover{
+   background: var(--hover);
+}
+
 @media (max-width:900px){
   .stats-panel{
     flex-wrap:wrap;

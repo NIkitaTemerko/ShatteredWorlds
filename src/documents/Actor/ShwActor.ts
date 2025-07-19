@@ -15,6 +15,7 @@ type SystemByKind = {
 export class ShwActor<K extends keyof SystemByKind = ActorKind> extends Actor {
    declare type: K;
    declare system: SystemByKind[K];
+   declare items: Item[];
    declare update: (
       data?: object,
       operation?: Partial<Omit<foundry.abstract.types.DatabaseUpdateOperation, 'updates'>>,

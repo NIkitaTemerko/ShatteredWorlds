@@ -48,14 +48,17 @@ export class ShwActor<K extends keyof SystemByKind = ActorKind> extends Actor {
       key: keyof ShwActorSystem['attributes'],
       isSave = false,
       advantage: 'adv' | 'dis' | 'normal' = 'normal',
+      rolValue?: number,
+      bonus?: number,
+      cubes?: number,
    ) {
       switch (this.type) {
          case 'character': {
-            await characterRoll(this, isSave, key, advantage);
+            await characterRoll(this, isSave, key, advantage, rolValue, bonus, cubes);
             break;
          }
          case 'npc': {
-            await characterRoll(this, isSave, key, advantage);
+            await characterRoll(this, isSave, key, advantage, rolValue, bonus, cubes);
             break;
          }
       }

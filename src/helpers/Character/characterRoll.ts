@@ -12,17 +12,36 @@ const STAT_NAMES = {
 export async function characterRoll(
    actor: ShwActor,
    isSave: boolean,
-   key: keyof ShwActorSystem['attributes'],
+   key: keyof ShwActorSystem['attributes'] | 'natural' = 'natural',
    advantage: 'adv' | 'dis' | 'normal' = 'normal',
+   rollValue: number = 20,
+   bonus?: number,
+   cubes?: number,
 ) {
+   const core =
+      advantage === 'adv'
+         ? `${cubes ?? 2}d${rollValue}kh1`
+         : advantage === 'dis'
+           ? `${cubes ?? 2}d${rollValue}kl1`
+           : `${cubes ?? 1}d${rollValue}`;
+   if (key === 'natural') {
+      const roll = bonus
+         ? await new Roll(`${core} + ${bonus}`).evaluate({ async: false })
+         : await new Roll(`${core}`).evaluate({ async: false });
+      await roll.toMessage({
+         speaker: ChatMessage.getSpeaker({ actor }),
+         flavor: `Натуральный бросок ${
+            advantage === 'adv' ? ' с преимуществом' : advantage === 'dis' ? ' с помехой' : ''
+         }`,
+      });
+      return;
+   }
    const mod = isSave
       ? actor.system.attributes[key].saveBonus
       : actor.system.attributes[key].charBonus;
 
-   const core = advantage === 'adv' ? '2d20kh1' : advantage === 'dis' ? '2d20kl1' : '1d20';
-
    const roll = await new Roll(`${core}+${mod}`).evaluate({ async: false });
-   roll.toMessage({
+   await roll.toMessage({
       speaker: ChatMessage.getSpeaker({ actor }),
       flavor: `${isSave ? 'Спас б' : 'Б'}росок ${STAT_NAMES[key]} ${
          advantage === 'adv' ? ' с преимуществом' : advantage === 'dis' ? ' с помехой' : ''

@@ -23,3 +23,10 @@ Hooks.once('setup', () => {
    Actors.registerSheet('shw', NpcApp, { types: ['npc'], makeDefault: true });
    Items.registerSheet('shw', ConsumableItemApp, { types: ['consumable'], makeDefault: true });
 });
+
+Hooks.on('preCreateToken', (tokenDocument: any, tokenData: any) => {
+   const actor = (game as any).actors.get(tokenData.actorId);
+   if (actor?.type === 'character') {
+      tokenDocument.updateSource({ actorLink: true });
+   }
+});

@@ -19,7 +19,7 @@
           <progress
             class="hp-bar"
             value="{{actor.system.health.value}}"
-            max="{{actor.system.health.max}}"
+            max="{{actor.system.helpers.totalHealth}}"
           ></progress>
           <span class="hp-label">
             <input
@@ -44,6 +44,25 @@
             />
             <span>({{actor.system.helpers.totalHealth}})</span>
           </span>
+          <div class="hp-damage-wrapper">
+            <i
+              class="fas fa-sword damage-icon"
+              data-action="apply-damage"
+              title="Применить урон"
+            ></i>
+            <input
+              class="damage-input"
+              type="number"
+              min="0"
+              value="0"
+              style="width:3rem;text-align:right;"
+            />
+            <i
+              class="fas fa-shield-alt shield-icon active"
+              data-action="toggle-defense"
+              title="Учитывать защиту"
+            ></i>
+          </div>
         </div>
         <div class="speed-wrapper">
           <span>Скорость:</span>
@@ -174,5 +193,33 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+  }
+
+  .hp-damage-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-left: 0.5rem;
+  }
+
+  .damage-icon {
+    cursor: pointer;
+    font-size: var(--font-size-14);
+    line-height: 1;
+    transform: rotate(-135deg);
+  }
+
+  .damage-icon:hover {
+    color: #d7263d; /* подчёркиваем действие */
+  }
+
+  .shield-icon {
+    cursor: pointer;
+    font-size: var(--font-size-14);
+    line-height: 1;
+  }
+
+  .shield-icon.active {
+    color: #d7263d;
   }
 </style>

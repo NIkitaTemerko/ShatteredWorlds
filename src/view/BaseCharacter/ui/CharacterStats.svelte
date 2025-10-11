@@ -107,7 +107,7 @@ const roll = (k: string, isSave = false, natValue?: number, bonus?: number, cube
          </div>
          <div class="roll-value">
             <label>
-               Кубы
+               Действия
                <input type="number" bind:value={cubes} min="0" max="999" />
             </label>
          </div>

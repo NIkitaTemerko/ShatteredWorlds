@@ -93,6 +93,7 @@ const roll = (k: string, isSave = false) => {
 <style>
 .stats-panel{
   display:flex;
+  flex-direction: column;
   gap:2px;
   padding:2px;
   background:var(--color-border-light-3);

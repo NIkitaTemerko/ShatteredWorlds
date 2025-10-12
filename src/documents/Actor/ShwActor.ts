@@ -45,20 +45,20 @@ export class ShwActor<K extends keyof SystemByKind = ActorKind> extends Actor {
    }
 
    async roll(
-      key: keyof ShwActorSystem['attributes'],
+      key: keyof ShwActorSystem['attributes'] | 'natural' = 'natural',
       isSave = false,
       advantage: 'adv' | 'dis' | 'normal' = 'normal',
       rolValue?: number,
       bonus?: number,
-      cubes?: number,
+      actions?: number,
    ) {
       switch (this.type) {
          case 'character': {
-            await characterRoll(this, isSave, key, advantage, rolValue, bonus, cubes);
+            await characterRoll(this, isSave, key, advantage, rolValue, bonus, actions);
             break;
          }
          case 'npc': {
-            await characterRoll(this, isSave, key, advantage, rolValue, bonus, cubes);
+            await characterRoll(this, isSave, key, advantage, rolValue, bonus, actions);
             break;
          }
       }

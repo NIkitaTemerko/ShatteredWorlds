@@ -11,5 +11,5 @@ tab_width = 2
 trim_trailing_whitespace = true
 
 [{*.cjs,*.js,*.mjs,*.svelte,*.ts}]
-indent_size = 3
-tab_width = 3
+indent_size = 2
+tab_width = 2

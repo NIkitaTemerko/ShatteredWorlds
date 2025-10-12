@@ -45,7 +45,7 @@ export async function characterRoll(
 
   const mod = getBonus(actor, key, isSave);
 
-  const expr = bonus ? `${core} + ${bonus} + ${mod}` : `${core} + ${mod}`;
+  const expr = `${core}${bonus ? ` + ${bonus}` : ''}${mod ? ` + ${mod}` : ''}`;
   const count = Number(actions ?? 1);
 
   // формируем формулу: одиночный бросок или пул { expr, expr, ... }

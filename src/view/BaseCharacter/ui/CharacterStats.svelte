@@ -1,6 +1,5 @@
 <script lang="ts">
 import type { ShwActor } from '../../../documents/Actor/ShwActor';
-import type {ShwActorSystem} from "../../../documents/Actor/types/ShwActorSystem";
 export let actor: ShwActor;
 
 const sys = actor.system;
@@ -20,12 +19,6 @@ const tabs: Array<{ id: RollType; label: string; colors: { dark: string; light: 
   {id: 'psyDefence', label: 'Пси‑защита', colors: {dark: '#8e44ad', light: '#c39bd3', hover: '#a86fc0'}},
   {id: 'diplomacy', label: 'Дипломатия', colors: {dark: '#6c757d', light: '#dee2e6', hover: '#a5acb2'}},
 ];
-
-const naturalColors = {
-   dark: '#3498db',
-   light: '#87ceeb',
-   hover: '#5dade2'
-};
 
 $: columns = [
    {key: 'fortune', label: 'Фортуна', dark: '#f08c00', light: '#ffd580', hover: '#ffae40'},

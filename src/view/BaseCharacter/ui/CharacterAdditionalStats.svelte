@@ -1,20 +1,8 @@
 <script lang="ts" context="module">
+  import type {ShwActorSystem} from "../../../documents/Actor/types/ShwActorSystem";
+
   /** Тип данных для блока характеристик */
-  export interface Stats {
-    actions: number;
-    bonusActions: number;
-    reactions: number;
-
-    impulse: number;
-    damage: string | number;
-    range: number;
-    discount: string | number;
-
-    initiative: number;
-    damageReduction: number;
-    armorClass: number;
-    aoeResist: string | number;
-  }
+  export type Stats = ShwActorSystem['additionalAttributes'];
 
   export interface Helpers {
     totalImpulse: number;
@@ -28,13 +16,12 @@
     bonusActions: "Бонусные действия",
     reactions: "Реакции",
     impulse: "Импульс",
-    damage: "Урон",
+    additionalCloseCombatDamage: "Урон вблизи",
+    additionalRangeDamage: 'Урон на расстоянии',
     range: "Дальность",
-    discount: "Скидка",
     initiative: "Инициатива",
     damageReduction: "Поглощение урона",
     armorClass: "Защита",
-    aoeResist: "Защита от AOE",
   };
 
   /** Иконки (Font Awesome / Foundry) */
@@ -43,13 +30,12 @@
     bonusActions: "fas fa-plus-circle",
     reactions: "fas fa-bolt",
     impulse: "fas fa-forward",
-    damage: "fas fa-sword",
+    additionalCloseCombatDamage: "fas fa-sword",
+    additionalRangeDamage: "fas fa-crosshairs",
     range: "fas fa-bullseye",
-    discount: "fas fa-tags",
     initiative: "fas fa-dice-six",
     damageReduction: "fas fa-shield-alt",
     armorClass: "fas fa-shield",
-    aoeResist: "fas fa-shield-virus",
   };
 
   /** Цвета иконок */
@@ -58,13 +44,12 @@
     bonusActions: "#0d6efd",    // blue
     reactions: "#dc3545",       // red
     impulse: "#fd7e14",         // orange
-    damage: "#dc3545",          // red
+    additionalCloseCombatDamage: "#dc3545",          // red
     range: "#198754",           // green
-    discount: "#ffc107",        // yellow
     initiative: "#6f42c1",      // purple
     damageReduction: "#6f42c1", // purple
     armorClass: "#6c757d",      // gray
-    aoeResist: "#fd7e14",       // orange
+    additionalRangeDamage: "#fd7e14",       // orange
   };
 </script>
 
@@ -128,11 +113,7 @@
           <span>({totalImpulse})</span>
         {/if}
       {:else}
-        {#if key === "discount" || key === "aoeResist"}
-          <span class="value">{value} %</span>
-        {:else}
           <span class="value">{value}</span>
-        {/if}
       {/if}
     </div>
   {/each}

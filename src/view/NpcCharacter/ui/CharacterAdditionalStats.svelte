@@ -1,31 +1,10 @@
 <script lang="ts" context="module">
+  import type {ShwActorSystem, ShwNpcSystem} from "../../../documents/Actor/types/ShwActorSystem";
+
   /** Тип данных для блока характеристик */
-  export interface Stats {
-    actions: number;
-    bonusActions: number;
-    reactions: number;
+  export type Stats = ShwActorSystem["additionalAttributes"];
 
-    impulse: number;
-    damage: string | number;
-    range: number;
-    discount: string | number;
-
-    initiative: number;
-    damageReduction: number;
-    armorClass: number;
-    aoeResist: string | number;
-  }
-
-  export interface Helpers {
-    totalImpulse: number;
-    totalHealth: number;
-    totalSpeed: number;
-    totalDamage: number;
-    totalDamageReduction: number;
-    totalAoeResist: number;
-    totalRange: number;
-    totalDiscount: number;
-  }
+  export type Helpers = ShwNpcSystem["helpers"];
 
   /** Подписи */
   export const LABELS: Record<keyof Stats, string> = {
@@ -33,13 +12,12 @@
     bonusActions: "Бонусные действия",
     reactions: "Реакции",
     impulse: "Импульс",
-    damage: "Урон",
+    additionalCloseCombatDamage: "Урон",
+    additionalRangeDamage: 'Урон на расстоянии',
     range: "Дальность",
-    discount: "Скидка",
     initiative: "Инициатива",
     damageReduction: "Поглощение урона",
     armorClass: "Защита",
-    aoeResist: "Защита от AOE",
   };
 
   /** Иконки (Font Awesome / Foundry) */
@@ -48,13 +26,12 @@
     bonusActions: "fas fa-plus-circle",
     reactions: "fas fa-bolt",
     impulse: "fas fa-forward",
-    damage: "fas fa-sword",
+    additionalCloseCombatDamage: "fas fa-sword",
+    additionalRangeDamage: "fas fa-crosshairs",
     range: "fas fa-bullseye",
-    discount: "fas fa-tags",
     initiative: "fas fa-dice-six",
     damageReduction: "fas fa-shield-alt",
     armorClass: "fas fa-shield",
-    aoeResist: "fas fa-shield-virus",
   };
 
   /** Цвета иконок */
@@ -63,13 +40,12 @@
     bonusActions: "#0d6efd",    // blue
     reactions: "#dc3545",       // red
     impulse: "#fd7e14",         // orange
-    damage: "#dc3545",          // red
+    additionalCloseCombatDamage: "#dc3545",          // red
     range: "#198754",           // green
-    discount: "#ffc107",        // yellow
     initiative: "#6f42c1",      // purple
     damageReduction: "#6f42c1", // purple
     armorClass: "#6c757d",      // gray
-    aoeResist: "#fd7e14",       // orange
+    additionalRangeDamage: "#fd7e14",       // orange
   };
 </script>
 
@@ -91,6 +67,9 @@
     dispatch("change", { key, value, path, stats });
   }
 
+  console.log(stats);
+  console.log(helpers);
+
   // пересчитывать при изменении stats
   $: allEntries = Object.entries(stats) as Array<[
     keyof Stats,
@@ -99,11 +78,8 @@
   $: orderedEntries = allEntries;
   $: helpersMap = {
      impulse: helpers.totalImpulse,
-     damage: helpers.totalDamage,
      range: helpers.totalRange,
-     discount: helpers.totalDiscount,
      damageReduction: helpers.totalDamageReduction,
-     aoeResist: helpers.totalAoeResist,
   };
 </script>
 
@@ -123,7 +99,7 @@
        value={value}
        on:change={(e) => handleChange(key, e)}
      />
-     {#if key === "impulse" || key === "damage" || key === "range" || key === "discount" || key === "damageReduction" || key === "aoeResist"}
+     {#if key === "impulse" || key === "range" || key === "damageReduction"}
        <span>({helpersMap[key]})</span>
      {/if}
     </div>

@@ -33,7 +33,7 @@ function updateHelpers(
   sys: ShwActorSystem,
   addAttrMap: ReturnType<typeof calculateAdditionalAttributes>,
 ): void {
-  sys.helpers.totalImpulse += addAttrMap.impulse += sys.additionalAttributes.impulse;
+  sys.helpers.totalImpulse += addAttrMap.impulse + sys.additionalAttributes.impulse;
   sys.helpers.totalHealth += sys.health.max;
   sys.helpers.totalSpeed += sys.utility.speed;
 }
@@ -47,7 +47,7 @@ export function prepareCharacterDerivedData(sys: ShwActorSystem) {
   updateHelpers(sys, addAttrMap);
 
   for (const k of ADDITIONAL_KEYS) {
-    if (k in addAttrMap && k in sys.additionalAttributes) {
+    if (k in addAttrMap && k in sys.additionalAttributes && k !== 'impulse') {
       sys.additionalAttributes[k] += (addAttrMap as any)[k];
     }
   }

@@ -17,7 +17,6 @@ export const ADDITIONAL_KEYS: (keyof ShwActorSystem['additionalAttributes'])[] =
   'additionalCloseCombatDamage',
   'additionalRangeDamage',
   'range',
-  'discount',
   'damageReduction',
   'armorClass',
 ] as const;

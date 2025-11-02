@@ -16,7 +16,6 @@ export interface ShwActorSystem {
     additionalCloseCombatDamage: number;
     additionalRangeDamage: number;
     range: number;
-    discount: number;
     damageReduction: number;
     armorClass: number;
   };
@@ -58,7 +57,6 @@ export interface ShwNpcSystem {
     additionalCloseCombatDamage: number;
     additionalRangeDamage: number;
     range: number;
-    discount: number;
     damageReduction: number;
     armorClass: number;
   };
@@ -72,8 +70,6 @@ export interface ShwNpcSystem {
     totalSpeed: number;
     totalDamage: number;
     totalDamageReduction: number;
-    totalAoeResist: number;
     totalRange: number;
-    totalDiscount: number;
   };
 }

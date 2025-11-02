@@ -14,6 +14,9 @@ export function prepareNpcDerivedData(sys: ShwNpcSystem) {
     impulse: attrs?.force.value >= ATTR_RIM ? 1 : 0,
   };
 
+  console.log('before', sys.helpers.totalRange);
+  console.log('before', add.range);
+
   sys.helpers.totalImpulse += addAttrMap.impulse + add.impulse;
   sys.helpers.totalHealth += sys.health.max;
   sys.helpers.totalSpeed += sys.utility.speed;
@@ -23,8 +26,10 @@ export function prepareNpcDerivedData(sys: ShwNpcSystem) {
     Math.floor(sys.attributes.psyDefence.extra / 3);
   sys.helpers.totalRange += add.range;
 
+  console.log('after', sys.helpers.totalRange);
+
   for (const k of ADDITIONAL_KEYS) {
-    if (k === 'damageReduction') {
+    if (k === 'damageReduction' || k === 'impulse') {
       continue;
     }
     if (k in addAttrMap && k in sys.additionalAttributes) {

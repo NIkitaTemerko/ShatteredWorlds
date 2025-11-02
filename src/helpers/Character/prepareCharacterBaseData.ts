@@ -18,7 +18,6 @@ const emptyAdditionalMap: ShwActorSystem['additionalAttributes'] = {
   impulse: 0,
   initiative: 0,
   range: 0,
-  discount: 0,
   damageReduction: 0,
   armorClass: 0,
   additionalCloseCombatDamage: 0,

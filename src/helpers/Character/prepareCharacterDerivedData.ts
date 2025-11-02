@@ -1,47 +1,56 @@
 import type { ShwActorSystem } from '../../documents/Actor/types/ShwActorSystem';
+import { ADDITIONAL_KEYS, ATTR_RIM, STAT_KEYS } from '../constants';
 
-const STAT_KEYS = ['fortune', 'force', 'perception', 'psyDefence', 'diplomacy'] as const;
-const ADDITIONAL_KEYS = ['damageReduction', 'range', 'discount', 'damage', 'aoeResist'] as const;
+function calculateAdditionalAttributes(
+  attrs: ShwActorSystem['attributes'],
+  isLevelAboveFive: boolean,
+): Pick<
+  ShwActorSystem['additionalAttributes'],
+  | 'damageReduction'
+  | 'additionalRangeDamage'
+  | 'armorClass'
+  | 'additionalCloseCombatDamage'
+  | 'impulse'
+> {
+  return {
+    damageReduction: isLevelAboveFive ? attrs.psyDefence.value : 0,
+    additionalRangeDamage: isLevelAboveFive ? attrs.perception.value : 0,
+    armorClass: isLevelAboveFive ? attrs.diplomacy.value : 0,
+    additionalCloseCombatDamage: isLevelAboveFive ? attrs.force.value : 0,
+    impulse: attrs?.force.value >= ATTR_RIM ? 1 : 0,
+  };
+}
+
+function updateAttributeBonuses(attrs: ShwActorSystem['attributes']): void {
+  for (const k of STAT_KEYS) {
+    const a = attrs[k];
+    a.charBonus = Math.floor(a.value / 5);
+    a.saveBonus = Math.floor(a.value / 5);
+  }
+}
+
+function updateHelpers(
+  sys: ShwActorSystem,
+  addAttrMap: ReturnType<typeof calculateAdditionalAttributes>,
+): void {
+  sys.helpers.totalImpulse += addAttrMap.impulse += sys.additionalAttributes.impulse;
+  sys.helpers.totalHealth += sys.health.max;
+  sys.helpers.totalSpeed += sys.utility.speed;
+}
 
 export function prepareCharacterDerivedData(sys: ShwActorSystem) {
-   const attrs = sys.attributes;
-   const add = sys.additionalAttributes;
+  const attrs = sys.attributes;
+  const isLevelAboveFive = sys.utility.level >= 5;
 
-   const addAttrMap = {
-      health: attrs?.psyDefence.value >= 15 ? 15 : 0,
-      damageReduction: attrs?.psyDefence.value >= 25 ? 5 : 0,
-      speed: attrs?.perception.value >= 15 ? 5 : 0,
-      range: attrs?.perception.value >= 25 ? 2 : 0,
-      discount: attrs?.diplomacy.value >= 15 ? 5 : 0,
-      damage: attrs?.force.value >= 25 ? 15 : attrs?.force.value >= 15 ? 5 : 0,
-      aoeResist: attrs?.fortune.value >= 15 ? 15 : 0,
-      impulse: attrs?.force.value >= 25 ? 3 : attrs?.force.value >= 15 ? 1 : 0,
-   };
+  const addAttrMap = calculateAdditionalAttributes(attrs, isLevelAboveFive);
 
-   const bonusMap = {
-      diplomacy: attrs?.diplomacy.value >= 25 ? 1 : 0,
-   } as const;
+  updateHelpers(sys, addAttrMap);
 
-   const saveMap = {
-      fortune: (attrs?.fortune.value >= 25 ? 1 : 0) + (attrs?.force.value >= 25 ? 1 : 0),
-      force: attrs?.force.value >= 25 ? 1 : 0,
-      perception: attrs?.force.value >= 25 ? 1 : 0,
-      psyDefence: attrs?.force.value >= 25 ? 1 : 0,
-      diplomacy: attrs?.force.value >= 25 ? 1 : 0,
-   };
+  for (const k of ADDITIONAL_KEYS) {
+    if (k in addAttrMap && k in sys.additionalAttributes) {
+      sys.additionalAttributes[k] += (addAttrMap as any)[k];
+    }
+  }
 
-   sys.helpers.totalImpulse += addAttrMap.impulse += add.impulse;
-   sys.helpers.totalHealth += addAttrMap.health += sys.health.max;
-   sys.helpers.totalSpeed += addAttrMap.speed += sys.utility.speed;
-
-   for (const k of ADDITIONAL_KEYS) {
-      sys.additionalAttributes[k] += addAttrMap[k];
-   }
-
-   for (const k of STAT_KEYS) {
-      const a = attrs[k];
-      a.charBonus =
-         Math.floor(a.value / 5) + (k in bonusMap ? bonusMap[k as keyof typeof bonusMap] : 0);
-      a.saveBonus = Math.floor(a.value / 5) + saveMap[k];
-   }
+  updateAttributeBonuses(attrs);
 }

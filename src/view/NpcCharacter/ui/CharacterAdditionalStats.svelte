@@ -12,7 +12,7 @@
     bonusActions: "Бонусные действия",
     reactions: "Реакции",
     impulse: "Импульс",
-    additionalCloseCombatDamage: "Урон",
+    additionalCloseCombatDamage: "Урон в близи",
     additionalRangeDamage: 'Урон на расстоянии',
     range: "Дальность",
     initiative: "Инициатива",
@@ -67,15 +67,12 @@
     dispatch("change", { key, value, path, stats });
   }
 
-  console.log(stats);
-  console.log(helpers);
-
   // пересчитывать при изменении stats
   $: allEntries = Object.entries(stats) as Array<[
     keyof Stats,
     Stats[keyof Stats]
   ]>;
-  $: orderedEntries = allEntries;
+  $: orderedEntries = allEntries.filter(([key]) => key !== "additionalCloseCombatDamage" && key !== "additionalRangeDamage");
   $: helpersMap = {
      impulse: helpers.totalImpulse,
      range: helpers.totalRange,

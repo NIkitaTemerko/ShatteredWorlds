@@ -93,7 +93,7 @@
 </script>
 
 <!-- GRID 4×N Плитки -->
-<div class="stats-grid">
+<div class="stats-grid bg-red">
   {#each orderedEntries as [key, value]}
     <div
       class="stat-tile {isEditable(key) ? 'editable' : 'readonly'}"

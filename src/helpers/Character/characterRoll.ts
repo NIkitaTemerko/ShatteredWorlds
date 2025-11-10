@@ -51,7 +51,7 @@ export async function characterRoll(
   // формируем формулу: одиночный бросок или пул { expr, expr, ... }
   const formula = count > 1 ? `{ ${Array.from({ length: count }, () => expr).join(', ')} }` : expr;
 
-  const roll = await new Roll(formula).evaluate({ async: false });
+  const roll = await new Roll(formula).evaluate({});
 
   // достаём тоталы под-роллов пула (adv/dis уже учтены внутри total)
   let results: number[];
@@ -72,7 +72,7 @@ export async function characterRoll(
   if (totalEl) totalEl.textContent = results.join(', ');
 
   await (ChatMessage as any).create({
-    speaker: ChatMessage.getSpeaker({ actor }),
+    speaker: ChatMessage.getSpeaker({}),
     flavor: `${isSave ? 'Спасб' : 'Б'}росок ${STAT_NAMES[key]}${bonus ? ` +${bonus}` : ''}${
       advantage === 'adv' ? ' с преимуществом' : advantage === 'dis' ? ' с помехой' : ''
     }${count > 1 ? ` ×${count}` : ''}`,

@@ -9,24 +9,26 @@ import { NpcApp } from './view/NpcCharacter/NpcApp';
 (globalThis as any).MIN_WINDOW_WIDTH = 200;
 
 Hooks.once('init', () => {
-   CONFIG.Actor.documentClass = ShwActor;
-   CONFIG.Item.documentClass = ShwItem;
-   CONFIG.Token.documentClass = ShwTokenDocument;
-   CONFIG.Combat.initiative = {
-      formula: '1d20 + @initiative',
-      decimals: 0,
-   };
+  //@ts-ignore
+  CONFIG.Actor.documentClass = ShwActor;
+  //@ts-ignore
+  CONFIG.Item.documentClass = ShwItem;
+  CONFIG.Token.documentClass = ShwTokenDocument;
+  CONFIG.Combat.initiative = {
+    formula: '1d20 + @initiative',
+    decimals: 0,
+  };
 });
 
 Hooks.once('setup', () => {
-   Actors.registerSheet('shw', CharacterApp, { types: ['character'], makeDefault: true });
-   Actors.registerSheet('shw', NpcApp, { types: ['npc'], makeDefault: true });
-   Items.registerSheet('shw', ConsumableItemApp, { types: ['consumable'], makeDefault: true });
+  Actors.registerSheet('shw', CharacterApp, { types: ['character'], makeDefault: true });
+  Actors.registerSheet('shw', NpcApp, { types: ['npc'], makeDefault: true });
+  Items.registerSheet('shw', ConsumableItemApp, { types: ['consumable'], makeDefault: true });
 });
 
 Hooks.on('preCreateToken', (tokenDocument: any, tokenData: any) => {
-   const actor = (game as any).actors.get(tokenData.actorId);
-   if (actor?.type === 'character') {
-      tokenDocument.updateSource({ actorLink: true });
-   }
+  const actor = (game as any).actors.get(tokenData.actorId);
+  if (actor?.type === 'character') {
+    tokenDocument.updateSource({ actorLink: true });
+  }
 });

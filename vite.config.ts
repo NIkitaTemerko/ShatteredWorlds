@@ -1,12 +1,11 @@
 /* eslint-env node */
-import {svelte} from '@sveltejs/vite-plugin-svelte';
-
-import {sveltePreprocess} from 'svelte-preprocess';
-
-import {postcssConfig} from './postcssConfig';
-import moduleJSON from './system.json';
-import {terserConfig} from './terserConfig';
+import { svelte } from '@sveltejs/vite-plugin-svelte';
 import tailwind from '@tailwindcss/vite';
+import copy from 'rollup-plugin-copy';
+import { sveltePreprocess } from 'svelte-preprocess';
+import { postcssConfig } from './postcssConfig';
+import moduleJSON from './system.json';
+import { terserConfig } from './terserConfig';
 
 // ATTENTION!
 // Please modify the below variables: s_PACKAGE_ID and s_SVELTE_HASH_ID appropriately.
@@ -21,7 +20,7 @@ const s_SVELTE_HASH_ID = 'sw';
 const s_COMPRESS = false; // Set to true to compress the module bundle.
 const s_SOURCEMAPS = true; // Generate sourcemaps for the bundle (recommended).
 
-export default ({mode}) => {
+export default ({ mode }) => {
   // Provides a custom hash adding the string defined in `s_SVELTE_HASH_ID` to scoped Svelte styles;
   // This is reasonable to do as the framework styles in TRL compiled across `n` different packages will
   // be the same. Slightly modifying the hash ensures that your package has uniquely scoped styles for all
@@ -29,8 +28,8 @@ export default ({mode}) => {
   const compilerOptions =
     mode === 'production'
       ? {
-        cssHash: ({hash, css}) => `svelte-${s_SVELTE_HASH_ID}-${hash(css)}`,
-      }
+          cssHash: ({ hash, css }) => `svelte-${s_SVELTE_HASH_ID}-${hash(css)}`,
+        }
       : {};
 
   /** @type {import('vite').UserConfig} */
@@ -50,7 +49,7 @@ export default ({mode}) => {
 
     css: {
       // Creates a standard configuration for PostCSS with autoprefixer & postcss-preset-env.
-      postcss: postcssConfig({compress: s_COMPRESS, sourceMap: s_SOURCEMAPS}),
+      postcss: postcssConfig({ compress: s_COMPRESS, sourceMap: s_SOURCEMAPS }),
     },
 
     // About server options:
@@ -80,7 +79,7 @@ export default ({mode}) => {
         },
 
         // Enable socket.io from main Foundry server.
-        '/socket.io': {target: 'ws://localhost:30000', ws: true},
+        '/socket.io': { target: 'ws://localhost:30000', ws: true },
       },
     },
 
@@ -91,7 +90,7 @@ export default ({mode}) => {
       brotliSize: true,
       minify: s_COMPRESS ? 'terser' : false,
       target: ['es2022'],
-      terserOptions: s_COMPRESS ? {...terserConfig(), ecma: 2022} : void 0,
+      terserOptions: s_COMPRESS ? { ...terserConfig(), ecma: 2022 } : void 0,
       lib: {
         entry: './index.ts',
         formats: ['es'],
@@ -103,6 +102,13 @@ export default ({mode}) => {
           assetFileNames: (assetInfo) =>
             assetInfo.name === 'style.css' ? `${moduleJSON.id}.css` : assetInfo.name,
         },
+        plugins: [
+          // ← Копируем всё из ../public в ../dist/assets
+          copy({
+            hook: 'writeBundle',
+            targets: [{ src: './public/assets/*', dest: './dist/assets' }],
+          }),
+        ],
       },
     },
 
@@ -118,7 +124,7 @@ export default ({mode}) => {
         compilerOptions,
         preprocess: sveltePreprocess(),
       }),
-      tailwind()
+      tailwind(),
     ],
   };
 };

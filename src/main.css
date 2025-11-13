@@ -1,2 +1,18 @@
 @import "tailwindcss/utilities.css" prefix(tw);
 @import "tailwindcss/theme.css" prefix(tw);
+
+:root{
+  --actor-bg: url("https://grizly.club/uploads/posts/2023-01/1673341678_grizly-club-p-besshovnaya-tekstura-metalla-so-rzhavchino-1.jpg");
+  --actor-bg-size: 1024px;
+}
+
+/* окно твоего листа */
+.app.window-app.sheet.character.shw .window-content{
+  background: var(--actor-bg) center/var(--actor-bg-size) var(--actor-bg-size) repeat !important;
+  border-radius: 8px;
+}
+
+/* если внутри что-то заливает фон */
+.app.window-app.sheet.character.shw .window-content > *{
+  background: transparent !important;
+}

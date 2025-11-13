@@ -6,8 +6,7 @@
 		"moduleResolution": "Bundler",
 		"types": [
 			"svelte",
-			"@league-of-foundry-developers/foundry-vtt-types",
-			"@typhonjs-fvtt/runtime/types/fvtt-shim/league"
+			"@league-of-foundry-developers/foundry-vtt-types"
 		],
 		"strict": true,
 		"sourceMap": true,

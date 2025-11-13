@@ -1,21 +1,8 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
   "files": {
-    "includes": ["**/*.{js,ts,hbs,html,css}"],
+    "includes": ["**/*.{js,ts,hbs,html}"],
     "ignoreUnknown": true
-  },
-  "css": {
-    "formatter": {
-      "enabled": true,
-      "indentWidth": 2
-    },
-    "linter": {
-      "enabled": true
-    },
-    "parser": {
-      "allowWrongLineComments": true,
-      "cssModules": true
-    }
   },
   "formatter": {
     "useEditorconfig": true,

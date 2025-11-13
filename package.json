@@ -21,7 +21,6 @@
     "@tsconfig/svelte": "^4.0.1",
     "autoprefixer": "^10.4.21",
     "postcss-preset-env": "^10.4.0",
-    "rollup-plugin-copy": "^3.5.0",
     "svelte": "^5.43.2",
     "svelte-preprocess": "^6.0.3",
     "tailwindcss": "^4.1.17",

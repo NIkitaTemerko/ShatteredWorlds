@@ -72,7 +72,9 @@ export async function characterRoll(
   if (totalEl) totalEl.textContent = results.join(', ');
 
   await (ChatMessage as any).create({
-    speaker: ChatMessage.getSpeaker({}),
+    speaker: ChatMessage.getSpeaker({
+      actor: actor as unknown as Actor<'base' | foundry.abstract.Document.ModuleSubType>,
+    }),
     flavor: `${isSave ? 'Спасб' : 'Б'}росок ${STAT_NAMES[key]}${bonus ? ` +${bonus}` : ''}${
       advantage === 'adv' ? ' с преимуществом' : advantage === 'dis' ? ' с помехой' : ''
     }${count > 1 ? ` ×${count}` : ''}`,

@@ -1,7 +1,6 @@
 /* eslint-env node */
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import tailwind from '@tailwindcss/vite';
-import copy from 'rollup-plugin-copy';
 import { sveltePreprocess } from 'svelte-preprocess';
 import { postcssConfig } from './postcssConfig';
 import moduleJSON from './system.json';
@@ -103,11 +102,7 @@ export default ({ mode }) => {
             assetInfo.name === 'style.css' ? `${moduleJSON.id}.css` : assetInfo.name,
         },
         plugins: [
-          // ← Копируем всё из ../public в ../dist/assets
-          copy({
-            hook: 'writeBundle',
-            targets: [{ src: './public/assets/*', dest: './dist/assets' }],
-          }),
+          // No assets to copy since 'public/' does not exist; remove copy plugin.
         ],
       },
     },

@@ -7,7 +7,7 @@
     onTabChange: (tab: CharacterTab) => void;
   }
 
-  let { activeTab = $bindable(), onTabChange }: Props = $props();
+  let { activeTab, onTabChange }: Props = $props();
 </script>
 
 <nav class="sheet-tabs" data-group="main">

@@ -20,7 +20,7 @@ export function prepareNpcDerivedData(sys: ShwNpcSystem) {
   sys.helpers.totalDamageReduction +=
     addAttrMap.damageReduction +
     add.damageReduction +
-    Math.floor(sys.attributes.psyDefence.extra / 4);
+    Math.floor((sys.attributes?.psyDefence?.extra ?? 0) / 4);
   sys.helpers.totalRange += add.range;
 
   for (const k of ADDITIONAL_KEYS) {

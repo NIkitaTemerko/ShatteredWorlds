@@ -6,15 +6,11 @@
    export let item: ShwItem;
 
    const updateConsumable = getUpdateConsumable(item)
-
-   // 1) Всегда возвращает массив эффектов
-   function getEffects() {
-      return (item.system.consumable as any).effects as any[];
-   }
+   const consEffects: any[] = (item?.system?.consumable as any)?.effects ?? []
 
    // 2) Добавляем новый элемент, подставляя шаблон по типу
    function addEffect() {
-      const effects = [...getEffects()];
+      const effects = [...consEffects];
       if (item.system.consumable.consumableType === 'potion') {
          effects.push({ type: 'heal', amount: 0, duration: 1, attribute: '' });
       } else {
@@ -25,13 +21,13 @@
 
    // 3) Удаляем по индексу
    function removeEffect(idx: number) {
-      const effects = getEffects().filter((_, i) => i !== idx);
+      const effects = consEffects.filter((_, i) => i !== idx);
       updateConsumable('effects', effects);
    }
 
    // 4) Обновляем любое поле
    function updateEffect(idx: number, field: string, value: any) {
-      const effects = getEffects().map((e, i) =>
+      const effects = consEffects.map((e, i) =>
          i === idx ? { ...e, [field]: value } : e
       );
       updateConsumable('effects', effects);
@@ -71,7 +67,7 @@
             <button type="button" class="add-btn" on:click={addEffect}>+ Добавить эффект</button>
          </div>
 
-         {#each getEffects() as eff, idx}
+         {#each consEffects as eff, idx}
             <!-- Тип эффекта -->
             <div class="stat-block">
                <label for="effect-type">{item.system.consumable.consumableType === 'potion' ? 'Тип' : 'Бонус'}</label>

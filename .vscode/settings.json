@@ -1,0 +1,7 @@
+{
+  "css.validate": false,
+  "css.customData": [],
+  "[css]": {
+    "editor.suggest.insertMode": "replace"
+  }
+}

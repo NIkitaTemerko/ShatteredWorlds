@@ -1,21 +1,40 @@
 <script lang="ts">
-  import type {ShwActor} from '../../../documents/Actor/ShwActor';
-  import CharacterAdditionalStats from './CharacterAdditionalStats.svelte';
-  import CharacterStats from './CharacterStats.svelte';
+  import type { ShwActor } from '../../../documents/Actor/ShwActor';
+  import type { AdditionalAttributes } from '../../../shared/model';
+  import { AttributeStats, AdditionalStats, RollPanel } from '../../../shared/ui';
 
-  export let actor: ShwActor<'npc'>;
-
-  function handleChange(event: CustomEvent) {
-    const {value, path} = event.detail;
-    actor.update({[path]: value});
+  interface Props {
+    actor: ShwActor<'npc'>;
   }
+
+  let { actor }: Props = $props();
+
+  function handleAdditionalStatsUpdate(key: keyof AdditionalAttributes, value: number) {
+    actor.update({ [`system.additionalAttributes.${String(key)}`]: value });
+  }
+
+  // For NPC, ALL additional stats should be editable
+  const npcEditableKeys = new Set<keyof AdditionalAttributes>([
+    'actions',
+    'bonusActions',
+    'reactions',
+    'impulse',
+    'initiative',
+    'additionalCloseCombatDamage',
+    'additionalRangeDamage',
+    'range',
+    'damageReduction',
+    'armorClass',
+  ]);
 </script>
 
-<div>
-  <CharacterStats actor={actor}/>
-  <CharacterAdditionalStats
-    stats={actor.system.additionalAttributes}
-    helpers={actor.system.helpers}
-    on:change={handleChange}
-  />
-</div>
+<section>
+  <AttributeStats {actor} isNpc={true} />
+  <RollPanel {actor} />
+</section>
+<AdditionalStats
+  stats={actor.system.additionalAttributes}
+  helpers={actor.system.helpers}
+  editableKeys={npcEditableKeys}
+  onUpdate={handleAdditionalStatsUpdate}
+/>

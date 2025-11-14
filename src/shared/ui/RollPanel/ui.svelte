@@ -40,19 +40,19 @@
     <div class="roll-value">
       <label>
         База
-        <Input class="tw:w-10" type="number" bind:value={natRoll} min="0" max="999" />
+        <Input variant="underline" class="tw:w-10" type="number" bind:value={natRoll} min="0" max="999" />
       </label>
     </div>
     <div class="roll-value bonus">
       <label>
         Бонус
-        <Input class="tw:w-10" type="number" bind:value={rollBonus} min="0" max="999" />
+        <Input variant="underline" class="tw:w-10" type="number" bind:value={rollBonus} min="0" max="999" />
       </label>
     </div>
     <div class="roll-value">
       <label>
         Действия
-        <Input class="tw:w-10" type="number" bind:value={actions} min="0" max="999" />
+        <Input variant="underline" class="tw:w-10" type="number" bind:value={actions} min="0" max="999" />
       </label>
     </div>
 

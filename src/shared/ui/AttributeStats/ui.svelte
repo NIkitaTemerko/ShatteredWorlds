@@ -80,13 +80,13 @@
     <div class="stat-col flexcol" style="--dark:{col.dark}; --light:{col.light}; --hover:{col.hover};">
       <div class="cell header">{col.label}</div>
       <div class="cell value">
-        <Input class="tw:w-10" type="number" value={col.base} min="-999" max="999" onchange={(e) => onChangeValue(col.key, e)} />
+        <Input class="tw:w-10" variant="underline" type="number" value={col.base} min="-999" max="999" onchange={(e) => onChangeValue(col.key, e)} />
       </div>
 
       <div class="cell subheader">Доп. {col.label}</div>
       <div class="cell value">
         {#if isNpc}
-          <Input class="tw:w-10" type="number" value={col.extra} min="-999" max="999" onchange={(e) => onChangeValue(col.key, e, 'extra')} />
+          <Input class="tw:w-10" variant="underline" type="number" value={col.extra} min="-999" max="999" onchange={(e) => onChangeValue(col.key, e, 'extra')} />
         {:else}
           {col.extra}
         {/if}
@@ -97,6 +97,7 @@
         {#if isNpc && col.charBonusBase !== undefined}
           <Input
             class="tw:w-10"
+            variant="underline"
             type="number"
             value={col.charBonusBase}
             min="-999"
@@ -113,6 +114,7 @@
         {#if isNpc && col.saveBonusBase !== undefined}
           <Input
             class="tw:w-10"
+            variant="underline"
             type="number"
             value={col.saveBonusBase}
             min="-999"

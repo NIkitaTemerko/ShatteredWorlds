@@ -6,6 +6,7 @@
     background?: string;
     textAlign?: 'left' | 'center' | 'right';
     fullWidth?: boolean;
+    variant?: 'default' | 'underline';
   }
 
   let {
@@ -13,6 +14,7 @@
     background = 'transparent',
     textAlign = 'center',
     fullWidth = false,
+    variant = 'default',
     class: className = '',
     type = 'text',
     ...restProps
@@ -24,6 +26,7 @@
   {type}
   class="shw-input {className}"
   class:full-width={fullWidth}
+  class:variant-underline={variant === 'underline'}
   style:background
   style:text-align={textAlign}
   {...restProps}
@@ -81,5 +84,22 @@
   .shw-input[type='number']::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
+  }
+
+  /* Underline variant */
+  .shw-input.variant-underline {
+    border: none;
+    border-bottom: 1px solid var(--color-border-light-2, rgba(0, 0, 0, 0.2));
+    border-radius: 0;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .shw-input.variant-underline:hover {
+    border-bottom-color: var(--color-border-dark, rgba(0, 0, 0, 0.4));
+  }
+
+  .shw-input.variant-underline:focus {
+    border-bottom-color: var(--color-primary, #0066cc);
+    box-shadow: none;
   }
 </style>

@@ -68,7 +68,7 @@
       <i class={ADDITIONAL_ATTRIBUTE_ICONS[key]} style="color: {ADDITIONAL_ATTRIBUTE_COLORS[key]}" aria-hidden="true"></i>
       <span class="label">{ADDITIONAL_ATTRIBUTE_LABELS[key]}</span>
       {#if isEditable(key)}
-        <Input class="tw:w-10" type="number" min="0" {value} onchange={(e) => handleChange(key, e)} />
+        <Input class="tw:w-10" variant="underline" type="number" min="0" {value} onchange={(e) => handleChange(key, e)} />
         {#if hasHelper(key)}
           {@const helperValue = getHelperValue(key)}
           {#if helperValue !== undefined}

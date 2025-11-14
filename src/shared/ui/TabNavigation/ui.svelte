@@ -7,7 +7,7 @@
     onTabChange: (tab: CharacterTab) => void;
   }
 
-  let { activeTab, onTabChange }: Props = $props();
+  const { activeTab, onTabChange }: Props = $props();
 </script>
 
 <nav class="sheet-tabs" data-group="main">
@@ -36,11 +36,13 @@
 
   .sheet-tabs .item {
     position: relative;
-    padding: 2px 4px 6px;
+    padding: 2px 4px 4px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-size: 11px;
+    gap: 2px;
+    font-size: 10px;
+    line-height: 1;
     color: var(--color-text-light-5, #666);
     background: transparent;
     border: none;
@@ -48,7 +50,7 @@
   }
 
   .sheet-tabs .item i {
-    font-size: 17px;
+    font-size: 14px;
     line-height: 1;
   }
 

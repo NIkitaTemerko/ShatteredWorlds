@@ -158,7 +158,6 @@
     align-items: center;
     font-weight: 700;
     width: 100%;
-    font-family: var(--font-primary);
     font-size: var(--font-size-14);
   }
 

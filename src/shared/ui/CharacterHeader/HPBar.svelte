@@ -135,7 +135,6 @@
 
   .hp-label {
     font-size: var(--font-size-12);
-    font-family: var(--font-primary), sans-serif;
   }
 
   .hp-damage-wrapper {

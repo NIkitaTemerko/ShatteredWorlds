@@ -35,7 +35,6 @@
 <style>
   .shw-input {
     /* Base styles */
-    font-family: var(--font-primary, inherit);
     font-size: var(--font-size-14, 14px);
     font-weight: 400;
     line-height: 1.5;

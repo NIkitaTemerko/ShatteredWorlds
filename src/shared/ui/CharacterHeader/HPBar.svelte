@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { ShwActor } from '../../../documents/Actor/ShwActor';
+  import { ActionIcon } from '../ActionIcon';
   import Input from '../Input/ui.svelte';
 
   interface Props {
@@ -79,24 +80,28 @@
     <span>({actor.system.helpers.totalHealth})</span>
   </span>
   <div class="hp-damage-wrapper">
-    <i
-      class="fas fa-sword damage-icon"
-      role="button"
-      tabindex="0"
+    <ActionIcon
       title="Применить урон"
       onclick={applyDamage}
       onkeydown={(e) => e.key === 'Enter' && applyDamage()}
-    ></i>
+    >
+      {#snippet icon()}
+        <i class="fas fa-sword damage-icon"></i>
+      {/snippet}
+    </ActionIcon>
     <Input variant="underline" bind:value={damageValue} onkeydown={(e) => e.key === 'Enter' && applyDamage()} type="number" min={0} style="width:3rem;" />
-    <i
-      class="fas fa-shield-alt shield-icon"
-      class:active={defenseActive}
-      role="button"
-      tabindex="0"
+    <ActionIcon
       title="Учитывать защиту"
       onclick={toggleDefense}
       onkeydown={(e) => e.key === 'Enter' && toggleDefense()}
-    ></i>
+    >
+      {#snippet icon()}
+        <i
+          class="fas fa-shield-alt shield-icon"
+          class:active={defenseActive}
+        ></i>
+      {/snippet}
+    </ActionIcon>
   </div>
 </div>
 
@@ -108,22 +113,20 @@
   }
 
   .hp-bar {
+    flex-grow: 1;
     width: 200px;
-    height: 12px;
+    height: 20px;
     appearance: none;
     border: 1px solid var(--color-border-light-2);
-    border-radius: 4px;
     background: #ff9aa5;
   }
 
   .hp-bar::-webkit-progress-bar {
     background: #ff9aa5;
-    border-radius: 4px;
   }
 
   .hp-bar::-webkit-progress-value {
     background: #d7263d;
-    border-radius: 4px;
   }
 
   .hp-bar::-moz-progress-bar {

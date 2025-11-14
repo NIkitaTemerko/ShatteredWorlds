@@ -17,8 +17,8 @@
     alt="avatar"
     data-edit="img"
     title={actor.name}
-    height="72"
-    width="72"
+    height="100"
+    width="100"
   />
 
   <div class="header-fields">
@@ -39,10 +39,6 @@
           />
         </label>
       </h1>
-    </div>
-
-    <div class="stats-wrapper">
-      <HPBar {actor} />
       <div class="speed-wrapper">
         <span>Скорость:</span>
         <label>
@@ -58,6 +54,8 @@
         <span>({actor.system.helpers.totalSpeed})</span>
       </div>
     </div>
+
+    <HPBar {actor} />
   </div>
 </header>
 
@@ -101,12 +99,6 @@
   .charname {
     flex: 1;
     margin: 0;
-  }
-
-  .stats-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
   }
 
   .speed-wrapper {

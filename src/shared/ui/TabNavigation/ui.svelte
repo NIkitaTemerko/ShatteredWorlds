@@ -32,6 +32,8 @@
     gap: 8px;
     border-bottom: 1px solid var(--color-border-light, #999);
     padding-bottom: 2px;
+    background-color: transparent;
+    border: none;
   }
 
   .sheet-tabs .item {

@@ -108,7 +108,7 @@
     display: flex;
     flex-direction: column;
     background: var(--color-border-light-3);
-    padding: 10px 0;
+    padding-top: 5px;
   }
 
   .tabs {

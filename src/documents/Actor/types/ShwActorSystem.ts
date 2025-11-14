@@ -1,33 +1,45 @@
-export interface ShwActorSystem {
-  health: { value: number; max: number };
-  attributes: {
-    fortune: { value: number; extra: number; charBonus: number; saveBonus: number };
-    force: { value: number; extra: number; charBonus: number; saveBonus: number };
-    perception: { value: number; extra: number; charBonus: number; saveBonus: number };
-    psyDefence: { value: number; extra: number; charBonus: number; saveBonus: number };
-    diplomacy: { value: number; extra: number; charBonus: number; saveBonus: number };
-  };
-  additionalAttributes: {
-    actions: number;
-    bonusActions: number;
-    reactions: number;
-    impulse: number;
-    initiative: number;
-    additionalCloseCombatDamage: number;
-    additionalRangeDamage: number;
-    range: number;
-    damageReduction: number;
-    armorClass: number;
-  };
-  utility: {
-    speed: number;
-    level: number;
-  };
-  helpers: {
-    totalHealth: number;
-    totalImpulse: number;
-    totalSpeed: number;
-  };
+interface AttributeFields {
+  value: number;
+  extra: number;
+  charBonus: number;
+  saveBonus: number;
+}
+
+interface HealthFields {
+  value: number;
+  max: number;
+}
+
+interface Attributes<T> {
+  fortune: T;
+  force: T;
+  perception: T;
+  psyDefence: T;
+  diplomacy: T;
+}
+
+interface AdditionalAttributes {
+  actions: number;
+  bonusActions: number;
+  reactions: number;
+  impulse: number;
+  initiative: number;
+  additionalCloseCombatDamage: number;
+  additionalRangeDamage: number;
+  range: number;
+  damageReduction: number;
+  armorClass: number;
+}
+
+interface UtilityFields {
+  speed: number;
+  level: number;
+}
+
+interface BaseHelpers {
+  totalHealth: number;
+  totalImpulse: number;
+  totalSpeed: number;
 }
 
 interface NpcAttribute {
@@ -39,36 +51,20 @@ interface NpcAttribute {
   saveBonus: number;
 }
 
+export interface ShwActorSystem {
+  health: HealthFields;
+  attributes: Attributes<AttributeFields>;
+  additionalAttributes: AdditionalAttributes;
+  utility: UtilityFields;
+  helpers: BaseHelpers;
+}
+
 export interface ShwNpcSystem {
-  health: { value: number; max: number };
-  attributes: {
-    fortune: NpcAttribute;
-    force: NpcAttribute;
-    perception: NpcAttribute;
-    psyDefence: NpcAttribute;
-    diplomacy: NpcAttribute;
-  };
-  additionalAttributes: {
-    actions: number;
-    bonusActions: number;
-    reactions: number;
-    impulse: number;
-    initiative: number;
-    additionalCloseCombatDamage: number;
-    additionalRangeDamage: number;
-    range: number;
-    damageReduction: number;
-    armorClass: number;
-  };
-  utility: {
-    speed: number;
-    level: number;
-  };
-  helpers: {
-    totalImpulse: number;
-    totalHealth: number;
-    totalSpeed: number;
-    totalDamage: number;
+  health: HealthFields;
+  attributes: Attributes<NpcAttribute>;
+  additionalAttributes: AdditionalAttributes;
+  utility: UtilityFields;
+  helpers: BaseHelpers & {
     totalDamageReduction: number;
     totalRange: number;
   };

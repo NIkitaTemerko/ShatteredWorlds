@@ -2,6 +2,7 @@
 import { consumableTypes } from "../constants/consumableConstats.js";
 import type { ShwItem } from "../../../documents/Item/ShwItem";
 import { getUpdateConsumable } from "../utils/updateConsumable";
+import { Input } from "../../../shared/ui";
 
 export let item: ShwItem;
 
@@ -20,12 +21,13 @@ const updateConsumable = getUpdateConsumable(item)
    />
 
    <div class="header-main">
-      <input
+      <Input
          class="item-name"
          type="text"
          bind:value={item.name}
          placeholder="Название предмета"
-         on:change={(e) => item.update({ name: e.currentTarget.value })}
+         onchange={(e) => item.update({ name: e.currentTarget.value })}
+         fullWidth
       />
 
       <div class="type-select">
@@ -56,11 +58,10 @@ const updateConsumable = getUpdateConsumable(item)
       gap: 0.5rem;
    }
 
-   .item-name {
+   :global(.item-name) {
       font-size: var(--font-size-20);
       padding: 0.4rem 0.6rem;
       border: 1px solid var(--color-border-light-1);
-      width: 100%;
    }
 
    .type-select select {

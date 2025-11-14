@@ -2,6 +2,7 @@
    import { activationTypes, perTypes } from "../constants/consumableConstats.js";
    import type { ShwItem } from "../../../documents/Item/ShwItem";
    import { getUpdateConsumable } from "../utils/updateConsumable";
+   import { Input } from "../../../shared/ui";
    export let item: ShwItem;
 
    const updateConsumable = getUpdateConsumable(item)
@@ -11,19 +12,19 @@
    <div class="stat-block">
       <label for="uses">Заряды</label>
       <div class="input-group">
-         <input
+         <Input
             id="uses"
             type="number"
             min="0"
             bind:value={item.system.consumable.uses.value}
-            on:change={(e) => updateConsumable('uses.value', Number(e.currentTarget.value))}
+            onchange={(e) => updateConsumable('uses.value', Number(e.currentTarget.value))}
          />
          <div class="devider">из</div>
-         <input
+         <Input
             type="number"
             min="0"
             bind:value={item.system.consumable.uses.max}
-            on:change={(e) => updateConsumable('uses.max', Number(e.currentTarget.value))}
+            onchange={(e) => updateConsumable('uses.max', Number(e.currentTarget.value))}
          />
       </div>
       <select
@@ -46,12 +47,12 @@
             <option value={act.value}>{act.label}</option>
          {/each}
       </select>
-      <input
+      <Input
          id="activation"
          type="number"
          min="0"
          bind:value={item.system.consumable.activation.cost}
-         on:change={(e) => updateConsumable('activation.cost', Number(e.currentTarget.value))}
+         onchange={(e) => updateConsumable('activation.cost', Number(e.currentTarget.value))}
       />
    </div>
 </section>
@@ -95,8 +96,12 @@
       font-size: var(--font-size-12);
       color: var(--dark);
    }
-   .stat-block input,
    .stat-block select {
+      border: 1px solid var(--color-border-light-2);
+      padding: 0.25rem 0.4rem;
+      text-align: center;
+   }
+   :global(.stat-block .shw-input) {
       border: 1px solid var(--color-border-light-2);
       padding: 0.25rem 0.4rem;
       text-align: center;

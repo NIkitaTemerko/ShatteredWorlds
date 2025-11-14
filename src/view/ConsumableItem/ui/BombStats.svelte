@@ -2,6 +2,7 @@
    import { damageTypes, saveTypes } from "../constants/consumableConstats.js";
    import type {ShwItem} from "../../../documents/Item/ShwItem";
    import {getUpdateConsumable} from "../utils/updateConsumable";
+   import { Input } from "../../../shared/ui";
    export let item: ShwItem;
 
    const updateConsumable = getUpdateConsumable(item)
@@ -13,12 +14,12 @@
    <section class="section-grid type-specific">
       <div class="stat-block">
          <label for="damage">Урон</label>
-         <input
+         <Input
             id="damage"
             type="number"
             min="0"
             value={item.system.consumable.damage.amount}
-            on:change={(e) => updateConsumable('damage.amount', Number(e.currentTarget.value))}
+            onchange={(e) => updateConsumable('damage.amount', Number(e.currentTarget.value))}
          />
       </div>
       <div class="stat-block">
@@ -35,12 +36,12 @@
       </div>
       <div class="stat-block">
          <label for="radius">Радиус (футы)</label>
-         <input
+         <Input
             id="radius"
             type="number"
             min="0"
             value={item.system.consumable.radius}
-            on:change={(e) => updateConsumable('radius', Number(e.currentTarget.value))}
+            onchange={(e) => updateConsumable('radius', Number(e.currentTarget.value))}
          />
       </div>
       <div class="stat-block">
@@ -57,12 +58,12 @@
       </div>
       <div class="stat-block">
          <label for="save-dc">Сложность</label>
-         <input
+         <Input
             id="save-dc"
             type="number"
             min="0"
             value={item.system.consumable.save.dc}
-            on:change={(e) => updateConsumable('save.dc', Number(e.currentTarget.value))}
+            onchange={(e) => updateConsumable('save.dc', Number(e.currentTarget.value))}
          />
       </div>
 </section>
@@ -97,8 +98,12 @@
       font-size: var(--font-size-12);
       color: var(--dark);
    }
-   .stat-block input,
    .stat-block select {
+      border: 1px solid var(--color-border-light-2);
+      padding: 0.25rem 0.4rem;
+      text-align: center;
+   }
+   :global(.stat-block .shw-input) {
       border: 1px solid var(--color-border-light-2);
       padding: 0.25rem 0.4rem;
       text-align: center;

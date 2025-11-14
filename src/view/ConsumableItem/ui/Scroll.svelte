@@ -1,6 +1,7 @@
 <script lang="ts">
    import type { ShwItem } from "../../../documents/Item/ShwItem";
    import { getUpdateConsumable } from "../utils/updateConsumable";
+   import { Input } from "../../../shared/ui";
 
    export let item: ShwItem;
 
@@ -12,50 +13,50 @@
       <section class="section-grid type-specific">
          <div class="stat-block full">
             <label for="spell-name">Название заклинания</label>
-            <input
+            <Input
                id="spell-name"
                type="text"
                value={item.system.consumable.spell.name}
-               on:change={(e) => updateConsumable('spell.name', e.currentTarget.value)}
+               onchange={(e) => updateConsumable('spell.name', e.currentTarget.value)}
             />
          </div>
          <div class="stat-block">
             <label for="spell-level">Уровень</label>
-            <input
+            <Input
                id="spell-level"
                type="number"
                min="0"
                max="9"
                value={item.system.consumable.spell.level}
-               on:change={(e) => updateConsumable('spell.level', Number(e.currentTarget.value))}
+               onchange={(e) => updateConsumable('spell.level', Number(e.currentTarget.value))}
             />
          </div>
          <div class="stat-block">
             <label for="spell-school">Школа</label>
-            <input
+            <Input
                id="spell-school"
                type="text"
                value={item.system.consumable.spell.school}
-               on:change={(e) => updateConsumable('spell.school', e.currentTarget.value)}
+               onchange={(e) => updateConsumable('spell.school', e.currentTarget.value)}
             />
          </div>
          <div class="stat-block">
             <label for="spell-requirements">Треб. характеристика</label>
-            <input
+            <Input
                id="spell-requirements"
                type="text"
                value={item.system.consumable.requirements.ability}
-               on:change={(e) => updateConsumable('requirements.ability', e.currentTarget.value)}
+               onchange={(e) => updateConsumable('requirements.ability', e.currentTarget.value)}
             />
          </div>
          <div class="stat-block">
             <label for="spell-difficulty">Сложность</label>
-            <input
+            <Input
                id="spell-difficulty"
                type="number"
                min="0"
                value={item.system.consumable.requirements.dc}
-               on:change={(e) => updateConsumable('requirements.dc', Number(e.currentTarget.value))}
+               onchange={(e) => updateConsumable('requirements.dc', Number(e.currentTarget.value))}
             />
          </div>
       </section>
@@ -94,7 +95,7 @@
       font-size: var(--font-size-12);
       color: var(--dark);
    }
-   .stat-block input {
+   :global(.stat-block .shw-input) {
       border: 1px solid var(--color-border-light-2);
       padding: 0.25rem 0.4rem;
       text-align: center;

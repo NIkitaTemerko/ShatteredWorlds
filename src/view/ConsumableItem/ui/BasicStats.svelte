@@ -2,6 +2,7 @@
 import { rarityTypes } from "../constants/consumableConstats";
 import type { ShwItem } from "../../../documents/Item/ShwItem";
 import { getUpdateConsumable } from "../utils/updateConsumable";
+import { Input } from "../../../shared/ui";
 
 export let item: ShwItem;
 
@@ -24,46 +25,46 @@ const updateConsumable = getUpdateConsumable(item)
 
    <div class="stat-block">
       <label for="price">Цена</label>
-      <input
+      <Input
          id="price"
          type="number"
          min="0"
          bind:value={item.system.consumable.price}
-         on:change={(e) => updateConsumable('price', Number(e.currentTarget.value))}
+         onchange={(e) => updateConsumable('price', Number(e.currentTarget.value))}
       />
    </div>
 
    <div class="stat-block">
       <label for="weight">Вес</label>
-      <input
+      <Input
          id="weight"
          type="number"
          min="0"
          step="0.01"
          bind:value={item.system.consumable.weight}
-         on:change={(e) => updateConsumable('weight', Number(e.currentTarget.value))}
+         onchange={(e) => updateConsumable('weight', Number(e.currentTarget.value))}
       />
    </div>
 
    <div class="stat-block">
       <label for="quantity">Кол-во</label>
-      <input
+      <Input
          id="quantity"
          type="number"
          min="0"
          bind:value={item.system.consumable.quantity}
-         on:change={(e) => updateConsumable('quantity', Number(e.currentTarget.value))}
+         onchange={(e) => updateConsumable('quantity', Number(e.currentTarget.value))}
       />
    </div>
 
    <div class="stat-block">
       <label for="stackLimit">Стек</label>
-      <input
+      <Input
          id="stackLimit"
          type="number"
          min="1"
          bind:value={item.system.consumable.stackLimit}
-         on:change={(e) => updateConsumable('stackLimit', Number(e.currentTarget.value))}
+         onchange={(e) => updateConsumable('stackLimit', Number(e.currentTarget.value))}
       />
    </div>
 </section>
@@ -103,8 +104,12 @@ const updateConsumable = getUpdateConsumable(item)
       font-size: var(--font-size-12);
       color: var(--dark);
    }
-   .stat-block input,
    .stat-block select {
+      border: 1px solid var(--color-border-light-2);
+      padding: 0.25rem 0.4rem;
+      text-align: center;
+   }
+   :global(.stat-block .shw-input) {
       border: 1px solid var(--color-border-light-2);
       padding: 0.25rem 0.4rem;
       text-align: center;

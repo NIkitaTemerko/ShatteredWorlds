@@ -2,6 +2,7 @@
   import type { ShwActor } from '../../../documents/Actor/ShwActor';
   import type { AttributeKey } from '../../model';
   import { ATTRIBUTE_COLORS } from '../../model';
+  import { Input } from '../Input';
 
   interface Props {
     actor: ShwActor<'character' | 'npc'>;
@@ -79,13 +80,13 @@
     <div class="stat-col flexcol" style="--dark:{col.dark}; --light:{col.light}; --hover:{col.hover};">
       <div class="cell header">{col.label}</div>
       <div class="cell value">
-        <input type="number" value={col.base} min="-999" max="999" onchange={(e) => onChangeValue(col.key, e)} />
+        <Input class="tw:w-10" type="number" value={col.base} min="-999" max="999" onchange={(e) => onChangeValue(col.key, e)} />
       </div>
 
       <div class="cell subheader">Доп. {col.label}</div>
       <div class="cell value">
         {#if isNpc}
-          <input type="number" value={col.extra} min="-999" max="999" onchange={(e) => onChangeValue(col.key, e, 'extra')} />
+          <Input class="tw:w-10" type="number" value={col.extra} min="-999" max="999" onchange={(e) => onChangeValue(col.key, e, 'extra')} />
         {:else}
           {col.extra}
         {/if}
@@ -94,7 +95,8 @@
       <div class="cell subheader">Бонус характеристики</div>
       <div class="cell value">
         {#if isNpc && col.charBonusBase !== undefined}
-          <input
+          <Input
+            class="tw:w-10"
             type="number"
             value={col.charBonusBase}
             min="-999"
@@ -109,7 +111,8 @@
       <div class="cell subheader">{col.saveLabel}</div>
       <div class="cell value">
         {#if isNpc && col.saveBonusBase !== undefined}
-          <input
+          <Input
+            class="tw:w-10"
             type="number"
             value={col.saveBonusBase}
             min="-999"
@@ -168,12 +171,7 @@
     color: #000;
   }
 
-  .value input {
-    width: 3rem;
-    text-align: center;
-    background: transparent;
-    border: none;
-  }
+
 
   @media (max-width: 900px) {
     .stats-panel {

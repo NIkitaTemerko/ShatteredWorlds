@@ -2,6 +2,7 @@
    import type {ShwItem} from "../../../documents/Item/ShwItem";
    import {getUpdateConsumable} from "../utils/updateConsumable";
    import {applicationTypes, saveTypes} from "../constants/consumableConstats";
+   import { Input } from "../../../shared/ui";
 
    export let item: ShwItem;
 
@@ -14,30 +15,30 @@
       <section class="section-grid type-specific">
       <div class="stat-block">
          <label for="damage-initial">Начальный урон</label>
-         <input
+         <Input
             id="damage-initial"
             type="text"
             value={item.system.consumable.damage.initial}
-            on:change={(e) => updateConsumable('damage.initial', e.currentTarget.value)}
+            onchange={(e) => updateConsumable('damage.initial', e.currentTarget.value)}
          />
       </div>
       <div class="stat-block">
          <label for="damage-recurring">Повтор. урон</label>
-         <input
+         <Input
             id="damage-recurring"
             type="text"
             value={item.system.consumable.damage.recurring}
-            on:change={(e) => updateConsumable('damage.recurring', e.currentTarget.value)}
+            onchange={(e) => updateConsumable('damage.recurring', e.currentTarget.value)}
          />
       </div>
       <div class="stat-block">
          <label for="damage-duration">Длительность (раунд)</label>
-         <input
+         <Input
             id="damage-duration"
             type="number"
             min="1"
             value={item.system.consumable.damage.duration}
-            on:change={(e) => updateConsumable('damage.duration', Number(e.currentTarget.value))}
+            onchange={(e) => updateConsumable('damage.duration', Number(e.currentTarget.value))}
          />
       </div>
       <div class="stat-block">
@@ -54,12 +55,12 @@
       </div>
       <div class="stat-block">
          <label for="save-dc">Сложность</label>
-         <input
+         <Input
             id="save-dc"
             type="number"
             min="0"
             value={item.system.consumable.save.dc}
-            on:change={(e) => updateConsumable('save.dc', Number(e.currentTarget.value))}
+            onchange={(e) => updateConsumable('save.dc', Number(e.currentTarget.value))}
          />
       </div>
       <div class="stat-block full">
@@ -109,8 +110,12 @@
       font-size: var(--font-size-12);
       color: var(--dark);
    }
-   .stat-block input,
    .stat-block select {
+      border: 1px solid var(--color-border-light-2);
+      padding: 0.25rem 0.4rem;
+      text-align: center;
+   }
+   :global(.stat-block .shw-input) {
       border: 1px solid var(--color-border-light-2);
       padding: 0.25rem 0.4rem;
       text-align: center;

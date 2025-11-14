@@ -9,6 +9,7 @@
     ADDITIONAL_ATTRIBUTE_ICONS,
     ADDITIONAL_ATTRIBUTE_COLORS,
   } from '../../model';
+  import { Input } from '../Input';
 
   interface Props {
     stats: AdditionalAttributes;
@@ -67,7 +68,7 @@
       <i class={ADDITIONAL_ATTRIBUTE_ICONS[key]} style="color: {ADDITIONAL_ATTRIBUTE_COLORS[key]}" aria-hidden="true"></i>
       <span class="label">{ADDITIONAL_ATTRIBUTE_LABELS[key]}</span>
       {#if isEditable(key)}
-        <input class="stat-input" type="number" min="0" {value} onchange={(e) => handleChange(key, e)} />
+        <Input class="tw:w-10" type="number" min="0" {value} onchange={(e) => handleChange(key, e)} />
         {#if hasHelper(key)}
           {@const helperValue = getHelperValue(key)}
           {#if helperValue !== undefined}
@@ -124,23 +125,24 @@
     white-space: nowrap;
   }
 
-  .value,
-  .stat-input {
+  .value {
     flex: 0 1 auto;
     width: 2.5rem;
     text-align: center;
   }
 
-  .stat-input {
+  :global(.stat-tile .stat-input) {
     background: transparent;
     border: none;
     border-bottom: 1px solid transparent;
     font: inherit;
     padding: 0;
     outline: none;
+    width: 2.5rem;
+    text-align: center;
   }
 
-  .stat-input:focus {
+  :global(.stat-tile .stat-input:focus) {
     border-bottom-color: var(--color-border-highlight, #666);
   }
 </style>

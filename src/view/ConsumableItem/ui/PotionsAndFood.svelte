@@ -2,6 +2,7 @@
    import type { ShwItem } from "../../../documents/Item/ShwItem";
    import { getUpdateConsumable } from "../utils/updateConsumable";
    import { effectTypes } from "../constants/consumableConstats";
+   import { Input } from "../../../shared/ui";
 
    export let item: ShwItem;
 
@@ -43,20 +44,20 @@
             <div class="stat-block full nutrition-section">
                <div class="stat-block">
                   <label for="nutrition-duration">Длительность насыщения</label>
-                  <input
+                  <Input
                      id="nutrition-duration"
                      type="text"
                      bind:value={item.system.consumable.nutrition.duration}
-                     on:change={(e) => updateConsumable('nutrition.duration', e)}
+                     onchange={(e) => updateConsumable('nutrition.duration', e)}
                   />
                </div>
                <div class="stat-block">
                   <label for="nutrition-duration">Сила насыщения</label>
-                  <input
+                  <Input
                      id="nutrition-duration"
                      type="text"
                      bind:value={item.system.consumable.nutrition.value}
-                     on:change={(e) => updateConsumable('nutrition.duration', e)}
+                     onchange={(e) => updateConsumable('nutrition.duration', e)}
                   />
                </div>
             </div>
@@ -82,11 +83,11 @@
                      {/each}
                   </select>
                {:else}
-                  <input
+                  <Input
                      id="effect-type"
                      type="text"
                      bind:value={eff.type}
-                     on:change={(e) => updateEffect(idx, 'type', e.currentTarget.value)}
+                     onchange={(e) => updateEffect(idx, 'type', e.currentTarget.value)}
                   />
                {/if}
             </div>
@@ -96,24 +97,24 @@
                <label for="effect-value">
                   Сила
                </label>
-               <input
+               <Input
                   id="effect-value"
                   type="number"
                   min="0"
                   value={item.system.consumable.consumableType === 'potion' ? eff.amount : eff.value}
-                  on:change={(e) => updateEffect(idx, item.system.consumable.consumableType === 'potion' ? 'amount' : 'value', Number(e.currentTarget.value))}
+                  onchange={(e) => updateEffect(idx, item.system.consumable.consumableType === 'potion' ? 'amount' : 'value', Number(e.currentTarget.value))}
                />
             </div>
 
             <!-- Длительность -->
             <div class="stat-block">
                <label for="effect-duration">Длительность</label>
-               <input
+               <Input
                   id="effect-duration"
                   type="number"
                   min="1"
                   bind:value={eff.duration}
-                  on:change={(e) => updateEffect(idx, 'duration', Number(e.currentTarget.value))}
+                  onchange={(e) => updateEffect(idx, 'duration', Number(e.currentTarget.value))}
                />
             </div>
 
@@ -126,11 +127,11 @@
             {#if item.system.consumable.consumableType === 'potion'}
                <div class="stat-block full">
                   <label for="effect-attribute">Атрибут</label>
-                  <input
+                  <Input
                      id="effect-attribute"
                      type="text"
                      bind:value={eff.attribute}
-                     on:change={(e) => updateEffect(idx, 'attribute', e.currentTarget.value)}
+                     onchange={(e) => updateEffect(idx, 'attribute', e.currentTarget.value)}
                   />
                </div>
             {/if}
@@ -187,8 +188,12 @@
       font-size: var(--font-size-12);
       color: var(--dark);
    }
-   .stat-block input,
    .stat-block select {
+      border: 1px solid var(--color-border-light-2);
+      padding: 0.25rem 0.4rem;
+      text-align: center;
+   }
+   :global(.stat-block .shw-input) {
       border: 1px solid var(--color-border-light-2);
       padding: 0.25rem 0.4rem;
       text-align: center;

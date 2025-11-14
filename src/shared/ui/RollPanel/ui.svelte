@@ -2,6 +2,7 @@
   import type { RollMode, RollType, RollTypeConfig } from '../../model';
   import { ROLL_TYPE_CONFIGS } from '../../model';
   import type { ShwActor } from '../../../documents/Actor/ShwActor';
+  import { Input } from '../Input';
 
   interface Props {
     actor: ShwActor<'character' | 'npc'>;
@@ -39,19 +40,19 @@
     <div class="roll-value">
       <label>
         База
-        <input type="number" bind:value={natRoll} min="0" max="999" />
+        <Input class="tw:w-10" type="number" bind:value={natRoll} min="0" max="999" />
       </label>
     </div>
     <div class="roll-value bonus">
       <label>
         Бонус
-        <input type="number" bind:value={rollBonus} min="0" max="999" />
+        <Input class="tw:w-10" type="number" bind:value={rollBonus} min="0" max="999" />
       </label>
     </div>
     <div class="roll-value">
       <label>
         Действия
-        <input type="number" bind:value={actions} min="0" max="999" />
+        <Input class="tw:w-10" type="number" bind:value={actions} min="0" max="999" />
       </label>
     </div>
 
@@ -158,7 +159,6 @@
   .roll-value input {
     text-align: center;
     background: transparent;
-    border: none;
   }
 
   .roll-value.bonus {

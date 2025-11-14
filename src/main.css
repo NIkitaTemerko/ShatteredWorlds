@@ -4,35 +4,7 @@
 /* ============================================================
    FOUNDRY RED BORDER REMOVAL - AGGRESSIVE OVERRIDES
    ============================================================ */
-
-/* Override Foundry's CSS variable at all levels */
-*,
-*::before,
-*::after,
-:root,
-html,
-body {
-  --color-shadow-primary: transparent !important;
-  --color-shadow-highlight: transparent !important;
-}
-
-/* Nuclear option - remove ALL outlines and box-shadows */
-* {
-  outline: 0 !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-*:focus,
-*:focus-visible,
-*:focus-within,
-*:active,
-*:hover {
-  outline: 0 !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
-
+   
 /* Target ALL possible form elements */
 input,
 select,
@@ -46,10 +18,7 @@ select:focus-visible,
 select:active,
 button:focus,
 button:focus-visible,
-button:active,
-textarea:focus,
-textarea:focus-visible,
-textarea:active {
+button:active {
   outline: 0 !important;
   outline: none !important;
   box-shadow: none !important;
@@ -66,13 +35,3 @@ textarea:active {
   box-shadow: none !important;
 }
 
-/* Target editable elements */
-[data-edit],
-[data-edit]:focus,
-[data-edit]:hover,
-[contenteditable],
-[contenteditable]:focus,
-[contenteditable]:hover {
-  outline: 0 !important;
-  box-shadow: none !important;
-}

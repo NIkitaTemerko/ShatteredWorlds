@@ -1,4 +1,4 @@
-import { ShwItemSheet } from '../../lib/Item/SveltItemSheet';
+import { ShwItemSheet } from '../../sheets/Item/SveltItemSheet';
 import ItemShell from './ui/RootItemShell.svelte';
 
 export class ConsumableItemApp extends ShwItemSheet {

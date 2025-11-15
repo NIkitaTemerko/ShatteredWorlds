@@ -1,4 +1,4 @@
-import { SvelteActorSheet } from '../../lib/Actor/SvelteActorSheet';
+import { SvelteActorSheet } from '../../sheets/Actor/SvelteActorSheet';
 import RootCharacterShell from './ui/RootCharacterShell.svelte';
 
 export class NpcApp extends SvelteActorSheet {

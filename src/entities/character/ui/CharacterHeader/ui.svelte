@@ -75,6 +75,7 @@
     align-items: center;
     gap: 0.75rem;
     flex: 0 0 auto;
+    padding-bottom: 4px;
   }
 
   .profile-img {

@@ -93,6 +93,7 @@
     user-select: none;
     font-size: 14px;
     font-weight: 600;
+    padding: 4px 0;
   }
 
   .stat-tile {

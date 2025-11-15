@@ -148,3 +148,21 @@ button::after,
   border-radius: 0 !important;
 }
 
+/* ============================================================
+   NEUTRAL BACKGROUND FOR SHEETS AND CHAT
+   ============================================================ */
+
+/* Character and Item Sheets */
+.window-app.sheet,
+.window-app.sheet .window-content {
+  background: #b4b3ba !important;
+  background-image: none !important;
+}
+
+/* Chat Messages */
+.chat-message {
+  background: #b4b3ba !important;
+  background-image: none !important;
+  border-color: #1a1820 !important;
+}
+

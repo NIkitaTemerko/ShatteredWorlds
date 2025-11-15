@@ -70,10 +70,15 @@ jobs:
         with:
           node-version: '18'
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
       - name: Install dependencies & pack
         run: |
-          npm ci
-          npm run pack
+          pnpm install --frozen-lockfile
+          pnpm pack
 
       - name: Create GitHub Release
         id: create_release

@@ -98,8 +98,6 @@
     align-items: center;
     gap: 4px;
     padding: 4px 6px;
-    border-radius: 6px;
-    border: 1px solid var(--color-border-light, rgba(0, 0, 0, 0.2));
     height: 40px;
     line-height: 1;
   }

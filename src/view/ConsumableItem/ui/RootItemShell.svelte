@@ -43,7 +43,7 @@
        bind:value={item.system.consumable.description}
        placeholder="Описание предмета..."
        on:change={(e) => updateConsumable('description', e.currentTarget.value)}
-    />
+    ></textarea>
    </section>
 
    <!-- ===== TYPE‑SPECIFIC DETAILS ===== -->
@@ -58,31 +58,46 @@
 
 <!-- ======================== СТИЛИ ======================== -->
 <style>
-   .consumable-card {
-      background: var(--light);
-      border: 2px solid var(--dark);
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-   }
+  .consumable-card {
+    background: transparent;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
 
-   /* sections */
-   section {
-      background: rgba(255, 255, 255, 0.5);
-      border: 1px solid var(--color-border-light-2);
-      padding: 0.75rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-   }
+  /* sections */
+  section {
+    background: transparent;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
 
-   .description textarea {
-      width: 100%;
-      min-height: 100px;
-      resize: vertical;
-      border: 1px solid var(--color-border-light-1);
-      padding: 0.5rem;
-   }
+  .description {
+    border-left: 4px solid var(--dark);
+    background: var(--light);
+  }
+
+  .description textarea {
+    width: 100%;
+    min-height: 100px;
+    resize: vertical;
+    border: none;
+    padding: 0.5rem;
+    background: transparent;
+    font-family: inherit;
+    font-size: var(--font-size-14);
+    color: #000;
+  }
+
+  .description textarea:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .description textarea::placeholder {
+    color: rgba(0, 0, 0, 0.5);
+  }
 </style>

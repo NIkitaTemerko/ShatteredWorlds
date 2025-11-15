@@ -1,113 +1,63 @@
 <script lang="ts">
-   import { activationTypes, perTypes } from "../constants/consumableConstats.js";
-   import type { ShwItem } from "../../../documents/Item/ShwItem";
-   import { getUpdateConsumable } from "../utils/updateConsumable";
-   import { Input } from "../../../shared/ui";
-   export let item: ShwItem;
+  import type { ShwItem } from '../../../documents/Item/ShwItem';
+  import { getUpdateConsumable } from '../utils/updateConsumable';
+  import { UsesControl } from '../../../features/uses';
+  import { ActivationControl } from '../../../features/activation';
+  import type { ActivationType, PerType } from '../../../entities/consumable/model';
 
-   const updateConsumable = getUpdateConsumable(item)
+  interface Props {
+    item: ShwItem;
+  }
+
+  let { item }: Props = $props();
+
+  const updateConsumable = getUpdateConsumable(item);
+
+  function handleUsesValueChange(value: number) {
+    updateConsumable('uses.value', value);
+  }
+
+  function handleUsesMaxChange(max: number) {
+    updateConsumable('uses.max', max);
+  }
+
+  function handleUsesPerChange(per: PerType) {
+    updateConsumable('uses.per', per);
+  }
+
+  function handleActivationTypeChange(type: ActivationType) {
+    updateConsumable('activation.type', type);
+  }
+
+  function handleActivationCostChange(cost: number) {
+    updateConsumable('activation.cost', cost);
+  }
 </script>
 
-<section class="section-grid small-gap">
-   <div class="stat-block">
-      <label for="uses">Заряды</label>
-      <div class="input-group">
-         <Input
-            id="uses"
-            type="number"
-            min="0"
-            bind:value={item.system.consumable.uses.value}
-            onchange={(e) => updateConsumable('uses.value', Number(e.currentTarget.value))}
-         />
-         <div class="devider">из</div>
-         <Input
-            type="number"
-            min="0"
-            bind:value={item.system.consumable.uses.max}
-            onchange={(e) => updateConsumable('uses.max', Number(e.currentTarget.value))}
-         />
-      </div>
-      <select
-         bind:value={item.system.consumable.uses.per}
-         on:change={(e) => updateConsumable('uses.per', e.currentTarget.value)}
-      >
-         {#each perTypes as per}
-            <option value={per.value}>{per.label}</option>
-         {/each}
-      </select>
-   </div>
+<section class="uses-activation-section">
+  <UsesControl
+    usesValue={item.system.consumable.uses.value}
+    usesMax={item.system.consumable.uses.max}
+    usesPer={item.system.consumable.uses.per}
+    onUsesValueChange={handleUsesValueChange}
+    onUsesMaxChange={handleUsesMaxChange}
+    onUsesPerChange={handleUsesPerChange}
+  />
 
-   <div class="stat-block">
-      <label for="activation">Активация</label>
-      <select
-         bind:value={item.system.consumable.activation.type}
-         on:change={(e) => updateConsumable('activation.type', e.currentTarget.value)}
-      >
-         {#each activationTypes as act}
-            <option value={act.value}>{act.label}</option>
-         {/each}
-      </select>
-      <Input
-         id="activation"
-         type="number"
-         min="0"
-         bind:value={item.system.consumable.activation.cost}
-         onchange={(e) => updateConsumable('activation.cost', Number(e.currentTarget.value))}
-      />
-   </div>
+  <ActivationControl
+    activationType={item.system.consumable.activation.type}
+    activationCost={item.system.consumable.activation.cost}
+    onActivationTypeChange={handleActivationTypeChange}
+    onActivationCostChange={handleActivationCostChange}
+  />
 </section>
 
 <style>
-   /* sections */
-   section {
-      background: rgba(255, 255, 255, 0.5);
-      border: 1px solid var(--color-border-light-2);
-      padding: 0.75rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-   }
-
-   .section-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 0.5rem;
-   }
-
-   .section-grid.small-gap {
-      gap: 0.25rem;
-   }
-
-   .stat-block {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-      position: relative;
-   }
-
-   .stat-block > .input-group {
-      display: flex;
-      gap: 0.25rem;
-      align-items: center;
-   }
-
-   .stat-block label {
-      font-weight: 600;
-      font-size: var(--font-size-12);
-      color: var(--dark);
-   }
-   .stat-block select {
-      border: 1px solid var(--color-border-light-2);
-      padding: 0.25rem 0.4rem;
-      text-align: center;
-   }
-   :global(.stat-block .shw-input) {
-      border: 1px solid var(--color-border-light-2);
-      padding: 0.25rem 0.4rem;
-      text-align: center;
-   }
-   .stat-block .devider {
-      pointer-events: none;
-      font-weight: bold;
-   }
+  .uses-activation-section {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+    background: var(--color-border-light-3);
+    padding: 0;
+  }
 </style>

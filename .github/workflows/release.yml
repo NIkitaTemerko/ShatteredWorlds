@@ -78,7 +78,7 @@ jobs:
       - name: Install dependencies & pack
         run: |
           pnpm install --frozen-lockfile
-          pnpm pack
+          pnpm run pack
 
       - name: Create GitHub Release
         id: create_release

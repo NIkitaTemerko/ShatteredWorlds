@@ -1,4 +1,4 @@
-import type { ShwActorSystem, ShwNpcSystem } from '../../documents/Actor/types/ShwActorSystem';
+import type { ShwActorSystem, ShwNpcSystem } from '../../../documents/Actor/types/ShwActorSystem';
 
 /** Tab types for character sheets */
 export type CharacterTab =

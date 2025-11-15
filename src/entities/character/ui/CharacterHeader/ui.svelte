@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { ShwActor } from '../../../documents/Actor/ShwActor';
-  import Input from '../Input/ui.svelte';
+  import type { ShwActor } from '../../../../documents/Actor/ShwActor';
+  import Input from '../../../../shared/ui/Input/ui.svelte';
   import HPBar from './HPBar.svelte';
 
   interface Props {

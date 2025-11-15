@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { CharacterTab, TabConfig } from '../../model';
-  import { TAB_CONFIGS } from '../../model';
+  import type { CharacterTab, TabConfig } from '../../../../entities/character/model';
+  import { TAB_CONFIGS } from '../../../../entities/character/model';
 
   interface Props {
     activeTab: CharacterTab;

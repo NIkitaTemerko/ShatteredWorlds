@@ -1,6 +1,3 @@
-// src/lib/Actor/SvelteActorSheet.ts
-
-// src/lib/svelte-host.ts
 import { mount, unmount } from 'svelte';
 import type { ShwActor } from '../../documents/Actor/ShwActor';
 
@@ -15,7 +12,7 @@ export function mountSvelte(
   return { destroy: () => unmount(inst, { outro: true }) };
 }
 
-export abstract class SvelteActorSheet extends ActorSheet {
+export abstract class SvelteActorSheet extends foundry.appv1.sheets.ActorSheet {
   /** Хэндл смонтированного Svelte-компонента (Svelte 5) */
   private _svelte: SvelteHandle | null = null;
 

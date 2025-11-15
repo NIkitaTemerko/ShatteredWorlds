@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { ShwActor } from '../../../documents/Actor/ShwActor';
-  import { ActionIcon } from '../ActionIcon';
-  import Input from '../Input/ui.svelte';
+  import type { ShwActor } from '../../../../documents/Actor/ShwActor';
+  import { ActionIcon } from '../../../../shared/ui/ActionIcon';
+  import Input from '../../../../shared/ui/Input/ui.svelte';
 
   interface Props {
     actor: ShwActor<'character'> | ShwActor<'npc'>;

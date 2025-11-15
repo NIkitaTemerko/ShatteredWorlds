@@ -12,7 +12,7 @@ export function mountSvelte(
   return { destroy: () => unmount(inst, { outro: true }) };
 }
 
-export class ShwItemSheet extends ItemSheet {
+export class ShwItemSheet extends foundry.appv1.sheets.ItemSheet {
   /** Хэндл смонтированного Svelte-компонента (Svelte 5) */
   private _svelte: SvelteHandle | null = null;
 
@@ -20,7 +20,7 @@ export class ShwItemSheet extends ItemSheet {
   static Shell: any;
 
   static override get defaultOptions() {
-    return foundry.utils.mergeObject(ItemSheet.defaultOptions, {
+    return foundry.utils.mergeObject(foundry.appv1.sheets.ItemSheet.defaultOptions, {
       width: 500,
       height: 500,
       // scrollY можно оставить, но используем ручное восстановление скролла ниже

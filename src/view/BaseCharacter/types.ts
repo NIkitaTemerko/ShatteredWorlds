@@ -1,2 +1,2 @@
-// Types moved to src/shared/model/CharacterTypes.ts
-export type { CharacterTab as Tabs } from '../../shared/model';
+// Types moved to src/entities/character/model
+export type { CharacterTab as Tabs } from '../../entities/character';

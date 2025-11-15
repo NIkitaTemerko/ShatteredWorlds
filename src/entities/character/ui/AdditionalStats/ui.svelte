@@ -9,7 +9,7 @@
     ADDITIONAL_ATTRIBUTE_ICONS,
     ADDITIONAL_ATTRIBUTE_COLORS,
   } from '../../model';
-  import { Input } from '../Input';
+  import { Input } from '../../../../shared/ui/Input';
 
   interface Props {
     stats: AdditionalAttributes;
@@ -45,7 +45,7 @@
   const orderedEntries = $derived([...editableEntries, ...readonlyEntries]);
 
   const hasHelper = (key: keyof AdditionalAttributes): boolean => {
-    return ['impulse', 'range', 'damageReduction', 'armorClass'].includes(key);
+    return ['impulse', 'range', 'damageReduction', 'armorClass'].includes(String(key));
   };
 
   const getHelperValue = (key: keyof AdditionalAttributes): number | undefined => {

@@ -51,6 +51,7 @@
     padding: 0;
     background: var(--color-border-light-3);
     border: none;
+    padding: 3px 0;
   }
 
   .sheet-tabs .item {

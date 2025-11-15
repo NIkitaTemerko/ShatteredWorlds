@@ -152,8 +152,7 @@ button::after,
    NEUTRAL BACKGROUND FOR SHEETS AND CHAT
    ============================================================ */
 
-/* Character and Item Sheets */
-.window-app.sheet,
+/* Character and Item Sheets - only content area, not header */
 .window-app.sheet .window-content {
   background: #b4b3ba !important;
   background-image: none !important;

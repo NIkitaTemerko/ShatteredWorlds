@@ -135,6 +135,7 @@
 
   .tab.active {
     background: var(--dark);
+    color: #fff;
   }
 
   .actions {

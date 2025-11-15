@@ -94,7 +94,14 @@
         <i class="fas fa-sword damage-icon"></i>
       {/snippet}
     </ActionIcon>
-    <Input variant="underline" bind:value={damageValue} onkeydown={(e) => e.key === 'Enter' && applyDamage()} type="number" min={0} style="width:3rem;" />
+    <Input
+      variant="underline"
+      bind:value={damageValue}
+      onkeydown={(e) => e.key === 'Enter' && applyDamage()}
+      type="number"
+      min={0}
+      style="width:3rem;"
+    />
     <ActionIcon
       title="Учитывать защиту"
       onclick={toggleDefense}

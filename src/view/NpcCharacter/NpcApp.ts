@@ -9,6 +9,7 @@ export class NpcApp extends SvelteActorSheet {
     const options = SvelteActorSheet.defaultOptions;
     return foundry.utils.mergeObject(options, {
       width: 820,
+      height: 750,
       resizable: false,
     });
   }

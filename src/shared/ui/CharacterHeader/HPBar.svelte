@@ -19,11 +19,16 @@
   function applyDamage() {
     if (damageValue <= 0) return;
 
-    const damageReduction = actor.system.additionalAttributes.damageReduction || 0;
+    const damageReduction = 'totalDamageReduction' in actor.system.helpers 
+      ? actor.system.helpers.totalDamageReduction
+      : actor.system.additionalAttributes.damageReduction || 0;
 
     let actualDamage = Math.max(0, damageValue - damageReduction);
     if (defenseActive) {
-      const armorClass = actor.system.additionalAttributes.armorClass || 0;
+      const armorClass = 
+        'totalArmorClass' in actor.system.helpers 
+          ? actor.system.helpers.totalArmorClass
+          : actor.system.additionalAttributes.armorClass || 0;
       actualDamage = Math.max(0, actualDamage - armorClass);
     }
 

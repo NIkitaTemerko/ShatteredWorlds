@@ -5,8 +5,8 @@ const NPC_HELPER_KEYS: (keyof ShwNpcSystem['helpers'])[] = [
   'totalImpulse',
   'totalHealth',
   'totalSpeed',
-  'totalDamage',
   'totalDamageReduction',
+  'totalArmorClass',
   'totalRange',
 ];
 
@@ -43,8 +43,8 @@ const emptyHelperMap = {
   totalImpulse: 0,
   totalHealth: 0,
   totalSpeed: 0,
-  totalDamage: 0,
   totalDamageReduction: 0,
+  totalArmorClass: 0,
   totalRange: 0,
 };
 

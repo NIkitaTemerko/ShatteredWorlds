@@ -66,6 +66,7 @@ export interface ShwNpcSystem {
   utility: UtilityFields;
   helpers: BaseHelpers & {
     totalDamageReduction: number;
+    totalArmorClass: number;
     totalRange: number;
   };
 }

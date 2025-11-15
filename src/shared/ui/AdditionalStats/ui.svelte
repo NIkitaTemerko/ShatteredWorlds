@@ -45,7 +45,7 @@
   const orderedEntries = $derived([...editableEntries, ...readonlyEntries]);
 
   const hasHelper = (key: keyof AdditionalAttributes): boolean => {
-    return ['impulse', 'range', 'damageReduction'].includes(key);
+    return ['impulse', 'range', 'damageReduction', 'armorClass'].includes(key);
   };
 
   const getHelperValue = (key: keyof AdditionalAttributes): number | undefined => {
@@ -56,6 +56,8 @@
         return 'totalRange' in helpers ? (helpers as NpcHelpers).totalRange : undefined;
       case 'damageReduction':
         return 'totalDamageReduction' in helpers ? (helpers as NpcHelpers).totalDamageReduction : undefined;
+      case 'armorClass':
+        return 'totalArmorClass' in helpers ? (helpers as NpcHelpers).totalArmorClass : undefined;
       default:
         return undefined;
     }

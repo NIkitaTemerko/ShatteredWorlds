@@ -1,7 +1,8 @@
 <script lang="ts">
   import type { ShwActor } from '../../../documents/Actor/ShwActor';
-  import type { AdditionalAttributes } from '../../../shared/model';
-  import { AttributeStats, AdditionalStats, RollPanel } from '../../../shared/ui';
+  import type { AdditionalAttributes } from '../../../entities/character';
+  import { CharacterHeader, AttributeStats, AdditionalStats } from '../../../entities/character';
+  import { RollPanel } from '../../../features/roll';
 
   interface Props {
     actor: ShwActor<'npc'>;
@@ -27,6 +28,8 @@
     'armorClass',
   ]);
 </script>
+
+<CharacterHeader {actor} />
 
 <section>
   <AttributeStats {actor} isNpc={true} />

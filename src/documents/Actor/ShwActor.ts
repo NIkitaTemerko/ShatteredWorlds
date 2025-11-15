@@ -3,6 +3,7 @@ import { prepareCharacterBaseData } from '../../helpers/Character/prepareCharact
 import { prepareCharacterDerivedData } from '../../helpers/Character/prepareCharacterDerivedData';
 import { prepareNpcBaseData } from '../../helpers/Npc/prepareNpcBaseData';
 import { prepareNpcDerivedData } from '../../helpers/Npc/prepareNpcDerivedData';
+import type { ShwItem } from '../Item/ShwItem';
 import type { ShwActorSystem, ShwNpcSystem } from './types/ShwActorSystem';
 
 type ActorKind = 'character' | 'npc'; // можно расширять
@@ -13,12 +14,12 @@ type SystemByKind = {
 };
 
 export class ShwActor<K extends keyof SystemByKind = ActorKind> extends Actor {
-  // @ts-expect-error
+  // @ts-expect-error - Override Foundry's base type system
   declare type: K;
-  // @ts-expect-error
+  // @ts-expect-error - Override Foundry's base system type
   declare system: SystemByKind[K];
-  // @ts-expect-error
-  declare items: Item<'consumable'>[];
+  // @ts-expect-error - Override Foundry's items collection type
+  declare items: Collection<ShwItem>;
   declare update: (
     data?: object,
     operation?: Partial<Omit<foundry.abstract.types.DatabaseUpdateOperation, 'updates'>>,
@@ -69,7 +70,7 @@ export class ShwActor<K extends keyof SystemByKind = ActorKind> extends Actor {
 
   override getRollData() {
     // берём базовый набор, который делает Foundry
-    const data: any = super.getRollData();
+    const data: Record<string, unknown> = super.getRollData();
 
     // гарантируем, что initiative — число
     const init = Number(this.system?.additionalAttributes?.initiative ?? 0);

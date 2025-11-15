@@ -1,123 +1,102 @@
 <script lang="ts">
-   import type {ShwItem} from "../../../documents/Item/ShwItem";
-   import {getUpdateConsumable} from "../utils/updateConsumable";
-   import {applicationTypes, saveTypes} from "../constants/consumableConstats";
+  import type { ShwItem } from '../../../documents/Item/ShwItem';
+  import { getUpdateConsumable } from '../utils/updateConsumable';
+  import { Input, SelectInput } from '../../../shared/ui';
+  import { APPLICATION_TYPES, SAVE_TYPES, StatsCard } from '../../../entities/consumable';
 
-   export let item: ShwItem;
+  interface Props {
+    item: ShwItem;
+  }
 
-   const updateConsumable = getUpdateConsumable(item)
+  let { item }: Props = $props();
+
+  const updateConsumable = getUpdateConsumable(item);
 </script>
 
-{#if item.system.consumable.consumableType === 'poison'
-   && item.system.consumable.damage !== undefined
-   && item.system.consumable.save !== undefined}
-      <section class="section-grid type-specific">
-      <div class="stat-block">
-         <label for="damage-initial">Начальный урон</label>
-         <input
-            id="damage-initial"
-            type="text"
-            value={item.system.consumable.damage.initial}
-            on:change={(e) => updateConsumable('damage.initial', e.currentTarget.value)}
-         />
+{#if item.system.consumable.consumableType === 'poison' && item.system.consumable.damage !== undefined && item.system.consumable.save !== undefined}
+  <StatsCard columns={3}>
+    <div class="stat-col">
+      <div class="stat-header">Начальный урон</div>
+      <div class="stat-body">
+        <Input
+          type="text"
+          value={item.system.consumable.damage.initial}
+          variant="underline"
+          textAlign="center"
+          fullWidth
+          onchange={(e) => updateConsumable('damage.initial', e.currentTarget.value)}
+        />
       </div>
-      <div class="stat-block">
-         <label for="damage-recurring">Повтор. урон</label>
-         <input
-            id="damage-recurring"
-            type="text"
-            value={item.system.consumable.damage.recurring}
-            on:change={(e) => updateConsumable('damage.recurring', e.currentTarget.value)}
-         />
+    </div>
+
+    <div class="stat-col">
+      <div class="stat-header">Повтор. урон</div>
+      <div class="stat-body">
+        <Input
+          type="text"
+          value={item.system.consumable.damage.recurring}
+          variant="underline"
+          textAlign="center"
+          fullWidth
+          onchange={(e) => updateConsumable('damage.recurring', e.currentTarget.value)}
+        />
       </div>
-      <div class="stat-block">
-         <label for="damage-duration">Длительность (раунд)</label>
-         <input
-            id="damage-duration"
-            type="number"
-            min="1"
-            value={item.system.consumable.damage.duration}
-            on:change={(e) => updateConsumable('damage.duration', Number(e.currentTarget.value))}
-         />
+    </div>
+
+    <div class="stat-col">
+      <div class="stat-header">Длительность</div>
+      <div class="stat-body">
+        <Input
+          type="number"
+          min="1"
+          value={item.system.consumable.damage.duration}
+          variant="underline"
+          textAlign="center"
+          fullWidth
+          onchange={(e) => updateConsumable('damage.duration', Number(e.currentTarget.value))}
+        />
       </div>
-      <div class="stat-block">
-         <label for="save">Спасбросок</label>
-         <select
-            id="save"
-            value={item.system.consumable.save.type}
-            on:change={(e) => updateConsumable('save.type', e.currentTarget.value)}
-         >
-            {#each saveTypes as type}
-               <option value={type.value}>{type.label}</option>
-            {/each}
-         </select>
+    </div>
+
+    <div class="stat-col">
+      <div class="stat-header">Спасбросок</div>
+      <div class="stat-body">
+        <SelectInput
+          value={item.system.consumable.save.type}
+          options={SAVE_TYPES}
+          variant="square"
+          fullWidth
+          onchange={(e) => updateConsumable('save.type', e.currentTarget.value)}
+        />
       </div>
-      <div class="stat-block">
-         <label for="save-dc">Сложность</label>
-         <input
-            id="save-dc"
-            type="number"
-            min="0"
-            value={item.system.consumable.save.dc}
-            on:change={(e) => updateConsumable('save.dc', Number(e.currentTarget.value))}
-         />
+    </div>
+
+    <div class="stat-col">
+      <div class="stat-header">Сложность</div>
+      <div class="stat-body">
+        <Input
+          type="number"
+          min="0"
+          value={item.system.consumable.save.dc}
+          variant="underline"
+          textAlign="center"
+          fullWidth
+          onchange={(e) => updateConsumable('save.dc', Number(e.currentTarget.value))}
+        />
       </div>
-      <div class="stat-block full">
-         <label for="application">Применение</label>
-         <select
-            id="application"
-            bind:value={item.system.consumable.application}
-            on:change={(e) => updateConsumable('application', e.currentTarget.value, e)}
-         >
-            {#each applicationTypes as type}
-               <option value={type.value}>{type.label}</option>
-            {/each}
-         </select>
+    </div>
+
+    <div class="stat-col full">
+      <div class="stat-header">Применение</div>
+      <div class="stat-body">
+        <SelectInput
+          bind:value={item.system.consumable.application}
+          options={APPLICATION_TYPES}
+          variant="square"
+          fullWidth
+          onchange={(e) => updateConsumable('application', e.currentTarget.value, e)}
+        />
       </div>
-   </section>
+    </div>
+  </StatsCard>
 {/if}
-
-<style>
-   section {
-      background: rgba(255, 255, 255, 0.5);
-      border: 1px solid var(--color-border-light-2);
-      padding: 0.75rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-   }
-
-   .section-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 0.5rem;
-   }
-
-   .stat-block {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-      position: relative;
-   }
-
-   .stat-block.full {
-      grid-column: 1 / -1;
-   }
-
-   .stat-block label {
-      font-weight: 600;
-      font-size: var(--font-size-12);
-      color: var(--dark);
-   }
-   .stat-block input,
-   .stat-block select {
-      border: 1px solid var(--color-border-light-2);
-      padding: 0.25rem 0.4rem;
-      text-align: center;
-   }
-
-   .type-specific {
-      border-left: 4px solid var(--dark);
-   }
-
-</style>

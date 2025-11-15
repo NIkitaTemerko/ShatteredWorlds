@@ -1,258 +1,226 @@
 <script lang="ts">
-   import type { ShwItem } from "../../../documents/Item/ShwItem";
-   import { getUpdateConsumable } from "../utils/updateConsumable";
-   import { effectTypes } from "../constants/consumableConstats";
+  import type { ShwItem } from '../../../documents/Item/ShwItem';
+  import { getUpdateConsumable } from '../utils/updateConsumable';
+  import { Input, SelectInput } from '../../../shared/ui';
+  import { EFFECT_TYPES, StatsCard } from '../../../entities/consumable';
 
-   export let item: ShwItem;
+  interface Props {
+    item: ShwItem;
+  }
 
-   const updateConsumable = getUpdateConsumable(item)
-   const consEffects: any[] = (item?.system?.consumable as any)?.effects ?? []
+  let { item }: Props = $props();
 
-   // 2) Добавляем новый элемент, подставляя шаблон по типу
-   function addEffect() {
-      const effects = [...consEffects];
-      if (item.system.consumable.consumableType === 'potion') {
-         effects.push({ type: 'heal', amount: 0, duration: 1, attribute: '' });
-      } else {
-         effects.push({ type: 'бафф', value: 0, duration: 1 });
-      }
-      updateConsumable('effects', effects);
-   }
+  const updateConsumable = getUpdateConsumable(item);
+  const consEffects: any[] = (item?.system?.consumable as any)?.effects ?? [];
 
-   // 3) Удаляем по индексу
-   function removeEffect(idx: number) {
-      const effects = consEffects.filter((_, i) => i !== idx);
-      updateConsumable('effects', effects);
-   }
+  function addEffect() {
+    const effects = [...consEffects];
+    if (item.system.consumable.consumableType === 'potion') {
+      effects.push({ type: 'heal', amount: 0, duration: 1, attribute: '' });
+    } else {
+      effects.push({ type: 'бафф', value: 0, duration: 1 });
+    }
+    updateConsumable('effects', effects);
+  }
 
-   // 4) Обновляем любое поле
-   function updateEffect(idx: number, field: string, value: any) {
-      const effects = consEffects.map((e, i) =>
-         i === idx ? { ...e, [field]: value } : e
-      );
-      updateConsumable('effects', effects);
-   }
+  function removeEffect(idx: number) {
+    const effects = consEffects.filter((_, i) => i !== idx);
+    updateConsumable('effects', effects);
+  }
+
+  function updateEffect(idx: number, field: string, value: any) {
+    const effects = consEffects.map((e, i) => (i === idx ? { ...e, [field]: value } : e));
+    updateConsumable('effects', effects);
+  }
 </script>
 
 {#if item.system.consumable.consumableType === 'potion' || item.system.consumable.consumableType === 'food'}
-   <section class="section-grid fourth type-specific effects-section">
-         {#if item.system.consumable.consumableType === 'food' && item.system.consumable.nutrition !== undefined}
-            <div class="stat-block full header">
-               <h3>Пищевая ценность</h3>
-            </div>
-            <div class="stat-block full nutrition-section">
-               <div class="stat-block">
-                  <label for="nutrition-duration">Длительность насыщения</label>
-                  <input
-                     id="nutrition-duration"
-                     type="text"
-                     bind:value={item.system.consumable.nutrition.duration}
-                     on:change={(e) => updateConsumable('nutrition.duration', e)}
-                  />
-               </div>
-               <div class="stat-block">
-                  <label for="nutrition-duration">Сила насыщения</label>
-                  <input
-                     id="nutrition-duration"
-                     type="text"
-                     bind:value={item.system.consumable.nutrition.value}
-                     on:change={(e) => updateConsumable('nutrition.duration', e)}
-                  />
-               </div>
-            </div>
-         {/if}
-         <!-- заголовок на всю ширину -->
-         <div class="stat-block full header">
-            <h3>Эффекты</h3>
-            <button type="button" class="add-btn" on:click={addEffect}>+ Добавить эффект</button>
-         </div>
+  <section class="effects-section">
+    {#if item.system.consumable.consumableType === 'food' && item.system.consumable.nutrition !== undefined}
+      <div class="section-header">
+        <h3>Пищевая ценность</h3>
+      </div>
+      <StatsCard columns={2}>
+        <div class="stat-col">
+          <div class="stat-header">Длительность насыщения</div>
+          <div class="stat-body">
+            <Input
+              type="text"
+              bind:value={item.system.consumable.nutrition.duration}
+              variant="underline"
+              textAlign="center"
+              fullWidth
+              onchange={(e) => updateConsumable('nutrition.duration', e)}
+            />
+          </div>
+        </div>
+        <div class="stat-col">
+          <div class="stat-header">Сила насыщения</div>
+          <div class="stat-body">
+            <Input
+              type="text"
+              bind:value={item.system.consumable.nutrition.value}
+              variant="underline"
+              textAlign="center"
+              fullWidth
+              onchange={(e) => updateConsumable('nutrition.value', e)}
+            />
+          </div>
+        </div>
+      </StatsCard>
+    {/if}
 
-         {#each consEffects as eff, idx}
-            <!-- Тип эффекта -->
-            <div class="stat-block">
-               <label for="effect-type">{item.system.consumable.consumableType === 'potion' ? 'Тип' : 'Бонус'}</label>
-               {#if item.system.consumable.consumableType === 'potion'}
-                  <select
-                     id="effect-type"
-                     bind:value={eff.type}
-                     on:change={(e) => updateEffect(idx, 'type', e.currentTarget.value)}
-                  >
-                     {#each effectTypes as et}
-                        <option value={et.value}>{et.label}</option>
-                     {/each}
-                  </select>
-               {:else}
-                  <input
-                     id="effect-type"
-                     type="text"
-                     bind:value={eff.type}
-                     on:change={(e) => updateEffect(idx, 'type', e.currentTarget.value)}
-                  />
-               {/if}
+    <div class="section-header">
+      <h3>Эффекты</h3>
+      <button type="button" class="add-btn" onclick={addEffect}>+ Добавить</button>
+    </div>
+
+    {#each consEffects as eff, idx}
+      <div class="effect-card-wrapper">
+        <StatsCard columns={3}>
+          <div class="stat-col">
+            <div class="stat-header">{item.system.consumable.consumableType === 'potion' ? 'Тип' : 'Бонус'}</div>
+            <div class="stat-body">
+              {#if item.system.consumable.consumableType === 'potion'}
+                <SelectInput
+                  bind:value={eff.type}
+                  options={EFFECT_TYPES}
+                  variant="square"
+                  fullWidth
+                  onchange={(e) => updateEffect(idx, 'type', e.currentTarget.value)}
+                />
+              {:else}
+                <Input
+                  type="text"
+                  bind:value={eff.type}
+                  variant="underline"
+                  textAlign="center"
+                  fullWidth
+                  onchange={(e) => updateEffect(idx, 'type', e.currentTarget.value)}
+                />
+              {/if}
             </div>
+          </div>
 
-            <!-- Сила или Значение -->
-            <div class="stat-block">
-               <label for="effect-value">
-                  Сила
-               </label>
-               <input
-                  id="effect-value"
-                  type="number"
-                  min="0"
-                  value={item.system.consumable.consumableType === 'potion' ? eff.amount : eff.value}
-                  on:change={(e) => updateEffect(idx, item.system.consumable.consumableType === 'potion' ? 'amount' : 'value', Number(e.currentTarget.value))}
-               />
+          <div class="stat-col">
+            <div class="stat-header">Сила</div>
+            <div class="stat-body">
+              <Input
+                type="number"
+                min="0"
+                value={item.system.consumable.consumableType === 'potion' ? eff.amount : eff.value}
+                variant="underline"
+                textAlign="center"
+                fullWidth
+                onchange={(e) =>
+                  updateEffect(
+                    idx,
+                    item.system.consumable.consumableType === 'potion' ? 'amount' : 'value',
+                    Number(e.currentTarget.value)
+                  )}
+              />
             </div>
+          </div>
 
-            <!-- Длительность -->
-            <div class="stat-block">
-               <label for="effect-duration">Длительность</label>
-               <input
-                  id="effect-duration"
-                  type="number"
-                  min="1"
-                  bind:value={eff.duration}
-                  on:change={(e) => updateEffect(idx, 'duration', Number(e.currentTarget.value))}
-               />
+          <div class="stat-col">
+            <div class="stat-header">Длительность</div>
+            <div class="stat-body">
+              <Input
+                type="number"
+                min="1"
+                bind:value={eff.duration}
+                variant="underline"
+                textAlign="center"
+                fullWidth
+                onchange={(e) => updateEffect(idx, 'duration', Number(e.currentTarget.value))}
+              />
             </div>
+          </div>
 
-            <!-- Кнопка удаления -->
-            <div class="stat-block">
-               <button type="button" class="delete-btn" on:click={() => removeEffect(idx)}>×</button>
+          {#if item.system.consumable.consumableType === 'potion'}
+            <div class="stat-col full">
+              <div class="stat-header">Атрибут</div>
+              <div class="stat-body">
+                <Input
+                  type="text"
+                  bind:value={eff.attribute}
+                  variant="underline"
+                  textAlign="center"
+                  fullWidth
+                  onchange={(e) => updateEffect(idx, 'attribute', e.currentTarget.value)}
+                />
+              </div>
             </div>
-
-            <!-- Атрибут только для зелья -->
-            {#if item.system.consumable.consumableType === 'potion'}
-               <div class="stat-block full">
-                  <label for="effect-attribute">Атрибут</label>
-                  <input
-                     id="effect-attribute"
-                     type="text"
-                     bind:value={eff.attribute}
-                     on:change={(e) => updateEffect(idx, 'attribute', e.currentTarget.value)}
-                  />
-               </div>
-            {/if}
-
-         {/each}
-      </section>
+          {/if}
+        </StatsCard>
+        <button type="button" class="delete-btn" onclick={() => removeEffect(idx)}>×</button>
+      </div>
+    {/each}
+  </section>
 {/if}
 
 <style>
-   h3 {
-      margin: 0;
-      padding: 0;
-      border: none;
-      font-size: var(--font-size-16);
-   }
+  .effects-section {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    border-left: 4px solid var(--dark);
+    background: transparent;
+  }
 
-   /* sections */
-   section {
-      background: rgba(255, 255, 255, 0.5);
-      border: 1px solid var(--color-border-light-2);
-      padding: 0.75rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-   }
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    background: var(--dark, #666);
+    color: #000;
+  }
 
-   .section-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 0.5rem;
-   }
+  .section-header h3 {
+    margin: 0;
+    font-size: var(--font-size-16);
+    font-weight: 700;
+  }
 
-   .section-grid.fourth {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr) 20px;
-      gap: 0.5rem;
-      align-items: end;
-   }
+  .add-btn {
+    background: rgba(0, 0, 0, 0.2);
+    color: #000;
+    border: none;
+    padding: 0.25rem 0.75rem;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: var(--font-size-12);
+    transition: background 0.2s;
+  }
 
+  .add-btn:hover {
+    background: rgba(0, 0, 0, 0.3);
+  }
 
-   .stat-block {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-      position: relative;
-   }
+  .effect-card-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 40px;
+    gap: 2px;
+    align-items: stretch;
+  }
 
-   .stat-block.full {
-      grid-column: 1 / -1;
-   }
+  .delete-btn {
+    background: var(--color-border-light-3);
+    border: none;
+    border-left: 4px solid #c00;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #c00;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-   .stat-block label {
-      font-weight: 600;
-      font-size: var(--font-size-12);
-      color: var(--dark);
-   }
-   .stat-block input,
-   .stat-block select {
-      border: 1px solid var(--color-border-light-2);
-      padding: 0.25rem 0.4rem;
-      text-align: center;
-   }
-
-   /* повторяем секционный фон/бордюр */
-   .effects-section {
-      background: rgba(255, 255, 255, 0.5);
-      border: 1px solid var(--color-border-light-2);
-      border-radius: var(--radius);
-      padding: 0.75rem;
-   }
-
-   /* делаем грид с автоматическим переносом в нужных местах */
-   .effects-section {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 0.5rem;
-   }
-
-   .effects-section .stat-block.full {
-      grid-column: 1 / -1;
-   }
-
-   .stat-block.full.header {
-      grid-column: 1 / -1;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: baseline;
-   }
-
-   /* кнопки «+» и «×» можно оставить в том же стиле, что и в других блоках */
-   .add-btn {
-      background: var(--dark);
-      width: auto;
-      border: none;
-      cursor: pointer;
-   }
-   .add-btn:hover {
-      opacity: 0.8;
-   }
-   .delete-btn {
-      background: none;
-      border: none;
-      font-size: 1.2rem;
-      color: var(--dark);
-      cursor: pointer;
-   }
-   .delete-btn:hover {
-      color: #c00;
-   }
-
-   .type-specific {
-      border-left: 4px solid var(--dark);
-   }
-
-   .nutrition-section {
-      display: flex;
-      gap: 0.5rem;
-      flex-direction: row;
-   }
-   .nutrition-section .stat-block {
-      flex: 1;
-   }
-
+  .delete-btn:hover {
+    background: rgba(200, 0, 0, 0.15);
+    color: #a00;
+  }
 </style>

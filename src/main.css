@@ -1,2 +1,167 @@
+@import "@fontsource/tektur/400.css";
+@import "@fontsource/tektur/500.css";
+@import "@fontsource/tektur/600.css";
+@import "@fontsource/tektur/700.css";
+
 @import "tailwindcss/utilities.css" prefix(tw);
 @import "tailwindcss/theme.css" prefix(tw);
+
+@theme {
+  --font-family-sans: 'Tektur', ui-sans-serif, system-ui, sans-serif;
+}
+
+/* ============================================================
+   GLOBAL FONT APPLICATION
+   ============================================================ */
+.window-app,
+.sheet,
+.application,
+body,
+html {
+  font-family: 'Tektur', ui-sans-serif, system-ui, sans-serif !important;
+}
+
+/* Apply to all elements including Svelte scoped styles, but exclude icons */
+.window-app *:not(i):not([class*="fa-"]):not([class*="fas"]):not([class*="far"]):not([class*="fab"]),
+.sheet *:not(i):not([class*="fa-"]):not([class*="fas"]):not([class*="far"]):not([class*="fab"]),
+.application *:not(i):not([class*="fa-"]):not([class*="fas"]):not([class*="far"]):not([class*="fab"]) {
+  font-family: inherit !important;
+}
+
+/* ============================================================
+   FOUNDRY RED BORDER REMOVAL - AGGRESSIVE OVERRIDES
+   ============================================================ */
+   
+/* Target ALL possible form elements */
+input,
+select,
+button,
+textarea,
+input:focus,
+input:focus-visible,
+input:active,
+select:focus,
+select:focus-visible,
+select:active,
+button:focus,
+button:focus-visible,
+button:active {
+  outline: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Foundry-specific classes with highest specificity */
+.window-app *,
+.sheet *,
+.application *,
+.window-app *:focus,
+.sheet *:focus,
+.application *:focus {
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+/* ============================================================
+   SQUARE BORDERS - REMOVE ALL BORDER RADIUS
+   ============================================================ */
+
+/* Global reset for all elements */
+*,
+*::before,
+*::after {
+  border-radius: 0 !important;
+}
+
+/* Target all Foundry VTT UI elements */
+.window-app,
+.window-app *,
+.sheet,
+.sheet *,
+.application,
+.application *,
+.dialog,
+.dialog *,
+.notification,
+.notification *,
+.context-menu,
+.context-menu *,
+.tooltip,
+.tooltip *,
+#sidebar,
+#sidebar *,
+#navigation,
+#navigation *,
+#controls,
+#controls *,
+#hotbar,
+#hotbar *,
+#players,
+#players *,
+#pause,
+#pause *,
+.app,
+.app * {
+  border-radius: 0 !important;
+}
+
+/* Target common UI components */
+input,
+select,
+button,
+textarea,
+.button,
+.form-group,
+.form-fields,
+.tab,
+.tabs,
+.editor,
+.editor-content,
+.window-header,
+.window-content,
+.window-resizable-handle,
+.flexcol,
+.flexrow,
+.grid,
+img,
+.item,
+.item-list,
+.directory,
+.directory-list,
+.sidebar-tab,
+.control-tool,
+.scene-control,
+.macro,
+.hotbar-page {
+  border-radius: 0 !important;
+}
+
+/* Target pseudo-elements */
+input::before,
+input::after,
+select::before,
+select::after,
+button::before,
+button::after,
+.button::before,
+.button::after {
+  border-radius: 0 !important;
+}
+
+/* ============================================================
+   NEUTRAL BACKGROUND FOR SHEETS AND CHAT
+   ============================================================ */
+
+/* Character and Item Sheets - only content area, not header */
+.window-app.sheet .window-content {
+  background: #b4b3ba !important;
+  background-image: none !important;
+}
+
+/* Chat Messages */
+.chat-message {
+  background: #b4b3ba !important;
+  background-image: none !important;
+  border-color: #1a1820 !important;
+}
+

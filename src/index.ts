@@ -22,9 +22,18 @@ Hooks.once('init', () => {
 });
 
 Hooks.once('setup', () => {
-  Actors.registerSheet('shw', CharacterApp, { types: ['character'], makeDefault: true });
-  Actors.registerSheet('shw', NpcApp, { types: ['npc'], makeDefault: true });
-  Items.registerSheet('shw', ConsumableItemApp, { types: ['consumable'], makeDefault: true });
+  foundry.documents.collections.Actors.registerSheet('shw', CharacterApp, {
+    types: ['character'],
+    makeDefault: true,
+  });
+  foundry.documents.collections.Actors.registerSheet('shw', NpcApp, {
+    types: ['npc'],
+    makeDefault: true,
+  });
+  foundry.documents.collections.Items.registerSheet('shw', ConsumableItemApp, {
+    types: ['consumable'],
+    makeDefault: true,
+  });
 });
 
 Hooks.on('preCreateToken', (tokenDocument: any, tokenData: any) => {

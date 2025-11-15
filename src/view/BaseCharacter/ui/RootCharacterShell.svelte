@@ -1,7 +1,13 @@
 <script lang="ts">
   import type { ShwActor } from '../../../documents/Actor/ShwActor';
-  import type { CharacterTab, AdditionalAttributes } from '../../../shared/model';
-  import { TabNavigation, AttributeStats, AdditionalStats, RollPanel } from '../../../shared/ui';
+  import type { CharacterTab, AdditionalAttributes } from '../../../entities/character';
+  import {
+    CharacterHeader,
+    AttributeStats,
+    AdditionalStats,
+  } from '../../../entities/character';
+  import { TabNavigation } from '../../../features/navigation';
+  import { RollPanel } from '../../../features/roll';
 
   interface Props {
     actor: ShwActor<'character'>;
@@ -19,6 +25,8 @@
     actor.update({ [`system.additionalAttributes.${String(key)}`]: value });
   }
 </script>
+
+<CharacterHeader {actor} />
 
 <TabNavigation {activeTab} onTabChange={handleTabChange} />
 

@@ -61,7 +61,7 @@
         max={actor.system.helpers.totalHealth}
         oninput={clampHealthValue}
         value={actor.system.health.value}
-        style="width:3rem;text-align:right;"
+        style="width:2.5rem;text-align:right;"
       />
     </label>
     /
@@ -74,7 +74,7 @@
         min="0"
         oninput={clampHealthMax}
         value={actor.system.health.max}
-        style="width:3rem;text-align:right;"
+        style="width:2.5rem;text-align:right;"
       />
     </label>
     <span>({actor.system.helpers.totalHealth})</span>
@@ -134,7 +134,7 @@
   }
 
   .hp-label {
-    font-size: var(--font-size-12);
+    font-size: var(--font-size-14);
   }
 
   .hp-damage-wrapper {
@@ -146,7 +146,7 @@
 
   .damage-icon {
     cursor: pointer;
-    font-size: var(--font-size-14);
+    font-size: var(--font-size-18);
     line-height: 1;
     transform: rotate(-135deg);
   }
@@ -158,7 +158,7 @@
   .shield-icon {
     position: relative;
     cursor: pointer;
-    font-size: var(--font-size-14);
+    font-size: var(--font-size-18);
     line-height: 1;
   }
 

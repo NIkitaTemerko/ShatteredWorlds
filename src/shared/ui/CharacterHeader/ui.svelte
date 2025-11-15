@@ -25,7 +25,15 @@
     <div class="introduction-info">
       <h1 class="charname">
         <label>
-          <Input variant="underline" name="name" type="text" value={actor.name} placeholder="Name" fullWidth />
+          <span class="name-label">Имя:</span>
+          <Input
+            variant="underline"
+            name="name"
+            type="text"
+            value={actor.name}
+            placeholder="Name"
+            fullWidth
+            style="font-size:var(--font-size-20);padding:0.25rem 0.5rem;" />
         </label>
       </h1>
       <h1 class="level">
@@ -35,23 +43,25 @@
             name="system.utility.level"
             type="number"
             value={actor.system.utility.level}
-            style="width:fit-content;max-width:5rem;"
+            style="width:fit-content;max-width:5rem;font-size:var(--font-size-20);padding:0.25rem 0.5rem;"
           />
         </label>
       </h1>
       <div class="speed-wrapper">
-        <span>Скорость:</span>
-        <label>
-          <Input
-            variant="underline"
-            name="system.utility.speed"
-            type="number"
-            data-dtype="Number"
-            value={actor.system.utility.speed}
-            style="width:3rem;"
-          />
-        </label>
-        <span>({actor.system.helpers.totalSpeed})</span>
+        <i class="fas fa-rabbit-fast speed-icon"></i>
+        <h1>
+          <label>
+            <Input
+              variant="underline"
+              name="system.utility.speed"
+              type="number"
+              data-dtype="Number"
+              value={actor.system.utility.speed}
+              style="width:3rem;font-size:var(--font-size-20);padding:0.25rem 0.5rem;"
+            />
+          </label>
+        </h1>
+        <span class="tw:text-xl">({actor.system.helpers.totalSpeed})</span>
       </div>
     </div>
 
@@ -79,12 +89,12 @@
   .introduction-info {
     display: flex;
     gap: 0.5rem;
-    align-items: center;
+    align-items: baseline;
   }
 
   .level {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     flex-grow: 0;
     font-size: var(--font-size-20);
   }
@@ -99,12 +109,29 @@
   .charname {
     flex: 1;
     margin: 0;
+    font-size: var(--font-size-20);
+  }
+
+  .charname label {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.25rem;
+    width: 100%;
+  }
+
+  .name-label {
+    font-size: var(--font-size-20);
+    white-space: nowrap;
   }
 
   .speed-wrapper {
     margin-left: auto;
     display: flex;
-    align-items: center;
+    align-items: baseline;
     gap: 0.5rem;
+  }
+
+  .speed-icon {
+    font-size: var(--font-size-20);
   }
 </style>

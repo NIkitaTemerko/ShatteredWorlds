@@ -172,13 +172,15 @@
   }
 
   .shield-icon:not(.active):after {
+    content: '';
     position: absolute;
-    content: 'X';
-    font-size: 16px;
-    transform: translate(10%, -10%);
-    left: 0;
-    top: 0;
-    color: red;
+    left: 50%;
+    top: 50%;
+    width: 150%;
+    height: 3px;
+    background-color: #d7263d;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    border-radius: 2px;
   }
 
   .shield-icon.active {

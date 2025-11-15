@@ -139,7 +139,6 @@
   .general-panel {
     flex-direction: row;
     gap: 2px;
-    padding: 2px;
   }
 
   .stat-col {

@@ -10,7 +10,7 @@ export class CharacterApp extends SvelteActorSheet {
     return foundry.utils.mergeObject(options, {
       width: 800,
       height: 740,
-      resizable: true,
+      resizable: false,
     });
   }
 

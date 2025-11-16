@@ -85,7 +85,7 @@
                 <SelectInput
                   bind:value={eff.type}
                   options={EFFECT_TYPES}
-                  variant="square"
+                  variant="bordered"
                   fullWidth
                   onchange={(e) => updateEffect(idx, 'type', e.currentTarget.value)}
                 />

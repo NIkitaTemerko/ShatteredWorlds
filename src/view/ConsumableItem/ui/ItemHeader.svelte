@@ -23,7 +23,7 @@
 
   <div class="header-main">
     <Input
-      class="item-name"
+      class="tw:text-[20px] tw:font-bold tw:py-[0.4rem] tw:px-0 tw:bg-amber-50"
       type="text"
       bind:value={item.name}
       placeholder="Название предмета"
@@ -33,12 +33,11 @@
     />
 
     <div class="type-wrapper">
-      <span class="type-label">Тип:</span>
+      <span class="tw:opacity-80 tw:text-[20px]">Тип:</span>
       <SelectInput
         value={item.system.consumable.consumableType}
         options={CONSUMABLE_TYPES}
-        variant="square"
-        class="type-select"
+        variant="underline"
         onchange={handleTypeChange}
       />
     </div>
@@ -70,20 +69,5 @@
     display: flex;
     align-items: baseline;
     gap: 0.5rem;
-  }
-
-  .type-label {
-    font-size: var(--font-size-16);
-    opacity: 0.8;
-  }
-
-  :global(.type-select) {
-    width: max-content;
-    background: transparent !important;
-    border: none !important;
-    border-bottom: 2px solid currentColor !important;
-    border-radius: 0 !important;
-    padding: 0.25rem 0.5rem !important;
-    font-size: var(--font-size-14);
   }
 </style>

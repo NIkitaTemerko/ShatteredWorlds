@@ -25,7 +25,7 @@
       <SelectInput
         value={item.system.consumable.rarity}
         options={RARITY_TYPES}
-        variant="square"
+        variant="bordered"
         fullWidth
         onchange={handleRarityChange}
       />

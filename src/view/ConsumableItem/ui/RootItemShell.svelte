@@ -60,10 +60,9 @@
 <style>
   .consumable-card {
     background: transparent;
-    padding: 1rem;
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 5px;
   }
 
   /* sections */

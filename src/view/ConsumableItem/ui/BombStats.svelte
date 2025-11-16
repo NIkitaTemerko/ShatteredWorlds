@@ -36,7 +36,6 @@
         <SelectInput
           value={item.system.consumable.damage.type}
           options={DAMAGE_TYPES}
-          variant="square"
           fullWidth
           onchange={(e) => updateConsumable('damage.type', e.currentTarget.value)}
         />
@@ -64,7 +63,6 @@
         <SelectInput
           value={item.system.consumable.save.type}
           options={SAVE_TYPES}
-          variant="square"
           fullWidth
           onchange={(e) => updateConsumable('save.type', e.currentTarget.value)}
         />

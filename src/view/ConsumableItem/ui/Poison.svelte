@@ -64,7 +64,7 @@
         <SelectInput
           value={item.system.consumable.save.type}
           options={SAVE_TYPES}
-          variant="square"
+          variant="bordered"
           fullWidth
           onchange={(e) => updateConsumable('save.type', e.currentTarget.value)}
         />
@@ -92,7 +92,7 @@
         <SelectInput
           bind:value={item.system.consumable.application}
           options={APPLICATION_TYPES}
-          variant="square"
+          variant="bordered"
           fullWidth
           onchange={(e) => updateConsumable('application', e.currentTarget.value, e)}
         />

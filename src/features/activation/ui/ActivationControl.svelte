@@ -31,7 +31,7 @@
     <SelectInput
       value={activationType}
       options={ACTIVATION_TYPES}
-      variant="square"
+      variant="bordered"
       fullWidth
       onchange={handleTypeChange}
     />

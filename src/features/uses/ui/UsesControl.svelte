@@ -59,7 +59,6 @@
     <SelectInput
       value={usesPer}
       options={PER_TYPES}
-      variant="square"
       fullWidth
       onchange={handlePerChange}
     />

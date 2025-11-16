@@ -41,7 +41,6 @@
       value={activationCost}
       variant="underline"
       textAlign="center"
-      class="tw:w-full"
       onchange={handleCostChange}
     />
   </div>

@@ -3,6 +3,7 @@
   import { getUpdateConsumable } from '../utils/updateConsumable';
   import { Input, SelectInput } from '../../../shared/ui';
   import { CONSUMABLE_TYPES, type ConsumableType } from '../../../entities/consumable/model';
+  import { cn } from '../../../shared/lib/cn';
 
   interface Props {
     item: ShwItem;
@@ -23,12 +24,11 @@
 
   <div class="header-main">
     <Input
-      class="tw:text-[20px] tw:font-bold tw:py-[0.4rem] tw:px-0 tw:bg-amber-50"
+      class={cn("tw:text-[20px] tw:font-bold tw:py-[0.4rem]")}
       type="text"
       bind:value={item.name}
       placeholder="Название предмета"
       onchange={(e) => item.update({ name: e.currentTarget.value })}
-      fullWidth
       variant="underline"
     />
 
@@ -57,12 +57,6 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-  }
-
-  :global(.item-name) {
-    font-size: var(--font-size-20);
-    font-weight: 700;
-    padding: 0.4rem 0;
   }
 
   .type-wrapper {

@@ -164,7 +164,6 @@
     display: flex;
     flex-direction: column;
     gap: 2px;
-    border-left: 4px solid var(--dark);
     background: transparent;
   }
 
@@ -208,7 +207,6 @@
   .delete-btn {
     background: var(--color-border-light-3);
     border: none;
-    border-left: 4px solid #c00;
     font-size: 1.5rem;
     font-weight: 700;
     color: #c00;

@@ -16,10 +16,19 @@
     const value = (event.currentTarget as HTMLSelectElement).value as RarityType;
     updateConsumable('rarity', value);
   }
+
+  const rarityColors: Record<RarityType, { dark: string; light: string }> = {
+    common: { dark: '#9CA3AF', light: '#F3F4F6' },
+    uncommon: { dark: '#10B981', light: '#D1FAE5' },
+    rare: { dark: '#3B82F6', light: '#DBEAFE' },
+    legendary: { dark: '#F97316', light: '#FFEDD5' },
+  };
+
+  const currentRarityColors = $derived(rarityColors[item.system.consumable.rarity]);
 </script>
 
 <StatsCard columns={3}>
-  <div class="stat-col">
+  <div class="stat-col" style="--dark: {currentRarityColors.dark}; --light: {currentRarityColors.light}">
     <div class="stat-header">Редкость</div>
     <div class="stat-body">
       <SelectInput
@@ -32,7 +41,7 @@
     </div>
   </div>
 
-  <div class="stat-col">
+  <div class="stat-col" style="--dark: #EAB308; --light: #FEF9C3">
     <div class="stat-header">Цена</div>
     <div class="stat-body">
       <Input
@@ -47,7 +56,7 @@
     </div>
   </div>
 
-  <div class="stat-col">
+  <div class="stat-col" style="--dark: #8B7355; --light: #E7DDD3">
     <div class="stat-header">Вес</div>
     <div class="stat-body">
       <Input
@@ -63,7 +72,7 @@
     </div>
   </div>
 
-  <div class="stat-col">
+  <div class="stat-col" style="--dark: #06B6D4; --light: #CFFAFE">
     <div class="stat-header">Кол-во</div>
     <div class="stat-body">
       <Input
@@ -78,7 +87,7 @@
     </div>
   </div>
 
-  <div class="stat-col">
+  <div class="stat-col" style="--dark: #8B5CF6; --light: #EDE9FE">
     <div class="stat-header">Стек</div>
     <div class="stat-body">
       <Input

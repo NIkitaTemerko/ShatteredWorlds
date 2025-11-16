@@ -75,7 +75,6 @@
   }
 
   .description {
-    border-left: 4px solid var(--dark);
     background: var(--light);
   }
 

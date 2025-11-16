@@ -23,7 +23,7 @@
   }
 </script>
 
-<div class="activation-control">
+<div class="activation-control" style="--dark: #6B7280; --light: #F3F4F6">
   <div class="control-header">
     <span class="control-label">Активация</span>
   </div>
@@ -31,7 +31,7 @@
     <SelectInput
       value={activationType}
       options={ACTIVATION_TYPES}
-      variant="bordered"
+      variant="underline"
       fullWidth
       onchange={handleTypeChange}
     />
@@ -76,15 +76,10 @@
 
   .control-body :global(.shw-select) {
     background: transparent;
-    border: none;
-    border-bottom: 2px solid var(--dark);
-    padding: 0;
   }
 
   .control-body :global(.shw-input) {
     background: transparent;
-    border: none;
-    border-bottom: 2px solid var(--dark);
     padding: 0.25rem 0;
   }
 </style>

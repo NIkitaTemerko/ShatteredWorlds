@@ -34,7 +34,7 @@
       <SelectInput
         value={item.system.consumable.rarity}
         options={RARITY_TYPES}
-        variant="bordered"
+        variant="underline"
         fullWidth
         onchange={handleRarityChange}
       />
@@ -56,7 +56,7 @@
     </div>
   </div>
 
-  <div class="stat-col" style="--dark: #8B7355; --light: #E7DDD3">
+  <div class="stat-col" style="--dark: #6B7280; --light: #F3F4F6">
     <div class="stat-header">Вес</div>
     <div class="stat-body">
       <Input
@@ -72,7 +72,7 @@
     </div>
   </div>
 
-  <div class="stat-col" style="--dark: #06B6D4; --light: #CFFAFE">
+  <div class="stat-col" style="--dark: #3B82F6; --light: #DBEAFE">
     <div class="stat-header">Кол-во</div>
     <div class="stat-body">
       <Input
@@ -87,7 +87,7 @@
     </div>
   </div>
 
-  <div class="stat-col" style="--dark: #8B5CF6; --light: #EDE9FE">
+  <div class="stat-col" style="--dark: #3B82F6; --light: #DBEAFE">
     <div class="stat-header">Стек</div>
     <div class="stat-body">
       <Input

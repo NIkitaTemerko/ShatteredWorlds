@@ -63,16 +63,5 @@
   .stats-card :global(.stat-body .shw-input),
   .stats-card :global(.stat-body .shw-select) {
     background: transparent;
-    border: none;
-    border-bottom: 2px solid var(--dark);
-    padding: 0;
-    transition: border-bottom-color 0.2s ease;
-  }
-
-  .stats-card :global(.stat-body .shw-input:hover),
-  .stats-card :global(.stat-body .shw-input:focus),
-  .stats-card :global(.stat-body .shw-select:hover),
-  .stats-card :global(.stat-body .shw-select:focus) {
-    border-bottom-color: color-mix(in srgb, var(--dark) 60%, black);
   }
 </style>

@@ -30,7 +30,7 @@
   }
 </script>
 
-<div class="uses-control">
+<div class="uses-control" style="--dark: #8B5CF6; --light: #EDE9FE">
   <div class="control-header">
     <span class="control-label">Заряды</span>
   </div>
@@ -59,6 +59,7 @@
     <SelectInput
       value={usesPer}
       options={PER_TYPES}
+      variant="underline"
       fullWidth
       onchange={handlePerChange}
     />
@@ -109,14 +110,10 @@
 
   .control-body :global(.shw-select) {
     background: transparent;
-    border: none;
-    border-bottom: 2px solid var(--dark);
-    padding: 0;
   }
 
   .control-body :global(.shw-input) {
-    border: none;
-    border-bottom: 2px solid var(--dark);
+    background: transparent;
     padding: 0.25rem 0;
   }
 </style>

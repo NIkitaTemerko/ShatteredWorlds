@@ -38,7 +38,8 @@
    <UsesAndActivations item={item} />
 
    <!-- ===== DESCRIPTION ===== -->
-   <section class="description">
+   <section class="description" style="--dark: #6B7280; --light: #F3F4F6">
+    <div class="section-header">Описание</div>
     <textarea
        bind:value={item.system.consumable.description}
        placeholder="Описание предмета..."
@@ -75,7 +76,15 @@
   }
 
   .description {
-    background: var(--light);
+    gap: 0;
+  }
+
+  .description .section-header {
+    background: var(--dark);
+    color: #000;
+    padding: 0.35rem 0.5rem;
+    font-weight: 700;
+    font-size: var(--font-size-14);
   }
 
   .description textarea {
@@ -84,7 +93,7 @@
     resize: vertical;
     border: none;
     padding: 0.5rem;
-    background: transparent;
+    background: var(--light);
     font-family: inherit;
     font-size: var(--font-size-14);
     color: #000;
@@ -92,7 +101,7 @@
 
   .description textarea:focus {
     outline: none;
-    background: rgba(255, 255, 255, 0.15);
+    background: color-mix(in srgb, var(--light) 90%, white);
   }
 
   .description textarea::placeholder {

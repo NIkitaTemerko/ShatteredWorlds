@@ -14,7 +14,7 @@
 </script>
 
 {#if item.system.consumable.consumableType === 'poison' && item.system.consumable.damage !== undefined && item.system.consumable.save !== undefined}
-  <StatsCard columns={3}>
+  <StatsCard columns={3} borderColor="rgba(108, 117, 125, 0.5)">
     <div class="stat-col">
       <div class="stat-header">Начальный урон</div>
       <div class="stat-body">
@@ -64,7 +64,7 @@
         <SelectInput
           value={item.system.consumable.save.type}
           options={SAVE_TYPES}
-          variant="bordered"
+          variant="underline"
           fullWidth
           onchange={(e) => updateConsumable('save.type', e.currentTarget.value)}
         />
@@ -92,7 +92,7 @@
         <SelectInput
           bind:value={item.system.consumable.application}
           options={APPLICATION_TYPES}
-          variant="bordered"
+          variant="underline"
           fullWidth
           onchange={(e) => updateConsumable('application', e.currentTarget.value, e)}
         />

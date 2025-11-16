@@ -14,7 +14,7 @@
 </script>
 
 {#if item.system.consumable.consumableType === 'scroll' && item.system.consumable?.spell !== undefined && item.system.consumable?.requirements !== undefined}
-  <StatsCard columns={3}>
+  <StatsCard columns={2}>
     <div class="stat-col full">
       <div class="stat-header">Название заклинания</div>
       <div class="stat-body">

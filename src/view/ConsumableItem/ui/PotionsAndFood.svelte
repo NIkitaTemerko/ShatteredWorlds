@@ -37,13 +37,13 @@
 {#if item.system.consumable.consumableType === 'potion' || item.system.consumable.consumableType === 'food'}
   <section class="effects-section">
     {#if item.system.consumable.consumableType === 'food' && item.system.consumable.nutrition !== undefined}
-      <div class="section-header">
-        <h3>Пищевая ценность</h3>
-      </div>
-      <StatsCard columns={2}>
-        <div class="stat-col">
-          <div class="stat-header">Длительность насыщения</div>
-          <div class="stat-body">
+      <div class="nutrition-section" style="background: var(--color-border-light-3)">
+        <div class="section-header" style="background: #f08c00">
+          <h3>Пищевая ценность</h3>
+        </div>
+        <div class="nutrition-grid">
+          <div class="nutrition-item">
+            <div class="nutrition-label">Длительность насыщения</div>
             <Input
               type="text"
               bind:value={item.system.consumable.nutrition.duration}
@@ -53,10 +53,8 @@
               onchange={(e) => updateConsumable('nutrition.duration', e)}
             />
           </div>
-        </div>
-        <div class="stat-col">
-          <div class="stat-header">Сила насыщения</div>
-          <div class="stat-body">
+          <div class="nutrition-item">
+            <div class="nutrition-label">Сила насыщения</div>
             <Input
               type="text"
               bind:value={item.system.consumable.nutrition.value}
@@ -67,17 +65,17 @@
             />
           </div>
         </div>
-      </StatsCard>
+      </div>
     {/if}
 
     <div class="section-header">
-      <h3>Эффекты</h3>
+      <span class="tw:text-20 tw:font-bold">Эффекты</span>
       <button type="button" class="add-btn" onclick={addEffect}>+ Добавить</button>
     </div>
 
     {#each consEffects as eff, idx}
       <div class="effect-card-wrapper">
-        <StatsCard columns={3}>
+        <StatsCard columns={item.system.consumable.consumableType === 'potion' ? 2 : 3}>
           <div class="stat-col">
             <div class="stat-header">{item.system.consumable.consumableType === 'potion' ? 'Тип' : 'Бонус'}</div>
             <div class="stat-body">
@@ -85,7 +83,7 @@
                 <SelectInput
                   bind:value={eff.type}
                   options={EFFECT_TYPES}
-                  variant="bordered"
+                  variant="underline"
                   fullWidth
                   onchange={(e) => updateEffect(idx, 'type', e.currentTarget.value)}
                 />
@@ -138,7 +136,7 @@
           </div>
 
           {#if item.system.consumable.consumableType === 'potion'}
-            <div class="stat-col full">
+            <div class="stat-col">
               <div class="stat-header">Атрибут</div>
               <div class="stat-body">
                 <Input
@@ -172,7 +170,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 0.5rem;
-    background: var(--dark, #666);
+    background: var(--light, #666);
     color: #000;
   }
 
@@ -197,28 +195,66 @@
     background: rgba(0, 0, 0, 0.3);
   }
 
+  .nutrition-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .nutrition-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+    padding: 2px;
+    background: var(--color-border-light-3);
+  }
+
+  .nutrition-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    background: #ffd580;
+    padding: 0.5rem;
+  }
+
+  .nutrition-label {
+    font-weight: 700;
+    font-size: var(--font-size-12);
+    color: #000;
+    text-align: center;
+  }
+
   .effect-card-wrapper {
     display: grid;
     grid-template-columns: 1fr 40px;
-    gap: 2px;
+    gap: 4px;
+
     align-items: stretch;
+    background-color: var(--light);
   }
 
   .delete-btn {
-    background: var(--color-border-light-3);
+    margin: 0;
+    background: rgba(200, 0, 0, 0.3);
     border: none;
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-weight: 700;
-    color: #c00;
+    color: rgba(200, 0, 0, 0.6);
     cursor: pointer;
     transition: all 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
+    line-height: 1;
   }
 
   .delete-btn:hover {
     background: rgba(200, 0, 0, 0.15);
-    color: #a00;
+    color: #c00;
+  }
+
+  .stat-header {
+    background: var(--dark, #666);
+    color: #000;
   }
 </style>

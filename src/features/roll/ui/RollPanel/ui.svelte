@@ -157,19 +157,10 @@
     padding: 1rem;
   }
 
-  .roll-value input {
-    text-align: center;
-    background: transparent;
-  }
-
   .roll-value.bonus {
     background-color: var(--dark);
     color: #fff;
     height: 100%;
-  }
-
-  .roll-value.bonus input {
-    color: #fff;
   }
 
   .roll {

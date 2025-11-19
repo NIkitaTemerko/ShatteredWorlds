@@ -1,31 +1,24 @@
 <script lang="ts">
-  import type { ShwActor } from '../../../../documents/Actor/ShwActor';
-  import Input from '../../../../shared/ui/Input/ui.svelte';
-  import HPBar from './HPBar.svelte';
+  import type { ShwActor } from "../../../../documents/Actor/ShwActor";
+  import Input from "../../../../shared/ui/Input/ui.svelte";
+  import HPBar from "./HPBar.svelte";
+  import { t } from "../../../../shared/i18n";
 
   interface Props {
-    actor: ShwActor<'character'> | ShwActor<'npc'>;
+    actor: ShwActor<"character"> | ShwActor<"npc">;
   }
 
   let { actor }: Props = $props();
 </script>
 
 <header class="sheet-header">
-  <img
-    class="profile-img"
-    src={actor.img}
-    alt="avatar"
-    data-edit="img"
-    title={actor.name}
-    height="100"
-    width="100"
-  />
+  <img class="profile-img" src={actor.img} alt="avatar" data-edit="img" title={actor.name} height="100" width="100" />
 
   <div class="header-fields">
     <div class="introduction-info">
       <h1 class="charname">
         <label>
-          <span class="name-label">Имя:</span>
+          <span class="name-label">{t("character.nameLabel")}</span>
           <Input
             variant="underline"
             name="name"
@@ -33,7 +26,8 @@
             value={actor.name}
             placeholder="Name"
             fullWidth
-            style="font-size:var(--font-size-20);padding:0.25rem 0.5rem;" />
+            style="font-size:var(--font-size-20);padding:0.25rem 0.5rem;"
+          />
         </label>
       </h1>
       <h1 class="level">

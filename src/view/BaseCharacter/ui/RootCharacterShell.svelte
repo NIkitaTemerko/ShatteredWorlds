@@ -1,21 +1,17 @@
 <script lang="ts">
-  import type { ShwActor } from '../../../documents/Actor/ShwActor';
-  import type { CharacterTab, AdditionalAttributes } from '../../../entities/character';
-  import {
-    CharacterHeader,
-    AttributeStats,
-    AdditionalStats,
-  } from '../../../entities/character';
-  import { TabNavigation } from '../../../features/navigation';
-  import { RollPanel } from '../../../features/roll';
+  import type { CharacterTab, AdditionalAttributes } from "../../../entities/character";
+  import type { ShwActor } from "../../../documents/Actor/ShwActor";
+  import { CharacterHeader, AttributeStats, AdditionalStats } from "../../../entities/character";
+  import { TabNavigation } from "../../../features/navigation";
+  import { RollPanel } from "../../../features/roll";
 
   interface Props {
-    actor: ShwActor<'character'>;
+    actor: ShwActor<"character">;
   }
 
   let { actor }: Props = $props();
 
-  let activeTab = $state<CharacterTab>('stats');
+  let activeTab = $state<CharacterTab>("stats");
 
   function handleTabChange(tab: CharacterTab) {
     activeTab = tab;
@@ -30,12 +26,16 @@
 
 <TabNavigation {activeTab} onTabChange={handleTabChange} />
 
-{#if activeTab === 'stats'}
+{#if activeTab === "stats"}
   <section>
     <AttributeStats {actor} />
     <RollPanel {actor} />
   </section>
-  <AdditionalStats stats={actor.system.additionalAttributes} helpers={actor.system.helpers} onUpdate={handleAdditionalStatsUpdate} />
+  <AdditionalStats
+    stats={actor.system.additionalAttributes}
+    helpers={actor.system.helpers}
+    onUpdate={handleAdditionalStatsUpdate}
+  />
 {:else}
   <div>test</div>
 {/if}

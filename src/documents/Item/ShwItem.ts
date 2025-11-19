@@ -16,6 +16,7 @@ export class ShwItem extends Item {
     operation?: Partial<Omit<foundry.abstract.types.DatabaseUpdateOperation, 'updates'>>,
   ) => Promise<this | undefined>;
 
+
   private prepareConsumable() {
     if (!this.system.consumable && this.type === 'consumable') {
       const item = ItemFactory.createConsumable('bomb', {

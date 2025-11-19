@@ -1,0 +1,165 @@
+{
+  "SHW": {
+    "attributes": {
+      "natural": "Натуральный",
+      "fortune": "Фортуна",
+      "force": "Напор",
+      "perception": "Восприятие",
+      "psyDefence": "Пси‑защита",
+      "diplomacy": "Дипломатия"
+    },
+    "tabs": {
+      "stats": "Статы",
+      "inventory": "Инвентарь",
+      "equipment": "Экипировка",
+      "spells": "Заклинания",
+      "passives": "Пассивки",
+      "abilities": "Способности"
+    },
+    "additionalAttributes": {
+      "actions": "Действия",
+      "bonusActions": "Бонусные действия",
+      "reactions": "Реакции",
+      "impulse": "Импульс",
+      "additionalCloseCombatDamage": "Урон вблизи",
+      "additionalRangeDamage": "Урон на расстоянии",
+      "range": "Дальность",
+      "initiative": "Инициатива",
+      "damageReduction": "Поглощение урона",
+      "armorClass": "Защита"
+    },
+    "consumable": {
+      "activationType": {
+        "action": "действие",
+        "bonus": "бонус",
+        "reaction": "реакция"
+      },
+      "perType": {
+        "charges": "заряды",
+        "uses": "использования",
+        "turns": "ходы"
+      },
+      "rarityType": {
+        "common": "обычная",
+        "uncommon": "необычная",
+        "rare": "редкая",
+        "legendary": "легендарная"
+      },
+      "consumableType": {
+        "potion": "зелье",
+        "bomb": "бомба",
+        "scroll": "свиток",
+        "food": "еда",
+        "poison": "яд"
+      },
+      "damageType": {
+        "fire": "огонь",
+        "cold": "холод",
+        "lightning": "молния",
+        "acid": "кислота",
+        "poison": "яд",
+        "physical": "физический",
+        "force": "силовой"
+      },
+      "saveType": {
+        "force": "напор",
+        "perception": "восприятие",
+        "psyDefence": "псизащита",
+        "fortune": "фортуна",
+        "diplomacy": "дипломатия"
+      },
+      "applicationType": {
+        "injury": "рана",
+        "contact": "контакт",
+        "ingested": "иньекция",
+        "inhaled": "вдох"
+      },
+      "effectType": {
+        "heal": "лечение",
+        "buff": "баф",
+        "damage": "урон"
+      }
+    },
+    "item": {
+      "header": {
+        "namePlaceholder": "Название предмета",
+        "typeLabel": "Тип:"
+      },
+      "description": {
+        "title": "Описание",
+        "placeholder": "Описание предмета..."
+      },
+      "basicStats": {
+        "rarity": "Редкость",
+        "price": "Цена",
+        "weight": "Вес",
+        "quantity": "Кол-во",
+        "stack": "Стек"
+      },
+      "bomb": {
+        "damage": "Урон",
+        "damageType": "Тип урона",
+        "radius": "Радиус",
+        "save": "Спасбросок",
+        "difficulty": "Сложность"
+      },
+      "poison": {
+        "initialDamage": "Начальный урон",
+        "repeatDamage": "Повтор. урон",
+        "duration": "Длительность",
+        "save": "Спасбросок",
+        "difficulty": "Сложность",
+        "application": "Применение"
+      },
+      "scroll": {
+        "spellName": "Название заклинания",
+        "level": "Уровень",
+        "school": "Школа",
+        "requiredAttribute": "Треб. характеристика",
+        "difficulty": "Сложность"
+      },
+      "potionFood": {
+        "nutritionTitle": "Пищевая ценность",
+        "saturationDuration": "Длительность насыщения",
+        "saturationStrength": "Сила насыщения",
+        "effectsTitle": "Эффекты",
+        "addEffect": "+ Добавить",
+        "effectType": "Тип",
+        "effectBonus": "Бонус",
+        "effectStrength": "Сила",
+        "effectDuration": "Длительность",
+        "effectAttribute": "Атрибут",
+        "defaultEffect": "бафф"
+      }
+    },
+    "controls": {
+      "activation": "Активация",
+      "uses": "Заряды",
+      "usesOf": "из"
+    },
+    "character": {
+      "nameLabel": "Имя:",
+      "applyDamage": "Применить урон",
+      "considerArmor": "Учитывать защиту",
+      "attributeBonus": "Бонус характеристики",
+      "additionalAttribute": "Доп. {attribute}",
+      "saveThrow": "СБ‑{attribute}"
+    },
+    "roll": {
+      "base": "База",
+      "bonus": "Бонус",
+      "actions": "Действия",
+      "rollLabel": "Бросок",
+      "saveRollLabel": "Бросок защиты",
+      "advantage": "Преимущество",
+      "normal": "Обычный",
+      "disadvantage": "Помеха",
+      "flavorSave": "Спасбросок {attribute}",
+      "flavorRoll": "Бросок {attribute}",
+      "withBonus": " +{bonus}",
+      "withAdvantage": " с преимуществом",
+      "withDisadvantage": " с помехой",
+      "multiple": " ×{count}"
+    }
+  }
+}

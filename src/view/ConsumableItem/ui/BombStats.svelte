@@ -1,8 +1,9 @@
 <script lang="ts">
-  import type { ShwItem } from '../../../documents/Item/ShwItem';
-  import { getUpdateConsumable } from '../utils/updateConsumable';
-  import { Input, SelectInput } from '../../../shared/ui';
-  import { DAMAGE_TYPES, SAVE_TYPES, StatsCard } from '../../../entities/consumable';
+  import type { ShwItem } from "../../../documents/Item/ShwItem";
+  import { getUpdateConsumable } from "../utils/updateConsumable";
+  import { Input, SelectInput } from "../../../shared/ui";
+  import { DAMAGE_TYPES, SAVE_TYPES, StatsCard } from "../../../entities/consumable";
+  import { t } from "../../../shared/i18n";
 
   interface Props {
     item: ShwItem;
@@ -13,10 +14,10 @@
   const updateConsumable = getUpdateConsumable(item);
 </script>
 
-{#if item.system.consumable.consumableType === 'bomb' && item.system.consumable.damage !== undefined && item.system.consumable.save !== undefined}
+{#if item.system.consumable.consumableType === "bomb" && item.system.consumable.damage !== undefined && item.system.consumable.save !== undefined}
   <StatsCard columns={3} borderColor="rgba(215, 38, 61, 0.5)">
     <div class="stat-col">
-      <div class="stat-header">Урон</div>
+      <div class="stat-header">{t("item.bomb.damage")}</div>
       <div class="stat-body">
         <Input
           type="number"
@@ -25,26 +26,26 @@
           variant="underline"
           textAlign="center"
           fullWidth
-          onchange={(e) => updateConsumable('damage.amount', Number(e.currentTarget.value))}
+          onchange={(e) => updateConsumable("damage.amount", Number(e.currentTarget.value))}
         />
       </div>
     </div>
 
     <div class="stat-col">
-      <div class="stat-header">Тип урона</div>
+      <div class="stat-header">{t("item.bomb.damageType")}</div>
       <div class="stat-body">
         <SelectInput
           value={item.system.consumable.damage.type}
           options={DAMAGE_TYPES}
           variant="underline"
           fullWidth
-          onchange={(e) => updateConsumable('damage.type', e.currentTarget.value)}
+          onchange={(e) => updateConsumable("damage.type", e.currentTarget.value)}
         />
       </div>
     </div>
 
     <div class="stat-col">
-      <div class="stat-header">Радиус</div>
+      <div class="stat-header">{t("item.bomb.radius")}</div>
       <div class="stat-body">
         <Input
           type="number"
@@ -53,26 +54,26 @@
           variant="underline"
           textAlign="center"
           fullWidth
-          onchange={(e) => updateConsumable('radius', Number(e.currentTarget.value))}
+          onchange={(e) => updateConsumable("radius", Number(e.currentTarget.value))}
         />
       </div>
     </div>
 
     <div class="stat-col">
-      <div class="stat-header">Спасбросок</div>
+      <div class="stat-header">{t("item.bomb.save")}</div>
       <div class="stat-body">
         <SelectInput
           value={item.system.consumable.save.type}
           options={SAVE_TYPES}
           variant="underline"
           fullWidth
-          onchange={(e) => updateConsumable('save.type', e.currentTarget.value)}
+          onchange={(e) => updateConsumable("save.type", e.currentTarget.value)}
         />
       </div>
     </div>
 
     <div class="stat-col">
-      <div class="stat-header">Сложность</div>
+      <div class="stat-header">{t("item.bomb.difficulty")}</div>
       <div class="stat-body">
         <Input
           type="number"
@@ -81,7 +82,7 @@
           variant="underline"
           textAlign="center"
           fullWidth
-          onchange={(e) => updateConsumable('save.dc', Number(e.currentTarget.value))}
+          onchange={(e) => updateConsumable("save.dc", Number(e.currentTarget.value))}
         />
       </div>
     </div>

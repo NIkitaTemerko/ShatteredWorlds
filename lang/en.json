@@ -1,5 +1,165 @@
 {
-  "TemplateESM": {
-    "title": "Template Svelte (ESM)"
+  "SHW": {
+    "attributes": {
+      "natural": "Natural",
+      "fortune": "Fortune",
+      "force": "Force",
+      "perception": "Perception",
+      "psyDefence": "Psy Defense",
+      "diplomacy": "Diplomacy"
+    },
+    "tabs": {
+      "stats": "Stats",
+      "inventory": "Inventory",
+      "equipment": "Equipment",
+      "spells": "Spells",
+      "passives": "Passives",
+      "abilities": "Abilities"
+    },
+    "additionalAttributes": {
+      "actions": "Actions",
+      "bonusActions": "Bonus Actions",
+      "reactions": "Reactions",
+      "impulse": "Impulse",
+      "additionalCloseCombatDamage": "Melee Damage",
+      "additionalRangeDamage": "Range Damage",
+      "range": "Range",
+      "initiative": "Initiative",
+      "damageReduction": "Damage Reduction",
+      "armorClass": "Armor Class"
+    },
+    "consumable": {
+      "activationType": {
+        "action": "action",
+        "bonus": "bonus",
+        "reaction": "reaction"
+      },
+      "perType": {
+        "charges": "charges",
+        "uses": "uses",
+        "turns": "turns"
+      },
+      "rarityType": {
+        "common": "common",
+        "uncommon": "uncommon",
+        "rare": "rare",
+        "legendary": "legendary"
+      },
+      "consumableType": {
+        "potion": "potion",
+        "bomb": "bomb",
+        "scroll": "scroll",
+        "food": "food",
+        "poison": "poison"
+      },
+      "damageType": {
+        "fire": "fire",
+        "cold": "cold",
+        "lightning": "lightning",
+        "acid": "acid",
+        "poison": "poison",
+        "physical": "physical",
+        "force": "force"
+      },
+      "saveType": {
+        "force": "force",
+        "perception": "perception",
+        "psyDefence": "psy defense",
+        "fortune": "fortune",
+        "diplomacy": "diplomacy"
+      },
+      "applicationType": {
+        "injury": "injury",
+        "contact": "contact",
+        "ingested": "ingested",
+        "inhaled": "inhaled"
+      },
+      "effectType": {
+        "heal": "heal",
+        "buff": "buff",
+        "damage": "damage"
+      }
+    },
+    "item": {
+      "header": {
+        "namePlaceholder": "Item Name",
+        "typeLabel": "Type:"
+      },
+      "description": {
+        "title": "Description",
+        "placeholder": "Item description..."
+      },
+      "basicStats": {
+        "rarity": "Rarity",
+        "price": "Price",
+        "weight": "Weight",
+        "quantity": "Quantity",
+        "stack": "Stack"
+      },
+      "bomb": {
+        "damage": "Damage",
+        "damageType": "Damage Type",
+        "radius": "Radius",
+        "save": "Save",
+        "difficulty": "Difficulty"
+      },
+      "poison": {
+        "initialDamage": "Initial Damage",
+        "repeatDamage": "Repeat Damage",
+        "duration": "Duration",
+        "save": "Save",
+        "difficulty": "Difficulty",
+        "application": "Application"
+      },
+      "scroll": {
+        "spellName": "Spell Name",
+        "level": "Level",
+        "school": "School",
+        "requiredAttribute": "Required Attribute",
+        "difficulty": "Difficulty"
+      },
+      "potionFood": {
+        "nutritionTitle": "Nutrition",
+        "saturationDuration": "Saturation Duration",
+        "saturationStrength": "Saturation Strength",
+        "effectsTitle": "Effects",
+        "addEffect": "+ Add",
+        "effectType": "Type",
+        "effectBonus": "Bonus",
+        "effectStrength": "Strength",
+        "effectDuration": "Duration",
+        "effectAttribute": "Attribute",
+        "defaultEffect": "buff"
+      }
+    },
+    "controls": {
+      "activation": "Activation",
+      "uses": "Uses",
+      "usesOf": "of"
+    },
+    "character": {
+      "nameLabel": "Name:",
+      "applyDamage": "Apply Damage",
+      "considerArmor": "Consider Armor",
+      "attributeBonus": "Attribute Bonus",
+      "additionalAttribute": "Add. {attribute}",
+      "saveThrow": "Save {attribute}"
+    },
+    "roll": {
+      "base": "Base",
+      "bonus": "Bonus",
+      "actions": "Actions",
+      "rollLabel": "Roll",
+      "saveRollLabel": "Save Roll",
+      "advantage": "Advantage",
+      "normal": "Normal",
+      "disadvantage": "Disadvantage",
+      "flavorSave": "{attribute} Save",
+      "flavorRoll": "{attribute} Roll",
+      "withBonus": " +{bonus}",
+      "withAdvantage": " with advantage",
+      "withDisadvantage": " with disadvantage",
+      "multiple": " ×{count}"
+    }
   }
 }

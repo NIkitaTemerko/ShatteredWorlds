@@ -1,59 +1,60 @@
 import type { ActivationType, ConsumableType, PerType, RarityType, SelectOption } from './types';
 
+// Note: labels are i18n keys - translate with $_() in components
 export const ACTIVATION_TYPES: SelectOption<ActivationType>[] = [
-  { value: 'action', label: 'действие' },
-  { value: 'bonus', label: 'бонус' },
-  { value: 'reaction', label: 'реакция' },
+  { value: 'action', label: 'consumable.activationType.action' },
+  { value: 'bonus', label: 'consumable.activationType.bonus' },
+  { value: 'reaction', label: 'consumable.activationType.reaction' },
 ];
 
 export const PER_TYPES: SelectOption<PerType>[] = [
-  { value: 'charges', label: 'заряды' },
-  { value: 'uses', label: 'использования' },
-  { value: 'turns', label: 'ходы' },
+  { value: 'charges', label: 'consumable.perType.charges' },
+  { value: 'uses', label: 'consumable.perType.uses' },
+  { value: 'turns', label: 'consumable.perType.turns' },
 ];
 
 export const RARITY_TYPES: SelectOption<RarityType>[] = [
-  { value: 'common', label: 'обычная' },
-  { value: 'uncommon', label: 'необычная' },
-  { value: 'rare', label: 'редкая' },
-  { value: 'legendary', label: 'легендарная' },
+  { value: 'common', label: 'consumable.rarityType.common' },
+  { value: 'uncommon', label: 'consumable.rarityType.uncommon' },
+  { value: 'rare', label: 'consumable.rarityType.rare' },
+  { value: 'legendary', label: 'consumable.rarityType.legendary' },
 ];
 
 export const CONSUMABLE_TYPES: SelectOption<ConsumableType>[] = [
-  { value: 'potion', label: 'зелье' },
-  { value: 'bomb', label: 'бомба' },
-  { value: 'scroll', label: 'свиток' },
-  { value: 'food', label: 'еда' },
-  { value: 'poison', label: 'яд' },
+  { value: 'potion', label: 'consumable.consumableType.potion' },
+  { value: 'bomb', label: 'consumable.consumableType.bomb' },
+  { value: 'scroll', label: 'consumable.consumableType.scroll' },
+  { value: 'food', label: 'consumable.consumableType.food' },
+  { value: 'poison', label: 'consumable.consumableType.poison' },
 ];
 
 export const DAMAGE_TYPES: SelectOption[] = [
-  { value: 'fire', label: 'огонь' },
-  { value: 'cold', label: 'холод' },
-  { value: 'lightning', label: 'молния' },
-  { value: 'acid', label: 'кислота' },
-  { value: 'poison', label: 'яд' },
-  { value: 'physical', label: 'физический' },
-  { value: 'force', label: 'силовой' },
+  { value: 'fire', label: 'consumable.damageType.fire' },
+  { value: 'cold', label: 'consumable.damageType.cold' },
+  { value: 'lightning', label: 'consumable.damageType.lightning' },
+  { value: 'acid', label: 'consumable.damageType.acid' },
+  { value: 'poison', label: 'consumable.damageType.poison' },
+  { value: 'physical', label: 'consumable.damageType.physical' },
+  { value: 'force', label: 'consumable.damageType.force' },
 ];
 
 export const SAVE_TYPES: SelectOption[] = [
-  { value: 'force', label: 'сила' },
-  { value: 'perception', label: 'восприятие' },
-  { value: 'psyDefence', label: 'психозащита' },
-  { value: 'fortune', label: 'удача' },
-  { value: 'diplomacy', label: 'дипломатия' },
+  { value: 'force', label: 'consumable.saveType.force' },
+  { value: 'perception', label: 'consumable.saveType.perception' },
+  { value: 'psyDefence', label: 'consumable.saveType.psyDefence' },
+  { value: 'fortune', label: 'consumable.saveType.fortune' },
+  { value: 'diplomacy', label: 'consumable.saveType.diplomacy' },
 ];
 
 export const APPLICATION_TYPES: SelectOption[] = [
-  { value: 'injury', label: 'рана' },
-  { value: 'contact', label: 'контакт' },
-  { value: 'ingested', label: 'иньекция' },
-  { value: 'inhaled', label: 'вдох' },
+  { value: 'injury', label: 'consumable.applicationType.injury' },
+  { value: 'contact', label: 'consumable.applicationType.contact' },
+  { value: 'ingested', label: 'consumable.applicationType.ingested' },
+  { value: 'inhaled', label: 'consumable.applicationType.inhaled' },
 ];
 
 export const EFFECT_TYPES: SelectOption[] = [
-  { value: 'heal', label: 'лечение' },
-  { value: 'buff', label: 'баф' },
-  { value: 'damage', label: 'урон' },
+  { value: 'heal', label: 'consumable.effectType.heal' },
+  { value: 'buff', label: 'consumable.effectType.buff' },
+  { value: 'damage', label: 'consumable.effectType.damage' },
 ];

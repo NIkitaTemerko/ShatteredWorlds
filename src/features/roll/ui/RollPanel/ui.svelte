@@ -1,17 +1,18 @@
 <script lang="ts">
-  import type { RollMode, RollType, RollTypeConfig } from '../../../../entities/character/model';
-  import { ROLL_TYPE_CONFIGS } from '../../../../entities/character/model';
-  import type { ShwActor } from '../../../../documents/Actor/ShwActor';
-  import { Input } from '../../../../shared/ui/Input';
+  import type { RollMode, RollType, RollTypeConfig } from "../../../../entities/character/model";
+  import { ROLL_TYPE_CONFIGS } from "../../../../entities/character/model";
+  import type { ShwActor } from "../../../../documents/Actor/ShwActor";
+  import { Input } from "../../../../shared/ui/Input";
+  import { t } from "../../../../shared/i18n";
 
   interface Props {
-    actor: ShwActor<'character' | 'npc'>;
+    actor: ShwActor<"character" | "npc">;
   }
 
   let { actor }: Props = $props();
 
-  let activeTab = $state<RollType>('natural');
-  let mode = $state<RollMode>('normal');
+  let activeTab = $state<RollType>("natural");
+  let mode = $state<RollMode>("normal");
   let natRoll = $state(20);
   let rollBonus = $state(0);
   let actions = $state(1);
@@ -28,30 +29,31 @@
         style="--dark:{tab.colors.dark}; --light:{tab.colors.light}; --hover:{tab.colors.hover};"
         onclick={() => (activeTab = tab.id)}
       >
-        {tab.label}
+        {t(tab.label)}
       </button>
     {/each}
   </div>
 
   <div
     class="actions"
-    style="--dark:{activeConfig?.colors.dark}; --light:{activeConfig?.colors.light}; --hover:{activeConfig?.colors.hover};"
+    style="--dark:{activeConfig?.colors.dark}; --light:{activeConfig?.colors.light}; --hover:{activeConfig?.colors
+      .hover};"
   >
     <div class="roll-value">
       <label>
-        База
+        {t("roll.base")}
         <Input variant="underline" class="tw:w-10" type="number" bind:value={natRoll} min="0" max="999" />
       </label>
     </div>
     <div class="roll-value bonus">
       <label>
-        Бонус
+        {t("roll.bonus")}
         <Input variant="underline" class="tw:w-10" type="number" bind:value={rollBonus} min="0" max="999" />
       </label>
     </div>
     <div class="roll-value">
       <label>
-        Действия
+        {t("roll.actions")}
         <Input variant="underline" class="tw:w-10" type="number" bind:value={actions} min="0" max="999" />
       </label>
     </div>
@@ -59,16 +61,16 @@
     <button
       class="roll constructor"
       type="button"
-      aria-label="Бросок"
+      aria-label={t("roll.rollLabel")}
       onclick={() => actor.roll(activeTab, false, mode, natRoll, rollBonus, actions)}
     >
       <i class="fa-solid fa-dice-d20" style="color: white"></i>
     </button>
-    {#if activeTab !== 'natural'}
+    {#if activeTab !== "natural"}
       <button
         class="roll constructor"
         type="button"
-        aria-label="Бросок защиты"
+        aria-label={t("roll.saveRollLabel")}
         onclick={() => actor.roll(activeTab, true, mode, natRoll, rollBonus, actions)}
       >
         <i class="fa-solid fa-shield" style="color: white"></i>
@@ -78,24 +80,24 @@
       <button
         class="adv {mode === 'adv' ? 'active' : ''}"
         type="button"
-        aria-label="Преимущество"
-        onclick={() => (mode = 'adv')}
+        aria-label={t("roll.advantage")}
+        onclick={() => (mode = "adv")}
       >
         ▲
       </button>
       <button
         class="norm {mode === 'normal' ? 'active' : ''}"
         type="button"
-        aria-label="Обычный"
-        onclick={() => (mode = 'normal')}
+        aria-label={t("roll.normal")}
+        onclick={() => (mode = "normal")}
       >
         ●
       </button>
       <button
         class="dis {mode === 'dis' ? 'active' : ''}"
         type="button"
-        aria-label="Помеха"
-        onclick={() => (mode = 'dis')}
+        aria-label={t("roll.disadvantage")}
+        onclick={() => (mode = "dis")}
       >
         ▼
       </button>

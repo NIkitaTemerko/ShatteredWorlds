@@ -34,6 +34,12 @@
       "lang": "en",
       "name": "English",
       "path": "lang/en.json"
+    },
+    {
+      "lang": "ru",
+      "name": "Русский",
+      "path": "lang/ru.json",
+      "system": "shattered-worlds"
     }
   ],
   "socket": false,

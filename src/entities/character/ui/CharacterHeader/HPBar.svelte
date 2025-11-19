@@ -1,10 +1,11 @@
 <script lang="ts">
-  import type { ShwActor } from '../../../../documents/Actor/ShwActor';
-  import { ActionIcon } from '../../../../shared/ui/ActionIcon';
-  import Input from '../../../../shared/ui/Input/ui.svelte';
+  import type { ShwActor } from "../../../../documents/Actor/ShwActor";
+  import { ActionIcon } from "../../../../shared/ui/ActionIcon";
+  import Input from "../../../../shared/ui/Input/ui.svelte";
+  import { t } from "../../../../shared/i18n";
 
   interface Props {
-    actor: ShwActor<'character'> | ShwActor<'npc'>;
+    actor: ShwActor<"character"> | ShwActor<"npc">;
   }
 
   let { actor }: Props = $props();
@@ -19,21 +20,22 @@
   function applyDamage() {
     if (damageValue <= 0) return;
 
-    const damageReduction = 'totalDamageReduction' in actor.system.helpers 
-      ? actor.system.helpers.totalDamageReduction
-      : actor.system.additionalAttributes.damageReduction || 0;
+    const damageReduction =
+      "totalDamageReduction" in actor.system.helpers
+        ? actor.system.helpers.totalDamageReduction
+        : actor.system.additionalAttributes.damageReduction || 0;
 
     let actualDamage = Math.max(0, damageValue - damageReduction);
     if (defenseActive) {
-      const armorClass = 
-        'totalArmorClass' in actor.system.helpers 
+      const armorClass =
+        "totalArmorClass" in actor.system.helpers
           ? actor.system.helpers.totalArmorClass
           : actor.system.additionalAttributes.armorClass || 0;
       actualDamage = Math.max(0, actualDamage - armorClass);
     }
 
     const newHealth = Math.max(0, actor.system.health.value - actualDamage);
-    actor.update({ 'system.health.value': newHealth });
+    actor.update({ "system.health.value": newHealth });
     damageValue = 0;
   }
 
@@ -86,9 +88,9 @@
   </span>
   <div class="hp-damage-wrapper">
     <ActionIcon
-      title="Применить урон"
+      title={t("character.applyDamage")}
       onclick={applyDamage}
-      onkeydown={(e) => e.key === 'Enter' && applyDamage()}
+      onkeydown={(e) => e.key === "Enter" && applyDamage()}
     >
       {#snippet icon()}
         <i class="fas fa-sword damage-icon"></i>
@@ -97,21 +99,18 @@
     <Input
       variant="underline"
       bind:value={damageValue}
-      onkeydown={(e) => e.key === 'Enter' && applyDamage()}
+      onkeydown={(e) => e.key === "Enter" && applyDamage()}
       type="number"
       min={0}
       style="width:3rem;"
     />
     <ActionIcon
-      title="Учитывать защиту"
+      title={t("character.considerArmor")}
       onclick={toggleDefense}
-      onkeydown={(e) => e.key === 'Enter' && toggleDefense()}
+      onkeydown={(e) => e.key === "Enter" && toggleDefense()}
     >
       {#snippet icon()}
-        <i
-          class="fas fa-shield-alt shield-icon"
-          class:active={defenseActive}
-        ></i>
+        <i class="fas fa-shield-alt shield-icon" class:active={defenseActive}></i>
       {/snippet}
     </ActionIcon>
   </div>
@@ -183,7 +182,7 @@
   }
 
   .shield-icon:not(.active):after {
-    content: '';
+    content: "";
     position: absolute;
     left: 50%;
     top: 50%;

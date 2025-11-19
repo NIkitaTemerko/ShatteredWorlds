@@ -1,8 +1,9 @@
 <script lang="ts">
-  import type { ShwItem } from '../../../documents/Item/ShwItem';
-  import { getUpdateConsumable } from '../utils/updateConsumable';
-  import { Input, SelectInput } from '../../../shared/ui';
-  import { APPLICATION_TYPES, SAVE_TYPES, StatsCard } from '../../../entities/consumable';
+  import type { ShwItem } from "../../../documents/Item/ShwItem";
+  import { getUpdateConsumable } from "../utils/updateConsumable";
+  import { Input, SelectInput } from "../../../shared/ui";
+  import { APPLICATION_TYPES, SAVE_TYPES, StatsCard } from "../../../entities/consumable";
+  import { t } from "../../../shared/i18n";
 
   interface Props {
     item: ShwItem;
@@ -13,10 +14,10 @@
   const updateConsumable = getUpdateConsumable(item);
 </script>
 
-{#if item.system.consumable.consumableType === 'poison' && item.system.consumable.damage !== undefined && item.system.consumable.save !== undefined}
+{#if item.system.consumable.consumableType === "poison" && item.system.consumable.damage !== undefined && item.system.consumable.save !== undefined}
   <StatsCard columns={3} borderColor="rgba(108, 117, 125, 0.5)">
     <div class="stat-col">
-      <div class="stat-header">Начальный урон</div>
+      <div class="stat-header">{t("item.poison.initialDamage")}</div>
       <div class="stat-body">
         <Input
           type="text"
@@ -24,13 +25,13 @@
           variant="underline"
           textAlign="center"
           fullWidth
-          onchange={(e) => updateConsumable('damage.initial', e.currentTarget.value)}
+          onchange={(e) => updateConsumable("damage.initial", e.currentTarget.value)}
         />
       </div>
     </div>
 
     <div class="stat-col">
-      <div class="stat-header">Повтор. урон</div>
+      <div class="stat-header">{t("item.poison.repeatDamage")}</div>
       <div class="stat-body">
         <Input
           type="text"
@@ -38,13 +39,13 @@
           variant="underline"
           textAlign="center"
           fullWidth
-          onchange={(e) => updateConsumable('damage.recurring', e.currentTarget.value)}
+          onchange={(e) => updateConsumable("damage.recurring", e.currentTarget.value)}
         />
       </div>
     </div>
 
     <div class="stat-col">
-      <div class="stat-header">Длительность</div>
+      <div class="stat-header">{t("item.poison.duration")}</div>
       <div class="stat-body">
         <Input
           type="number"
@@ -53,26 +54,26 @@
           variant="underline"
           textAlign="center"
           fullWidth
-          onchange={(e) => updateConsumable('damage.duration', Number(e.currentTarget.value))}
+          onchange={(e) => updateConsumable("damage.duration", Number(e.currentTarget.value))}
         />
       </div>
     </div>
 
     <div class="stat-col">
-      <div class="stat-header">Спасбросок</div>
+      <div class="stat-header">{t("item.poison.save")}</div>
       <div class="stat-body">
         <SelectInput
           value={item.system.consumable.save.type}
           options={SAVE_TYPES}
           variant="underline"
           fullWidth
-          onchange={(e) => updateConsumable('save.type', e.currentTarget.value)}
+          onchange={(e) => updateConsumable("save.type", e.currentTarget.value)}
         />
       </div>
     </div>
 
     <div class="stat-col">
-      <div class="stat-header">Сложность</div>
+      <div class="stat-header">{t("item.poison.difficulty")}</div>
       <div class="stat-body">
         <Input
           type="number"
@@ -81,22 +82,24 @@
           variant="underline"
           textAlign="center"
           fullWidth
-          onchange={(e) => updateConsumable('save.dc', Number(e.currentTarget.value))}
+          onchange={(e) => updateConsumable("save.dc", Number(e.currentTarget.value))}
         />
       </div>
     </div>
 
     <div class="stat-col full">
-      <div class="stat-header">Применение</div>
-      <div class="stat-body">
-        <SelectInput
-          bind:value={item.system.consumable.application}
-          options={APPLICATION_TYPES}
-          variant="underline"
-          fullWidth
-          onchange={(e) => updateConsumable('application', e.currentTarget.value, e)}
-        />
+      <div class="stat-col">
+        <div class="stat-header">{t("item.poison.application")}</div>
+        <div class="stat-body">
+          <SelectInput
+            bind:value={item.system.consumable.application}
+            options={APPLICATION_TYPES}
+            variant="underline"
+            fullWidth
+            onchange={(e) => updateConsumable("application", e.currentTarget.value, e)}
+          />
+        </div>
       </div>
-    </div>
-  </StatsCard>
+    </div></StatsCard
+  >
 {/if}

@@ -1,8 +1,9 @@
 <script lang="ts">
-  import type { ShwItem } from '../../../documents/Item/ShwItem';
-  import { getUpdateConsumable } from '../utils/updateConsumable';
-  import { Input, SelectInput } from '../../../shared/ui';
-  import { EFFECT_TYPES, StatsCard } from '../../../entities/consumable';
+  import type { ShwItem } from "../../../documents/Item/ShwItem";
+  import { getUpdateConsumable } from "../utils/updateConsumable";
+  import { Input, SelectInput } from "../../../shared/ui";
+  import { EFFECT_TYPES, StatsCard } from "../../../entities/consumable";
+  import { t } from "../../../shared/i18n";
 
   interface Props {
     item: ShwItem;
@@ -15,53 +16,53 @@
 
   function addEffect() {
     const effects = [...consEffects];
-    if (item.system.consumable.consumableType === 'potion') {
-      effects.push({ type: 'heal', amount: 0, duration: 1, attribute: '' });
+    if (item.system.consumable.consumableType === "potion") {
+      effects.push({ type: "heal", amount: 0, duration: 1, attribute: "" });
     } else {
-      effects.push({ type: 'бафф', value: 0, duration: 1 });
+      effects.push({ type: "buff", value: 0, duration: 1 });
     }
-    updateConsumable('effects', effects);
+    updateConsumable("effects", effects);
   }
 
   function removeEffect(idx: number) {
     const effects = consEffects.filter((_, i) => i !== idx);
-    updateConsumable('effects', effects);
+    updateConsumable("effects", effects);
   }
 
   function updateEffect(idx: number, field: string, value: any) {
     const effects = consEffects.map((e, i) => (i === idx ? { ...e, [field]: value } : e));
-    updateConsumable('effects', effects);
+    updateConsumable("effects", effects);
   }
 </script>
 
-{#if item.system.consumable.consumableType === 'potion' || item.system.consumable.consumableType === 'food'}
+{#if item.system.consumable.consumableType === "potion" || item.system.consumable.consumableType === "food"}
   <section class="effects-section">
-    {#if item.system.consumable.consumableType === 'food' && item.system.consumable.nutrition !== undefined}
+    {#if item.system.consumable.consumableType === "food" && item.system.consumable.nutrition !== undefined}
       <div class="nutrition-section" style="background: var(--color-border-light-3)">
         <div class="section-header" style="background: #f08c00">
-          <h3>Пищевая ценность</h3>
+          <h3>{t("item.potionFood.nutritionTitle")}</h3>
         </div>
         <div class="nutrition-grid">
           <div class="nutrition-item">
-            <div class="nutrition-label">Длительность насыщения</div>
+            <div class="nutrition-label">{t("item.potionFood.saturationDuration")}</div>
             <Input
               type="text"
               bind:value={item.system.consumable.nutrition.duration}
               variant="underline"
               textAlign="center"
               fullWidth
-              onchange={(e) => updateConsumable('nutrition.duration', e)}
+              onchange={(e) => updateConsumable("nutrition.duration", e)}
             />
           </div>
           <div class="nutrition-item">
-            <div class="nutrition-label">Сила насыщения</div>
+            <div class="nutrition-label">{t("item.potionFood.saturationStrength")}</div>
             <Input
               type="text"
               bind:value={item.system.consumable.nutrition.value}
               variant="underline"
               textAlign="center"
               fullWidth
-              onchange={(e) => updateConsumable('nutrition.value', e)}
+              onchange={(e) => updateConsumable("nutrition.value", e)}
             />
           </div>
         </div>
@@ -69,23 +70,27 @@
     {/if}
 
     <div class="section-header">
-      <span class="tw:text-20 tw:font-bold">Эффекты</span>
-      <button type="button" class="add-btn" onclick={addEffect}>+ Добавить</button>
+      <span class="tw:text-20 tw:font-bold">{t("item.potionFood.effectsTitle")}</span>
+      <button type="button" class="add-btn" onclick={addEffect}>{t("item.potionFood.addEffect")}</button>
     </div>
 
     {#each consEffects as eff, idx}
       <div class="effect-card-wrapper">
-        <StatsCard columns={item.system.consumable.consumableType === 'potion' ? 2 : 3}>
+        <StatsCard columns={item.system.consumable.consumableType === "potion" ? 2 : 3}>
           <div class="stat-col">
-            <div class="stat-header">{item.system.consumable.consumableType === 'potion' ? 'Тип' : 'Бонус'}</div>
+            <div class="stat-header">
+              {item.system.consumable.consumableType === "potion"
+                ? t("item.potionFood.effectType")
+                : t("item.potionFood.effectBonus")}
+            </div>
             <div class="stat-body">
-              {#if item.system.consumable.consumableType === 'potion'}
+              {#if item.system.consumable.consumableType === "potion"}
                 <SelectInput
                   bind:value={eff.type}
                   options={EFFECT_TYPES}
                   variant="underline"
                   fullWidth
-                  onchange={(e) => updateEffect(idx, 'type', e.currentTarget.value)}
+                  onchange={(e) => updateEffect(idx, "type", e.currentTarget.value)}
                 />
               {:else}
                 <Input
@@ -94,34 +99,34 @@
                   variant="underline"
                   textAlign="center"
                   fullWidth
-                  onchange={(e) => updateEffect(idx, 'type', e.currentTarget.value)}
+                  onchange={(e) => updateEffect(idx, "type", e.currentTarget.value)}
                 />
               {/if}
             </div>
           </div>
 
           <div class="stat-col">
-            <div class="stat-header">Сила</div>
+            <div class="stat-header">{t("item.potionFood.effectStrength")}</div>
             <div class="stat-body">
               <Input
                 type="number"
                 min="0"
-                value={item.system.consumable.consumableType === 'potion' ? eff.amount : eff.value}
+                value={item.system.consumable.consumableType === "potion" ? eff.amount : eff.value}
                 variant="underline"
                 textAlign="center"
                 fullWidth
                 onchange={(e) =>
                   updateEffect(
                     idx,
-                    item.system.consumable.consumableType === 'potion' ? 'amount' : 'value',
-                    Number(e.currentTarget.value)
+                    item.system.consumable.consumableType === "potion" ? "amount" : "value",
+                    Number(e.currentTarget.value),
                   )}
               />
             </div>
           </div>
 
           <div class="stat-col">
-            <div class="stat-header">Длительность</div>
+            <div class="stat-header">{t("item.potionFood.effectDuration")}</div>
             <div class="stat-body">
               <Input
                 type="number"
@@ -130,14 +135,14 @@
                 variant="underline"
                 textAlign="center"
                 fullWidth
-                onchange={(e) => updateEffect(idx, 'duration', Number(e.currentTarget.value))}
+                onchange={(e) => updateEffect(idx, "duration", Number(e.currentTarget.value))}
               />
             </div>
           </div>
 
-          {#if item.system.consumable.consumableType === 'potion'}
+          {#if item.system.consumable.consumableType === "potion"}
             <div class="stat-col">
-              <div class="stat-header">Атрибут</div>
+              <div class="stat-header">{t("item.potionFood.effectAttribute")}</div>
               <div class="stat-body">
                 <Input
                   type="text"
@@ -145,7 +150,7 @@
                   variant="underline"
                   textAlign="center"
                   fullWidth
-                  onchange={(e) => updateEffect(idx, 'attribute', e.currentTarget.value)}
+                  onchange={(e) => updateEffect(idx, "attribute", e.currentTarget.value)}
                 />
               </div>
             </div>

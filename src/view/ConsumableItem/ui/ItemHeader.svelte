@@ -1,9 +1,10 @@
 <script lang="ts">
-  import type { ShwItem } from '../../../documents/Item/ShwItem';
-  import { getUpdateConsumable } from '../utils/updateConsumable';
-  import { Input, SelectInput } from '../../../shared/ui';
-  import { CONSUMABLE_TYPES, type ConsumableType } from '../../../entities/consumable/model';
-  import { cn } from '../../../shared/lib/cn';
+  import type { ShwItem } from "../../../documents/Item/ShwItem";
+  import { getUpdateConsumable } from "../utils/updateConsumable";
+  import { Input, SelectInput } from "../../../shared/ui";
+  import { CONSUMABLE_TYPES, type ConsumableType } from "../../../entities/consumable/model";
+  import { cn } from "../../../shared/lib/cn";
+  import { t } from "../../../shared/i18n";
 
   interface Props {
     item: ShwItem;
@@ -15,7 +16,7 @@
 
   function handleTypeChange(event: Event) {
     const value = (event.currentTarget as HTMLSelectElement).value as ConsumableType;
-    updateConsumable('consumableType', value, event);
+    updateConsumable("consumableType", value, event);
   }
 </script>
 
@@ -27,13 +28,13 @@
       class={cn("tw:text-[20px] tw:font-bold tw:py-[0.4rem]")}
       type="text"
       bind:value={item.name}
-      placeholder="Название предмета"
+      placeholder={t("item.header.namePlaceholder")}
       onchange={(e) => item.update({ name: e.currentTarget.value })}
       variant="underline"
     />
 
     <div class="type-wrapper">
-      <span class="tw:opacity-80 tw:text-[20px]">Тип:</span>
+      <span class="tw:opacity-80 tw:text-[20px]">{t("item.header.typeLabel")}</span>
       <SelectInput
         value={item.system.consumable.consumableType}
         options={CONSUMABLE_TYPES}

@@ -1,20 +1,21 @@
 <script lang="ts">
-  import type { HTMLSelectAttributes } from 'svelte/elements';
-  import type { SelectOption } from '../../../entities/consumable/model';
+  import type { HTMLSelectAttributes } from "svelte/elements";
+  import type { SelectOption } from "../../../entities/consumable/model";
+  import { t } from "../../i18n";
 
   interface Props extends HTMLSelectAttributes {
     value?: string | number;
     options: SelectOption[];
-    variant?: 'underline' | 'bordered';
+    variant?: "underline" | "bordered";
     fullWidth?: boolean;
   }
 
   let {
-    value = $bindable(''),
+    value = $bindable(""),
     options,
-    variant = 'bordered',
+    variant = "bordered",
     fullWidth = false,
-    class: className = '',
+    class: className = "",
     ...restProps
   }: Props = $props();
 </script>
@@ -23,11 +24,11 @@
   bind:value
   class="shw-select {className}"
   class:full-width={fullWidth}
-  class:variant-underline={variant === 'underline'}
+  class:variant-underline={variant === "underline"}
   {...restProps}
 >
   {#each options as option}
-    <option value={option.value}>{option.label}</option>
+    <option value={option.value}>{t(option.label)}</option>
   {/each}
 </select>
 

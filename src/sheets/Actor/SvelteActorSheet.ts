@@ -34,6 +34,16 @@ export abstract class SvelteActorSheet extends foundry.appv1.sheets.ActorSheet {
 
     // Svelte 5: монтирование через mount(...)
     this._svelte = mountSvelte(Shell, target, { actor: this.actor });
+
+    // Патч для клика по картинке (редактирование изображения)
+    this.element
+      .find('img[data-edit="img"]')
+      .off('click')
+      .on('click', (event) => {
+        event.preventDefault();
+        // базовый ActorSheet содержит _onEditImage
+        this._onEditImage(event as unknown as MouseEvent);
+      });
   }
 
   async close(options?: any) {

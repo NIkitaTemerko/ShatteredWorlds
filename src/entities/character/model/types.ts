@@ -1,4 +1,5 @@
 import type { ShwActorSystem, ShwNpcSystem } from '../../../documents/Actor/types/ShwActorSystem';
+import type { I18nKey } from '../../../shared/i18n';
 
 /** Tab types for character sheets */
 export type CharacterTab =
@@ -32,7 +33,7 @@ export type NpcHelpers = ShwNpcSystem['helpers'];
 export interface TabConfig {
   id: CharacterTab;
   icon: string;
-  label: string;
+  label: I18nKey;
 }
 
 /** Attribute color configuration */
@@ -45,14 +46,14 @@ export interface AttributeColors {
 /** Roll type configuration */
 export interface RollTypeConfig {
   id: RollType;
-  label: string;
+  label: I18nKey;
   colors: AttributeColors;
 }
 
 /** Attribute column configuration */
 export interface AttributeColumn {
   key: AttributeKey;
-  label: string;
+  label: I18nKey;
   dark: string;
   light: string;
   hover: string;
@@ -92,7 +93,7 @@ export const TAB_CONFIGS: TabConfig[] = [
 ];
 
 /** Labels for additional attributes (i18n keys) */
-export const ADDITIONAL_ATTRIBUTE_LABELS: Record<keyof AdditionalAttributes, string> = {
+export const ADDITIONAL_ATTRIBUTE_LABELS: Record<keyof AdditionalAttributes, I18nKey> = {
   actions: 'additionalAttributes.actions',
   bonusActions: 'additionalAttributes.bonusActions',
   reactions: 'additionalAttributes.reactions',

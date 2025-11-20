@@ -4,17 +4,25 @@
   import { TreeWithSearch } from "../../../shared/ui/tree";
   import { mapInventoryToFlatItems } from "../model/mappers";
   import { localize, t } from "../../../shared/i18n";
+  import { getInventoryTreeState, updateInventoryTreeState } from "../model/inventoryTreeState";
 
   interface Props {
+    actorId: string;
     items: ShwItem[];
     itemCount: number;
     onSelectItem?: (item: ShwItem) => void;
     onDeleteItem?: (item: ShwItem) => void;
   }
 
-  let { items, itemCount, onSelectItem, onDeleteItem }: Props = $props();
+  let { actorId, items, itemCount, onSelectItem, onDeleteItem }: Props = $props();
+
+  const treeState = $derived(getInventoryTreeState(actorId));
 
   const flatItems = $derived(mapInventoryToFlatItems(items));
+
+  function handleStateChange(state: { searchQuery: string; expandedIds: Set<string>; selectedId?: string }) {
+    updateInventoryTreeState(actorId, state);
+  }
 
   function getPluralForm(count: number): string {
     const lastDigit = count % 10;
@@ -50,7 +58,15 @@
 
 <div class="inventory-tree">
   <div class="search-wrapper">
-    <TreeWithSearch items={flatItems} onSelect={handleSelect} onDelete={handleDelete} />
+    <TreeWithSearch
+      items={flatItems}
+      initialSearchQuery={treeState.searchQuery}
+      initialExpandedIds={treeState.expandedIds}
+      initialSelectedId={treeState.selectedId}
+      onSelect={handleSelect}
+      onDelete={handleDelete}
+      onStateChange={handleStateChange}
+    />
     <div class="item-count-bar">
       <span class="item-count">{itemCount} {getPluralForm(itemCount)}</span>
     </div>

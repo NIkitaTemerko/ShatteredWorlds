@@ -5,20 +5,50 @@
   import { t } from "../../../shared/i18n";
   import { Input } from "../Input";
 
-  interface Props {
-    items: FlatItem[];
-    onSelect?: (node: TreeNode) => void;
-    onDelete?: (node: TreeNode, e: Event) => void;
+  interface TreeStateUpdate {
+    searchQuery: string;
+    expandedIds: Set<string>;
+    selectedId?: string;
   }
 
-  let { items, onSelect, onDelete }: Props = $props();
+  interface Props {
+    items: FlatItem[];
+    initialSearchQuery?: string;
+    initialExpandedIds?: Set<string>;
+    initialSelectedId?: string;
+    onSelect?: (node: TreeNode) => void;
+    onDelete?: (node: TreeNode, e: Event) => void;
+    onStateChange?: (state: TreeStateUpdate) => void;
+  }
 
-  let searchQuery = $state("");
-  let selectedId = $state<string | undefined>(undefined);
+  let {
+    items,
+    initialSearchQuery = "",
+    initialExpandedIds,
+    initialSelectedId,
+    onSelect,
+    onDelete,
+    onStateChange,
+  }: Props = $props();
+
+  let searchQuery = $state(initialSearchQuery);
+  let selectedId = $state<string | undefined>(initialSelectedId);
   let highlightedId = $state<string | undefined>(undefined);
   let showAutocomplete = $state(false);
   let treeRef: Tree | undefined = $state();
   let highlightTimeoutId: ReturnType<typeof setTimeout> | undefined;
+
+  // Notify parent of state changes
+  $effect(() => {
+    if (onStateChange) {
+      const expandedIds = treeRef?.getExpandedIds() ?? new Set();
+      onStateChange({
+        searchQuery,
+        expandedIds,
+        selectedId,
+      });
+    }
+  });
 
   const fullTree = $derived(buildTreeFromFlatList(items));
   const filteredTree = $derived(filterTree(fullTree, searchQuery));
@@ -126,7 +156,15 @@
   </div>
 
   <div class="tree-container">
-    <Tree bind:this={treeRef} nodes={filteredTree} {selectedId} {highlightedId} onSelect={handleSelect} {onDelete} />
+    <Tree
+      bind:this={treeRef}
+      nodes={filteredTree}
+      {initialExpandedIds}
+      {selectedId}
+      {highlightedId}
+      onSelect={handleSelect}
+      {onDelete}
+    />
   </div>
 </div>
 

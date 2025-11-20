@@ -4,15 +4,16 @@
 
   interface Props {
     nodes: TreeNode[];
+    initialExpandedIds?: Set<string>;
     selectedId?: string;
     highlightedId?: string;
     onSelect?: (node: TreeNode) => void;
     onDelete?: (node: TreeNode, e: Event) => void;
   }
 
-  let { nodes, selectedId, highlightedId, onSelect, onDelete }: Props = $props();
+  let { nodes, initialExpandedIds, selectedId, highlightedId, onSelect, onDelete }: Props = $props();
 
-  let expandedIds = $state(new Set<string>());
+  let expandedIds = $state(initialExpandedIds ? new Set(initialExpandedIds) : new Set<string>());
 
   function handleToggle(nodeId: string) {
     if (expandedIds.has(nodeId)) {
@@ -33,6 +34,11 @@
       expandedIds.add(id);
     }
     expandedIds = new Set(expandedIds);
+  }
+
+  // Expose method to get current expanded IDs
+  export function getExpandedIds(): Set<string> {
+    return new Set(expandedIds);
   }
 </script>
 

@@ -30,12 +30,15 @@
 </script>
 
 <div class="character-inventory">
-  <InventoryTree
-    items={inventoryItems}
-    itemCount={inventoryItems.length}
-    onSelectItem={handleSelectItem}
-    onDeleteItem={handleDeleteItem}
-  />
+  {#if actor.id}
+    <InventoryTree
+      actorId={actor.id}
+      items={inventoryItems}
+      itemCount={inventoryItems.length}
+      onSelectItem={handleSelectItem}
+      onDeleteItem={handleDeleteItem}
+    />
+  {/if}
 </div>
 
 <style>

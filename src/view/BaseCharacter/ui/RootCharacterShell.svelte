@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { CharacterTab, AdditionalAttributes } from "../../../entities/character";
   import type { ShwActor } from "../../../documents/Actor/ShwActor";
-  import { CharacterHeader, AttributeStats, AdditionalStats } from "../../../entities/character";
+  import { CharacterHeader, AttributeStats, AdditionalStats, CharacterInventory } from "../../../entities/character";
   import { TabNavigation } from "../../../features/navigation";
   import { RollPanel } from "../../../features/roll";
 
@@ -36,6 +36,8 @@
     helpers={actor.system.helpers}
     onUpdate={handleAdditionalStatsUpdate}
   />
+{:else if activeTab === "inventory"}
+  <CharacterInventory {actor} />
 {:else}
   <div>test</div>
 {/if}

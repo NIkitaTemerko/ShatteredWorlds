@@ -160,6 +160,33 @@
       "withAdvantage": " с преимуществом",
       "withDisadvantage": " с помехой",
       "multiple": " ×{count}"
+    },
+    "inventory": {
+      "searchPlaceholder": "Поиск предметов...",
+      "itemsCount": "{count}",
+      "deleteConfirmTitle": "Удалить предмет",
+      "deleteConfirmContent": "Вы уверены, что хотите удалить <strong>{name}</strong>?",
+      "deleteItem": "Удалить предмет",
+      "clearSearch": "Очистить поиск",
+      "categories": {
+        "consumable": "Расходники",
+        "weapon": "Оружие",
+        "armor": "Броня",
+        "equipment": "Снаряжение",
+        "treasure": "Сокровища"
+      },
+      "consumableTypes": {
+        "potion": "Зелья",
+        "bomb": "Бомбы",
+        "scroll": "Свитки",
+        "food": "Еда",
+        "poison": "Яды"
+      },
+      "itemPlurals": {
+        "one": "предмет",
+        "few": "предмета",
+        "many": "предметов"
+      }
     }
   }
 }

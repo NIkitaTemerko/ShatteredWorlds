@@ -160,6 +160,28 @@
       "withAdvantage": " with advantage",
       "withDisadvantage": " with disadvantage",
       "multiple": " ×{count}"
+    },
+    "inventory": {
+      "searchPlaceholder": "Search items...",
+      "itemsCount": "{count} items",
+      "deleteConfirmTitle": "Delete Item",
+      "deleteConfirmContent": "Are you sure you want to delete <strong>{name}</strong>?",
+      "deleteItem": "Delete item",
+      "clearSearch": "Clear search",
+      "categories": {
+        "consumable": "Consumables",
+        "weapon": "Weapons",
+        "armor": "Armor",
+        "equipment": "Equipment",
+        "treasure": "Treasure"
+      },
+      "consumableTypes": {
+        "potion": "Potions",
+        "bomb": "Bombs",
+        "scroll": "Scrolls",
+        "food": "Food",
+        "poison": "Poisons"
+      }
     }
   }
 }

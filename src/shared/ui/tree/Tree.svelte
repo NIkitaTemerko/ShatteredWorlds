@@ -1,0 +1,63 @@
+<script lang="ts">
+  import type { TreeNode, TreeState } from "./types";
+  import TreeNodeView from "./TreeNodeView.svelte";
+
+  interface Props {
+    nodes: TreeNode[];
+    selectedId?: string;
+    highlightedId?: string;
+    onSelect?: (node: TreeNode) => void;
+    onDelete?: (node: TreeNode, e: Event) => void;
+  }
+
+  let { nodes, selectedId, highlightedId, onSelect, onDelete }: Props = $props();
+
+  let expandedIds = $state(new Set<string>());
+
+  function handleToggle(nodeId: string) {
+    if (expandedIds.has(nodeId)) {
+      expandedIds.delete(nodeId);
+    } else {
+      expandedIds.add(nodeId);
+    }
+    expandedIds = new Set(expandedIds); // Trigger reactivity
+  }
+
+  function handleSelect(node: TreeNode) {
+    onSelect?.(node);
+  }
+
+  // Expose method to expand specific nodes (for search jump-to)
+  export function expandNodes(nodeIds: string[]) {
+    for (const id of nodeIds) {
+      expandedIds.add(id);
+    }
+    expandedIds = new Set(expandedIds);
+  }
+</script>
+
+<div class="tree">
+  {#each nodes as node (node.id)}
+    <TreeNodeView
+      {node}
+      isExpanded={expandedIds.has(node.id)}
+      isSelected={selectedId === node.id}
+      isHighlighted={highlightedId === node.id}
+      onToggle={handleToggle}
+      onSelect={handleSelect}
+      {onDelete}
+      {expandedIds}
+      {selectedId}
+      {highlightedId}
+    />
+  {/each}
+</div>
+
+<style>
+  .tree {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    overflow-y: auto;
+  }
+</style>

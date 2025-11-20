@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { ShwActor } from "../../../documents/Actor/ShwActor";
-  import ReactiveDocumentWrapper from "../../../shared/ui/ReactiveDocumentWrapper.svelte";
+  import { ReactiveDocumentWrapper } from "../../../shared/ui";
   import RootCharacterShell from "./RootCharacterShell.svelte";
 
   interface Props {

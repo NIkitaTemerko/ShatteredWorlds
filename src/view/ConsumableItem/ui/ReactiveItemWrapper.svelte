@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { ShwItem } from "../../../documents/Item/ShwItem";
-  import ReactiveDocumentWrapper from "../../../shared/ui/ReactiveDocumentWrapper.svelte";
+  import { ReactiveDocumentWrapper } from "../../../shared/ui";
   import RootItemShell from "./RootItemShell.svelte";
 
   interface Props {

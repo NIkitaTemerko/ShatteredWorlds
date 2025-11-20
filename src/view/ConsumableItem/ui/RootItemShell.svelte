@@ -11,7 +11,13 @@
   import { getUpdateConsumable } from "../utils/updateConsumable";
   import { t } from "../../../shared/i18n";
 
-  export let item: ShwItem; /**
+  interface Props {
+    item: ShwItem;
+  }
+
+  let { item }: Props = $props();
+
+  /**
    * Унифицированный метод, который гарантирует, что мы не «съедим» соседние поля,
    * передавая в обновление сам объект consumable и патч‑путь одновременно.
    */
@@ -38,7 +44,7 @@
     <textarea
       bind:value={item.system.description}
       placeholder={t("item.description.placeholder")}
-      on:change={(e) => updateConsumable("description", e.currentTarget.value)}
+      onchange={(e) => updateConsumable("description", e.currentTarget.value)}
     ></textarea>
   </section>
 

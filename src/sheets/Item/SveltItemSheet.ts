@@ -43,7 +43,9 @@ export class ShwItemSheet extends foundry.appv1.sheets.ItemSheet {
       await this._svelte?.destroy?.();
 
       const Shell = (this.constructor as typeof ShwItemSheet).Shell;
-      this._svelte = mountSvelte(Shell, target, { item: this.item });
+      const sheet = this;
+      const getItem = () => sheet.item;
+      this._svelte = mountSvelte(Shell, target, { getItem });
     }
 
     // 4) Восстанавливаем scrollTop после монтирования

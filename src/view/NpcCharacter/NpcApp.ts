@@ -1,9 +1,9 @@
 import { SvelteActorSheet } from '../../sheets/Actor/SvelteActorSheet';
-import RootCharacterShell from './ui/RootCharacterShell.svelte';
+import ReactiveActorWrapper from './ui/ReactiveActorWrapper.svelte';
 
 export class NpcApp extends SvelteActorSheet {
   /* обязательное статическое свойство, чтобы оболочка знала, какой Shell монтировать */
-  static Shell = RootCharacterShell;
+  static Shell = ReactiveActorWrapper;
 
   static override get defaultOptions() {
     const options = SvelteActorSheet.defaultOptions;

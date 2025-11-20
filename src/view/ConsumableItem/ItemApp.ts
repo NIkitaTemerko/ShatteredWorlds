@@ -1,9 +1,9 @@
 import { ShwItemSheet } from '../../sheets/Item/SveltItemSheet';
-import ItemShell from './ui/RootItemShell.svelte';
+import ReactiveItemWrapper from './ui/ReactiveItemWrapper.svelte';
 
 export class ConsumableItemApp extends ShwItemSheet {
   /* обязательное статическое свойство, чтобы оболочка знала, какой Shell монтировать */
-  static Shell = ItemShell;
+  static Shell = ReactiveItemWrapper;
 
   static override get defaultOptions() {
     const options = ShwItemSheet.defaultOptions;

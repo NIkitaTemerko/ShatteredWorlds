@@ -12,11 +12,11 @@
   let { item }: Props = $props();
 
   const updateConsumable = getUpdateConsumable(item);
-  const consEffects: any[] = (item?.system?.consumable as any)?.effects ?? [];
+  const consEffects: any[] = (item?.system as any)?.effects ?? [];
 
   function addEffect() {
     const effects = [...consEffects];
-    if (item.system.consumable.consumableType === "potion") {
+    if (item.system.consumableType === "potion") {
       effects.push({ type: "heal", amount: 0, duration: 1, attribute: "" });
     } else {
       effects.push({ type: "buff", value: 0, duration: 1 });
@@ -35,9 +35,9 @@
   }
 </script>
 
-{#if item.system.consumable.consumableType === "potion" || item.system.consumable.consumableType === "food"}
+{#if item.system.consumableType === "potion" || item.system.consumableType === "food"}
   <section class="effects-section">
-    {#if item.system.consumable.consumableType === "food" && item.system.consumable.nutrition !== undefined}
+    {#if item.system.consumableType === "food" && item.system.nutrition !== undefined}
       <div class="nutrition-section" style="background: var(--color-border-light-3)">
         <div class="section-header" style="background: #f08c00">
           <h3>{t("item.potionFood.nutritionTitle")}</h3>
@@ -47,7 +47,7 @@
             <div class="nutrition-label">{t("item.potionFood.saturationDuration")}</div>
             <Input
               type="text"
-              bind:value={item.system.consumable.nutrition.duration}
+              bind:value={item.system.nutrition.duration}
               variant="underline"
               textAlign="center"
               fullWidth
@@ -58,7 +58,7 @@
             <div class="nutrition-label">{t("item.potionFood.saturationStrength")}</div>
             <Input
               type="text"
-              bind:value={item.system.consumable.nutrition.value}
+              bind:value={item.system.nutrition.value}
               variant="underline"
               textAlign="center"
               fullWidth
@@ -76,15 +76,15 @@
 
     {#each consEffects as eff, idx}
       <div class="effect-card-wrapper">
-        <StatsCard columns={item.system.consumable.consumableType === "potion" ? 2 : 3}>
+        <StatsCard columns={item.system.consumableType === "potion" ? 2 : 3}>
           <div class="stat-col">
             <div class="stat-header">
-              {item.system.consumable.consumableType === "potion"
+              {item.system.consumableType === "potion"
                 ? t("item.potionFood.effectType")
                 : t("item.potionFood.effectBonus")}
             </div>
             <div class="stat-body">
-              {#if item.system.consumable.consumableType === "potion"}
+              {#if item.system.consumableType === "potion"}
                 <SelectInput
                   bind:value={eff.type}
                   options={EFFECT_TYPES}
@@ -111,14 +111,14 @@
               <Input
                 type="number"
                 min="0"
-                value={item.system.consumable.consumableType === "potion" ? eff.amount : eff.value}
+                value={item.system.consumableType === "potion" ? eff.amount : eff.value}
                 variant="underline"
                 textAlign="center"
                 fullWidth
                 onchange={(e) =>
                   updateEffect(
                     idx,
-                    item.system.consumable.consumableType === "potion" ? "amount" : "value",
+                    item.system.consumableType === "potion" ? "amount" : "value",
                     Number(e.currentTarget.value),
                   )}
               />
@@ -140,7 +140,7 @@
             </div>
           </div>
 
-          {#if item.system.consumable.consumableType === "potion"}
+          {#if item.system.consumableType === "potion"}
             <div class="stat-col">
               <div class="stat-header">{t("item.potionFood.effectAttribute")}</div>
               <div class="stat-body">

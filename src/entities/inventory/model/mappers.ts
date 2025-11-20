@@ -40,16 +40,16 @@ export function mapInventoryToFlatItems(items: ShwItem[]): FlatItem[] {
     const path: string[] = [t(itemTypeKeys[itemType] as any)];
 
     // Add subcategory for consumables
-    if (item.type === 'consumable' && item.system.consumable?.consumableType) {
-      path.push(t(consumableTypeKeys[item.system.consumable.consumableType] as any));
+    if (item.type === 'consumable' && item.system?.consumableType) {
+      path.push(t(consumableTypeKeys[item.system.consumableType] as any));
     }
 
     // Add item name with quantity
-    const quantity = item.type === 'consumable' ? (item.system.consumable?.quantity ?? 1) : 1;
+    const quantity = item.type === 'consumable' ? (item.system?.quantity ?? 1) : 1;
     const label = quantity > 1 ? `${item.name} (×${quantity})` : item.name;
     path.push(label);
 
-    const rarity = item.type === 'consumable' ? (item.system.consumable?.rarity ?? 'common') : 'common';
+    const rarity = item.type === 'consumable' ? (item.system?.rarity ?? 'common') : 'common';
 
     return {
       id: (item.id ?? item._id) || '',

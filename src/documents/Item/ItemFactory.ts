@@ -1,6 +1,24 @@
 import type { ConsumableData, ConsumableType } from './types/ConsumableDataTypes';
 import type { BaseItemData } from './types/ItemDataInterface';
 
+/**
+ * Get default image path for consumable type
+ */
+export function getConsumableImage(type: ConsumableType): string {
+  switch (type) {
+    case 'potion':
+      return 'icons/consumables/potions/bottle-bulb-corked-glowing-red.webp';
+    case 'bomb':
+      return 'icons/weapons/thrown/bomb-fuse-black-grey.webp';
+    case 'scroll':
+      return 'icons/sundries/scrolls/scroll-bound-blue-brown.webp';
+    case 'food':
+      return 'icons/consumables/grains/bread-loaf-sliced-wheat-brown.webp';
+    case 'poison':
+      return 'icons/consumables/potions/potion-jar-corked-labeled-poison-skull-green.webp';
+  }
+}
+
 // biome-ignore lint/complexity/noStaticOnlyClass: смысла 0
 export class ItemFactory {
   static createConsumable(type: ConsumableType, baseData: Partial<BaseItemData>): ConsumableData {
@@ -12,13 +30,11 @@ export class ItemFactory {
       weight: 0,
       quantity: 1,
       rarity: 'common',
-      img: 'icons/svg/item-bag.svg',
       ...baseData,
     };
 
     const baseConsumable = {
       ...base,
-      type: 'consumable' as const,
       uses: {
         value: 1,
         max: 1,
@@ -34,7 +50,6 @@ export class ItemFactory {
       case 'potion':
         return {
           ...baseConsumable,
-          img: 'icons/consumables/potions/bottle-bulb-corked-glowing-red.webp',
           consumableType: 'potion',
           effects: [],
         };
@@ -42,7 +57,6 @@ export class ItemFactory {
       case 'bomb':
         return {
           ...baseConsumable,
-          img: 'icons/weapons/thrown/bomb-fuse-black-grey.webp',
           consumableType: 'bomb',
           damage: {
             amount: 50,
@@ -58,7 +72,6 @@ export class ItemFactory {
       case 'scroll':
         return {
           ...baseConsumable,
-          img: 'icons/sundries/scrolls/scroll-bound-blue-brown.webp',
           consumableType: 'scroll',
           spell: {
             name: '',
@@ -74,7 +87,6 @@ export class ItemFactory {
       case 'food':
         return {
           ...baseConsumable,
-          img: 'icons/consumables/grains/bread-loaf-sliced-wheat-brown.webp',
           consumableType: 'food',
           nutrition: {
             value: 1,
@@ -86,7 +98,6 @@ export class ItemFactory {
       case 'poison':
         return {
           ...baseConsumable,
-          img: 'icons/consumables/potions/potion-jar-corked-labeled-poison-skull-green.webp',
           consumableType: 'poison',
           damage: {
             initial: 10,

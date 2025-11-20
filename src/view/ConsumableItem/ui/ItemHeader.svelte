@@ -36,7 +36,7 @@
     <div class="type-wrapper">
       <span class="tw:opacity-80 tw:text-[20px]">{t("item.header.typeLabel")}</span>
       <SelectInput
-        value={item.system.consumable.consumableType}
+        value={item.system.consumableType}
         options={CONSUMABLE_TYPES}
         variant="underline"
         onchange={handleTypeChange}

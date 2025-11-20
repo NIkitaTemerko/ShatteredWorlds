@@ -4,6 +4,7 @@ import { ShwTokenDocument } from './documents/ShwTokenDocument.js';
 import { CharacterApp } from './view/BaseCharacter/CharacterApp.js';
 import { ConsumableItemApp } from './view/ConsumableItem/ItemApp';
 import { NpcApp } from './view/NpcCharacter/NpcApp';
+import { needsMigration, migrateConsumableData } from './helpers/Item/migrateConsumableData';
 import './main.css';
 
 (globalThis as any).MIN_WINDOW_HEIGHT = 200;
@@ -40,5 +41,44 @@ Hooks.on('preCreateToken', (tokenDocument: any, tokenData: any) => {
   const actor = (game as any).actors.get(tokenData.actorId);
   if (actor?.type === 'character') {
     tokenDocument.updateSource({ actorLink: true });
+  }
+});
+
+// Auto-migrate legacy consumable data on item creation
+Hooks.on('preCreateItem', (item: any, data: any) => {
+  if (needsMigration(data)) {
+    const migrated = migrateConsumableData(data);
+    item.updateSource({ system: migrated.system });
+  }
+});
+
+// Batch migrate existing items on world initialization (one-time on world load)
+Hooks.once('setup', async () => {
+  const items = (game as any).items;
+  if (!items || items.size === 0) return;
+
+  let migratedCount = 0;
+  const itemsToMigrate: any[] = [];
+
+  // Collect items that need migration
+  for (const item of items) {
+    if (needsMigration(item)) {
+      itemsToMigrate.push(item);
+      migratedCount++;
+    }
+  }
+
+  // Batch update all at once
+  if (migratedCount > 0) {
+    const updates = itemsToMigrate.map((item) => {
+      const migrated = migrateConsumableData(item);
+      return {
+        _id: item.id,
+        system: migrated.system,
+      };
+    });
+
+    await Item.updateDocuments(updates);
+    console.log(`[SHW Migration] Migrated ${migratedCount} consumable items to flat structure`);
   }
 });

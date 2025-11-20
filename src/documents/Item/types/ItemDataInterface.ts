@@ -6,7 +6,6 @@ export interface BaseItemData {
   quantity: number;
   stackLimit: number;
   rarity: 'common' | 'uncommon' | 'rare' | 'legendary';
-  img: string;
 }
 
 export type ItemType = 'weapon' | 'armor' | 'consumable' | 'equipment' | 'treasure';

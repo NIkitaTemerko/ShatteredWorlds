@@ -21,9 +21,7 @@
 <!-- ======================== МАКЕТ ======================== -->
 <div
   class="consumable-card"
-  style="--dark:{typeColors[item.system.consumable.consumableType]?.dark}; --light:{typeColors[
-    item.system.consumable.consumableType
-  ]?.light}"
+  style="--dark:{typeColors[item.system.consumableType]?.dark}; --light:{typeColors[item.system.consumableType]?.light}"
 >
   <!-- ===== HEADER ===== -->
   <ItemHeader {item} />
@@ -38,7 +36,7 @@
   <section class="description" style="--dark: #6B7280; --light: #F3F4F6">
     <div class="section-header">{t("item.description.title")}</div>
     <textarea
-      bind:value={item.system.consumable.description}
+      bind:value={item.system.description}
       placeholder={t("item.description.placeholder")}
       on:change={(e) => updateConsumable("description", e.currentTarget.value)}
     ></textarea>

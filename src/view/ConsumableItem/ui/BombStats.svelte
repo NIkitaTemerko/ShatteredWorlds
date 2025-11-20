@@ -14,7 +14,7 @@
   const updateConsumable = getUpdateConsumable(item);
 </script>
 
-{#if item.system.consumable.consumableType === "bomb" && item.system.consumable.damage !== undefined && item.system.consumable.save !== undefined}
+{#if item.system.consumableType === "bomb" && item.system.damage !== undefined && item.system.save !== undefined}
   <StatsCard columns={3} borderColor="rgba(215, 38, 61, 0.5)">
     <div class="stat-col">
       <div class="stat-header">{t("item.bomb.damage")}</div>
@@ -22,7 +22,7 @@
         <Input
           type="number"
           min="0"
-          value={item.system.consumable.damage.amount}
+          value={item.system.damage.amount}
           variant="underline"
           textAlign="center"
           fullWidth
@@ -35,7 +35,7 @@
       <div class="stat-header">{t("item.bomb.damageType")}</div>
       <div class="stat-body">
         <SelectInput
-          value={item.system.consumable.damage.type}
+          value={item.system.damage.type}
           options={DAMAGE_TYPES}
           variant="underline"
           fullWidth
@@ -50,7 +50,7 @@
         <Input
           type="number"
           min="0"
-          value={item.system.consumable.radius}
+          value={item.system.radius}
           variant="underline"
           textAlign="center"
           fullWidth
@@ -63,7 +63,7 @@
       <div class="stat-header">{t("item.bomb.save")}</div>
       <div class="stat-body">
         <SelectInput
-          value={item.system.consumable.save.type}
+          value={item.system.save.type}
           options={SAVE_TYPES}
           variant="underline"
           fullWidth
@@ -78,7 +78,7 @@
         <Input
           type="number"
           min="0"
-          value={item.system.consumable.save.dc}
+          value={item.system.save.dc}
           variant="underline"
           textAlign="center"
           fullWidth

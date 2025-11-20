@@ -14,14 +14,14 @@
   const updateConsumable = getUpdateConsumable(item);
 </script>
 
-{#if item.system.consumable.consumableType === "poison" && item.system.consumable.damage !== undefined && item.system.consumable.save !== undefined}
+{#if item.system.consumableType === "poison" && item.system.damage !== undefined && item.system.save !== undefined}
   <StatsCard columns={3} borderColor="rgba(108, 117, 125, 0.5)">
     <div class="stat-col">
       <div class="stat-header">{t("item.poison.initialDamage")}</div>
       <div class="stat-body">
         <Input
           type="text"
-          value={item.system.consumable.damage.initial}
+          value={item.system.damage.initial}
           variant="underline"
           textAlign="center"
           fullWidth
@@ -35,7 +35,7 @@
       <div class="stat-body">
         <Input
           type="text"
-          value={item.system.consumable.damage.recurring}
+          value={item.system.damage.recurring}
           variant="underline"
           textAlign="center"
           fullWidth
@@ -50,7 +50,7 @@
         <Input
           type="number"
           min="1"
-          value={item.system.consumable.damage.duration}
+          value={item.system.damage.duration}
           variant="underline"
           textAlign="center"
           fullWidth
@@ -63,7 +63,7 @@
       <div class="stat-header">{t("item.poison.save")}</div>
       <div class="stat-body">
         <SelectInput
-          value={item.system.consumable.save.type}
+          value={item.system.save.type}
           options={SAVE_TYPES}
           variant="underline"
           fullWidth
@@ -78,7 +78,7 @@
         <Input
           type="number"
           min="0"
-          value={item.system.consumable.save.dc}
+          value={item.system.save.dc}
           variant="underline"
           textAlign="center"
           fullWidth
@@ -92,7 +92,7 @@
         <div class="stat-header">{t("item.poison.application")}</div>
         <div class="stat-body">
           <SelectInput
-            bind:value={item.system.consumable.application}
+            bind:value={item.system.application}
             options={APPLICATION_TYPES}
             variant="underline"
             fullWidth

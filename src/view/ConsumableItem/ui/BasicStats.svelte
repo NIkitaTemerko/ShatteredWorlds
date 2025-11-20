@@ -25,7 +25,7 @@
     legendary: { dark: "#F97316", light: "#FFEDD5" },
   };
 
-  const currentRarityColors = $derived(rarityColors[item.system.consumable.rarity]);
+  const currentRarityColors = $derived(rarityColors[item.system.rarity]);
 </script>
 
 <StatsCard columns={3}>
@@ -33,7 +33,7 @@
     <div class="stat-header">{t("item.basicStats.rarity")}</div>
     <div class="stat-body">
       <SelectInput
-        value={item.system.consumable.rarity}
+        value={item.system.rarity}
         options={RARITY_TYPES}
         variant="underline"
         fullWidth
@@ -48,7 +48,7 @@
       <Input
         type="number"
         min="0"
-        bind:value={item.system.consumable.price}
+        bind:value={item.system.price}
         variant="underline"
         textAlign="center"
         fullWidth
@@ -64,7 +64,7 @@
         type="number"
         min="0"
         step="0.01"
-        bind:value={item.system.consumable.weight}
+        bind:value={item.system.weight}
         variant="underline"
         textAlign="center"
         fullWidth
@@ -79,7 +79,7 @@
       <Input
         type="number"
         min="0"
-        bind:value={item.system.consumable.quantity}
+        bind:value={item.system.quantity}
         variant="underline"
         textAlign="center"
         fullWidth
@@ -94,7 +94,7 @@
       <Input
         type="number"
         min="1"
-        bind:value={item.system.consumable.stackLimit}
+        bind:value={item.system.stackLimit}
         variant="underline"
         textAlign="center"
         fullWidth

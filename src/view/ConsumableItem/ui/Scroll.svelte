@@ -14,14 +14,14 @@
   const updateConsumable = getUpdateConsumable(item);
 </script>
 
-{#if item.system.consumable.consumableType === "scroll" && item.system.consumable?.spell !== undefined && item.system.consumable?.requirements !== undefined}
+{#if item.system.consumableType === "scroll" && item.system?.spell !== undefined && item.system?.requirements !== undefined}
   <StatsCard columns={3}>
     <div class="stat-col">
       <div class="stat-header">{t("item.scroll.spellName")}</div>
       <div class="stat-body">
         <Input
           type="text"
-          value={item.system.consumable.spell.name}
+          value={item.system.spell.name}
           variant="underline"
           textAlign="center"
           fullWidth
@@ -37,7 +37,7 @@
           type="number"
           min="0"
           max="9"
-          value={item.system.consumable.spell.level}
+          value={item.system.spell.level}
           variant="underline"
           textAlign="center"
           fullWidth
@@ -51,7 +51,7 @@
       <div class="stat-body">
         <Input
           type="text"
-          value={item.system.consumable.spell.school}
+          value={item.system.spell.school}
           variant="underline"
           textAlign="center"
           fullWidth
@@ -65,7 +65,7 @@
       <div class="stat-body">
         <Input
           type="text"
-          value={item.system.consumable.requirements.ability}
+          value={item.system.requirements.ability}
           variant="underline"
           textAlign="center"
           fullWidth
@@ -80,7 +80,7 @@
         <Input
           type="number"
           min="0"
-          value={item.system.consumable.requirements.dc}
+          value={item.system.requirements.dc}
           variant="underline"
           textAlign="center"
           fullWidth

@@ -14,26 +14,51 @@ export function mountSvelte(
 
 export abstract class SvelteActorSheet extends foundry.appv1.sheets.ActorSheet {
   /** Хэндл смонтированного Svelte-компонента (Svelte 5) */
-  private _svelte: SvelteHandle | null = null;
+  private _svelte: any = null;
+  /** ID актёра, для которого смонтирован компонент */
+  private _mountedActorId: string | null = null;
+
+  override render(force?: boolean, options?: any): this {
+    // Only do full render if not yet rendered or force=true
+    if (force || !this.rendered) {
+      super.render(force, options);
+      return this;
+    }
+    
+    // Already rendered - just bring to top, don't recreate
+    this.bringToTop();
+    return this;
+  }
 
   async _render(...args: Parameters<ActorSheet['_render']>) {
     await super._render(...args);
     await this._renderSvelte();
   }
 
-  /** Монтируем/перемонтируем Svelte Shell */
+  /** Монтируем Svelte Shell (только при первом рендере или смене актёра) */
   private async _renderSvelte() {
     const target = this.element[0]?.querySelector('.svelte-sheet-body') as Element | null;
     if (!target) return;
 
-    // корректно размонтируем предыдущий инстанс
-    await this._svelte?.destroy?.();
+    // Remount if actor changed
+    const actorChanged = this._mountedActorId !== null && this._mountedActorId !== this.actor.id;
+    
+    if (actorChanged) {
+      if (this._svelte) {
+        unmount(this._svelte);
+      }
+      this._svelte = null;
+      this._mountedActorId = null;
+    }
 
-    // Потомок обязан объявить:  static Shell = RootCharacterShell;
-    const Shell = (this.constructor as any).Shell as any;
-
-    // Svelte 5: монтирование через mount(...)
-    this._svelte = mountSvelte(Shell, target, { actor: this.actor });
+    // Mount component with getter function for reactivity
+    if (!this._svelte) {
+      const Shell = (this.constructor as any).Shell as any;
+      const sheet = this;
+      const getActor = () => sheet.actor;
+      this._svelte = mount(Shell, { target, props: { getActor } });
+      this._mountedActorId = this.actor.id;
+    }
 
     // Патч для клика по картинке (редактирование изображения)
     this.element
@@ -48,11 +73,15 @@ export abstract class SvelteActorSheet extends foundry.appv1.sheets.ActorSheet {
 
   async close(options?: any) {
     try {
-      await this._svelte?.destroy?.();
+      if (this._svelte) {
+        unmount(this._svelte);
+      }
       this._svelte = null;
+      this._mountedActorId = null;
       return super.close(options);
     } catch (error) {
       this._svelte = null;
+      this._mountedActorId = null;
       throw error;
     }
   }

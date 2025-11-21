@@ -1,30 +1,30 @@
-interface InventoryTreeState {
+interface AbilityTreeState {
   searchQuery: string;
   expandedIds: Set<string>;
   selectedId?: string;
 }
 
-const defaultState: InventoryTreeState = {
+const defaultState: AbilityTreeState = {
   searchQuery: '',
   expandedIds: new Set(),
   selectedId: undefined,
 };
 
 // Store tree state per actor ID
-const treeStates = new Map<string, InventoryTreeState>();
+const treeStates = new Map<string, AbilityTreeState>();
 
-export function getInventoryTreeState(actorId: string): InventoryTreeState {
+export function getAbilityTreeState(actorId: string): AbilityTreeState {
   if (!treeStates.has(actorId)) {
     treeStates.set(actorId, { ...defaultState, expandedIds: new Set() });
   }
   return treeStates.get(actorId) ?? { ...defaultState, expandedIds: new Set() };
 }
 
-export function updateInventoryTreeState(actorId: string, updates: Partial<InventoryTreeState>) {
-  const current = getInventoryTreeState(actorId);
+export function updateAbilityTreeState(actorId: string, updates: Partial<AbilityTreeState>) {
+  const current = getAbilityTreeState(actorId);
   treeStates.set(actorId, { ...current, ...updates });
 }
 
-export function clearInventoryTreeState(actorId: string) {
+export function clearAbilityTreeState(actorId: string) {
   treeStates.delete(actorId);
 }

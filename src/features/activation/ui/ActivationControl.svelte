@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { Input, SelectInput } from "../../../shared/ui";
   import { ACTIVATION_TYPES, type ActivationType } from "../../../entities/consumable/model";
   import { t } from "../../../shared/i18n";
+  import { Input, SelectInput } from "../../../shared/ui";
 
   interface Props {
     activationType: ActivationType;

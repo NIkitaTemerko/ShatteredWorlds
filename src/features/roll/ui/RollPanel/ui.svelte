@@ -1,9 +1,9 @@
 <script lang="ts">
+  import type { ShwActor } from "../../../../documents/Actor/ShwActor";
   import type { RollMode, RollType, RollTypeConfig } from "../../../../entities/character/model";
   import { ROLL_TYPE_CONFIGS } from "../../../../entities/character/model";
-  import type { ShwActor } from "../../../../documents/Actor/ShwActor";
-  import { Input } from "../../../../shared/ui/Input";
   import { t } from "../../../../shared/i18n";
+  import { Input } from "../../../../shared/ui/Input";
 
   interface Props {
     actor: ShwActor<"character" | "npc">;

@@ -1,11 +1,11 @@
 import { ShwActor } from './documents/Actor/ShwActor';
 import { ShwItem } from './documents/Item/ShwItem';
 import { ShwTokenDocument } from './documents/ShwTokenDocument.js';
+import { migrateConsumableData, needsMigration } from './helpers/Item/migrateConsumableData';
+import { AbilityItemApp } from './view/AbilityItem/ItemApp';
 import { CharacterApp } from './view/BaseCharacter/CharacterApp.js';
 import { ConsumableItemApp } from './view/ConsumableItem/ItemApp';
-import { AbilityItemApp } from './view/AbilityItem/ItemApp';
 import { NpcApp } from './view/NpcCharacter/NpcApp';
-import { needsMigration, migrateConsumableData } from './helpers/Item/migrateConsumableData';
 import './main.css';
 
 (globalThis as any).MIN_WINDOW_HEIGHT = 200;

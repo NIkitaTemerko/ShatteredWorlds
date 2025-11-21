@@ -1,9 +1,9 @@
 <script lang="ts">
   import type { ShwActor } from "../../../../documents/Actor/ShwActor";
   import type { ShwItem } from "../../../../documents/Item/ShwItem";
+  import { localize, t } from "../../../../shared/i18n";
   import { InventoryTree } from "../../../inventory";
   import { collectionToInventoryItems } from "../../../inventory/model/mappers";
-  import { t, localize } from "../../../../shared/i18n";
 
   interface Props {
     actor: ShwActor<"character">;
@@ -11,7 +11,7 @@
 
   let { actor }: Props = $props();
 
-  const inventoryItems = $derived(collectionToInventoryItems(actor.items));
+  const inventoryItems = $derived(collectionToInventoryItems(actor.items).filter((item) => item.type !== "ability"));
 
   function handleSelectItem(item: ShwItem) {
     item.sheet?.render(true);

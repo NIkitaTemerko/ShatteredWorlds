@@ -1,9 +1,9 @@
 <script lang="ts">
   import type { ShwItem } from "../../../documents/Item/ShwItem";
-  import { getUpdateConsumable } from "../utils/updateConsumable";
-  import { Input, SelectInput } from "../../../shared/ui";
-  import { RARITY_TYPES, StatsCard, type RarityType } from "../../../entities/consumable";
+  import { RARITY_TYPES, type RarityType, StatsCard } from "../../../entities/consumable";
   import { t } from "../../../shared/i18n";
+  import { Input, SelectInput } from "../../../shared/ui";
+  import { getUpdateConsumable } from "../utils/updateConsumable";
 
   interface Props {
     item: ShwItem;

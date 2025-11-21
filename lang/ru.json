@@ -285,6 +285,19 @@
         "few": "предмета",
         "many": "предметов"
       }
+    },
+    "abilities": {
+      "searchPlaceholder": "Поиск способностей...",
+      "abilitiesCount": "{count} способностей",
+      "deleteConfirmTitle": "Удалить способность",
+      "deleteConfirmContent": "Вы уверены, что хотите удалить <strong>{name}</strong>?",
+      "deleteAbility": "Удалить способность",
+      "clearSearch": "Очистить поиск",
+      "abilityPlurals": {
+        "one": "способность",
+        "few": "способности",
+        "many": "способностей"
+      }
     }
   }
 }

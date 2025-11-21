@@ -1,27 +1,27 @@
 <script lang="ts">
   import type { ShwItem } from "../../../documents/Item/ShwItem";
-  import { localize, t } from "../../../shared/i18n";
+  import { t } from "../../../shared/i18n";
   import type { TreeNode } from "../../../shared/ui/tree";
   import { TreeWithSearch } from "../../../shared/ui/tree";
-  import { getInventoryTreeState, updateInventoryTreeState } from "../model/inventoryTreeState";
-  import { mapInventoryToFlatItems } from "../model/mappers";
+  import { getAbilityTreeState, updateAbilityTreeState } from "../model/abilityTreeState";
+  import { mapAbilitiesToFlatItems } from "../model/mappers";
 
   interface Props {
     actorId: string;
     items: ShwItem[];
-    itemCount: number;
-    onSelectItem?: (item: ShwItem) => void;
-    onDeleteItem?: (item: ShwItem) => void;
+    abilityCount: number;
+    onSelectAbility?: (item: ShwItem) => void;
+    onDeleteAbility?: (item: ShwItem) => void;
   }
 
-  let { actorId, items, itemCount, onSelectItem, onDeleteItem }: Props = $props();
+  let { actorId, items, abilityCount, onSelectAbility, onDeleteAbility }: Props = $props();
 
-  const treeState = $derived(getInventoryTreeState(actorId));
+  const treeState = $derived(getAbilityTreeState(actorId));
 
-  const flatItems = $derived(mapInventoryToFlatItems(items));
+  const flatItems = $derived(mapAbilitiesToFlatItems(items));
 
   function handleStateChange(state: { searchQuery: string; expandedIds: Set<string>; selectedId?: string }) {
-    updateInventoryTreeState(actorId, state);
+    updateAbilityTreeState(actorId, state);
   }
 
   function getPluralForm(count: number): string {
@@ -29,21 +29,21 @@
     const lastTwoDigits = count % 100;
 
     if (lastTwoDigits >= 11 && lastTwoDigits <= 14) {
-      return t("inventory.itemPlurals.many");
+      return t("abilities.abilityPlurals.many");
     }
     if (lastDigit === 1) {
-      return t("inventory.itemPlurals.one");
+      return t("abilities.abilityPlurals.one");
     }
     if (lastDigit >= 2 && lastDigit <= 4) {
-      return t("inventory.itemPlurals.few");
+      return t("abilities.abilityPlurals.few");
     }
-    return t("inventory.itemPlurals.many");
+    return t("abilities.abilityPlurals.many");
   }
 
   function handleSelect(node: TreeNode) {
     if (node.isLeaf && node.data) {
       const item = node.data as ShwItem;
-      onSelectItem?.(item);
+      onSelectAbility?.(item);
     }
   }
 
@@ -51,12 +51,12 @@
     e.stopPropagation();
     if (node.isLeaf && node.data) {
       const item = node.data as ShwItem;
-      onDeleteItem?.(item);
+      onDeleteAbility?.(item);
     }
   }
 </script>
 
-<div class="inventory-tree">
+<div class="ability-tree">
   <div class="search-wrapper">
     <TreeWithSearch
       items={flatItems}
@@ -67,14 +67,14 @@
       onDelete={handleDelete}
       onStateChange={handleStateChange}
     />
-    <div class="item-count-bar">
-      <span class="item-count">{itemCount} {getPluralForm(itemCount)}</span>
+    <div class="ability-count-bar">
+      <span class="ability-count">{abilityCount} {getPluralForm(abilityCount)}</span>
     </div>
   </div>
 </div>
 
 <style>
-  .inventory-tree {
+  .ability-tree {
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -88,17 +88,17 @@
     min-height: 0;
   }
 
-  .item-count-bar {
+  .ability-count-bar {
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 0.5rem;
-    background: rgba(222, 184, 135, 0.15);
+    background: rgba(59, 130, 246, 0.15);
     border-radius: 4px;
     margin-bottom: 0.5rem;
   }
 
-  .item-count {
+  .ability-count {
     font-size: 13px;
     color: #1a1a1a;
     font-weight: 600;

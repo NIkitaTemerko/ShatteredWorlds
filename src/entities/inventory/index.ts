@@ -1,3 +1,3 @@
-export { InventoryTree } from './ui';
+export { collectionToInventoryItems, mapInventoryToFlatItems } from './model/mappers';
 export type { InventoryItem } from './model/types';
-export { mapInventoryToFlatItems, collectionToInventoryItems } from './model/mappers';
+export { InventoryTree } from './ui';

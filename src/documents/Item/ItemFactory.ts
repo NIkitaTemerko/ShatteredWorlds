@@ -1,10 +1,10 @@
-import type { ConsumableData, ConsumableType } from './types/ConsumableDataTypes';
 import type {
   AbilityCategory,
   AbilitySystem,
   ActiveAbilityKind,
   PassiveAbilityKind,
 } from './types/AbilityDataTypes';
+import type { ConsumableData, ConsumableType } from './types/ConsumableDataTypes';
 import type { BaseItemData } from './types/ItemDataInterface';
 
 /**
@@ -193,21 +193,24 @@ export class ItemFactory {
     }
 
     const passiveKind = kind as PassiveAbilityKind;
-    
+
     return {
       ...commonAbility,
       category: 'passive',
       passiveKind,
       mode: 'always-on',
       statBonuses: passiveKind === 'stat-bonus' ? { modifiers: [] } : null,
-      aura: passiveKind === 'aura' ? {
-        radius: 5,
-        shape: 'circle',
-        affect: 'allies',
-        effects: [],
-        isToggle: false,
-        requiresConcentration: false,
-      } : null,
+      aura:
+        passiveKind === 'aura'
+          ? {
+              radius: 5,
+              shape: 'circle',
+              affect: 'allies',
+              effects: [],
+              isToggle: false,
+              requiresConcentration: false,
+            }
+          : null,
       triggers: passiveKind === 'triggered' ? [] : null,
     };
   }

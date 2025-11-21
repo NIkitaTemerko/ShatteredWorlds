@@ -1,4 +1,4 @@
-import { ItemFactory, getConsumableImage } from '../../../documents/Item/ItemFactory';
+import { getConsumableImage, ItemFactory } from '../../../documents/Item/ItemFactory';
 import type { ShwItem } from '../../../documents/Item/ShwItem';
 import type { ConsumableType } from '../../../documents/Item/types/ConsumableDataTypes';
 

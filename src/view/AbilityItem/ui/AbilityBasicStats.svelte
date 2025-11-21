@@ -1,9 +1,9 @@
 <script lang="ts">
   import type { ShwItem } from "../../../documents/Item/ShwItem";
   import type { AbilitySystem } from "../../../documents/Item/types/AbilityDataTypes";
-  import { Input, SelectInput } from "../../../shared/ui";
-  import { StatsCard, RARITY_TYPES, type RarityType } from "../../../entities/consumable";
+  import { RARITY_TYPES, type RarityType, StatsCard } from "../../../entities/consumable";
   import { t } from "../../../shared/i18n";
+  import { Input, SelectInput } from "../../../shared/ui";
 
   interface Props {
     item: ShwItem;

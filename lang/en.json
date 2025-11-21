@@ -265,6 +265,11 @@
       "deleteConfirmContent": "Are you sure you want to delete <strong>{name}</strong>?",
       "deleteItem": "Delete item",
       "clearSearch": "Clear search",
+      "itemPlurals": {
+        "one": "item",
+        "few": "items",
+        "many": "items"
+      },
       "categories": {
         "consumable": "Consumables",
         "ability": "Abilities",
@@ -279,6 +284,19 @@
         "scroll": "Scrolls",
         "food": "Food",
         "poison": "Poisons"
+      }
+    },
+    "abilities": {
+      "searchPlaceholder": "Search abilities...",
+      "abilitiesCount": "{count} abilities",
+      "deleteConfirmTitle": "Delete Ability",
+      "deleteConfirmContent": "Are you sure you want to delete <strong>{name}</strong>?",
+      "deleteAbility": "Delete ability",
+      "clearSearch": "Clear search",
+      "abilityPlurals": {
+        "one": "ability",
+        "few": "abilities",
+        "many": "abilities"
       }
     }
   }

@@ -1,10 +1,10 @@
 <script lang="ts">
   import type { ShwItem } from "../../../documents/Item/ShwItem";
-  import { getUpdateConsumable } from "../utils/updateConsumable";
-  import { Input, SelectInput } from "../../../shared/ui";
   import { CONSUMABLE_TYPES, type ConsumableType } from "../../../entities/consumable/model";
-  import { cn } from "../../../shared/lib/cn";
   import { t } from "../../../shared/i18n";
+  import { cn } from "../../../shared/lib/cn";
+  import { Input, SelectInput } from "../../../shared/ui";
+  import { getUpdateConsumable } from "../utils/updateConsumable";
 
   interface Props {
     item: ShwItem;

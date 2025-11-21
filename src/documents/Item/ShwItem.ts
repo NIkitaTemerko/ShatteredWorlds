@@ -1,12 +1,12 @@
-import { ItemFactory, getConsumableImage, getAbilityImage } from './ItemFactory';
-import type { ConsumableData } from './types/ConsumableDataTypes';
+import { getAbilityImage, getConsumableImage, ItemFactory } from './ItemFactory';
 import type { AbilitySystem } from './types/AbilityDataTypes';
+import type { ConsumableData } from './types/ConsumableDataTypes';
 
 // Flattened: system IS the item data directly (no nested structure)
 type ShwItemSystem = ConsumableData | AbilitySystem;
 
 export class ShwItem extends Item {
-  // @ts-ignore
+  // @ts-expect-error
   declare system: ShwItemSystem;
   declare type: any;
   declare name: string;
@@ -15,7 +15,6 @@ export class ShwItem extends Item {
     data?: object,
     operation?: Partial<Omit<foundry.abstract.types.DatabaseUpdateOperation, 'updates'>>,
   ) => Promise<this | undefined>;
-
 
   // Type guards
   isConsumable(): this is { system: ConsumableData } {

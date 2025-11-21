@@ -5,10 +5,10 @@
     ActiveAbilityKind,
     PassiveAbilityKind,
   } from "../../../documents/Item/types/AbilityDataTypes";
-  import { getUpdateAbility } from "../utils/updateAbility";
   import { t } from "../../../shared/i18n";
-  import AbilityHeader from "./AbilityHeader.svelte";
+  import { getUpdateAbility } from "../utils/updateAbility";
   import AbilityBasicStats from "./AbilityBasicStats.svelte";
+  import AbilityHeader from "./AbilityHeader.svelte";
   import ActiveAbilityDetails from "./ActiveAbilityDetails.svelte";
   import PassiveAbilityDetails from "./PassiveAbilityDetails.svelte";
 

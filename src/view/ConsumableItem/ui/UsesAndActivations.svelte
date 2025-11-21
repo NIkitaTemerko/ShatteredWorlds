@@ -1,9 +1,9 @@
 <script lang="ts">
   import type { ShwItem } from "../../../documents/Item/ShwItem";
-  import { getUpdateConsumable } from "../utils/updateConsumable";
-  import { UsesControl } from "../../../features/uses";
-  import { ActivationControl } from "../../../features/activation";
   import type { ActivationType, PerType } from "../../../entities/consumable/model";
+  import { ActivationControl } from "../../../features/activation";
+  import { UsesControl } from "../../../features/uses";
+  import { getUpdateConsumable } from "../utils/updateConsumable";
 
   interface Props {
     item: ShwItem;

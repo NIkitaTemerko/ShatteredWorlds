@@ -1,13 +1,13 @@
 <script lang="ts">
   import type { ShwItem } from "../../../documents/Item/ShwItem";
-  import { Input, SelectInput } from "../../../shared/ui";
-  import { cn } from "../../../shared/lib/cn";
-  import { t } from "../../../shared/i18n";
   import type {
     AbilityCategory,
     ActiveAbilityKind,
     PassiveAbilityKind,
   } from "../../../documents/Item/types/AbilityDataTypes";
+  import { t } from "../../../shared/i18n";
+  import { cn } from "../../../shared/lib/cn";
+  import { Input, SelectInput } from "../../../shared/ui";
 
   interface Props {
     item: ShwItem;

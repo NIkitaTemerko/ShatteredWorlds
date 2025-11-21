@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { TreeNode, TreeState } from "./types";
   import TreeNodeView from "./TreeNodeView.svelte";
+  import type { TreeNode, TreeState } from "./types";
 
   interface Props {
     nodes: TreeNode[];

@@ -43,8 +43,7 @@ export class ShwItemSheet extends foundry.appv1.sheets.ItemSheet {
       await this._svelte?.destroy?.();
 
       const Shell = (this.constructor as typeof ShwItemSheet).Shell;
-      const sheet = this;
-      const getItem = () => sheet.item;
+      const getItem = () => this.item;
       this._svelte = mountSvelte(Shell, target, { getItem });
     }
 

@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type { AdditionalAttributes, CharacterHelpers, NpcHelpers } from "../../model";
-  import { ADDITIONAL_ATTRIBUTE_LABELS, ADDITIONAL_ATTRIBUTE_ICONS, ADDITIONAL_ATTRIBUTE_COLORS } from "../../model";
-  import { Input } from "../../../../shared/ui/Input";
   import { t } from "../../../../shared/i18n";
+  import { Input } from "../../../../shared/ui/Input";
+  import type { AdditionalAttributes, CharacterHelpers, NpcHelpers } from "../../model";
+  import { ADDITIONAL_ATTRIBUTE_COLORS, ADDITIONAL_ATTRIBUTE_ICONS, ADDITIONAL_ATTRIBUTE_LABELS } from "../../model";
 
   interface Props {
     stats: AdditionalAttributes;

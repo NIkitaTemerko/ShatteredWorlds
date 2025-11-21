@@ -1,15 +1,15 @@
 <script lang="ts">
   import type { ShwItem } from "../../../documents/Item/ShwItem";
+  import { t } from "../../../shared/i18n";
   import { typeColors } from "../constants/consumableConstats";
-  import ItemHeader from "./ItemHeader.svelte";
+  import { getUpdateConsumable } from "../utils/updateConsumable";
   import BasicStats from "./BasicStats.svelte";
-  import UsesAndActivations from "./UsesAndActivations.svelte";
   import BombStats from "./BombStats.svelte";
+  import ItemHeader from "./ItemHeader.svelte";
+  import Poison from "./Poison.svelte";
   import PotionsAndFood from "./PotionsAndFood.svelte";
   import Scroll from "./Scroll.svelte";
-  import Poison from "./Poison.svelte";
-  import { getUpdateConsumable } from "../utils/updateConsumable";
-  import { t } from "../../../shared/i18n";
+  import UsesAndActivations from "./UsesAndActivations.svelte";
 
   interface Props {
     item: ShwItem;

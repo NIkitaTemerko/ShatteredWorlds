@@ -2,8 +2,8 @@
   import type { ShwItem } from "../../../documents/Item/ShwItem";
   import type { ActiveAbilitySystem } from "../../../documents/Item/types/AbilityDataTypes";
   import { StatsCard } from "../../../entities/consumable";
-  import { SelectInput, Input } from "../../../shared/ui";
   import { t } from "../../../shared/i18n";
+  import { Input, SelectInput } from "../../../shared/ui";
 
   interface Props {
     item: ShwItem;

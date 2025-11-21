@@ -1,6 +1,6 @@
 <script lang="ts" generics="TDoc extends { id: string | null }">
-  import { onMount, onDestroy } from "svelte";
   import type { Component } from "svelte";
+  import { onDestroy, onMount } from "svelte";
 
   interface Props {
     getDocument: () => TDoc;

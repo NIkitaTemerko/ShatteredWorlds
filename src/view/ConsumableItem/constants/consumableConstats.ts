@@ -9,6 +9,7 @@ export const rarityTypes = [
   { value: 'common', label: 'обычная' },
   { value: 'uncommon', label: 'необычная' },
   { value: 'rare', label: 'редкая' },
+  { value: 'epic', label: 'эпическая' },
   { value: 'legendary', label: 'легендарная' },
 ];
 export const damageTypes = [

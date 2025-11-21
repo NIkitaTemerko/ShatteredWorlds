@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
   "files": {
-    "includes": ["**/*.{js,ts,hbs,html,svelte}"],
+    "includes": ["src/**/*.{js,ts}", "scripts/**/*.js", "*.{js,ts}"],
     "ignoreUnknown": true
   },
   "html": {
@@ -15,8 +15,7 @@
     "indentStyle": "space",
     "indentWidth": 2,
     "attributePosition": "multiline",
-    "formatWithErrors": false,
-    "indentScriptAndStyle": true
+    "formatWithErrors": false
   },
   "javascript": {
     "formatter": {

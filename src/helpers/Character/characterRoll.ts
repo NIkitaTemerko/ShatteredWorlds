@@ -1,7 +1,7 @@
-import type { RollMode, RollType } from '../../entities/character/model';
 import type { ShwActor } from '../../documents/Actor/ShwActor';
-import { t, localize } from '../../shared/i18n';
 import type { ShwActorSystem } from '../../documents/Actor/types/ShwActorSystem';
+import type { RollMode, RollType } from '../../entities/character/model';
+import { localize, t } from '../../shared/i18n';
 
 // I18n keys for attribute names
 const STAT_NAME_KEYS = {
@@ -76,13 +76,18 @@ export async function characterRoll(
 
   // Build flavor text with i18n
   const statName = t(STAT_NAME_KEYS[key]);
-  const rollTypePrefix = isSave ? localize('roll.flavorSave', { attribute: statName }) : localize('roll.flavorRoll', { attribute: statName });
+  const rollTypePrefix = isSave
+    ? localize('roll.flavorSave', { attribute: statName })
+    : localize('roll.flavorRoll', { attribute: statName });
   const bonusText = bonus ? localize('roll.withBonus', { bonus: String(bonus) }) : '';
-  const advantageText = 
-    advantage === 'adv' ? t('roll.withAdvantage') : 
-    advantage === 'dis' ? t('roll.withDisadvantage') : '';
+  const advantageText =
+    advantage === 'adv'
+      ? t('roll.withAdvantage')
+      : advantage === 'dis'
+        ? t('roll.withDisadvantage')
+        : '';
   const multipleText = count > 1 ? localize('roll.multiple', { count: String(count) }) : '';
-  
+
   const flavor = `${rollTypePrefix}${bonusText}${advantageText}${multipleText}`;
 
   await (ChatMessage as any).create({

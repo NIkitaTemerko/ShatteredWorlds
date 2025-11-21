@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type { TreeNode } from "./types";
-  import TreeNodeViewSelf from "./TreeNodeView.svelte";
   import { t } from "../../../shared/i18n";
   import ActionIcon from "../ActionIcon/ui.svelte";
+  import TreeNodeViewSelf from "./TreeNodeView.svelte";
+  import type { TreeNode } from "./types";
 
   interface Props {
     node: TreeNode;

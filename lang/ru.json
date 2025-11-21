@@ -9,11 +9,10 @@
       "diplomacy": "Дипломатия"
     },
     "tabs": {
-      "stats": "Статы",
+      "stats": "Статистика",
       "inventory": "Инвентарь",
       "equipment": "Экипировка",
       "spells": "Заклинания",
-      "passives": "Пассивки",
       "abilities": "Способности"
     },
     "additionalAttributes": {
@@ -132,6 +131,104 @@
         "defaultEffect": "бафф"
       }
     },
+    "ability": {
+      "header": {
+        "namePlaceholder": "Название способности",
+        "categoryLabel": "Категория:",
+        "kindLabel": "Тип:"
+      },
+      "category": {
+        "active": "Активные",
+        "passive": "Пассивные"
+      },
+      "activeKind": {
+        "attack": "Атака",
+        "heal": "Лечение",
+        "support": "Поддержка",
+        "debuff": "Дебафф",
+        "control": "Контроль",
+        "movement": "Перемещение",
+        "summon": "Призыв",
+        "utility": "Утилита"
+      },
+      "passiveKind": {
+        "statBonus": "Бонус к характеристикам",
+        "aura": "Аура",
+        "triggered": "Триггерная",
+        "mechanic": "Механика"
+      },
+      "basicStats": {
+        "rank": "Ранг"
+      },
+      "actionType": {
+        "action": "Действие",
+        "bonus": "Бонус",
+        "reaction": "Реакция",
+        "free": "Свободное"
+      },
+      "rangeKind": {
+        "self": "На себя",
+        "melee": "Ближний бой",
+        "ranged": "Дальний бой",
+        "area": "Область"
+      },
+      "targetType": {
+        "self": "Себя",
+        "ally": "Союзник",
+        "enemy": "Враг",
+        "any": "Любой"
+      },
+      "activeDetails": {
+        "title": "Детали активной способности",
+        "actionType": "Тип действия",
+        "range": "Дальность и цели",
+        "rangeKind": "Дальность",
+        "rangeDistance": "Расстояние",
+        "areaRadius": "Радиус",
+        "areaShape": "Форма",
+        "targetType": "Цель",
+        "maxTargets": "Макс. целей"
+      },
+      "areaShape": {
+        "circle": "Круг",
+        "cone": "Конус",
+        "line": "Линия"
+      },
+      "passiveDetails": {
+        "title": "Детали пассивной способности",
+        "mode": "Режим",
+        "statBonuses": "Бонусы характеристик",
+        "bonusesInfo": "Модификаторы статов",
+        "bonusesPlaceholder": "Настройте бонусы в редакторе эффектов (скоро)",
+        "aura": "Настройки ауры",
+        "auraRadius": "Радиус ауры",
+        "auraShape": "Форма ауры",
+        "auraAffect": "Влияет на",
+        "allies": "Союзников",
+        "enemies": "Врагов",
+        "everyone": "Всех",
+        "isToggle": "Переключаемая аура",
+        "requiresConcentration": "Требует концентрации",
+        "triggers": "Настройки триггеров",
+        "triggerInfo": "События триггера",
+        "triggerPlaceholder": "Настройте триггеры в редакторе эффектов (скоро)"
+      },
+      "passiveMode": {
+        "alwaysOn": "Всегда активна",
+        "toggle": "Переключаемая",
+        "triggered": "Триггерная"
+      },
+      "advancedSettings": {
+        "title": "Расширенные настройки",
+        "castTime": "Время каста",
+        "uses": "Использования и переключения",
+        "usesPerRest": "Использ./отдых",
+        "usesPerEncounter": "Использ./бой",
+        "channeled": "Поддерживаемая",
+        "togglable": "Переключаемая",
+        "requiresLOS": "Требует видимость"
+      }
+    },
     "controls": {
       "activation": "Активация",
       "uses": "Заряды",
@@ -170,6 +267,7 @@
       "clearSearch": "Очистить поиск",
       "categories": {
         "consumable": "Расходники",
+        "ability": "Способности",
         "weapon": "Оружие",
         "armor": "Броня",
         "equipment": "Снаряжение",
@@ -186,6 +284,19 @@
         "one": "предмет",
         "few": "предмета",
         "many": "предметов"
+      }
+    },
+    "abilities": {
+      "searchPlaceholder": "Поиск способностей...",
+      "abilitiesCount": "{count} способностей",
+      "deleteConfirmTitle": "Удалить способность",
+      "deleteConfirmContent": "Вы уверены, что хотите удалить <strong>{name}</strong>?",
+      "deleteAbility": "Удалить способность",
+      "clearSearch": "Очистить поиск",
+      "abilityPlurals": {
+        "one": "способность",
+        "few": "способности",
+        "many": "способностей"
       }
     }
   }

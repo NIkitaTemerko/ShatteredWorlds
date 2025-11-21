@@ -15,8 +15,7 @@ import postcssPresetEnv from 'postcss-preset-env'; // Popular postcss plugin for
  *
  * @returns {{extensions: string[], extract, sourceMap: boolean, plugins: (*)[], use: string[], inject: boolean}} PostCSS config
  */
-export function postcssConfig({ extract, compress = false, sourceMap = false } = {})
-{
+export function postcssConfig({ extract, compress = false, sourceMap = false } = {}) {
   const plugins = compress
     ? [autoprefixer, postcssPresetEnv, cssnano]
     : [autoprefixer, postcssPresetEnv];

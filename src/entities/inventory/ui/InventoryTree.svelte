@@ -1,10 +1,10 @@
 <script lang="ts">
-  import type { TreeNode } from "../../../shared/ui/tree";
   import type { ShwItem } from "../../../documents/Item/ShwItem";
-  import { TreeWithSearch } from "../../../shared/ui/tree";
-  import { mapInventoryToFlatItems } from "../model/mappers";
   import { localize, t } from "../../../shared/i18n";
+  import type { TreeNode } from "../../../shared/ui/tree";
+  import { TreeWithSearch } from "../../../shared/ui/tree";
   import { getInventoryTreeState, updateInventoryTreeState } from "../model/inventoryTreeState";
+  import { mapInventoryToFlatItems } from "../model/mappers";
 
   interface Props {
     actorId: string;

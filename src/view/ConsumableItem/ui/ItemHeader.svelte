@@ -1,10 +1,10 @@
 <script lang="ts">
   import type { ShwItem } from "../../../documents/Item/ShwItem";
-  import { getUpdateConsumable } from "../utils/updateConsumable";
-  import { Input, SelectInput } from "../../../shared/ui";
   import { CONSUMABLE_TYPES, type ConsumableType } from "../../../entities/consumable/model";
-  import { cn } from "../../../shared/lib/cn";
   import { t } from "../../../shared/i18n";
+  import { cn } from "../../../shared/lib/cn";
+  import { Input, SelectInput } from "../../../shared/ui";
+  import { getUpdateConsumable } from "../utils/updateConsumable";
 
   interface Props {
     item: ShwItem;
@@ -12,11 +12,14 @@
 
   let { item }: Props = $props();
 
+  if (!item.isConsumable()) throw new Error("Item is not a consumable");
+  const system = $derived(item.system);
+
   const updateConsumable = getUpdateConsumable(item);
 
   function handleTypeChange(event: Event) {
     const value = (event.currentTarget as HTMLSelectElement).value as ConsumableType;
-    updateConsumable("consumableType", value, event);
+    updateConsumable("consumableType", value);
   }
 </script>
 

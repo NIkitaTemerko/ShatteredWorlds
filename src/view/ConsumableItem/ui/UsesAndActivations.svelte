@@ -1,9 +1,9 @@
 <script lang="ts">
   import type { ShwItem } from "../../../documents/Item/ShwItem";
-  import { getUpdateConsumable } from "../utils/updateConsumable";
-  import { UsesControl } from "../../../features/uses";
-  import { ActivationControl } from "../../../features/activation";
   import type { ActivationType, PerType } from "../../../entities/consumable/model";
+  import { ActivationControl } from "../../../features/activation";
+  import { UsesControl } from "../../../features/uses";
+  import { getUpdateConsumable } from "../utils/updateConsumable";
 
   interface Props {
     item: ShwItem;
@@ -34,23 +34,25 @@
   }
 </script>
 
-<section class="uses-activation-section">
-  <UsesControl
-    usesValue={item.system.uses.value}
-    usesMax={item.system.uses.max}
-    usesPer={item.system.uses.per}
-    onUsesValueChange={handleUsesValueChange}
-    onUsesMaxChange={handleUsesMaxChange}
-    onUsesPerChange={handleUsesPerChange}
-  />
+{#if item.isConsumable()}
+  <section class="uses-activation-section">
+    <UsesControl
+      usesValue={item.system.uses.value}
+      usesMax={item.system.uses.max}
+      usesPer={item.system.uses.per}
+      onUsesValueChange={handleUsesValueChange}
+      onUsesMaxChange={handleUsesMaxChange}
+      onUsesPerChange={handleUsesPerChange}
+    />
 
-  <ActivationControl
-    activationType={item.system.activation.type}
-    activationCost={item.system.activation.cost}
-    onActivationTypeChange={handleActivationTypeChange}
-    onActivationCostChange={handleActivationCostChange}
-  />
-</section>
+    <ActivationControl
+      activationType={item.system.activation.type}
+      activationCost={item.system.activation.cost}
+      onActivationTypeChange={handleActivationTypeChange}
+      onActivationCostChange={handleActivationCostChange}
+    />
+  </section>
+{/if}
 
 <style>
   .uses-activation-section {

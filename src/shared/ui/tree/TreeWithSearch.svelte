@@ -1,9 +1,9 @@
 <script lang="ts">
-  import type { FlatItem, TreeNode } from "./types";
-  import { buildTreeFromFlatList, filterTree, findNodePath, collectLeafNodes } from "./treeUtils";
-  import Tree from "./Tree.svelte";
   import { t } from "../../../shared/i18n";
   import { Input } from "../Input";
+  import Tree from "./Tree.svelte";
+  import { buildTreeFromFlatList, collectLeafNodes, filterTree, findNodePath } from "./treeUtils";
+  import type { FlatItem, TreeNode } from "./types";
 
   interface TreeStateUpdate {
     searchQuery: string;

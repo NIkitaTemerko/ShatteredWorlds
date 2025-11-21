@@ -24,7 +24,7 @@ export abstract class SvelteActorSheet extends foundry.appv1.sheets.ActorSheet {
       super.render(force, options);
       return this;
     }
-    
+
     // Already rendered - just bring to top, don't recreate
     this.bringToTop();
     return this;
@@ -42,7 +42,7 @@ export abstract class SvelteActorSheet extends foundry.appv1.sheets.ActorSheet {
 
     // Remount if actor changed
     const actorChanged = this._mountedActorId !== null && this._mountedActorId !== this.actor.id;
-    
+
     if (actorChanged) {
       if (this._svelte) {
         unmount(this._svelte);
@@ -54,8 +54,7 @@ export abstract class SvelteActorSheet extends foundry.appv1.sheets.ActorSheet {
     // Mount component with getter function for reactivity
     if (!this._svelte) {
       const Shell = (this.constructor as any).Shell as any;
-      const sheet = this;
-      const getActor = () => sheet.actor;
+      const getActor = () => this.actor;
       this._svelte = mount(Shell, { target, props: { getActor } });
       this._mountedActorId = this.actor.id;
     }
@@ -99,7 +98,7 @@ export abstract class SvelteActorSheet extends foundry.appv1.sheets.ActorSheet {
       const shield = wrapper.find('.shield-icon');
       const actor: ShwActor<'character'> | ShwActor<'npc'> = this.actor as any;
 
-      let damage = parseInt(input.val() as string) || 0;
+      let damage = parseInt(input.val() as string, 10) || 0;
       const defense = actor.system.additionalAttributes.armorClass ?? 0;
       const damageReduction =
         actor.type === 'character'

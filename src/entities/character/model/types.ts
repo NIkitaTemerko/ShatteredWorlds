@@ -8,7 +8,6 @@ export type CharacterTab =
   | 'equipment'
   | 'consumable'
   | 'spells'
-  | 'passives'
   | 'abilities';
 
 /** Roll mode types */
@@ -88,7 +87,6 @@ export const TAB_CONFIGS: TabConfig[] = [
   { id: 'inventory', icon: 'fa-box-open', label: 'tabs.inventory' },
   { id: 'equipment', icon: 'fa-shield-halved', label: 'tabs.equipment' },
   { id: 'spells', icon: 'fa-wand-magic-sparkles', label: 'tabs.spells' },
-  { id: 'passives', icon: 'fa-circle-half-stroke', label: 'tabs.passives' },
   { id: 'abilities', icon: 'fa-person-running', label: 'tabs.abilities' },
 ];
 

@@ -28,7 +28,7 @@
   {...restProps}
 >
   {#each options as option}
-    <option value={option.value}>{t(option.label)}</option>
+    <option value={option.value}>{t(option.label as any)}</option>
   {/each}
 </select>
 

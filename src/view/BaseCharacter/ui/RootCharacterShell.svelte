@@ -1,7 +1,13 @@
 <script lang="ts">
-  import type { CharacterTab, AdditionalAttributes } from "../../../entities/character";
   import type { ShwActor } from "../../../documents/Actor/ShwActor";
-  import { CharacterHeader, AttributeStats, AdditionalStats, CharacterInventory } from "../../../entities/character";
+  import type { AdditionalAttributes, CharacterTab } from "../../../entities/character";
+  import {
+    AdditionalStats,
+    AttributeStats,
+    CharacterAbilities,
+    CharacterHeader,
+    CharacterInventory,
+  } from "../../../entities/character";
   import { TabNavigation } from "../../../features/navigation";
   import { RollPanel } from "../../../features/roll";
 
@@ -38,6 +44,8 @@
   />
 {:else if activeTab === "inventory"}
   <CharacterInventory {actor} />
+{:else if activeTab === "abilities"}
+  <CharacterAbilities {actor} />
 {:else}
   <div>test</div>
 {/if}

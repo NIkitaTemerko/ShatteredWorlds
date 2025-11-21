@@ -1,3 +1,9 @@
+import type {
+  AbilityCategory,
+  AbilitySystem,
+  ActiveAbilityKind,
+  PassiveAbilityKind,
+} from './types/AbilityDataTypes';
 import type { ConsumableData, ConsumableType } from './types/ConsumableDataTypes';
 import type { BaseItemData } from './types/ItemDataInterface';
 
@@ -19,17 +25,29 @@ export function getConsumableImage(type: ConsumableType): string {
   }
 }
 
+/**
+ * Get default image path for ability type
+ */
+export function getAbilityImage(category: AbilityCategory): string {
+  switch (category) {
+    case 'active':
+      return 'icons/svg/dice-target.svg';
+    case 'passive':
+      return 'icons/svg/aura.svg';
+  }
+}
+
 // biome-ignore lint/complexity/noStaticOnlyClass: смысла 0
 export class ItemFactory {
   static createConsumable(type: ConsumableType, baseData: Partial<BaseItemData>): ConsumableData {
-    const base: BaseItemData = {
+    const base = {
       name: '',
       description: '',
+      weight: 0,
+      rarity: 'common' as const,
       stackLimit: 1,
       price: 0,
-      weight: 0,
       quantity: 1,
-      rarity: 'common',
       ...baseData,
     };
 
@@ -111,5 +129,89 @@ export class ItemFactory {
           application: 'injury',
         };
     }
+  }
+
+  static createAbility(
+    category: 'active',
+    kind: ActiveAbilityKind,
+    baseData: Partial<BaseItemData>,
+  ): AbilitySystem;
+  static createAbility(
+    category: 'passive',
+    kind: PassiveAbilityKind,
+    baseData: Partial<BaseItemData>,
+  ): AbilitySystem;
+  static createAbility(
+    category: AbilityCategory,
+    kind: ActiveAbilityKind | PassiveAbilityKind,
+    baseData: Partial<BaseItemData>,
+  ): AbilitySystem {
+    const base = {
+      name: '',
+      description: '',
+      weight: 0,
+      rarity: 'common' as const,
+      ...baseData,
+    };
+
+    const commonAbility = {
+      ...base,
+      kind: 'ability' as const,
+      category,
+      cooldown: null,
+      resourceCosts: [],
+      maxRank: 1,
+      currentRank: 1,
+    };
+
+    if (category === 'active') {
+      return {
+        ...commonAbility,
+        category: 'active',
+        activeKind: kind as ActiveAbilityKind,
+        actionType: 'action',
+        castTime: 0,
+        range: {
+          kind: 'melee',
+          distance: 5,
+          radius: 0,
+          shape: 'circle',
+        },
+        targeting: {
+          targetType: 'enemy',
+          maxTargets: 1,
+          requiresLineOfSight: true,
+        },
+        attackRoll: null,
+        savingThrow: null,
+        effects: [],
+        channeled: false,
+        togglable: false,
+        usesPerRest: null,
+        usesPerEncounter: null,
+      };
+    }
+
+    const passiveKind = kind as PassiveAbilityKind;
+
+    return {
+      ...commonAbility,
+      category: 'passive',
+      passiveKind,
+      mode: 'always-on',
+      statBonuses: passiveKind === 'stat-bonus' ? { modifiers: [] } : null,
+      aura:
+        passiveKind === 'aura'
+          ? {
+              radius: 5,
+              shape: 'circle',
+              affect: 'allies',
+              effects: [],
+              isToggle: false,
+              requiresConcentration: false,
+            }
+          : null,
+      triggers: passiveKind === 'triggered' ? [] : null,
+    };
   }
 }

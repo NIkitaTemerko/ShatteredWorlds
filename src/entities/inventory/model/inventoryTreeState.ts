@@ -13,11 +13,11 @@ const defaultState: InventoryTreeState = {
 // Store tree state per actor ID
 const treeStates = new Map<string, InventoryTreeState>();
 
-export function getInventoryTreeState(actorId: string) {
+export function getInventoryTreeState(actorId: string): InventoryTreeState {
   if (!treeStates.has(actorId)) {
     treeStates.set(actorId, { ...defaultState, expandedIds: new Set() });
   }
-  return treeStates.get(actorId)!;
+  return treeStates.get(actorId) ?? { ...defaultState, expandedIds: new Set() };
 }
 
 export function updateInventoryTreeState(actorId: string, updates: Partial<InventoryTreeState>) {

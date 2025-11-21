@@ -1,8 +1,8 @@
 <script lang="ts">
   import type { ShwActor } from "../../../../documents/Actor/ShwActor";
+  import { t } from "../../../../shared/i18n";
   import { ActionIcon } from "../../../../shared/ui/ActionIcon";
   import Input from "../../../../shared/ui/Input/ui.svelte";
-  import { t } from "../../../../shared/i18n";
 
   interface Props {
     actor: ShwActor<"character"> | ShwActor<"npc">;

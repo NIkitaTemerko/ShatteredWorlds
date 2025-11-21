@@ -1,21 +1,24 @@
 <script lang="ts">
   import type { ShwItem } from "../../../documents/Item/ShwItem";
+  import { t } from "../../../shared/i18n";
   import { typeColors } from "../constants/consumableConstats";
-  import ItemHeader from "./ItemHeader.svelte";
+  import { getUpdateConsumable } from "../utils/updateConsumable";
   import BasicStats from "./BasicStats.svelte";
-  import UsesAndActivations from "./UsesAndActivations.svelte";
   import BombStats from "./BombStats.svelte";
+  import ItemHeader from "./ItemHeader.svelte";
+  import Poison from "./Poison.svelte";
   import PotionsAndFood from "./PotionsAndFood.svelte";
   import Scroll from "./Scroll.svelte";
-  import Poison from "./Poison.svelte";
-  import { getUpdateConsumable } from "../utils/updateConsumable";
-  import { t } from "../../../shared/i18n";
+  import UsesAndActivations from "./UsesAndActivations.svelte";
 
   interface Props {
     item: ShwItem;
   }
 
   let { item }: Props = $props();
+
+  if (!item.isConsumable()) throw new Error("Item is not a consumable");
+  const system = $derived(item.system);
 
   /**
    * Унифицированный метод, который гарантирует, что мы не «съедим» соседние поля,
@@ -27,7 +30,7 @@
 <!-- ======================== МАКЕТ ======================== -->
 <div
   class="consumable-card"
-  style="--dark:{typeColors[item.system.consumableType]?.dark}; --light:{typeColors[item.system.consumableType]?.light}"
+  style="--dark:{typeColors[system.consumableType]?.dark}; --light:{typeColors[system.consumableType]?.light}"
 >
   <!-- ===== HEADER ===== -->
   <ItemHeader {item} />
@@ -42,7 +45,7 @@
   <section class="description" style="--dark: #6B7280; --light: #F3F4F6">
     <div class="section-header">{t("item.description.title")}</div>
     <textarea
-      bind:value={item.system.description}
+      bind:value={system.description}
       placeholder={t("item.description.placeholder")}
       onchange={(e) => updateConsumable("description", e.currentTarget.value)}
     ></textarea>

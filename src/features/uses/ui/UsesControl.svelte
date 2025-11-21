@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { Input, SelectInput } from "../../../shared/ui";
   import { PER_TYPES, type PerType } from "../../../entities/consumable/model";
   import { t } from "../../../shared/i18n";
+  import { Input, SelectInput } from "../../../shared/ui";
 
   interface Props {
     usesValue: number;

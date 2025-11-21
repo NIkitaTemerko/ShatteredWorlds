@@ -1,9 +1,9 @@
 <script lang="ts">
   import type { ShwActor } from "../../../../documents/Actor/ShwActor";
+  import { localize, t } from "../../../../shared/i18n";
+  import { Input } from "../../../../shared/ui/Input";
   import type { AttributeKey } from "../../model";
   import { ATTRIBUTE_COLORS } from "../../model";
-  import { Input } from "../../../../shared/ui/Input";
-  import { t, localize } from "../../../../shared/i18n";
 
   interface Props {
     actor: ShwActor<"character" | "npc">;

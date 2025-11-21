@@ -1,9 +1,10 @@
-import type { BaseItemData } from './ItemDataInterface';
+import type { BaseItemData, PricedItem, StackableItem } from './ItemDataInterface';
 
 export type ConsumableType = 'potion' | 'bomb' | 'scroll' | 'food' | 'poison';
 
 // Base consumable fields (flattened, no extra nesting)
-interface BaseConsumableData extends BaseItemData {
+// Consumables are priced and stackable
+interface BaseConsumableData extends BaseItemData, PricedItem, StackableItem {
   consumableType: ConsumableType;
   activation: {
     type: 'action' | 'bonus' | 'reaction';

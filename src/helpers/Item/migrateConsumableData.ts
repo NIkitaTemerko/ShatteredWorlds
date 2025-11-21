@@ -1,9 +1,9 @@
 /**
  * Migration utility for flattening consumable data structure
- * 
+ *
  * Transforms old nested format:
  *   { system: { consumable: { consumableType: 'bomb', ... } } }
- * 
+ *
  * To new flat format:
  *   { system: { consumableType: 'bomb', ... } }
  */
@@ -27,7 +27,7 @@ export function needsMigration(itemData: any): boolean {
 
 /**
  * Migrates item data from nested to flat structure
- * 
+ *
  * @param itemData - Item data with potentially nested consumable
  * @returns Migrated item data with flattened system
  */
@@ -67,8 +67,11 @@ export async function migrateItemDocument(item: any): Promise<void> {
   }
 
   const migratedData = migrateConsumableData(item);
-  
-  await item.update({
-    system: migratedData.system,
-  }, { diff: false, recursive: false });
+
+  await item.update(
+    {
+      system: migratedData.system,
+    },
+    { diff: false, recursive: false },
+  );
 }

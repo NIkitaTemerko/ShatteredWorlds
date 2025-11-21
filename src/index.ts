@@ -2,6 +2,7 @@ import { ShwActor } from './documents/Actor/ShwActor';
 import { ShwItem } from './documents/Item/ShwItem';
 import { ShwTokenDocument } from './documents/ShwTokenDocument.js';
 import { migrateConsumableData, needsMigration } from './helpers/Item/migrateConsumableData';
+import { handleAddItem } from './helpers/Item/StackManager';
 import { AbilityItemApp } from './view/AbilityItem/ItemApp';
 import { CharacterApp } from './view/BaseCharacter/CharacterApp.js';
 import { ConsumableItemApp } from './view/ConsumableItem/ItemApp';
@@ -50,10 +51,26 @@ Hooks.on('preCreateToken', (tokenDocument: any, tokenData: any) => {
 });
 
 // Auto-migrate legacy consumable data on item creation
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 Hooks.on('preCreateItem', (item: any, data: any) => {
+  // Migration pass
   if (needsMigration(data)) {
     const migrated = migrateConsumableData(data);
     item.updateSource({ system: migrated.system });
+  }
+
+  // Stack management: only for items being added to actors
+  if (item.parent && item.parent instanceof ShwActor) {
+    const result = handleAddItem(item.parent, {
+      type: item.type,
+      name: item.name,
+      system: item.system,
+    });
+
+    // Prevent creation if item was stacked or blocked
+    if (result === 'stacked' || result === 'blocked') {
+      return false;
+    }
   }
 });
 

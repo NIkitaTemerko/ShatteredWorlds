@@ -105,10 +105,6 @@
       <span class="rarity-indicator" style:background-color={rarityColors[rarity]} title={rarity}></span>
     {/if}
 
-    {#if isLeaf && quantity !== null && quantity !== undefined}
-      <span class="item-quantity">x{quantity}</span>
-    {/if}
-
     {#if isLeaf && onDelete}
       <ActionIcon
         onclick={handleDeleteClick}

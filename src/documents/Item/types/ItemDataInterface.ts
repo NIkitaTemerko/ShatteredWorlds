@@ -4,6 +4,7 @@ export interface BaseItemData {
   description: string;
   weight: number;
   rarity: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+  baseId?: string; // Unique identifier for stacking/duplicate detection
 }
 
 // Price mixin for items that can be bought/sold

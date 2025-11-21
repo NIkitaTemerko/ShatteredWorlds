@@ -138,8 +138,8 @@
         "kindLabel": "Тип:"
       },
       "category": {
-        "active": "Активная",
-        "passive": "Пассивная"
+        "active": "Активные",
+        "passive": "Пассивные"
       },
       "activeKind": {
         "attack": "Атака",

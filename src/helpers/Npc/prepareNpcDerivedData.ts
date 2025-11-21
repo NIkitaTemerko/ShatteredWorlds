@@ -21,10 +21,7 @@ export function prepareNpcDerivedData(sys: ShwNpcSystem) {
     addAttrMap.damageReduction +
     add.damageReduction +
     Math.floor((sys.attributes?.psyDefence?.extra ?? 0) / 4);
-  sys.helpers.totalArmorClass +=
-    addAttrMap.armorClass +
-    add.armorClass +
-    Math.floor((sys.attributes?.diplomacy?.extra ?? 0) / 4);
+  sys.helpers.totalArmorClass += addAttrMap.armorClass + add.armorClass;
   sys.helpers.totalRange += add.range;
 
   for (const k of ADDITIONAL_KEYS) {

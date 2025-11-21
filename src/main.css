@@ -66,14 +66,14 @@
 .application,
 body,
 html {
-  font-family: 'Tektur', ui-sans-serif, system-ui, sans-serif !important;
+  font-family: 'Tektur', ui-sans-serif, system-ui, sans-serif;
 }
 
 /* Apply to all elements including Svelte scoped styles, but exclude icons */
 .window-app *:not(i):not([class*="fa-"]):not([class*="fas"]):not([class*="far"]):not([class*="fab"]),
 .sheet *:not(i):not([class*="fa-"]):not([class*="fas"]):not([class*="far"]):not([class*="fab"]),
 .application *:not(i):not([class*="fa-"]):not([class*="fas"]):not([class*="far"]):not([class*="fab"]) {
-  font-family: inherit !important;
+  font-family: inherit;
 }
 
 /* ============================================================
@@ -94,9 +94,9 @@ select:active,
 button:focus,
 button:focus-visible,
 button:active {
-  outline: 0 !important;
-  outline: none !important;
-  box-shadow: none !important;
+  outline: 0;
+  outline: none;
+  box-shadow: none;
 }
 
 /* Foundry-specific classes with highest specificity */
@@ -106,8 +106,8 @@ button:active {
 .window-app *:focus,
 .sheet *:focus,
 .application *:focus {
-  outline: 0 !important;
-  box-shadow: none !important;
+  outline: 0;
+  box-shadow: none;
 }
 
 /* ============================================================
@@ -122,7 +122,7 @@ button:active {
 ::-webkit-scrollbar-track,
 ::-webkit-scrollbar-thumb,
 ::-webkit-scrollbar-corner {
-  border-radius: 0 !important;
+  border-radius: 0;
 }
 
 /* Target all Foundry VTT UI elements */
@@ -154,7 +154,7 @@ button:active {
 #pause *,
 .app,
 .app * {
-  border-radius: 0 !important;
+  border-radius: 0;
 }
 
 /* Target common UI components */
@@ -185,7 +185,7 @@ img,
 .scene-control,
 .macro,
 .hotbar-page {
-  border-radius: 0 !important;
+  border-radius: 0;
 }
 
 /* Target pseudo-elements */
@@ -197,7 +197,7 @@ button::before,
 button::after,
 .button::before,
 .button::after {
-  border-radius: 0 !important;
+  border-radius: 0;
 }
 
 /* ============================================================
@@ -206,15 +206,15 @@ button::after,
 
 /* Character and Item Sheets - only content area, not header */
 .window-app.sheet .window-content {
-  background: #b4b3ba !important;
-  background-image: none !important;
+  background: #b4b3ba;
+  background-image: none;
 }
 
 /* Chat Messages */
 .chat-message {
-  background: #b4b3ba !important;
-  background-image: none !important;
-  border-color: #1a1820 !important;
+  background: #b4b3ba;
+  background-image: none;
+  border-color: #1a1820;
 }
 
 /* ============================================================
@@ -238,16 +238,16 @@ button::after,
   padding: 8px 16px;
   font-size: 14px;
   font-weight: 500;
-  color: #1a1820 !important;
+  color: #1a1820;
   background: #8a8990;
   border: none;
-  border-radius: 0 !important;
+  border-radius: 0;
   cursor: pointer;
   transition: all 0.2s ease;
   min-width: 80px;
   text-transform: none;
-  box-shadow: none !important;
-  outline: none !important;
+  box-shadow: none;
+  outline: none;
 }
 
 .dialog .dialog-button:hover,
@@ -301,8 +301,8 @@ button::after,
 
 /* Remove paper texture and improve dialog appearance */
 .dialog .window-content {
-  background: #b4b3ba !important;
-  background-image: none !important;
+  background: #b4b3ba;
+  background-image: none;
   padding: 16px;
 }
 

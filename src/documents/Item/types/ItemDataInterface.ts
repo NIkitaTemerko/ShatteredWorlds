@@ -1,11 +1,20 @@
+// Core item fields - minimal base for all items
 export interface BaseItemData {
   name: string;
   description: string;
-  price: number;
   weight: number;
-  quantity: number;
-  stackLimit: number;
-  rarity: 'common' | 'uncommon' | 'rare' | 'legendary';
+  rarity: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
 }
 
-export type ItemType = 'weapon' | 'armor' | 'consumable' | 'equipment' | 'treasure';
+// Price mixin for items that can be bought/sold
+export interface PricedItem {
+  price: number;
+}
+
+// Stack mixin for items with quantity/stacks
+export interface StackableItem {
+  quantity: number;
+  stackLimit: number;
+}
+
+export type ItemType = 'weapon' | 'armor' | 'consumable' | 'equipment' | 'treasure' | 'ability';

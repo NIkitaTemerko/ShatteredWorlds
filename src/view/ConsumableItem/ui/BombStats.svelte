@@ -11,10 +11,13 @@
 
   let { item }: Props = $props();
 
+  if (!item.isConsumable()) throw new Error("Item is not a consumable");
+  const system = $derived(item.system);
+
   const updateConsumable = getUpdateConsumable(item);
 </script>
 
-{#if item.system.consumableType === "bomb" && item.system.damage !== undefined && item.system.save !== undefined}
+{#if system.consumableType === "bomb" && system.damage !== undefined && system.save !== undefined}
   <StatsCard columns={3} borderColor="rgba(215, 38, 61, 0.5)">
     <div class="stat-col">
       <div class="stat-header">{t("item.bomb.damage")}</div>
@@ -22,7 +25,7 @@
         <Input
           type="number"
           min="0"
-          value={item.system.damage.amount}
+          value={system.damage.amount}
           variant="underline"
           textAlign="center"
           fullWidth
@@ -35,7 +38,7 @@
       <div class="stat-header">{t("item.bomb.damageType")}</div>
       <div class="stat-body">
         <SelectInput
-          value={item.system.damage.type}
+          value={system.damage.type}
           options={DAMAGE_TYPES}
           variant="underline"
           fullWidth
@@ -50,7 +53,7 @@
         <Input
           type="number"
           min="0"
-          value={item.system.radius}
+          value={system.radius}
           variant="underline"
           textAlign="center"
           fullWidth
@@ -63,7 +66,7 @@
       <div class="stat-header">{t("item.bomb.save")}</div>
       <div class="stat-body">
         <SelectInput
-          value={item.system.save.type}
+          value={system.save.type}
           options={SAVE_TYPES}
           variant="underline"
           fullWidth
@@ -78,7 +81,7 @@
         <Input
           type="number"
           min="0"
-          value={item.system.save.dc}
+          value={system.save.dc}
           variant="underline"
           textAlign="center"
           fullWidth

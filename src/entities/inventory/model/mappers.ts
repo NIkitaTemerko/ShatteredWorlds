@@ -15,6 +15,7 @@ const rarityColors: Record<string, string> = {
 // Item type category translation keys
 const itemTypeKeys: Record<ItemType, string> = {
   consumable: 'inventory.categories.consumable',
+  ability: 'inventory.categories.ability',
   weapon: 'inventory.categories.weapon',
   armor: 'inventory.categories.armor',
   equipment: 'inventory.categories.equipment',
@@ -40,16 +41,20 @@ export function mapInventoryToFlatItems(items: ShwItem[]): FlatItem[] {
     const path: string[] = [t(itemTypeKeys[itemType] as any)];
 
     // Add subcategory for consumables
-    if (item.type === 'consumable' && item.system?.consumableType) {
+    if (item.type === 'consumable' && 'consumableType' in item.system) {
       path.push(t(consumableTypeKeys[item.system.consumableType] as any));
     }
 
-    // Add item name with quantity
-    const quantity = item.type === 'consumable' ? (item.system?.quantity ?? 1) : 1;
+    // Add item name with quantity (only for stackable items)
+    let quantity = 1;
+    if (item.type === 'consumable' && 'quantity' in item.system) {
+      quantity = item.system.quantity ?? 1;
+    }
     const label = quantity > 1 ? `${item.name} (×${quantity})` : item.name;
     path.push(label);
 
-    const rarity = item.type === 'consumable' ? (item.system?.rarity ?? 'common') : 'common';
+    // Get rarity from system data
+    const rarity = item.system?.rarity ?? 'common';
 
     return {
       id: (item.id ?? item._id) || '',

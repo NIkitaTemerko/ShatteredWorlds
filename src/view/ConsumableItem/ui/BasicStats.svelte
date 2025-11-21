@@ -13,6 +13,9 @@
 
   const updateConsumable = getUpdateConsumable(item);
 
+  if (!item.isConsumable()) throw new Error("Item is not a consumable");
+  const system = $derived(item.system);
+
   function handleRarityChange(event: Event) {
     const value = (event.currentTarget as HTMLSelectElement).value as RarityType;
     updateConsumable("rarity", value);
@@ -22,10 +25,11 @@
     common: { dark: "#9CA3AF", light: "#F3F4F6" },
     uncommon: { dark: "#10B981", light: "#D1FAE5" },
     rare: { dark: "#3B82F6", light: "#DBEAFE" },
+    epic: { dark: "#9333EA", light: "#F3E8FF" },
     legendary: { dark: "#F97316", light: "#FFEDD5" },
   };
 
-  const currentRarityColors = $derived(rarityColors[item.system.rarity]);
+  const currentRarityColors = $derived(rarityColors[system.rarity]);
 </script>
 
 <StatsCard columns={3}>
@@ -33,7 +37,7 @@
     <div class="stat-header">{t("item.basicStats.rarity")}</div>
     <div class="stat-body">
       <SelectInput
-        value={item.system.rarity}
+        value={system.rarity}
         options={RARITY_TYPES}
         variant="underline"
         fullWidth
@@ -48,7 +52,7 @@
       <Input
         type="number"
         min="0"
-        bind:value={item.system.price}
+        bind:value={system.price}
         variant="underline"
         textAlign="center"
         fullWidth
@@ -64,7 +68,7 @@
         type="number"
         min="0"
         step="0.01"
-        bind:value={item.system.weight}
+        bind:value={system.weight}
         variant="underline"
         textAlign="center"
         fullWidth
@@ -79,7 +83,7 @@
       <Input
         type="number"
         min="0"
-        bind:value={item.system.quantity}
+        bind:value={system.quantity}
         variant="underline"
         textAlign="center"
         fullWidth
@@ -94,7 +98,7 @@
       <Input
         type="number"
         min="1"
-        bind:value={item.system.stackLimit}
+        bind:value={system.stackLimit}
         variant="underline"
         textAlign="center"
         fullWidth

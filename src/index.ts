@@ -3,6 +3,7 @@ import { ShwItem } from './documents/Item/ShwItem';
 import { ShwTokenDocument } from './documents/ShwTokenDocument.js';
 import { CharacterApp } from './view/BaseCharacter/CharacterApp.js';
 import { ConsumableItemApp } from './view/ConsumableItem/ItemApp';
+import { AbilityItemApp } from './view/AbilityItem/ItemApp';
 import { NpcApp } from './view/NpcCharacter/NpcApp';
 import { needsMigration, migrateConsumableData } from './helpers/Item/migrateConsumableData';
 import './main.css';
@@ -33,6 +34,10 @@ Hooks.once('setup', () => {
   });
   foundry.documents.collections.Items.registerSheet('shw', ConsumableItemApp, {
     types: ['consumable'],
+    makeDefault: true,
+  });
+  foundry.documents.collections.Items.registerSheet('shw', AbilityItemApp, {
+    types: ['ability'],
     makeDefault: true,
   });
 });

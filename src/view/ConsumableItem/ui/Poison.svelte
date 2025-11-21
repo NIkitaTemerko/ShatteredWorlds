@@ -11,17 +11,20 @@
 
   let { item }: Props = $props();
 
+  if (!item.isConsumable()) throw new Error("Item is not a consumable");
+  const system = $derived(item.system);
+
   const updateConsumable = getUpdateConsumable(item);
 </script>
 
-{#if item.system.consumableType === "poison" && item.system.damage !== undefined && item.system.save !== undefined}
+{#if system.consumableType === "poison" && system.damage !== undefined && system.save !== undefined}
   <StatsCard columns={3} borderColor="rgba(108, 117, 125, 0.5)">
     <div class="stat-col">
       <div class="stat-header">{t("item.poison.initialDamage")}</div>
       <div class="stat-body">
         <Input
           type="text"
-          value={item.system.damage.initial}
+          value={system.damage.initial}
           variant="underline"
           textAlign="center"
           fullWidth
@@ -35,7 +38,7 @@
       <div class="stat-body">
         <Input
           type="text"
-          value={item.system.damage.recurring}
+          value={system.damage.recurring}
           variant="underline"
           textAlign="center"
           fullWidth
@@ -50,7 +53,7 @@
         <Input
           type="number"
           min="1"
-          value={item.system.damage.duration}
+          value={system.damage.duration}
           variant="underline"
           textAlign="center"
           fullWidth
@@ -63,7 +66,7 @@
       <div class="stat-header">{t("item.poison.save")}</div>
       <div class="stat-body">
         <SelectInput
-          value={item.system.save.type}
+          value={system.save.type}
           options={SAVE_TYPES}
           variant="underline"
           fullWidth
@@ -78,7 +81,7 @@
         <Input
           type="number"
           min="0"
-          value={item.system.save.dc}
+          value={system.save.dc}
           variant="underline"
           textAlign="center"
           fullWidth
@@ -92,7 +95,7 @@
         <div class="stat-header">{t("item.poison.application")}</div>
         <div class="stat-body">
           <SelectInput
-            bind:value={item.system.application}
+            bind:value={system.application}
             options={APPLICATION_TYPES}
             variant="underline"
             fullWidth

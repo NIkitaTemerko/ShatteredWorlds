@@ -11,17 +11,20 @@
 
   let { item }: Props = $props();
 
+  if (!item.isConsumable()) throw new Error("Item is not a consumable");
+  const system = $derived(item.system);
+
   const updateConsumable = getUpdateConsumable(item);
 </script>
 
-{#if item.system.consumableType === "scroll" && item.system?.spell !== undefined && item.system?.requirements !== undefined}
+{#if system.consumableType === "scroll" && system?.spell !== undefined && system?.requirements !== undefined}
   <StatsCard columns={3}>
     <div class="stat-col">
       <div class="stat-header">{t("item.scroll.spellName")}</div>
       <div class="stat-body">
         <Input
           type="text"
-          value={item.system.spell.name}
+          value={system.spell.name}
           variant="underline"
           textAlign="center"
           fullWidth
@@ -37,7 +40,7 @@
           type="number"
           min="0"
           max="9"
-          value={item.system.spell.level}
+          value={system.spell.level}
           variant="underline"
           textAlign="center"
           fullWidth
@@ -51,7 +54,7 @@
       <div class="stat-body">
         <Input
           type="text"
-          value={item.system.spell.school}
+          value={system.spell.school}
           variant="underline"
           textAlign="center"
           fullWidth
@@ -65,7 +68,7 @@
       <div class="stat-body">
         <Input
           type="text"
-          value={item.system.requirements.ability}
+          value={system.requirements.ability}
           variant="underline"
           textAlign="center"
           fullWidth
@@ -80,7 +83,7 @@
         <Input
           type="number"
           min="0"
-          value={item.system.requirements.dc}
+          value={system.requirements.dc}
           variant="underline"
           textAlign="center"
           fullWidth

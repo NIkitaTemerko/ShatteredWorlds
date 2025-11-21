@@ -131,6 +131,104 @@
         "defaultEffect": "buff"
       }
     },
+    "ability": {
+      "header": {
+        "namePlaceholder": "Ability Name",
+        "categoryLabel": "Category:",
+        "kindLabel": "Type:"
+      },
+      "category": {
+        "active": "Active",
+        "passive": "Passive"
+      },
+      "activeKind": {
+        "attack": "Attack",
+        "heal": "Heal",
+        "support": "Support",
+        "debuff": "Debuff",
+        "control": "Control",
+        "movement": "Movement",
+        "summon": "Summon",
+        "utility": "Utility"
+      },
+      "passiveKind": {
+        "statBonus": "Stat Bonus",
+        "aura": "Aura",
+        "triggered": "Triggered",
+        "mechanic": "Mechanic"
+      },
+      "basicStats": {
+        "rank": "Rank"
+      },
+      "actionType": {
+        "action": "Action",
+        "bonus": "Bonus",
+        "reaction": "Reaction",
+        "free": "Free"
+      },
+      "rangeKind": {
+        "self": "Self",
+        "melee": "Melee",
+        "ranged": "Ranged",
+        "area": "Area"
+      },
+      "targetType": {
+        "self": "Self",
+        "ally": "Ally",
+        "enemy": "Enemy",
+        "any": "Any"
+      },
+      "activeDetails": {
+        "title": "Active Ability Details",
+        "actionType": "Action Type",
+        "range": "Range & Targeting",
+        "rangeKind": "Range",
+        "rangeDistance": "Distance",
+        "areaRadius": "Radius",
+        "areaShape": "Shape",
+        "targetType": "Target",
+        "maxTargets": "Max Targets"
+      },
+      "areaShape": {
+        "circle": "Circle",
+        "cone": "Cone",
+        "line": "Line"
+      },
+      "passiveDetails": {
+        "title": "Passive Ability Details",
+        "mode": "Mode",
+        "statBonuses": "Stat Bonuses",
+        "bonusesInfo": "Stat Modifiers",
+        "bonusesPlaceholder": "Configure stat bonuses in effects editor (coming soon)",
+        "aura": "Aura Settings",
+        "auraRadius": "Aura Radius",
+        "auraShape": "Aura Shape",
+        "auraAffect": "Affects",
+        "allies": "Allies",
+        "enemies": "Enemies",
+        "everyone": "Everyone",
+        "isToggle": "Toggle Aura",
+        "requiresConcentration": "Requires Concentration",
+        "triggers": "Trigger Settings",
+        "triggerInfo": "Trigger Events",
+        "triggerPlaceholder": "Configure triggers in effects editor (coming soon)"
+      },
+      "passiveMode": {
+        "alwaysOn": "Always On",
+        "toggle": "Toggle",
+        "triggered": "Triggered"
+      },
+      "advancedSettings": {
+        "title": "Advanced Settings",
+        "castTime": "Cast Time",
+        "uses": "Uses & Toggles",
+        "usesPerRest": "Uses/Rest",
+        "usesPerEncounter": "Uses/Encounter",
+        "channeled": "Channeled",
+        "togglable": "Togglable",
+        "requiresLOS": "Requires LOS"
+      }
+    },
     "controls": {
       "activation": "Activation",
       "uses": "Uses",
@@ -169,6 +267,7 @@
       "clearSearch": "Clear search",
       "categories": {
         "consumable": "Consumables",
+        "ability": "Abilities",
         "weapon": "Weapons",
         "armor": "Armor",
         "equipment": "Equipment",

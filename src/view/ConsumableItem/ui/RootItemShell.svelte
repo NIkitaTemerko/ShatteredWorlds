@@ -17,6 +17,9 @@
 
   let { item }: Props = $props();
 
+  if (!item.isConsumable()) throw new Error("Item is not a consumable");
+  const system = $derived(item.system);
+
   /**
    * Унифицированный метод, который гарантирует, что мы не «съедим» соседние поля,
    * передавая в обновление сам объект consumable и патч‑путь одновременно.
@@ -27,7 +30,7 @@
 <!-- ======================== МАКЕТ ======================== -->
 <div
   class="consumable-card"
-  style="--dark:{typeColors[item.system.consumableType]?.dark}; --light:{typeColors[item.system.consumableType]?.light}"
+  style="--dark:{typeColors[system.consumableType]?.dark}; --light:{typeColors[system.consumableType]?.light}"
 >
   <!-- ===== HEADER ===== -->
   <ItemHeader {item} />
@@ -42,7 +45,7 @@
   <section class="description" style="--dark: #6B7280; --light: #F3F4F6">
     <div class="section-header">{t("item.description.title")}</div>
     <textarea
-      bind:value={item.system.description}
+      bind:value={system.description}
       placeholder={t("item.description.placeholder")}
       onchange={(e) => updateConsumable("description", e.currentTarget.value)}
     ></textarea>

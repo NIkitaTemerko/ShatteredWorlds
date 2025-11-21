@@ -2,7 +2,7 @@ import type { I18nKey } from '../../../shared/i18n';
 
 export type ActivationType = 'action' | 'bonus' | 'reaction';
 export type PerType = 'charges' | 'uses' | 'turns';
-export type RarityType = 'common' | 'uncommon' | 'rare' | 'legendary';
+export type RarityType = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
 export type ConsumableType = 'potion' | 'bomb' | 'scroll' | 'food' | 'poison';
 
 export interface ActivationData {
@@ -18,5 +18,5 @@ export interface UsesData {
 
 export interface SelectOption<T = string> {
   value: T;
-  label: I18nKey;
+  label: string;
 }

@@ -9,11 +9,10 @@
       "diplomacy": "Дипломатия"
     },
     "tabs": {
-      "stats": "Статы",
+      "stats": "Статистика",
       "inventory": "Инвентарь",
       "equipment": "Экипировка",
       "spells": "Заклинания",
-      "passives": "Пассивки",
       "abilities": "Способности"
     },
     "additionalAttributes": {

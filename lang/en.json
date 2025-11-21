@@ -9,11 +9,10 @@
       "diplomacy": "Diplomacy"
     },
     "tabs": {
-      "stats": "Stats",
+      "stats": "Statistics",
       "inventory": "Inventory",
       "equipment": "Equipment",
       "spells": "Spells",
-      "passives": "Passives",
       "abilities": "Abilities"
     },
     "additionalAttributes": {

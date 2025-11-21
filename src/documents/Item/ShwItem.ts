@@ -1,9 +1,8 @@
-import { ItemFactory } from './ItemFactory';
+import { ItemFactory, getConsumableImage } from './ItemFactory';
 import type { ConsumableData } from './types/ConsumableDataTypes';
 
-interface ShwItemSystem {
-  consumable: ConsumableData;
-}
+// Flattened: system IS the consumable data directly (no nested .consumable)
+type ShwItemSystem = ConsumableData;
 
 export class ShwItem extends Item {
   // @ts-ignore
@@ -16,18 +15,20 @@ export class ShwItem extends Item {
     operation?: Partial<Omit<foundry.abstract.types.DatabaseUpdateOperation, 'updates'>>,
   ) => Promise<this | undefined>;
 
+
   private prepareConsumable() {
-    if (!this.system.consumable && this.type === 'consumable') {
+    if (!this.system.consumableType && this.type === 'consumable') {
       const item = ItemFactory.createConsumable('bomb', {
         name: this.name,
       });
-      this.system.consumable = item;
-      this.img = item.img;
+      // Flatten: assign item fields directly to system
+      Object.assign(this.system, item);
+      this.img = getConsumableImage('bomb');
     }
   }
 
   private async useConsumable() {
-    const consumable = this.system.consumable;
+    const consumable = this.system;
 
     if (consumable.quantity <= 0) {
       ui.notifications?.warn(`${this.name} больше нельзя использовать`);
@@ -44,14 +45,14 @@ export class ShwItem extends Item {
     }
 
     await this.update({
-      'system.consumable.uses.value': Math.max(0, consumable.quantity - 1),
+      'system.uses.value': Math.max(0, consumable.quantity - 1),
     });
 
     return true;
   }
 
   private async usePotion() {
-    const potion = this.system.consumable;
+    const potion = this.system;
     if (potion.consumableType !== 'potion') return;
 
     for (const effect of potion.effects) {
@@ -60,7 +61,7 @@ export class ShwItem extends Item {
   }
 
   private async useBomb() {
-    const bomb = this.system.consumable;
+    const bomb = this.system;
     if (bomb.consumableType !== 'bomb') return;
 
     console.log(

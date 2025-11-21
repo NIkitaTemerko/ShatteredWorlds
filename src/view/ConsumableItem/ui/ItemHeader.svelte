@@ -1,8 +1,10 @@
 <script lang="ts">
-  import type { ShwItem } from '../../../documents/Item/ShwItem';
-  import { getUpdateConsumable } from '../utils/updateConsumable';
-  import { Input, SelectInput } from '../../../shared/ui';
-  import { CONSUMABLE_TYPES, type ConsumableType } from '../../../entities/consumable/model';
+  import type { ShwItem } from "../../../documents/Item/ShwItem";
+  import { getUpdateConsumable } from "../utils/updateConsumable";
+  import { Input, SelectInput } from "../../../shared/ui";
+  import { CONSUMABLE_TYPES, type ConsumableType } from "../../../entities/consumable/model";
+  import { cn } from "../../../shared/lib/cn";
+  import { t } from "../../../shared/i18n";
 
   interface Props {
     item: ShwItem;
@@ -14,7 +16,7 @@
 
   function handleTypeChange(event: Event) {
     const value = (event.currentTarget as HTMLSelectElement).value as ConsumableType;
-    updateConsumable('consumableType', value, event);
+    updateConsumable("consumableType", value, event);
   }
 </script>
 
@@ -23,22 +25,20 @@
 
   <div class="header-main">
     <Input
-      class="item-name"
+      class={cn("tw:text-[20px] tw:font-bold tw:py-[0.4rem]")}
       type="text"
       bind:value={item.name}
-      placeholder="Название предмета"
+      placeholder={t("item.header.namePlaceholder")}
       onchange={(e) => item.update({ name: e.currentTarget.value })}
-      fullWidth
       variant="underline"
     />
 
     <div class="type-wrapper">
-      <span class="type-label">Тип:</span>
+      <span class="tw:opacity-80 tw:text-[20px]">{t("item.header.typeLabel")}</span>
       <SelectInput
-        value={item.system.consumable.consumableType}
+        value={item.system.consumableType}
         options={CONSUMABLE_TYPES}
-        variant="square"
-        class="type-select"
+        variant="underline"
         onchange={handleTypeChange}
       />
     </div>
@@ -60,30 +60,9 @@
     gap: 0.5rem;
   }
 
-  :global(.item-name) {
-    font-size: var(--font-size-20);
-    font-weight: 700;
-    padding: 0.4rem 0;
-  }
-
   .type-wrapper {
     display: flex;
     align-items: baseline;
     gap: 0.5rem;
-  }
-
-  .type-label {
-    font-size: var(--font-size-16);
-    opacity: 0.8;
-  }
-
-  :global(.type-select) {
-    width: max-content;
-    background: transparent !important;
-    border: none !important;
-    border-bottom: 2px solid currentColor !important;
-    border-radius: 0 !important;
-    padding: 0.25rem 0.5rem !important;
-    font-size: var(--font-size-14);
   }
 </style>

@@ -1,15 +1,8 @@
 <script lang="ts">
-  import type {
-    AdditionalAttributes,
-    CharacterHelpers,
-    NpcHelpers,
-  } from '../../model';
-  import {
-    ADDITIONAL_ATTRIBUTE_LABELS,
-    ADDITIONAL_ATTRIBUTE_ICONS,
-    ADDITIONAL_ATTRIBUTE_COLORS,
-  } from '../../model';
-  import { Input } from '../../../../shared/ui/Input';
+  import type { AdditionalAttributes, CharacterHelpers, NpcHelpers } from "../../model";
+  import { ADDITIONAL_ATTRIBUTE_LABELS, ADDITIONAL_ATTRIBUTE_ICONS, ADDITIONAL_ATTRIBUTE_COLORS } from "../../model";
+  import { Input } from "../../../../shared/ui/Input";
+  import { t } from "../../../../shared/i18n";
 
   interface Props {
     stats: AdditionalAttributes;
@@ -22,11 +15,11 @@
     stats,
     helpers,
     editableKeys = new Set<keyof AdditionalAttributes>([
-      'actions',
-      'bonusActions',
-      'reactions',
-      'impulse',
-      'initiative',
+      "actions",
+      "bonusActions",
+      "reactions",
+      "impulse",
+      "initiative",
     ]),
     onUpdate,
   }: Props = $props();
@@ -35,7 +28,7 @@
 
   function handleChange(key: keyof AdditionalAttributes, event: Event) {
     const target = event.target as HTMLInputElement;
-    const value = target.value === '' ? 0 : Number(target.value);
+    const value = target.value === "" ? 0 : Number(target.value);
     onUpdate(key, value);
   }
 
@@ -45,19 +38,19 @@
   const orderedEntries = $derived([...editableEntries, ...readonlyEntries]);
 
   const hasHelper = (key: keyof AdditionalAttributes): boolean => {
-    return ['impulse', 'range', 'damageReduction', 'armorClass'].includes(String(key));
+    return ["impulse", "range", "damageReduction", "armorClass"].includes(String(key));
   };
 
   const getHelperValue = (key: keyof AdditionalAttributes): number | undefined => {
     switch (key) {
-      case 'impulse':
-        return 'totalImpulse' in helpers ? helpers.totalImpulse : undefined;
-      case 'range':
-        return 'totalRange' in helpers ? (helpers as NpcHelpers).totalRange : undefined;
-      case 'damageReduction':
-        return 'totalDamageReduction' in helpers ? (helpers as NpcHelpers).totalDamageReduction : undefined;
-      case 'armorClass':
-        return 'totalArmorClass' in helpers ? (helpers as NpcHelpers).totalArmorClass : undefined;
+      case "impulse":
+        return "totalImpulse" in helpers ? helpers.totalImpulse : undefined;
+      case "range":
+        return "totalRange" in helpers ? (helpers as NpcHelpers).totalRange : undefined;
+      case "damageReduction":
+        return "totalDamageReduction" in helpers ? (helpers as NpcHelpers).totalDamageReduction : undefined;
+      case "armorClass":
+        return "totalArmorClass" in helpers ? (helpers as NpcHelpers).totalArmorClass : undefined;
       default:
         return undefined;
     }
@@ -67,10 +60,18 @@
 <div class="stats-grid">
   {#each orderedEntries as [key, value]}
     <div class="stat-tile {isEditable(key) ? 'editable' : 'readonly'}" data-key={key}>
-      <i class={ADDITIONAL_ATTRIBUTE_ICONS[key]} style="color: {ADDITIONAL_ATTRIBUTE_COLORS[key]}" aria-hidden="true"></i>
-      <span class="label">{ADDITIONAL_ATTRIBUTE_LABELS[key]}</span>
+      <i class={ADDITIONAL_ATTRIBUTE_ICONS[key]} style="color: {ADDITIONAL_ATTRIBUTE_COLORS[key]}" aria-hidden="true"
+      ></i>
+      <span class="label">{t(ADDITIONAL_ATTRIBUTE_LABELS[key])}</span>
       {#if isEditable(key)}
-        <Input class="tw:w-10" variant="underline" type="number" min="0" {value} onchange={(e) => handleChange(key, e)} />
+        <Input
+          class="tw:w-10"
+          variant="underline"
+          type="number"
+          min="0"
+          {value}
+          onchange={(e) => handleChange(key, e)}
+        />
         {#if hasHelper(key)}
           {@const helperValue = getHelperValue(key)}
           {#if helperValue !== undefined}

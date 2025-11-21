@@ -16,29 +16,29 @@
 
 <style>
   .stats-card {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
-    gap: 2px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
     background: var(--color-border-light-3);
-    border-left: 4px solid;
-  }
-
-  /* Enforce max columns constraint */
-  @media (min-width: 450px) {
-    .stats-card {
-      grid-template-columns: repeat(auto-fit, minmax(min(100% / var(--max-cols, 3), 150px), 1fr));
-    }
   }
 
   .stats-card :global(.stat-col) {
     display: flex;
     flex-direction: column;
     gap: 0;
-    min-width: 0; /* Allow flex items to shrink below content size */
+    min-width: 150px;
+    flex: 1 1 calc(100% / var(--max-cols, 3) - 4px);
   }
 
   .stats-card :global(.stat-col.full) {
-    grid-column: 1 / -1;
+    flex-basis: 100%;
+  }
+
+  /* Mobile: stack vertically */
+  @media (max-width: 449px) {
+    .stats-card :global(.stat-col) {
+      flex-basis: 100%;
+    }
   }
 
   .stats-card :global(.stat-header) {
@@ -63,15 +63,5 @@
   .stats-card :global(.stat-body .shw-input),
   .stats-card :global(.stat-body .shw-select) {
     background: transparent;
-    border: none;
-    border-bottom: 2px solid var(--dark);
-    padding: 0;
-  }
-
-  /* Smart grid logic using CSS Grid */
-  @supports (grid-template-columns: subgrid) {
-    .stats-card {
-      grid-template-columns: repeat(auto-fit, minmax(calc(100% / var(--max-cols, 3) - 2px), 1fr));
-    }
   }
 </style>

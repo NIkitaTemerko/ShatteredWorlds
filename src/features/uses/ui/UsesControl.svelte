@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { Input, SelectInput } from '../../../shared/ui';
-  import { PER_TYPES, type PerType } from '../../../entities/consumable/model';
+  import { Input, SelectInput } from "../../../shared/ui";
+  import { PER_TYPES, type PerType } from "../../../entities/consumable/model";
+  import { t } from "../../../shared/i18n";
 
   interface Props {
     usesValue: number;
@@ -11,8 +12,7 @@
     onUsesPerChange: (per: PerType) => void;
   }
 
-  let { usesValue, usesMax, usesPer, onUsesValueChange, onUsesMaxChange, onUsesPerChange }: Props =
-    $props();
+  let { usesValue, usesMax, usesPer, onUsesValueChange, onUsesMaxChange, onUsesPerChange }: Props = $props();
 
   function handleValueChange(event: Event) {
     const value = Number((event.currentTarget as HTMLInputElement).value);
@@ -30,9 +30,9 @@
   }
 </script>
 
-<div class="uses-control">
+<div class="uses-control" style="--dark: #8B5CF6; --light: #EDE9FE">
   <div class="control-header">
-    <span class="control-label">Заряды</span>
+    <span class="control-label">{t("controls.uses")}</span>
   </div>
   <div class="control-body">
     <div class="uses-inputs">
@@ -45,7 +45,7 @@
         class="tw:flex-1"
         onchange={handleValueChange}
       />
-      <span class="divider">из</span>
+      <span class="divider">{t("controls.usesOf")}</span>
       <Input
         type="number"
         min="0"
@@ -56,13 +56,7 @@
         onchange={handleMaxChange}
       />
     </div>
-    <SelectInput
-      value={usesPer}
-      options={PER_TYPES}
-      variant="square"
-      fullWidth
-      onchange={handlePerChange}
-    />
+    <SelectInput value={usesPer} options={PER_TYPES} variant="underline" fullWidth onchange={handlePerChange} />
   </div>
 </div>
 
@@ -110,14 +104,10 @@
 
   .control-body :global(.shw-select) {
     background: transparent;
-    border: none;
-    border-bottom: 2px solid var(--dark);
-    padding: 0;
   }
 
   .control-body :global(.shw-input) {
-    border: none;
-    border-bottom: 2px solid var(--dark);
+    background: transparent;
     padding: 0.25rem 0;
   }
 </style>

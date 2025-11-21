@@ -1,6 +1,7 @@
 <script lang="ts">
-  import type { CharacterTab, TabConfig } from '../../../../entities/character/model';
-  import { TAB_CONFIGS } from '../../../../entities/character/model';
+  import type { CharacterTab, TabConfig } from "../../../../entities/character/model";
+  import { TAB_CONFIGS } from "../../../../entities/character/model";
+  import { t } from "../../../../shared/i18n";
 
   interface Props {
     activeTab: CharacterTab;
@@ -17,13 +18,13 @@
   }
 
   const TAB_COLORS: Record<CharacterTab, TabColors> = {
-    stats: { icon: '#198754', light: '#d1f7e4', dark: '#198754', hover: '#4db083' },
-    inventory: { icon: '#fd7e14', light: '#ffe5cc', dark: '#fd7e14', hover: '#ff9a4d' },
-    equipment: { icon: '#6c757d', light: '#dee2e6', dark: '#6c757d', hover: '#a5acb2' },
-    spells: { icon: '#6f42c1', light: '#e8d9f5', dark: '#6f42c1', hover: '#9966cc' },
-    passives: { icon: '#0d6efd', light: '#cfe2ff', dark: '#0d6efd', hover: '#4d8fff' },
-    abilities: { icon: '#dc3545', light: '#f8d7da', dark: '#dc3545', hover: '#e15361' },
-    consumable: { icon: '#f08c00', light: '#ffd580', dark: '#f08c00', hover: '#ffae40' },
+    stats: { icon: "#198754", light: "#d1f7e4", dark: "#198754", hover: "#4db083" },
+    inventory: { icon: "#fd7e14", light: "#ffe5cc", dark: "#fd7e14", hover: "#ff9a4d" },
+    equipment: { icon: "#6c757d", light: "#dee2e6", dark: "#6c757d", hover: "#a5acb2" },
+    spells: { icon: "#6f42c1", light: "#e8d9f5", dark: "#6f42c1", hover: "#9966cc" },
+    passives: { icon: "#0d6efd", light: "#cfe2ff", dark: "#0d6efd", hover: "#4d8fff" },
+    abilities: { icon: "#dc3545", light: "#f8d7da", dark: "#dc3545", hover: "#e15361" },
+    consumable: { icon: "#f08c00", light: "#ffd580", dark: "#f08c00", hover: "#ffae40" },
   };
 </script>
 
@@ -32,13 +33,14 @@
     <button
       type="button"
       class="item {id === activeTab ? 'active' : ''}"
-      style="--icon:{TAB_COLORS[id].icon}; --light:{TAB_COLORS[id].light}; --dark:{TAB_COLORS[id].dark}; --hover:{TAB_COLORS[id].hover};"
+      style="--icon:{TAB_COLORS[id].icon}; --light:{TAB_COLORS[id].light}; --dark:{TAB_COLORS[id]
+        .dark}; --hover:{TAB_COLORS[id].hover};"
       data-tab={id}
       title={label}
       onclick={() => onTabChange(id)}
     >
-      <i class={'fa-solid ' + icon} aria-hidden="true"></i>
-      <span>{label}</span>
+      <i class={"fa-solid " + icon} aria-hidden="true"></i>
+      <span>{t(label)}</span>
     </button>
   {/each}
 </nav>

@@ -1,18 +1,19 @@
 <script lang="ts">
-  import type { ShwActor } from '../../../../documents/Actor/ShwActor';
-  import type { AttributeKey } from '../../model';
-  import { ATTRIBUTE_COLORS } from '../../model';
-  import { Input } from '../../../../shared/ui/Input';
+  import type { ShwActor } from "../../../../documents/Actor/ShwActor";
+  import type { AttributeKey } from "../../model";
+  import { ATTRIBUTE_COLORS } from "../../model";
+  import { Input } from "../../../../shared/ui/Input";
+  import { t, localize } from "../../../../shared/i18n";
 
   interface Props {
-    actor: ShwActor<'character' | 'npc'>;
+    actor: ShwActor<"character" | "npc">;
     isNpc?: boolean;
   }
 
   let { actor, isNpc = false }: Props = $props();
 
   const sys = $derived(actor.system);
-  const n = (v: unknown, d = 0) => (typeof v === 'number' && !Number.isNaN(v) ? v : d);
+  const n = (v: unknown, d = 0) => (typeof v === "number" && !Number.isNaN(v) ? v : d);
 
   interface ColumnData {
     key: AttributeKey;
@@ -30,20 +31,24 @@
     saveLabel: string;
   }
 
+  const ATTRIBUTE_KEYS = [
+    { key: "fortune" as const, labelKey: "attributes.fortune" },
+    { key: "force" as const, labelKey: "attributes.force" },
+    { key: "perception" as const, labelKey: "attributes.perception" },
+    { key: "psyDefence" as const, labelKey: "attributes.psyDefence" },
+    { key: "diplomacy" as const, labelKey: "attributes.diplomacy" },
+  ] as const;
+
   const columns = $derived<ColumnData[]>(
-    [
-      { key: 'fortune' as const, label: 'Фортуна' },
-      { key: 'force' as const, label: 'Напор' },
-      { key: 'perception' as const, label: 'Восприятие' },
-      { key: 'psyDefence' as const, label: 'Пси‑защита' },
-      { key: 'diplomacy' as const, label: 'Дипломатия' },
-    ].map((c) => {
+    ATTRIBUTE_KEYS.map((c) => {
       const attr = (sys as any).attributes[c.key];
       const colors = ATTRIBUTE_COLORS[c.key];
       const base = n(attr.value);
       const extra = n(attr.extra);
+      const label = t(c.labelKey);
       return {
         ...c,
+        label,
         ...colors,
         base,
         extra,
@@ -52,9 +57,9 @@
         saveBonus: n(attr.saveBonus),
         charBonusBase: isNpc ? n(attr.charBonusBase) : undefined,
         saveBonusBase: isNpc ? n(attr.saveBonusBase) : undefined,
-        saveLabel: `СБ‑${c.label}`,
+        saveLabel: localize("character.saveThrow", { attribute: label }),
       };
-    })
+    }),
   );
 
   function updateBase(key: string, value: number) {
@@ -65,9 +70,9 @@
     actor.update({ [`system.attributes.${key}.${field}`]: value });
   }
 
-  const onChangeValue = (key: string, ev: Event, field: string = 'value') => {
+  const onChangeValue = (key: string, ev: Event, field: string = "value") => {
     const value = Number((ev.currentTarget as HTMLInputElement).value);
-    if (field === 'value') {
+    if (field === "value") {
       updateBase(key, value);
     } else {
       updateAttr(key, field, value);
@@ -80,19 +85,35 @@
     <div class="stat-col flexcol" style="--dark:{col.dark}; --light:{col.light}; --hover:{col.hover};">
       <div class="cell header">{col.label}</div>
       <div class="cell value">
-        <Input class="tw:w-10" variant="underline" type="number" value={col.base} min="-999" max="999" onchange={(e) => onChangeValue(col.key, e)} />
+        <Input
+          class="tw:w-10"
+          variant="underline"
+          type="number"
+          value={col.base}
+          min="-999"
+          max="999"
+          onchange={(e) => onChangeValue(col.key, e)}
+        />
       </div>
 
-      <div class="cell subheader">Доп. {col.label}</div>
+      <div class="cell subheader">{localize("character.additionalAttribute", { attribute: col.label })}</div>
       <div class="cell value">
         {#if isNpc}
-          <Input class="tw:w-10" variant="underline" type="number" value={col.extra} min="-999" max="999" onchange={(e) => onChangeValue(col.key, e, 'extra')} />
+          <Input
+            class="tw:w-10"
+            variant="underline"
+            type="number"
+            value={col.extra}
+            min="-999"
+            max="999"
+            onchange={(e) => onChangeValue(col.key, e, "extra")}
+          />
         {:else}
           {col.extra}
         {/if}
       </div>
 
-      <div class="cell subheader">Бонус характеристики</div>
+      <div class="cell subheader">{t("character.attributeBonus")}</div>
       <div class="cell value">
         {#if isNpc && col.charBonusBase !== undefined}
           <Input
@@ -102,7 +123,7 @@
             value={col.charBonusBase}
             min="-999"
             max="999"
-            onchange={(e) => onChangeValue(col.key, e, 'charBonusBase')}
+            onchange={(e) => onChangeValue(col.key, e, "charBonusBase")}
           />({col.charBonus})
         {:else}
           {col.charBonus}
@@ -119,7 +140,7 @@
             value={col.saveBonusBase}
             min="-999"
             max="999"
-            onchange={(e) => onChangeValue(col.key, e, 'saveBonusBase')}
+            onchange={(e) => onChangeValue(col.key, e, "saveBonusBase")}
           />({col.saveBonus})
         {:else}
           {col.saveBonus}
@@ -170,8 +191,6 @@
     background: var(--light);
     color: #000;
   }
-
-
 
   @media (max-width: 900px) {
     .stats-panel {

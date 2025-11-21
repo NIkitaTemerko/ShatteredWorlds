@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { Input, SelectInput } from '../../../shared/ui';
-  import { ACTIVATION_TYPES, type ActivationType } from '../../../entities/consumable/model';
+  import { Input, SelectInput } from "../../../shared/ui";
+  import { ACTIVATION_TYPES, type ActivationType } from "../../../entities/consumable/model";
+  import { t } from "../../../shared/i18n";
 
   interface Props {
     activationType: ActivationType;
@@ -9,8 +10,7 @@
     onActivationCostChange: (cost: number) => void;
   }
 
-  let { activationType, activationCost, onActivationTypeChange, onActivationCostChange }: Props =
-    $props();
+  let { activationType, activationCost, onActivationTypeChange, onActivationCostChange }: Props = $props();
 
   function handleTypeChange(event: Event) {
     const value = (event.currentTarget as HTMLSelectElement).value as ActivationType;
@@ -23,15 +23,15 @@
   }
 </script>
 
-<div class="activation-control">
+<div class="activation-control" style="--dark: #6B7280; --light: #F3F4F6">
   <div class="control-header">
-    <span class="control-label">Активация</span>
+    <span class="control-label">{t("controls.activation")}</span>
   </div>
   <div class="control-body">
     <SelectInput
       value={activationType}
       options={ACTIVATION_TYPES}
-      variant="square"
+      variant="underline"
       fullWidth
       onchange={handleTypeChange}
     />
@@ -41,7 +41,6 @@
       value={activationCost}
       variant="underline"
       textAlign="center"
-      class="tw:w-full"
       onchange={handleCostChange}
     />
   </div>
@@ -77,15 +76,10 @@
 
   .control-body :global(.shw-select) {
     background: transparent;
-    border: none;
-    border-bottom: 2px solid var(--dark);
-    padding: 0;
   }
 
   .control-body :global(.shw-input) {
     background: transparent;
-    border: none;
-    border-bottom: 2px solid var(--dark);
     padding: 0.25rem 0;
   }
 </style>

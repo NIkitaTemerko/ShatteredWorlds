@@ -1,13 +1,16 @@
+import type { RollMode, RollType } from '../../entities/character/model';
 import type { ShwActor } from '../../documents/Actor/ShwActor';
+import { t, localize } from '../../shared/i18n';
 import type { ShwActorSystem } from '../../documents/Actor/types/ShwActorSystem';
 
-const STAT_NAMES = {
-  fortune: 'Фортуна',
-  force: 'Напор',
-  perception: 'Восприятие',
-  psyDefence: 'Пси-защита',
-  diplomacy: 'Дипломатия',
-  natural: 'Натуральный',
+// I18n keys for attribute names
+const STAT_NAME_KEYS = {
+  fortune: 'attributes.fortune',
+  force: 'attributes.force',
+  perception: 'attributes.perception',
+  psyDefence: 'attributes.psyDefence',
+  diplomacy: 'attributes.diplomacy',
+  natural: 'attributes.natural',
 } as const;
 
 function buildDiceFormula(advantage: 'adv' | 'dis' | 'normal', diceSize: number): string {
@@ -71,13 +74,22 @@ export async function characterRoll(
   const totalEl = wrapper.querySelector('.dice-total');
   if (totalEl) totalEl.textContent = results.join(', ');
 
+  // Build flavor text with i18n
+  const statName = t(STAT_NAME_KEYS[key]);
+  const rollTypePrefix = isSave ? localize('roll.flavorSave', { attribute: statName }) : localize('roll.flavorRoll', { attribute: statName });
+  const bonusText = bonus ? localize('roll.withBonus', { bonus: String(bonus) }) : '';
+  const advantageText = 
+    advantage === 'adv' ? t('roll.withAdvantage') : 
+    advantage === 'dis' ? t('roll.withDisadvantage') : '';
+  const multipleText = count > 1 ? localize('roll.multiple', { count: String(count) }) : '';
+  
+  const flavor = `${rollTypePrefix}${bonusText}${advantageText}${multipleText}`;
+
   await (ChatMessage as any).create({
     speaker: ChatMessage.getSpeaker({
       actor: actor as unknown as Actor<'base' | foundry.abstract.Document.ModuleSubType>,
     }),
-    flavor: `${isSave ? 'Спасб' : 'Б'}росок ${STAT_NAMES[key]}${bonus ? ` +${bonus}` : ''}${
-      advantage === 'adv' ? ' с преимуществом' : advantage === 'dis' ? ' с помехой' : ''
-    }${count > 1 ? ` ×${count}` : ''}`,
+    flavor,
     rolls: [roll],
     content: wrapper.innerHTML,
   });

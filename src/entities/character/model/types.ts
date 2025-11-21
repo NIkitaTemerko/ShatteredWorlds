@@ -1,4 +1,5 @@
 import type { ShwActorSystem, ShwNpcSystem } from '../../../documents/Actor/types/ShwActorSystem';
+import type { I18nKey } from '../../../shared/i18n';
 
 /** Tab types for character sheets */
 export type CharacterTab =
@@ -32,7 +33,7 @@ export type NpcHelpers = ShwNpcSystem['helpers'];
 export interface TabConfig {
   id: CharacterTab;
   icon: string;
-  label: string;
+  label: I18nKey;
 }
 
 /** Attribute color configuration */
@@ -45,14 +46,14 @@ export interface AttributeColors {
 /** Roll type configuration */
 export interface RollTypeConfig {
   id: RollType;
-  label: string;
+  label: I18nKey;
   colors: AttributeColors;
 }
 
 /** Attribute column configuration */
 export interface AttributeColumn {
   key: AttributeKey;
-  label: string;
+  label: I18nKey;
   dark: string;
   light: string;
   hover: string;
@@ -67,42 +68,42 @@ export const ATTRIBUTE_COLORS: Record<AttributeKey, AttributeColors> = {
   diplomacy: { dark: '#6c757d', light: '#dee2e6', hover: '#a5acb2' },
 };
 
-/** Constants for roll types */
+/** Constants for roll types (labels are i18n keys) */
 export const ROLL_TYPE_CONFIGS: RollTypeConfig[] = [
   {
     id: 'natural',
-    label: 'Натуральный',
+    label: 'attributes.natural',
     colors: { dark: '#3498db', light: '#87ceeb', hover: '#5dade2' },
   },
-  { id: 'fortune', label: 'Фортуна', colors: ATTRIBUTE_COLORS.fortune },
-  { id: 'force', label: 'Напор', colors: ATTRIBUTE_COLORS.force },
-  { id: 'perception', label: 'Восприятие', colors: ATTRIBUTE_COLORS.perception },
-  { id: 'psyDefence', label: 'Пси‑защита', colors: ATTRIBUTE_COLORS.psyDefence },
-  { id: 'diplomacy', label: 'Дипломатия', colors: ATTRIBUTE_COLORS.diplomacy },
+  { id: 'fortune', label: 'attributes.fortune', colors: ATTRIBUTE_COLORS.fortune },
+  { id: 'force', label: 'attributes.force', colors: ATTRIBUTE_COLORS.force },
+  { id: 'perception', label: 'attributes.perception', colors: ATTRIBUTE_COLORS.perception },
+  { id: 'psyDefence', label: 'attributes.psyDefence', colors: ATTRIBUTE_COLORS.psyDefence },
+  { id: 'diplomacy', label: 'attributes.diplomacy', colors: ATTRIBUTE_COLORS.diplomacy },
 ];
 
-/** Tab configurations */
+/** Tab configurations (labels are i18n keys) */
 export const TAB_CONFIGS: TabConfig[] = [
-  { id: 'stats', icon: 'fa-chart-simple', label: 'Статы' },
-  { id: 'inventory', icon: 'fa-box-open', label: 'Инвентарь' },
-  { id: 'equipment', icon: 'fa-shield-halved', label: 'Экипировка' },
-  { id: 'spells', icon: 'fa-wand-magic-sparkles', label: 'Заклинания' },
-  { id: 'passives', icon: 'fa-circle-half-stroke', label: 'Пассивки' },
-  { id: 'abilities', icon: 'fa-person-running', label: 'Способности' },
+  { id: 'stats', icon: 'fa-chart-simple', label: 'tabs.stats' },
+  { id: 'inventory', icon: 'fa-box-open', label: 'tabs.inventory' },
+  { id: 'equipment', icon: 'fa-shield-halved', label: 'tabs.equipment' },
+  { id: 'spells', icon: 'fa-wand-magic-sparkles', label: 'tabs.spells' },
+  { id: 'passives', icon: 'fa-circle-half-stroke', label: 'tabs.passives' },
+  { id: 'abilities', icon: 'fa-person-running', label: 'tabs.abilities' },
 ];
 
-/** Labels for additional attributes */
-export const ADDITIONAL_ATTRIBUTE_LABELS: Record<keyof AdditionalAttributes, string> = {
-  actions: 'Действия',
-  bonusActions: 'Бонусные действия',
-  reactions: 'Реакции',
-  impulse: 'Импульс',
-  additionalCloseCombatDamage: 'Урон вблизи',
-  additionalRangeDamage: 'Урон на расстоянии',
-  range: 'Дальность',
-  initiative: 'Инициатива',
-  damageReduction: 'Поглощение урона',
-  armorClass: 'Защита',
+/** Labels for additional attributes (i18n keys) */
+export const ADDITIONAL_ATTRIBUTE_LABELS: Record<keyof AdditionalAttributes, I18nKey> = {
+  actions: 'additionalAttributes.actions',
+  bonusActions: 'additionalAttributes.bonusActions',
+  reactions: 'additionalAttributes.reactions',
+  impulse: 'additionalAttributes.impulse',
+  additionalCloseCombatDamage: 'additionalAttributes.additionalCloseCombatDamage',
+  additionalRangeDamage: 'additionalAttributes.additionalRangeDamage',
+  range: 'additionalAttributes.range',
+  initiative: 'additionalAttributes.initiative',
+  damageReduction: 'additionalAttributes.damageReduction',
+  armorClass: 'additionalAttributes.armorClass',
 };
 
 /** Icons for additional attributes */

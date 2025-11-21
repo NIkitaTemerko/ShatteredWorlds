@@ -1,8 +1,9 @@
 <script lang="ts">
-  import type { ShwItem } from '../../../documents/Item/ShwItem';
-  import { getUpdateConsumable } from '../utils/updateConsumable';
-  import { Input } from '../../../shared/ui';
-  import { StatsCard } from '../../../entities/consumable';
+  import type { ShwItem } from "../../../documents/Item/ShwItem";
+  import { getUpdateConsumable } from "../utils/updateConsumable";
+  import { Input, SelectInput } from "../../../shared/ui";
+  import { SAVE_TYPES, StatsCard } from "../../../entities/consumable";
+  import { t } from "../../../shared/i18n";
 
   interface Props {
     item: ShwItem;
@@ -13,77 +14,77 @@
   const updateConsumable = getUpdateConsumable(item);
 </script>
 
-{#if item.system.consumable.consumableType === 'scroll' && item.system.consumable?.spell !== undefined && item.system.consumable?.requirements !== undefined}
+{#if item.system.consumableType === "scroll" && item.system?.spell !== undefined && item.system?.requirements !== undefined}
   <StatsCard columns={3}>
-    <div class="stat-col full">
-      <div class="stat-header">Название заклинания</div>
+    <div class="stat-col">
+      <div class="stat-header">{t("item.scroll.spellName")}</div>
       <div class="stat-body">
         <Input
           type="text"
-          value={item.system.consumable.spell.name}
+          value={item.system.spell.name}
           variant="underline"
           textAlign="center"
           fullWidth
-          onchange={(e) => updateConsumable('spell.name', e.currentTarget.value)}
+          onchange={(e) => updateConsumable("spell.name", e.currentTarget.value)}
         />
       </div>
     </div>
 
     <div class="stat-col">
-      <div class="stat-header">Уровень</div>
+      <div class="stat-header">{t("item.scroll.level")}</div>
       <div class="stat-body">
         <Input
           type="number"
           min="0"
           max="9"
-          value={item.system.consumable.spell.level}
+          value={item.system.spell.level}
           variant="underline"
           textAlign="center"
           fullWidth
-          onchange={(e) => updateConsumable('spell.level', Number(e.currentTarget.value))}
+          onchange={(e) => updateConsumable("spell.level", Number(e.currentTarget.value))}
         />
       </div>
     </div>
 
     <div class="stat-col">
-      <div class="stat-header">Школа</div>
+      <div class="stat-header">{t("item.scroll.school")}</div>
       <div class="stat-body">
         <Input
           type="text"
-          value={item.system.consumable.spell.school}
+          value={item.system.spell.school}
           variant="underline"
           textAlign="center"
           fullWidth
-          onchange={(e) => updateConsumable('spell.school', e.currentTarget.value)}
+          onchange={(e) => updateConsumable("spell.school", e.currentTarget.value)}
         />
       </div>
     </div>
 
     <div class="stat-col">
-      <div class="stat-header">Треб. характеристика</div>
+      <div class="stat-header">{t("item.scroll.requiredAttribute")}</div>
       <div class="stat-body">
         <Input
           type="text"
-          value={item.system.consumable.requirements.ability}
+          value={item.system.requirements.ability}
           variant="underline"
           textAlign="center"
           fullWidth
-          onchange={(e) => updateConsumable('requirements.ability', e.currentTarget.value)}
+          onchange={(e) => updateConsumable("requirements.ability", e.currentTarget.value)}
         />
       </div>
     </div>
 
     <div class="stat-col">
-      <div class="stat-header">Сложность</div>
+      <div class="stat-header">{t("item.scroll.difficulty")}</div>
       <div class="stat-body">
         <Input
           type="number"
           min="0"
-          value={item.system.consumable.requirements.dc}
+          value={item.system.requirements.dc}
           variant="underline"
           textAlign="center"
           fullWidth
-          onchange={(e) => updateConsumable('requirements.dc', Number(e.currentTarget.value))}
+          onchange={(e) => updateConsumable("requirements.dc", Number(e.currentTarget.value))}
         />
       </div>
     </div>

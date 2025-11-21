@@ -1,3 +1,5 @@
+import type { I18nKey } from '../../../shared/i18n';
+
 export type ActivationType = 'action' | 'bonus' | 'reaction';
 export type PerType = 'charges' | 'uses' | 'turns';
 export type RarityType = 'common' | 'uncommon' | 'rare' | 'legendary';
@@ -16,5 +18,5 @@ export interface UsesData {
 
 export interface SelectOption<T = string> {
   value: T;
-  label: string;
+  label: I18nKey;
 }

@@ -1,4 +1,4 @@
-import { ItemFactory } from '../../../documents/Item/ItemFactory';
+import { ItemFactory, getConsumableImage } from '../../../documents/Item/ItemFactory';
 import type { ShwItem } from '../../../documents/Item/ShwItem';
 import type { ConsumableType } from '../../../documents/Item/types/ConsumableDataTypes';
 
@@ -10,19 +10,18 @@ export const getUpdateConsumable = (item: ShwItem) =>
       const consumable = ItemFactory.createConsumable(value as ConsumableType, {
         name: item.name,
       });
+      const img = getConsumableImage(value as ConsumableType);
 
       await item.update({
-        'system.consumable': consumable,
-        img: consumable.img,
-        type: item.type,
-        name: item.name,
+        system: consumable,
+        img: img,
       });
       return;
     }
 
     await item.update({
       // сохраняем текущие данные, чтобы не потерять вложенные поля
-      'system.consumable': item.system.consumable,
-      [`system.consumable.${path}`]: value,
+      system: item.system,
+      [`system.${path}`]: value,
     });
   };

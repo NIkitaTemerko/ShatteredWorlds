@@ -2,8 +2,8 @@ import type { BaseItemData } from './ItemDataInterface';
 
 export type ConsumableType = 'potion' | 'bomb' | 'scroll' | 'food' | 'poison';
 
+// Base consumable fields (flattened, no extra nesting)
 interface BaseConsumableData extends BaseItemData {
-  type: 'consumable';
   consumableType: ConsumableType;
   activation: {
     type: 'action' | 'bonus' | 'reaction';

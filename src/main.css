@@ -11,6 +11,54 @@
 }
 
 /* ============================================================
+   CUSTOM SCROLLBAR STYLING
+   ============================================================ */
+
+/* Scrollbar track */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+  background: #2a2830;
+}
+
+::-webkit-scrollbar-track {
+  background: #2a2830;
+  border-radius: 0;
+}
+
+/* Scrollbar thumb - SHARP CORNERS with border trick */
+::-webkit-scrollbar-thumb {
+  background: #8a8990;
+  border: 2px solid #2a2830;
+  background-clip: padding-box;
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9a99a0;
+  border: 2px solid #2a2830;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #7a7980;
+  border: 2px solid #2a2830;
+  background-clip: padding-box;
+}
+
+/* Scrollbar corner */
+::-webkit-scrollbar-corner {
+  background: #2a2830;
+  border-radius: 0;
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #8a8990 #2a2830;
+}
+
+/* ============================================================
    GLOBAL FONT APPLICATION
    ============================================================ */
 .window-app,
@@ -18,14 +66,14 @@
 .application,
 body,
 html {
-  font-family: 'Tektur', ui-sans-serif, system-ui, sans-serif !important;
+  font-family: 'Tektur', ui-sans-serif, system-ui, sans-serif;
 }
 
 /* Apply to all elements including Svelte scoped styles, but exclude icons */
 .window-app *:not(i):not([class*="fa-"]):not([class*="fas"]):not([class*="far"]):not([class*="fab"]),
 .sheet *:not(i):not([class*="fa-"]):not([class*="fas"]):not([class*="far"]):not([class*="fab"]),
 .application *:not(i):not([class*="fa-"]):not([class*="fas"]):not([class*="far"]):not([class*="fab"]) {
-  font-family: inherit !important;
+  font-family: inherit;
 }
 
 /* ============================================================
@@ -46,9 +94,9 @@ select:active,
 button:focus,
 button:focus-visible,
 button:active {
-  outline: 0 !important;
-  outline: none !important;
-  box-shadow: none !important;
+  outline: 0;
+  outline: none;
+  box-shadow: none;
 }
 
 /* Foundry-specific classes with highest specificity */
@@ -58,19 +106,23 @@ button:active {
 .window-app *:focus,
 .sheet *:focus,
 .application *:focus {
-  outline: 0 !important;
-  box-shadow: none !important;
+  outline: 0;
+  box-shadow: none;
 }
 
 /* ============================================================
    SQUARE BORDERS - REMOVE ALL BORDER RADIUS
    ============================================================ */
 
-/* Global reset for all elements */
+/* Global reset for all elements INCLUDING SCROLLBARS */
 *,
 *::before,
-*::after {
-  border-radius: 0 !important;
+*::after,
+::-webkit-scrollbar,
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-corner {
+  border-radius: 0;
 }
 
 /* Target all Foundry VTT UI elements */
@@ -102,7 +154,7 @@ button:active {
 #pause *,
 .app,
 .app * {
-  border-radius: 0 !important;
+  border-radius: 0;
 }
 
 /* Target common UI components */
@@ -133,7 +185,7 @@ img,
 .scene-control,
 .macro,
 .hotbar-page {
-  border-radius: 0 !important;
+  border-radius: 0;
 }
 
 /* Target pseudo-elements */
@@ -145,7 +197,7 @@ button::before,
 button::after,
 .button::before,
 .button::after {
-  border-radius: 0 !important;
+  border-radius: 0;
 }
 
 /* ============================================================
@@ -154,14 +206,131 @@ button::after,
 
 /* Character and Item Sheets - only content area, not header */
 .window-app.sheet .window-content {
-  background: #b4b3ba !important;
-  background-image: none !important;
+  background: #b4b3ba;
+  background-image: none;
 }
 
 /* Chat Messages */
 .chat-message {
-  background: #b4b3ba !important;
-  background-image: none !important;
-  border-color: #1a1820 !important;
+  background: #b4b3ba;
+  background-image: none;
+  border-color: #1a1820;
+}
+
+/* ============================================================
+   DIALOG BUTTON STYLING - MODERN BUTTON LOOK
+   ============================================================ */
+
+/* Target Foundry dialog windows */
+.dialog .dialog-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  padding: 12px 16px;
+  background: transparent;
+}
+
+.dialog .dialog-button,
+.dialog button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a1820;
+  background: #8a8990;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 80px;
+  text-transform: none;
+  box-shadow: none;
+  outline: none;
+}
+
+.dialog .dialog-button:hover,
+.dialog button:hover {
+  background: #7a7980;
+}
+
+.dialog .dialog-button:active,
+.dialog button:active {
+  background: #6a6970;
+}
+
+/* Primary/Yes button - light gray */
+.dialog .dialog-button.yes,
+.dialog button.yes,
+.dialog .dialog-button[data-button="yes"],
+.dialog button[data-button="yes"] {
+  background: #c4c3ca;
+  color: #1a1820;
+}
+
+.dialog .dialog-button.yes:hover,
+.dialog button.yes:hover,
+.dialog .dialog-button[data-button="yes"]:hover,
+.dialog button[data-button="yes"]:hover {
+  background: #d4d3da;
+}
+
+.dialog .dialog-button.yes:active,
+.dialog button.yes:active,
+.dialog .dialog-button[data-button="yes"]:active,
+.dialog button[data-button="yes"]:active {
+  background: #b4b3ba;
+}
+
+/* Cancel/No button - darker gray */
+.dialog .dialog-button.no,
+.dialog button.no,
+.dialog .dialog-button[data-button="no"],
+.dialog button[data-button="no"] {
+  background: #8a8990;
+  color: #1a1820;
+}
+
+.dialog .dialog-button.no:hover,
+.dialog button.no:hover,
+.dialog .dialog-button[data-button="no"]:hover,
+.dialog button[data-button="no"]:hover {
+  background: #7a7980;
+}
+
+/* Remove paper texture and improve dialog appearance */
+.dialog .window-content {
+  background: #b4b3ba;
+  background-image: none;
+  padding: 16px;
+}
+
+.dialog .dialog-content {
+  margin-bottom: 12px;
+  color: #1a1820;
+  line-height: 1.5;
+}
+
+.window-content .dialog-form .dialog-content .form-group label {
+  color: #1a1820;
+}
+
+.window-content .dialog-form .dialog-content .form-group .form-fields input {
+  color: #1a1820;
+  background-color: white;
+}
+
+.window-content .dialog-form .dialog-content .form-group .form-fields input::placeholder {
+  color: #b4b3ba;
+}
+
+.window-content .dialog-form .dialog-content .form-group .form-fields select {
+  color: #1a1820;
+  background-color: white;
+}
+
+.window-content .dialog-form .dialog-content .form-group .hint {
+  color: #1a1820;
 }
 

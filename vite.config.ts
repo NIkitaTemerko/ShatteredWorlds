@@ -1,7 +1,6 @@
 /* eslint-env node */
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import tailwind from '@tailwindcss/vite';
-import { sveltePreprocess } from 'svelte-preprocess';
 import { postcssConfig } from './postcssConfig';
 import moduleJSON from './system.json';
 import { terserConfig } from './terserConfig';
@@ -117,7 +116,6 @@ export default ({ mode }) => {
     plugins: [
       svelte({
         compilerOptions,
-        preprocess: sveltePreprocess(),
       }),
       tailwind(),
     ],

@@ -273,9 +273,9 @@ if (actor.isCharacter()) {
 
 Use discriminated unions for items:
 ```svelte
-{#if item.system.consumable.consumableType === 'bomb'}
+{#if item.system.consumableType === 'bomb'}
   <BombStats {item} />
-{:else if item.system.consumable.consumableType === 'potion'}
+{:else if item.system.consumableType === 'potion'}
   <PotionsAndFood {item} />
 {/if}
 ```
@@ -314,8 +314,8 @@ Components use CSS variables for type-specific colors:
 ## Common Pitfalls & Solutions
 
 ### 1. **Data Loss on Partial Updates**
-❌ **Wrong:** `item.update({ 'system.consumable': { name: newName } })`  
-✅ **Right:** Use `getUpdateConsumable()` utility or full path: `item.update({ 'system.consumable.name': newName })`
+❌ **Wrong:** `item.update({ 'system': { name: newName } })`  
+✅ **Right:** Use `getUpdateConsumable()` utility or full path: `item.update({ 'system.name': newName })`
 
 ### 2. **Svelte 5 vs Svelte 4 Patterns**
 ❌ **Wrong:** `export let actor;` (Svelte 4)  

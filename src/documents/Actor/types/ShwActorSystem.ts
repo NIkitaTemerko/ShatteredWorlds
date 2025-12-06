@@ -42,6 +42,20 @@ interface BaseHelpers {
   totalSpeed: number;
 }
 
+interface CharacterHelpers extends BaseHelpers {
+  // Total значения атрибутов (value + бонусы от предметов)
+  totalFortune: number;
+  totalForce: number;
+  totalPerception: number;
+  totalPsyDefence: number;
+  totalDiplomacy: number;
+  // Total значения только для editable additionalAttributes
+  totalActions: number;
+  totalBonusActions: number;
+  totalReactions: number;
+  totalInitiative: number;
+}
+
 interface NpcAttribute {
   value: number;
   extra: number;
@@ -56,7 +70,7 @@ export interface ShwActorSystem {
   attributes: Attributes<AttributeFields>;
   additionalAttributes: AdditionalAttributes;
   utility: UtilityFields;
-  helpers: BaseHelpers;
+  helpers: CharacterHelpers;
 }
 
 export interface ShwNpcSystem {
@@ -64,7 +78,7 @@ export interface ShwNpcSystem {
   attributes: Attributes<NpcAttribute>;
   additionalAttributes: AdditionalAttributes;
   utility: UtilityFields;
-  helpers: BaseHelpers & {
+  helpers: CharacterHelpers & {
     totalDamageReduction: number;
     totalArmorClass: number;
     totalRange: number;

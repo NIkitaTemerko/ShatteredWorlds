@@ -25,8 +25,7 @@ export abstract class SvelteActorSheet extends foundry.appv1.sheets.ActorSheet {
       return this;
     }
 
-    // Already rendered - just bring to top, don't recreate
-    this.bringToTop();
+    // Already rendered - no need to recreate or bring to top
     return this;
   }
 

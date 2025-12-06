@@ -1,8 +1,8 @@
 <script lang="ts">
   import type { ShwActor } from "../../../../documents/Actor/ShwActor";
   import { localize, t } from "../../../../shared/i18n";
+  import type { AttributeKey } from "../../../../shared/model/types";
   import { Input } from "../../../../shared/ui/Input";
-  import type { AttributeKey } from "../../model";
   import { ATTRIBUTE_COLORS } from "../../model";
 
   interface Props {
@@ -24,6 +24,7 @@
     base: number;
     extra: number;
     total: number;
+    totalValue?: number; // Total значение с бонусами от предметов
     charBonus: number;
     saveBonus: number;
     charBonusBase?: number;
@@ -46,6 +47,11 @@
       const base = n(attr.value);
       const extra = n(attr.extra);
       const label = t(c.labelKey);
+
+      // Для character получаем total значение из helpers
+      const totalKey = `total${c.key.capitalize()}`;
+      const totalValue = !isNpc && totalKey in sys.helpers ? n((sys.helpers as any)[totalKey]) : undefined;
+
       return {
         ...c,
         label,
@@ -53,6 +59,7 @@
         base,
         extra,
         total: base + extra,
+        totalValue,
         charBonus: n(attr.charBonus),
         saveBonus: n(attr.saveBonus),
         charBonusBase: isNpc ? n(attr.charBonusBase) : undefined,
@@ -94,6 +101,9 @@
           max="999"
           onchange={(e) => onChangeValue(col.key, e)}
         />
+        {#if col.totalValue !== undefined && col.totalValue !== col.base}
+          <span class="total-indicator">({col.totalValue})</span>
+        {/if}
       </div>
 
       <div class="cell subheader">{localize("character.additionalAttribute", { attribute: col.label })}</div>
@@ -190,6 +200,13 @@
   .value {
     background: var(--light);
     color: #000;
+    gap: 0.25rem;
+  }
+
+  .total-indicator {
+    font-size: 0.85em;
+    opacity: 0.75;
+    font-weight: 600;
   }
 
   @media (max-width: 900px) {

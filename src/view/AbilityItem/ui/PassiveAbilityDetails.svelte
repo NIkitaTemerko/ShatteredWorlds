@@ -1,9 +1,10 @@
 <script lang="ts">
   import type { ShwItem } from "../../../documents/Item/ShwItem";
-  import type { PassiveAbilitySystem } from "../../../documents/Item/types/AbilityDataTypes";
+  import type { PassiveAbilitySystem, StatModifier } from "../../../documents/Item/types/AbilityDataTypes";
+  import type { CharacterStatPath } from "../../../shared/model/characterStatPaths";
   import { StatsCard } from "../../../entities/consumable";
   import { t } from "../../../shared/i18n";
-  import { Input, SelectInput } from "../../../shared/ui";
+  import { BonusCharacteristics, Input, SelectInput } from "../../../shared/ui";
 
   interface Props {
     item: ShwItem;
@@ -13,6 +14,37 @@
   let { item, onUpdate }: Props = $props();
 
   const system = $derived(item.system as PassiveAbilitySystem);
+
+  // Инициализация statBonuses если null
+  const statModifiers = $derived(system.statBonuses?.modifiers ?? []);
+
+  function handleAddModifier(stat: CharacterStatPath) {
+    const newModifier: StatModifier = {
+      stat,
+      mode: "add",
+      value: 0,
+      scaling: null,
+      condition: undefined,
+    };
+
+    const updatedModifiers = [...statModifiers, newModifier];
+    onUpdate("statBonuses", { modifiers: updatedModifiers });
+  }
+
+  function handleRemoveModifier(index: number) {
+    const updatedModifiers = statModifiers.filter((_, i) => i !== index);
+    onUpdate("statBonuses", { modifiers: updatedModifiers });
+  }
+
+  function handleUpdateModifierValue(index: number, value: number) {
+    const updatedModifiers = statModifiers.map((mod, i) => (i === index ? { ...mod, value } : mod));
+    onUpdate("statBonuses", { modifiers: updatedModifiers });
+  }
+
+  function handleUpdateModifierMode(index: number, mode: "add" | "mul" | "override") {
+    const updatedModifiers = statModifiers.map((mod, i) => (i === index ? { ...mod, mode } : mod));
+    onUpdate("statBonuses", { modifiers: updatedModifiers });
+  }
 </script>
 
 {#if system.category === "passive"}
@@ -49,9 +81,13 @@
         <div class="stat-col full" style="--dark: #10B981; --light: #D1FAE5">
           <div class="stat-header">{t("ability.passiveDetails.bonusesInfo")}</div>
           <div class="stat-body">
-            <span style="font-size: 12px; opacity: 0.8;">
-              {t("ability.passiveDetails.bonusesPlaceholder")}
-            </span>
+            <BonusCharacteristics
+              modifiers={statModifiers}
+              onAdd={handleAddModifier}
+              onRemove={handleRemoveModifier}
+              onUpdateValue={handleUpdateModifierValue}
+              onUpdateMode={handleUpdateModifierMode}
+            />
           </div>
         </div>
       </StatsCard>

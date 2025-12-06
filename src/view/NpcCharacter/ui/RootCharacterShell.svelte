@@ -1,11 +1,11 @@
 <script lang="ts">
-  import type { ShwActor } from '../../../documents/Actor/ShwActor';
-  import type { AdditionalAttributes } from '../../../entities/character';
-  import { AdditionalStats, AttributeStats, CharacterHeader } from '../../../entities/character';
-  import { RollPanel } from '../../../features/roll';
+  import type { ShwActor } from "../../../documents/Actor/ShwActor";
+  import { AdditionalStats, AttributeStats, CharacterHeader } from "../../../entities/character";
+  import { RollPanel } from "../../../features/roll";
+  import type { AdditionalAttributes } from "../../../shared/model/types";
 
   interface Props {
-    actor: ShwActor<'npc'>;
+    actor: ShwActor<"npc">;
   }
 
   let { actor }: Props = $props();
@@ -16,16 +16,16 @@
 
   // For NPC, ALL additional stats should be editable
   const npcEditableKeys = new Set<keyof AdditionalAttributes>([
-    'actions',
-    'bonusActions',
-    'reactions',
-    'impulse',
-    'initiative',
-    'additionalCloseCombatDamage',
-    'additionalRangeDamage',
-    'range',
-    'damageReduction',
-    'armorClass',
+    "actions",
+    "bonusActions",
+    "reactions",
+    "impulse",
+    "initiative",
+    "additionalCloseCombatDamage",
+    "additionalRangeDamage",
+    "range",
+    "damageReduction",
+    "armorClass",
   ]);
 </script>
 

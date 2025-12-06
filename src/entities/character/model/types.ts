@@ -1,5 +1,6 @@
 import type { ShwActorSystem, ShwNpcSystem } from '../../../documents/Actor/types/ShwActorSystem';
 import type { I18nKey } from '../../../shared/i18n';
+import type { AdditionalAttributes, AttributeKey } from '../../../shared/model/types';
 
 /** Tab types for character sheets */
 export type CharacterTab =
@@ -15,12 +16,6 @@ export type RollMode = 'adv' | 'normal' | 'dis';
 
 /** Roll type for different attributes */
 export type RollType = 'natural' | 'fortune' | 'force' | 'perception' | 'psyDefence' | 'diplomacy';
-
-/** Attribute key type */
-export type AttributeKey = 'fortune' | 'force' | 'perception' | 'psyDefence' | 'diplomacy';
-
-/** Additional attributes type */
-export type AdditionalAttributes = ShwActorSystem['additionalAttributes'];
 
 /** Character helpers type */
 export type CharacterHelpers = ShwActorSystem['helpers'];
@@ -89,20 +84,6 @@ export const TAB_CONFIGS: TabConfig[] = [
   { id: 'spells', icon: 'fa-wand-magic-sparkles', label: 'tabs.spells' },
   { id: 'abilities', icon: 'fa-person-running', label: 'tabs.abilities' },
 ];
-
-/** Labels for additional attributes (i18n keys) */
-export const ADDITIONAL_ATTRIBUTE_LABELS: Record<keyof AdditionalAttributes, I18nKey> = {
-  actions: 'additionalAttributes.actions',
-  bonusActions: 'additionalAttributes.bonusActions',
-  reactions: 'additionalAttributes.reactions',
-  impulse: 'additionalAttributes.impulse',
-  additionalCloseCombatDamage: 'additionalAttributes.additionalCloseCombatDamage',
-  additionalRangeDamage: 'additionalAttributes.additionalRangeDamage',
-  range: 'additionalAttributes.range',
-  initiative: 'additionalAttributes.initiative',
-  damageReduction: 'additionalAttributes.damageReduction',
-  armorClass: 'additionalAttributes.armorClass',
-};
 
 /** Icons for additional attributes */
 export const ADDITIONAL_ATTRIBUTE_ICONS: Record<keyof AdditionalAttributes, string> = {

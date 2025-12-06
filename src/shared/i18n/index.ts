@@ -28,7 +28,9 @@ export type I18nKey = PathsToStringProps<(typeof translations)['SHW']>;
  */
 export function localize(key: I18nKey, data?: Record<string, string>): string {
   const fullKey = `SHW.${key}`;
-  return game.i18n?.format(fullKey, data) ?? fullKey;
+  const result = game.i18n?.format(fullKey, data) ?? fullKey;
+  // Если результат совпадает с ключом (перевод не найден), возвращаем исходный ключ без префикса
+  return result === fullKey ? key : result;
 }
 
 /**
@@ -36,5 +38,7 @@ export function localize(key: I18nKey, data?: Record<string, string>): string {
  */
 export function t(key: I18nKey): string {
   const fullKey = `SHW.${key}`;
-  return game.i18n?.localize(fullKey) ?? fullKey;
+  const result = game.i18n?.localize(fullKey) ?? fullKey;
+  // Если результат совпадает с ключом (перевод не найден), возвращаем исходный ключ без префикса
+  return result === fullKey ? key : result;
 }

@@ -1,8 +1,8 @@
 <script lang="ts">
   import type { ShwActor } from "../../../../documents/Actor/ShwActor";
   import { localize, t } from "../../../../shared/i18n";
+  import type { AttributeKey } from "../../../../shared/model/types";
   import { Input } from "../../../../shared/ui/Input";
-  import type { AttributeKey } from "../../model";
   import { ATTRIBUTE_COLORS } from "../../model";
 
   interface Props {

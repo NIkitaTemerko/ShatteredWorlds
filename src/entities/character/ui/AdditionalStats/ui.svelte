@@ -1,8 +1,10 @@
 <script lang="ts">
   import { t } from "../../../../shared/i18n";
+  import { ADDITIONAL_ATTRIBUTE_LABELS } from "../../../../shared/model/constants";
+  import type { AdditionalAttributes } from "../../../../shared/model/types";
   import { Input } from "../../../../shared/ui/Input";
-  import type { AdditionalAttributes, CharacterHelpers, NpcHelpers } from "../../model";
-  import { ADDITIONAL_ATTRIBUTE_COLORS, ADDITIONAL_ATTRIBUTE_ICONS, ADDITIONAL_ATTRIBUTE_LABELS } from "../../model";
+  import type { CharacterHelpers, NpcHelpers } from "../../model";
+  import { ADDITIONAL_ATTRIBUTE_COLORS, ADDITIONAL_ATTRIBUTE_ICONS } from "../../model";
 
   interface Props {
     stats: AdditionalAttributes;

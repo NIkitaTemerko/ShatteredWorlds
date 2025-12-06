@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { HTMLSelectAttributes } from "svelte/elements";
   import type { SelectOption } from "../../../entities/consumable/model";
-  import { t } from "../../i18n";
+  import { t, type I18nKey } from "../../i18n";
 
   interface Props extends HTMLSelectAttributes {
     value?: string | number;
@@ -28,7 +28,7 @@
   {...restProps}
 >
   {#each options as option}
-    <option value={option.value}>{t(option.label as any)}</option>
+    <option value={option.value}>{t(option.label as I18nKey)}</option>
   {/each}
 </select>
 

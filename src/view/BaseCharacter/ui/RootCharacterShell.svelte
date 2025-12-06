@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { ShwActor } from "../../../documents/Actor/ShwActor";
-  import type { AdditionalAttributes, CharacterTab } from "../../../entities/character";
+  import type { CharacterTab } from "../../../entities/character";
   import {
     AdditionalStats,
     AttributeStats,
@@ -10,6 +10,7 @@
   } from "../../../entities/character";
   import { TabNavigation } from "../../../features/navigation";
   import { RollPanel } from "../../../features/roll";
+  import type { AdditionalAttributes } from "../../../shared/model/types";
 
   interface Props {
     actor: ShwActor<"character">;

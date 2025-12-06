@@ -199,7 +199,13 @@
         "mode": "Mode",
         "statBonuses": "Stat Bonuses",
         "bonusesInfo": "Stat Modifiers",
-        "bonusesPlaceholder": "Configure stat bonuses in effects editor (coming soon)",
+        "allStatsAdded": "All available characteristics have been added",
+        "statModifiers": {
+          "attributeValue": "{attribute}",
+          "attributeExtra": "{attribute} (Extra)",
+          "attributeCharBonus": "{attribute} (Bonus)",
+          "attributeSaveBonus": "{attribute} (Save)"
+        },
         "aura": "Aura Settings",
         "auraRadius": "Aura Radius",
         "auraShape": "Aura Shape",
@@ -217,6 +223,11 @@
         "alwaysOn": "Always On",
         "toggle": "Toggle",
         "triggered": "Triggered"
+      },
+      "modifier": {
+        "add": "Add (+)",
+        "mul": "Multiply (×)",
+        "override": "Override (=)"
       },
       "advancedSettings": {
         "title": "Advanced Settings",
@@ -240,7 +251,15 @@
       "considerArmor": "Consider Armor",
       "attributeBonus": "Attribute Bonus",
       "additionalAttribute": "Add. {attribute}",
-      "saveThrow": "Save {attribute}"
+      "saveThrow": "Save {attribute}",
+      "health": {
+        "current": "Health",
+        "max": "Max Health"
+      },
+      "utility": {
+        "speed": "Speed",
+        "level": "Level"
+      }
     },
     "roll": {
       "base": "Base",

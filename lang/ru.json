@@ -199,7 +199,13 @@
         "mode": "Режим",
         "statBonuses": "Бонусы характеристик",
         "bonusesInfo": "Модификаторы статов",
-        "bonusesPlaceholder": "Настройте бонусы в редакторе эффектов (скоро)",
+        "allStatsAdded": "Все доступные характеристики добавлены",
+        "statModifiers": {
+          "attributeValue": "{attribute}",
+          "attributeExtra": "{attribute} (Экстра)",
+          "attributeCharBonus": "{attribute} (Бонус)",
+          "attributeSaveBonus": "{attribute} (Спасбросок)"
+        },
         "aura": "Настройки ауры",
         "auraRadius": "Радиус ауры",
         "auraShape": "Форма ауры",
@@ -217,6 +223,11 @@
         "alwaysOn": "Всегда активна",
         "toggle": "Переключаемая",
         "triggered": "Триггерная"
+      },
+      "modifier": {
+        "add": "Добавить (+)",
+        "mul": "Умножить (×)",
+        "override": "Заменить (=)"
       },
       "advancedSettings": {
         "title": "Расширенные настройки",
@@ -240,7 +251,15 @@
       "considerArmor": "Учитывать защиту",
       "attributeBonus": "Бонус характеристики",
       "additionalAttribute": "Доп. {attribute}",
-      "saveThrow": "СБ‑{attribute}"
+      "saveThrow": "СБ‑{attribute}",
+      "health": {
+        "current": "Здоровье",
+        "max": "Макс. здоровье"
+      },
+      "utility": {
+        "speed": "Скорость",
+        "level": "Уровень"
+      }
     },
     "roll": {
       "base": "База",

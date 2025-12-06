@@ -22,11 +22,16 @@ type HealthPath = 'health.value' | 'health.max';
 // Утилиты
 type UtilityPath = 'utility.speed' | 'utility.level';
 
+// Хелперы
+type HelperKey = keyof ShwActorSystem['helpers'];
+type HelperPath = `helpers.${HelperKey}`;
+
 // Итоговый тип всех путей
 export type CharacterStatPath =
   | AttributePath
   | AdditionalAttributePath
   | HealthPath
+  | HelperPath
   | UtilityPath;
 
 export interface CharacterStatOption {
@@ -78,10 +83,5 @@ export const CHARACTER_STAT_OPTIONS: CharacterStatOption[] = [
   })),
 
   // Здоровье
-  { value: 'health.value', labelKey: 'character.health.current' as I18nKey },
-  { value: 'health.max', labelKey: 'character.health.max' as I18nKey },
-
-  // Утилиты
-  { value: 'utility.speed', labelKey: 'character.utility.speed' as I18nKey },
-  { value: 'utility.level', labelKey: 'character.utility.level' as I18nKey },
+  { value: 'helpers.totalHealth', labelKey: 'character.health.current' as I18nKey },
 ];

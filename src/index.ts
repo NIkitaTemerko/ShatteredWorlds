@@ -50,29 +50,136 @@ Hooks.on('preCreateToken', (tokenDocument: any, tokenData: any) => {
   }
 });
 
-// Auto-migrate legacy consumable data on item creation
+// Хук для создания предметов: миграция данных и отслеживание связи с глобальным предметом
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-Hooks.on('preCreateItem', (item: any, data: any) => {
-  // Migration pass
+Hooks.on('preCreateItem', (item: any, data: any, options: any) => {
+  // Миграция устаревших данных consumable
   if (needsMigration(data)) {
     const migrated = migrateConsumableData(data);
     item.updateSource({ system: migrated.system });
   }
 
-  // Stack management: only for items being added to actors
+  // Отслеживание связи с глобальным предметом при добавлении к актеру
   if (item.parent && item.parent instanceof ShwActor) {
+    const originItemId = findOriginItem(item, options);
+    
+    if (originItemId) {
+      item.updateSource({ 'flags.shw.originItemId': originItemId });
+    }
+
+    // Управление стеком предметов
     const result = handleAddItem(item.parent, {
       type: item.type,
       name: item.name,
       system: item.system,
     });
 
-    // Prevent creation if item was stacked or blocked
     if (result === 'stacked' || result === 'blocked') {
       return false;
     }
   }
 });
+
+/**
+ * Найти ID глобального предмета-источника для синхронизации
+ * Стратегии поиска:
+ * 1. Явный originItemId в options
+ * 2. Поиск по baseId
+ * 3. Поиск по имени + типу (для drag-drop)
+ */
+function findOriginItem(item: any, options: any): string | undefined {
+  // Явно указанный ID
+  if (options?.originItemId) {
+    return options.originItemId;
+  }
+
+  const globalItems = (game as any).items;
+  if (!globalItems) return undefined;
+
+  // Поиск по baseId
+  if (item.system?.baseId) {
+    const byBaseId = globalItems.find(
+      (gi: any) => gi.system?.baseId === item.system.baseId && gi.type === item.type,
+    );
+    if (byBaseId) return byBaseId.id;
+  }
+
+  // Поиск по имени + типу (для drag-drop из директории Items)
+  const byName = globalItems.find(
+    (gi: any) => gi.name === item.name && gi.type === item.type,
+  );
+  
+  return byName?.id;
+}
+
+// Двунаправленная синхронизация предметов: owned ↔ global
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+Hooks.on('updateItem', async (item: any, changes: any, options: any) => {
+  if (options?.skipSync) return;
+
+  // Случай 1: Обновление owned предмета → синхронизация в глобальный
+  if (item.parent && item.parent instanceof ShwActor) {
+    await syncOwnedToGlobal(item, changes);
+    return;
+  }
+
+  // Случай 2: Обновление глобального предмета → синхронизация во все owned копии
+  if (!item.parent) {
+    await syncGlobalToOwned(item, changes);
+  }
+});
+
+/**
+ * Синхронизация изменений от owned предмета к глобальному источнику
+ */
+async function syncOwnedToGlobal(item: any, changes: any): Promise<void> {
+  const originItemId = item.flags?.shw?.originItemId;
+  if (!originItemId) return;
+
+  const globalItem = (game as any).items?.get(originItemId);
+  if (globalItem) {
+    await globalItem.update(changes, { fromOwnedSync: true });
+  }
+}
+
+/**
+ * Синхронизация изменений от глобального предмета ко всем owned копиям
+ */
+async function syncGlobalToOwned(item: any, changes: any): Promise<void> {
+  const actors = (game as any).actors;
+  if (!actors) return;
+
+  const ownedCopies = findOwnedCopies(actors, item.id);
+  
+  if (ownedCopies.length === 0) return;
+
+  // Обновление всех owned копий
+  for (const { actor, itemId } of ownedCopies) {
+    // Убираем _id из changes, чтобы не перезаписать ID owned предмета
+    const { _id, ...changesWithoutId } = changes;
+    
+    await actor.updateEmbeddedDocuments('Item', [{ _id: itemId, ...changesWithoutId }], {
+      skipSync: true, // Предотвращаем бесконечную рекурсию
+    });
+  }
+}
+
+/**
+ * Найти все owned копии глобального предмета
+ */
+function findOwnedCopies(actors: any, globalItemId: string): Array<{ actor: any; itemId: string }> {
+  const copies: Array<{ actor: any; itemId: string }> = [];
+
+  for (const actor of actors) {
+    for (const ownedItem of actor.items) {
+      if (ownedItem.flags?.shw?.originItemId === globalItemId) {
+        copies.push({ actor, itemId: ownedItem.id });
+      }
+    }
+  }
+
+  return copies;
+}
 
 // Batch migrate existing items on world initialization (one-time on world load)
 Hooks.once('setup', async () => {

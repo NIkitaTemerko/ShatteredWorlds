@@ -1,8 +1,10 @@
+import type { ShwActor } from '../../documents/Actor/ShwActor';
 import type { ShwActorSystem } from '../../documents/Actor/types/ShwActorSystem';
-import { ADDITIONAL_KEYS, ATTR_RIM, STAT_KEYS } from '../constants';
+import { ADDITIONAL_KEYS, ATTR_MAX_RIM, ATTR_RIM, HELPER_KEYS, STAT_KEYS } from '../constants';
+import { applyBonus, calculateItemBonuses } from './calculateItemBonuses';
 
 function calculateAdditionalAttributes(
-  attrs: ShwActorSystem['attributes'],
+  attrs: ShwActorSystem['helpers'],
   isLevelAboveFive: boolean,
 ): Pick<
   ShwActorSystem['additionalAttributes'],
@@ -11,21 +13,41 @@ function calculateAdditionalAttributes(
   | 'armorClass'
   | 'additionalCloseCombatDamage'
   | 'impulse'
+  | 'range'
 > {
   return {
-    damageReduction: isLevelAboveFive ? attrs.psyDefence.value : 0,
-    additionalRangeDamage: isLevelAboveFive ? attrs.perception.value : 0,
-    armorClass: isLevelAboveFive ? attrs.diplomacy.value : 0,
-    additionalCloseCombatDamage: isLevelAboveFive ? attrs.force.value : 0,
-    impulse: attrs?.force.value >= ATTR_RIM ? 1 : 0,
+    damageReduction: isLevelAboveFive ? attrs.totalPsyDefence : 0,
+    additionalRangeDamage: isLevelAboveFive ? attrs.totalPerception : 0,
+    armorClass: isLevelAboveFive ? attrs.totalDiplomacy : 0,
+    additionalCloseCombatDamage: isLevelAboveFive ? attrs.totalForce : 0,
+    impulse: attrs?.totalForce >= ATTR_RIM ? 1 : 0,
+    range: attrs?.totalPerception >= ATTR_MAX_RIM ? 2 : 0,
   };
 }
 
-function updateAttributeBonuses(attrs: ShwActorSystem['attributes']): void {
+function resetAttributeBonuses(
+  attributes: ShwActorSystem['attributes'],
+): void {
   for (const k of STAT_KEYS) {
-    const a = attrs[k];
-    a.charBonus = Math.floor(a.value / 5);
-    a.saveBonus = Math.floor(a.value / 5);
+    const a = attributes[k];
+    a.extra = 0;
+    a.charBonus = 0;
+    a.saveBonus = 0;
+  }
+}
+
+function updateAttributeBonuses(
+  helpers: ShwActorSystem['helpers'],
+  attributes: ShwActorSystem['attributes'],
+): void {
+  for (const k of STAT_KEYS) {
+    const helperKey = HELPER_KEYS.find((key) => key.toLocaleLowerCase().includes(k.toLocaleLowerCase())) as keyof ShwActorSystem['helpers'];
+    const a = attributes[k];
+
+    const bonus = Math.floor(helpers[helperKey] / 5);
+
+    a.charBonus = a.charBonus ? a.charBonus + bonus : bonus;
+    a.saveBonus = a.saveBonus ? a.saveBonus + bonus : bonus;
   }
 }
 
@@ -38,11 +60,31 @@ function updateHelpers(
   sys.helpers.totalSpeed += sys.utility.speed;
 }
 
-export function prepareCharacterDerivedData(sys: ShwActorSystem) {
+export function prepareCharacterDerivedData(sys: ShwActorSystem, actor: ShwActor<'character'>) {
   const attrs = sys.attributes;
   const isLevelAboveFive = sys.utility.level >= 5;
+  resetAttributeBonuses(attrs);
 
-  const addAttrMap = calculateAdditionalAttributes(attrs, isLevelAboveFive);
+  // Копируем базовые значения в total поля (только для 5 атрибутов и 4 editable stats)
+  sys.helpers.totalFortune = attrs.fortune.value;
+  sys.helpers.totalForce = attrs.force.value;
+  sys.helpers.totalPerception = attrs.perception.value;
+  sys.helpers.totalPsyDefence = attrs.psyDefence.value;
+  sys.helpers.totalDiplomacy = attrs.diplomacy.value;
+  
+  sys.helpers.totalActions = sys.additionalAttributes.actions;
+  sys.helpers.totalBonusActions = sys.additionalAttributes.bonusActions;
+  sys.helpers.totalReactions = sys.additionalAttributes.reactions;
+  sys.helpers.totalInitiative = sys.additionalAttributes.initiative;
+
+  // Применяем бонусы от предметов
+  const { bonuses } = calculateItemBonuses(actor);
+  for (const [path, bonus] of bonuses.entries()) {
+    applyBonus(sys, path, bonus);
+  }
+
+  // Теперь используем totalX для расчёта математики
+  const addAttrMap = calculateAdditionalAttributes(sys.helpers, isLevelAboveFive);
 
   updateHelpers(sys, addAttrMap);
 
@@ -52,5 +94,5 @@ export function prepareCharacterDerivedData(sys: ShwActorSystem) {
     }
   }
 
-  updateAttributeBonuses(attrs);
+  updateAttributeBonuses(sys.helpers, attrs);
 }

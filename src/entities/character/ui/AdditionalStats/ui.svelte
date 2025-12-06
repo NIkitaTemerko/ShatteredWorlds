@@ -40,22 +40,26 @@
   const orderedEntries = $derived([...editableEntries, ...readonlyEntries]);
 
   const hasHelper = (key: keyof AdditionalAttributes): boolean => {
-    return ["impulse", "range", "damageReduction", "armorClass"].includes(String(key));
+    // Только для editable stats: actions, bonusActions, reactions, initiative
+    const editableWithTotal = ["actions", "bonusActions", "reactions", "initiative", "impulse"];
+    if (!editableWithTotal.includes(String(key))) {
+      return false;
+    }
+    const totalKey = `total${key.capitalize()}`;
+    return totalKey in helpers;
   };
 
-  const getHelperValue = (key: keyof AdditionalAttributes): number | undefined => {
-    switch (key) {
-      case "impulse":
-        return "totalImpulse" in helpers ? helpers.totalImpulse : undefined;
-      case "range":
-        return "totalRange" in helpers ? (helpers as NpcHelpers).totalRange : undefined;
-      case "damageReduction":
-        return "totalDamageReduction" in helpers ? (helpers as NpcHelpers).totalDamageReduction : undefined;
-      case "armorClass":
-        return "totalArmorClass" in helpers ? (helpers as NpcHelpers).totalArmorClass : undefined;
-      default:
-        return undefined;
+  const getHelperValue = (key: keyof AdditionalAttributes, baseValue: number): number | undefined => {
+    // Получаем total значение из helpers
+    const totalKey = `total${key.capitalize()}`;
+    if (totalKey in helpers) {
+      const totalValue = (helpers as any)[totalKey];
+      // Показываем только если отличается от базового
+      if (typeof totalValue === "number" && totalValue !== baseValue) {
+        return totalValue;
+      }
     }
+    return undefined;
   };
 </script>
 
@@ -75,7 +79,7 @@
           onchange={(e) => handleChange(key, e)}
         />
         {#if hasHelper(key)}
-          {@const helperValue = getHelperValue(key)}
+          {@const helperValue = getHelperValue(key, value)}
           {#if helperValue !== undefined}
             <span>({helperValue})</span>
           {/if}

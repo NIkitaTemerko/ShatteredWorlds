@@ -27,6 +27,15 @@ const emptyHelperMap = {
   totalHealth: 0,
   totalImpulse: 0,
   totalSpeed: 0,
+  totalFortune: 0,
+  totalForce: 0,
+  totalPerception: 0,
+  totalPsyDefence: 0,
+  totalDiplomacy: 0,
+  totalActions: 0,
+  totalBonusActions: 0,
+  totalReactions: 0,
+  totalInitiative: 0,
 };
 
 export function prepareCharacterBaseData(sys: ShwActorSystem) {

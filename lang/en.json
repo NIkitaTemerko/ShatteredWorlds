@@ -249,6 +249,8 @@
       "nameLabel": "Name:",
       "applyDamage": "Apply Damage",
       "considerArmor": "Consider Armor",
+      "ignoreArmor": "Ignore Armor",
+      "trueDamage": "True Damage",
       "attributeBonus": "Attribute Bonus",
       "additionalAttribute": "Add. {attribute}",
       "saveThrow": "Save {attribute}",

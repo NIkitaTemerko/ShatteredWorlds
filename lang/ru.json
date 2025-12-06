@@ -247,8 +247,10 @@
     },
     "character": {
       "nameLabel": "Имя:",
-      "applyDamage": "Применить урон",
+      "applyDamage": "Нанести урон",
       "considerArmor": "Учитывать защиту",
+      "ignoreArmor": "Игнорировать броню",
+      "trueDamage": "Чистый урон",
       "attributeBonus": "Бонус характеристики",
       "additionalAttribute": "Доп. {attribute}",
       "saveThrow": "СБ‑{attribute}",

@@ -10,28 +10,39 @@
 
   let { actor }: Props = $props();
 
-  let defenseActive = $state(true);
+  // 0 = true damage (skull), 1 = no armor (shield off), 2 = full defense (shield on)
+  let damageMode = $state(2);
   let damageValue = $state(0);
 
   function toggleDefense() {
-    defenseActive = !defenseActive;
+    damageMode = (damageMode + 1) % 3;
   }
 
   function applyDamage() {
     if (damageValue <= 0) return;
 
-    const damageReduction =
-      "totalDamageReduction" in actor.system.helpers
-        ? actor.system.helpers.totalDamageReduction
-        : actor.system.additionalAttributes.damageReduction || 0;
+    let actualDamage = damageValue;
 
-    let actualDamage = Math.max(0, damageValue - damageReduction);
-    if (defenseActive) {
-      const armorClass =
-        "totalArmorClass" in actor.system.helpers
-          ? actor.system.helpers.totalArmorClass
-          : actor.system.additionalAttributes.armorClass || 0;
-      actualDamage = Math.max(0, actualDamage - armorClass);
+    // True damage - ignores everything
+    if (damageMode === 0) {
+      actualDamage = damageValue;
+    } else {
+      // Apply damage reduction for modes 1 and 2
+      const damageReduction =
+        "totalDamageReduction" in actor.system.helpers
+          ? actor.system.helpers.totalDamageReduction
+          : actor.system.additionalAttributes.damageReduction || 0;
+
+      actualDamage = Math.max(0, damageValue - damageReduction);
+
+      // Apply armor only in mode 2 (full defense)
+      if (damageMode === 2) {
+        const armorClass =
+          "totalArmorClass" in actor.system.helpers
+            ? actor.system.helpers.totalArmorClass
+            : actor.system.additionalAttributes.armorClass || 0;
+        actualDamage = Math.max(0, actualDamage - armorClass);
+      }
     }
 
     const newHealth = Math.max(0, actor.system.health.value - actualDamage);
@@ -105,12 +116,20 @@
       style="width:3rem;"
     />
     <ActionIcon
-      title={t("character.considerArmor")}
+      title={damageMode === 2
+        ? t("character.considerArmor")
+        : damageMode === 1
+          ? t("character.ignoreArmor")
+          : t("character.trueDamage")}
       onclick={toggleDefense}
       onkeydown={(e) => e.key === "Enter" && toggleDefense()}
     >
       {#snippet icon()}
-        <i class="fas fa-shield-alt shield-icon" class:active={defenseActive}></i>
+        {#if damageMode === 0}
+          <i class="fas fa-skull skull-icon"></i>
+        {:else}
+          <i class="fas fa-shield-alt shield-icon" class:active={damageMode === 2}></i>
+        {/if}
       {/snippet}
     </ActionIcon>
   </div>
@@ -195,5 +214,12 @@
 
   .shield-icon.active {
     color: cadetblue;
+  }
+
+  .skull-icon {
+    cursor: pointer;
+    font-size: var(--font-size-18);
+    line-height: 1;
+    color: #d7263d;
   }
 </style>

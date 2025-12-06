@@ -1,123 +1,160 @@
 import type { ShwActor } from '../../documents/Actor/ShwActor';
-import type { AbilitySystem } from '../../documents/Item/types/AbilityDataTypes';
+import type { ShwActorSystem } from '../../documents/Actor/types/ShwActorSystem';
+import type { AbilitySystem, PassiveAbilitySystem, StatModifier } from '../../documents/Item/types/AbilityDataTypes';
 import type { CharacterStatPath } from '../../shared/model/characterStatPaths';
 
-/**
- * Результат расчёта бонусов от предметов
- */
+type SplitPath<T extends string> = T extends `${infer First}.${infer Rest}`
+  ? First | SplitPath<Rest>
+  : T;
+
+type PathPart = SplitPath<CharacterStatPath>;
+
 export interface ItemBonusResult {
-  /** Карта путей к характеристикам -> итоговый бонус */
   bonuses: Map<CharacterStatPath, number>;
 }
 
+const EDITABLE_STATS = new Set([
+  'actions',
+  'bonusActions', 
+  'reactions',
+  'initiative',
+  'impulse',
+] as const);
+
+type ModifierMode = 'add' | 'mul' | 'override';
+
+const applyModifier = (current: number, value: number, mode: ModifierMode): number => {
+  switch (mode) {
+    case 'add':
+    case 'mul': // TODO: реализовать мультипликативную логику отдельно
+      return current + value;
+    case 'override':
+      return Math.max(current, value);
+  }
+};
+
+const hasStatBonuses = (
+  system: PassiveAbilitySystem,
+) => {
+  if (typeof system !== 'object' || system === null) return false;
+  
+  const itemSystem = system as PassiveAbilitySystem;
+  return (
+    itemSystem.statBonuses?.modifiers !== undefined &&
+    Array.isArray(itemSystem.statBonuses.modifiers) &&
+    itemSystem.statBonuses.modifiers.length > 0
+  );
+};
+
 /**
- * Вычисляет все бонусы от предметов актёра
- * Обрабатывает:
- * - Passive abilities со statBonuses
- * - Будущие типы предметов с бонусами (оружие, броня и т.д.)
+ * Вычисляет все бонусы от предметов актёра (способности, снаряжение, расходники и т.д.)
  */
 export function calculateItemBonuses(actor: ShwActor<'character'>): ItemBonusResult {
   const bonuses = new Map<CharacterStatPath, number>();
-
+  
   for (const item of actor.items) {
-    const system = item.system;
+    const itemSystem = item.system as PassiveAbilitySystem;
 
-    // Обрабатываем пассивные способности
-    if ('category' in system && system.category === 'passive') {
-      const abilitySystem = system as AbilitySystem;
+    if (!hasStatBonuses(itemSystem)) continue;
 
-      if (
-        abilitySystem.category === 'passive' &&
-        abilitySystem.statBonuses &&
-        abilitySystem.statBonuses.modifiers
-      ) {
-        for (const modifier of abilitySystem.statBonuses.modifiers) {
-          const stat = modifier.stat as CharacterStatPath;
-          const currentBonus = bonuses.get(stat) ?? 0;
-
-          let newBonus = currentBonus;
-          switch (modifier.mode) {
-            case 'add':
-              newBonus = currentBonus + modifier.value;
-              break;
-            case 'mul':
-              // Сейчас просто складываем
-              newBonus = currentBonus + modifier.value;
-              break;
-            case 'override':
-              // При override берём максимальное значение из всех модификаторов
-              newBonus = Math.max(currentBonus, modifier.value);
-              break;
-          }
-
-          bonuses.set(stat, newBonus);
-        }
-      }
+    for (const modifier of itemSystem?.statBonuses?.modifiers ?? []) {
+      const stat = modifier.stat as CharacterStatPath;
+      const currentBonus = bonuses.get(stat) ?? 0;
+      const newBonus = applyModifier(currentBonus, modifier.value, modifier.mode);
+      
+      bonuses.set(stat, newBonus);
     }
-
-    // Здесь можно добавить обработку других типов предметов:
-    // - consumable с постоянными бонусами
-    // - equipment (оружие, броня) с бонусами к статам
   }
 
   return { bonuses };
 }
 
-/**
- * Применяет бонус к характеристике персонажа
- * 
- * Логика:
- * 1. Для attributes.*.value и 4 editable stats (actions, bonusActions, reactions, initiative):
- *    - Бонус применяется ТОЛЬКО к соответствующему total полю в helpers
- *    - Оригинальное поле не трогается
- * 2. Для всех остальных ключей (attributes.*.extra, health.max и т.д.):
- *    - Бонус просто прибавляется к оригинальному полю
- */
-export function applyBonus(
+const toTotalFieldName = (key: string): keyof ShwActorSystem['helpers'] => 
+  `total${key.capitalize()}` as keyof ShwActorSystem['helpers'];
+
+const hasTotalField = (
+  system: ShwActorSystem,
+  totalKey: keyof ShwActorSystem['helpers'],
+): boolean =>
+  totalKey in system.helpers && typeof system.helpers[totalKey] === 'number';
+
+interface ParsedPath {
+  parts: PathPart[];
+  isAttributeValue: boolean;
+  isEditableStat: boolean;
+  attributeKey?: PathPart;
+}
+
+const parsePath = (path: CharacterStatPath): ParsedPath => {
+  const parts = path.split('.') as PathPart[];
+  
+  const isAttributeValue = 
+    parts[0] === 'attributes' && parts.length === 3 && parts[2] === 'value';
+  
+  const isEditableStat = 
+    parts[0] === 'additionalAttributes' && 
+    parts.length === 2 && 
+    EDITABLE_STATS.has(parts[1] as typeof EDITABLE_STATS extends Set<infer T> ? T : never);
+
+  return {
+    parts,
+    isAttributeValue,
+    isEditableStat,
+    attributeKey: (isAttributeValue || isEditableStat) ? parts[1] : undefined,
+  };
+};
+
+const tryApplyToTotalField = (
   system: any,
-  path: CharacterStatPath,
+  parsed: ParsedPath,
   bonus: number,
-): void {
-  const parts = path.split('.');
+): boolean => {
+  if (!parsed.attributeKey) return false;
+  if (!parsed.isAttributeValue && !parsed.isEditableStat) return false;
+
+  const totalKey = toTotalFieldName(parsed.attributeKey);
   
-  // Проверяем, есть ли для этого пути total поле
-  let totalKey: string | null = null;
+  if (!hasTotalField(system, totalKey)) return false;
+
+  system.helpers[totalKey] += bonus;
+  return true;
+};
+
+const applyToOriginalField = (
+  system: ShwActorSystem,
+  parts: PathPart[],
+  bonus: number,
+): void => {
+  let current = system as unknown as Record<PathPart, unknown>;
   
-  // Обработка attributes.*.value -> totalX
-  if (parts[0] === 'attributes' && parts.length === 3 && parts[2] === 'value') {
-    const attrKey = parts[1];
-    totalKey = `total${attrKey.charAt(0).toUpperCase()}${attrKey.slice(1)}`;
-    if (totalKey in system.helpers && typeof system.helpers[totalKey] === 'number') {
-      // Применяем ТОЛЬКО к total полю
-      system.helpers[totalKey] += bonus;
-      return;
-    }
-  }
-  
-  // Обработка editable additionalAttributes
-  if (parts[0] === 'additionalAttributes' && parts.length === 2) {
-    const attrKey = parts[1];
-    const editableKeys = ['actions', 'bonusActions', 'reactions', 'initiative', 'impulse'];
-    
-    if (editableKeys.includes(attrKey)) {
-      totalKey = `total${attrKey.charAt(0).toUpperCase()}${attrKey.slice(1)}`;
-      if (totalKey in system.helpers && typeof system.helpers[totalKey] === 'number') {
-        // Применяем ТОЛЬКО к total полю
-        system.helpers[totalKey] += bonus;
-        return;
-      }
-    }
-  }
-  
-  // Для всех остальных путей - применяем к оригинальному полю
-  let current = system;
   for (let i = 0; i < parts.length - 1; i++) {
-    if (!(parts[i] in current)) return;
-    current = current[parts[i]];
+    const next = current[parts[i]];
+    if (typeof next !== 'object' || next === null) return;
+    current = next as Record<PathPart, unknown>;
   }
   
   const lastKey = parts[parts.length - 1];
-  if (typeof current[lastKey] === 'number') {
-    current[lastKey] += bonus;
+  const value = current[lastKey];
+  if (typeof value === 'number') {
+    current[lastKey] = value + bonus;
   }
+};
+
+/**
+ * Применяет бонус к характеристике персонажа
+ * 
+ * Для attributes.*.value и editable stats применяется к total-полю в helpers.
+ * Для остальных путей — прибавляется к оригинальному полю.
+ */
+export function applyBonus(
+  system: ShwActorSystem,
+  path: CharacterStatPath,
+  bonus: number,
+): void {
+  const parsed = parsePath(path);
+  
+  const appliedToTotal = tryApplyToTotalField(system, parsed, bonus);
+  if (appliedToTotal) return;
+  
+  applyToOriginalField(system, parsed.parts, bonus);
 }

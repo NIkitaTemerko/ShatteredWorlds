@@ -84,4 +84,7 @@ export const CHARACTER_STAT_OPTIONS: CharacterStatOption[] = [
 
   // Здоровье
   { value: 'helpers.totalHealth', labelKey: 'character.health.current' as I18nKey },
+
+  // Скорость
+  { value: 'helpers.totalSpeed', labelKey: 'character.utility.speed' as I18nKey },
 ];

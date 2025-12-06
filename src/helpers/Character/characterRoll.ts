@@ -48,7 +48,10 @@ export async function characterRoll(
 
   const mod = getBonus(actor, key, isSave);
 
-  const expr = `${core}${bonus ? ` + ${bonus}` : ''}${mod ? ` + ${mod}` : ''}`;
+  // Add bonus only if it's a non-zero number
+  const bonusStr = bonus && bonus > 0 ? ` + ${bonus}` : '';
+  const modStr = mod ? ` + ${mod}` : '';
+  const expr = `${core}${bonusStr}${modStr}`;
   const count = Number(actions ?? 1);
 
   // формируем формулу: одиночный бросок или пул { expr, expr, ... }
@@ -90,14 +93,24 @@ export async function characterRoll(
 
   const flavor = `${rollTypePrefix}${bonusText}${advantageText}${multipleText}`;
 
-  await (ChatMessage as any).create({
+  // Get current roll mode from game settings
+  const rollMode = (game as any).settings.get('core', 'rollMode');
+
+  // Prepare chat message data
+  const messageData = {
     speaker: ChatMessage.getSpeaker({
       actor: actor as unknown as Actor<'base' | foundry.abstract.Document.ModuleSubType>,
     }),
     flavor,
     rolls: [roll],
     content: wrapper.innerHTML,
-  });
+  };
+
+  // Apply roll mode to set whisper and blind properties
+  (ChatMessage as any).applyRollMode(messageData, rollMode);
+
+  // Create the chat message
+  await (ChatMessage as any).create(messageData);
 
   return;
 }

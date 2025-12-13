@@ -26,6 +26,8 @@
     onUpdate,
   }: Props = $props();
 
+  console.log(helpers);
+
   const isEditable = (k: keyof AdditionalAttributes) => editableKeys.has(k);
 
   function handleChange(key: keyof AdditionalAttributes, event: Event) {
@@ -40,9 +42,8 @@
   const orderedEntries = $derived([...editableEntries, ...readonlyEntries]);
 
   const hasHelper = (key: keyof AdditionalAttributes): boolean => {
-    // Только для editable stats: actions, bonusActions, reactions, initiative
-    const editableWithTotal = ["actions", "bonusActions", "reactions", "initiative", "impulse"];
-    if (!editableWithTotal.includes(String(key))) {
+    // Проверяем наличие totalKey в helpers для любого editable поля
+    if (!isEditable(key)) {
       return false;
     }
     const totalKey = `total${key.capitalize()}`;

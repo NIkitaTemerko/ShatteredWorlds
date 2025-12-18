@@ -7,10 +7,10 @@ export function prepareNpcDerivedData(sys: ShwNpcSystem) {
   const isLevelAboveFive = sys.utility.level >= 5;
 
   const addAttrMap = {
-    damageReduction: isLevelAboveFive ? attrs.psyDefence.value : 0,
-    additionalRangeDamage: isLevelAboveFive ? attrs.perception.value : 0,
-    armorClass: isLevelAboveFive ? attrs.diplomacy.value : 0,
-    additionalCloseCombatDamage: isLevelAboveFive ? attrs.force.value : 0,
+    damageReduction: isLevelAboveFive ? attrs.psyDefence.value ?? 0 : 0,
+    additionalRangeDamage: isLevelAboveFive ? attrs.perception.value ?? 0 : 0,
+    armorClass: isLevelAboveFive ? attrs.diplomacy.value ?? 0 : 0,
+    additionalCloseCombatDamage: isLevelAboveFive ? attrs.force.value ?? 0 : 0,
     impulse: attrs?.force.value >= ATTR_RIM ? 1 : 0,
   };
 

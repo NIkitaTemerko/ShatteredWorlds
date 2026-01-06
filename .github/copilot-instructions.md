@@ -112,27 +112,122 @@ pnpm pack         # Builds + creates shattered-worlds.zip for distribution
 
 ## Code Conventions
 
+### Language Rules
+
+- **Code comments and docstrings:** Russian (Cyrillic)
+- **Variable/function names:** English
+- **Commit messages:** English (see branch/commit instruction files)
+- **Branch names:** English (see branch/commit instruction files)
+
 ### Biome Formatting
 
 - **Line width:** 100 chars
 - **Quotes:** Single quotes for JS/TS
 - **Indentation:** 2 spaces
 - **Import types:** Use `import type` for type-only imports (enforced)
+- **Svelte overrides:** `useConst`, `useImportType`, `noUnusedVariables`, and `noUnusedImports` rules disabled for `*.svelte` files
 
 ### Svelte 5 Patterns
 
-- Use **runes** (`$state`, `$derived`, `$effect`) instead of stores where possible
-- Component props: Use `$props()` with interface destructuring:
-  ```typescript
-  interface Props { actor: ShwActor<'character'>; }
-  let { actor }: Props = $props();
-  ```
-- Event handlers: Use callback props, not `on:` directives:
-  ```svelte
-  <TabNavigation {activeTab} onTabChange={handleTabChange} />
-  ```
-- State management: `let activeTab = $state<CharacterTab>('stats');`
-- Legacy stores still exist in `*/store/` - migrate to runes when refactoring
+**CRITICAL:** Always use Svelte 5 runes syntax, NOT Svelte 4 patterns. This project uses Svelte 5.
+
+#### State Management: Use Runes, Not Stores
+
+❌ **Svelte 4 (Don't use):**
+```svelte
+<script>
+  import { writable } from 'svelte/store';
+  const count = writable(0);
+</script>
+<button on:click={() => $count++}>{$count}</button>
+```
+
+✅ **Svelte 5 (Use this):**
+```svelte
+<script>
+  let count = $state(0);
+</script>
+<button onclick={() => count++}>{count}</button>
+```
+
+#### Component Props
+
+❌ **Svelte 4 (Don't use):**
+```svelte
+<script>
+  export let actor;
+  export let isEditable = true;
+</script>
+```
+
+✅ **Svelte 5 (Use this):**
+```svelte
+<script>
+  interface Props { 
+    actor: ShwActor<'character'>; 
+    isEditable?: boolean;
+  }
+  let { actor, isEditable = true }: Props = $props();
+</script>
+```
+
+#### Reactive Computations
+
+❌ **Svelte 4 (Don't use):**
+```svelte
+<script>
+  export let value;
+  $: doubled = value * 2;
+  $: {
+    console.log('Value changed:', value);
+  }
+</script>
+```
+
+✅ **Svelte 5 (Use this):**
+```svelte
+<script>
+  let { value }: Props = $props();
+  let doubled = $derived(value * 2);
+  $effect(() => {
+    console.log('Value changed:', value);
+  });
+</script>
+```
+
+#### Event Handlers
+
+❌ **Svelte 4 (Don't use):**
+```svelte
+<button on:click={handleClick}>Click</button>
+<input on:change={handleChange} />
+```
+
+✅ **Svelte 5 (Use this):**
+```svelte
+<button onclick={handleClick}>Click</button>
+<input onchange={handleChange} />
+```
+
+For custom events, use callback props:
+```svelte
+<!-- Parent -->
+<TabNavigation {activeTab} onTabChange={handleTabChange} />
+
+<!-- Child -->
+interface Props { onTabChange: (tab: CharacterTab) => void; }
+let { onTabChange }: Props = $props();
+```
+
+#### Key Runes Reference
+
+- `$state(value)` - Reactive state variable
+- `$state<T>(value)` - Typed reactive state
+- `$derived(expression)` - Computed value (like Svelte 4's `$:`)
+- `$effect(() => {})` - Side effects (like Svelte 4's `$: {}` blocks)
+- `$props()` - Component props (replaces `export let`)
+
+**Note:** Legacy stores still exist in `*/store/` directories - migrate to runes when refactoring
 
 ### File Organization
 
@@ -284,6 +379,48 @@ const updateConsumable = getUpdateConsumable(item);
 
 **Critical:** This pattern prevents data loss by preserving the entire `system` object while updating specific nested paths. Without this, partial updates can overwrite sibling fields.
 
+### Item Stacking & Duplicate Prevention
+
+The `StackManager.ts` handles automatic stacking of consumables and prevents duplicate abilities:
+
+```typescript
+// src/helpers/Item/StackManager.ts - Key functions:
+
+// 1. Identity matching: Uses baseId if available, else type:name
+export function getIdentityKey(itemData: ItemDataLike): string {
+  if (itemData.system?.baseId) return itemData.system.baseId;
+  return `${itemData.type}:${itemData.name?.toLowerCase().trim()}`;
+}
+
+// 2. Stack finding: Prioritizes non-full stacks
+export function findExistingStack(actor: ShwActor, itemData: ItemDataLike): ShwItem | null
+
+// 3. Auto-increment: Handles overflow by creating new stacks
+export function incrementStack(existingItem: ShwItem, incomingData: ItemDataLike): void
+
+// 4. Main handler: Called from preCreateItem hook
+export function handleAddItem(actor: ShwActor, itemData: ItemDataLike): 'created' | 'stacked' | 'blocked'
+```
+
+**Behavior:**
+- **Consumables** (`stackable`): Auto-stack if identity matches, respects `stackLimit`
+- **Abilities** (`unique`): Blocks duplicates, shows notification
+- **Overflow handling**: When adding to full stack, fills current to limit and creates additional stacks
+- **Recursion prevention**: Uses `isCreatingOverflowStacks` flag during overflow stack creation
+
+**Hook integration** (`src/index.ts`):
+```typescript
+Hooks.on('preCreateItem', (item, data) => {
+  if (item.parent && item.parent instanceof ShwActor) {
+    const result = handleAddItem(item.parent, {
+      type: item.type, name: item.name, system: item.system
+    });
+    // Return false to prevent creation if item was stacked or blocked
+    if (result === 'stacked' || result === 'blocked') return false;
+  }
+});
+```
+
 ## Patterns & Best Practices
 
 ### Component Communication
@@ -334,6 +471,34 @@ Components use CSS variables for type-specific colors:
 </div>
 ```
 
+### Ability Tree State Management
+
+Ability tree UI state (search, expanded nodes, selection) is managed per-actor in memory:
+
+```typescript
+// src/entities/ability/model/abilityTreeState.ts
+
+// Per-actor state storage
+const treeStates = new Map<string, AbilityTreeState>();
+
+export function getAbilityTreeState(actorId: string): AbilityTreeState
+export function updateAbilityTreeState(actorId: string, updates: Partial<AbilityTreeState>)
+export function clearAbilityTreeState(actorId: string)
+```
+
+**Pattern:** State persists during session but resets on page refresh. This keeps UI responsive without polluting actor data with transient UI state.
+
+**Usage in components:**
+```typescript
+let treeState = $state(getAbilityTreeState(actor.id));
+
+// Update search query
+function handleSearch(query: string) {
+  updateAbilityTreeState(actor.id, { searchQuery: query });
+  treeState = getAbilityTreeState(actor.id);
+}
+```
+
 ## Debugging Tips
 
 - **Svelte DevTools:** Install browser extension for Svelte 5
@@ -342,6 +507,66 @@ Components use CSS variables for type-specific colors:
 - **Hot reload:** Only works for lang files; code changes require page refresh in dev mode
 - **Vite dev server issues:** Ensure Foundry is running on `:30000` before starting `:30001`
 - **Sheet not rendering:** Check browser console for Svelte mount errors in `.svelte-sheet-body`
+
+## Performance Considerations
+
+### Reactive Document Updates
+
+`ReactiveDocumentWrapper` subscribes to Foundry hooks for auto-updates:
+
+```svelte
+<!-- src/shared/ui/ReactiveDocumentWrapper/ui.svelte -->
+<script>
+  let docData = $state({ doc: getDocument(), version: 0 });
+  
+  function handleUpdate(doc: any) {
+    const currentDoc = getDocument();
+    // Only update if it's our document or child
+    if (doc?.id === currentDoc?.id || doc?.parent?.id === currentDoc?.id) {
+      docData = { doc: currentDoc, version: docData.version + 1 };
+    }
+  }
+</script>
+```
+
+**Optimization strategies:**
+- **Identity checks:** Updates only fire for relevant document changes
+- **Version counter:** Forces Svelte reactivity even when object reference doesn't change
+- **Hook cleanup:** `onDestroy` properly unregisters hooks to prevent memory leaks
+
+### Sheet Remounting Strategy
+
+`SvelteActorSheet` avoids unnecessary remounts:
+
+```typescript
+// Tracks mounted actor ID to detect changes
+private _mountedActorId: string | null = null;
+
+// Only remount if actor actually changed
+const actorChanged = this._mountedActorId !== null && 
+                     this._mountedActorId !== this.actor.id;
+
+if (actorChanged) {
+  unmount(this._svelte);
+  this._svelte = null;
+}
+```
+
+**Why it matters:** Remounting Svelte components is expensive. This pattern ensures sheets only remount when switching between different actors, not on every render call.
+
+### Item Stack Operations
+
+Stack updates use async fire-and-forget pattern:
+
+```typescript
+// Updates fire asynchronously but function returns immediately
+existingItem.update({ 'system.quantity': totalQuantity }).then(() => {
+  ui.notifications?.info(`Stack increased`);
+});
+// Function returns here, doesn't wait for update to complete
+```
+
+**Result:** UI remains responsive during bulk item operations. Foundry's document system queues updates automatically.
 
 ## External Dependencies
 
@@ -352,9 +577,10 @@ Components use CSS variables for type-specific colors:
 
 ## Localization
 
-- Files: `lang/en.json`
-- Access in code: `game.i18n.localize('SHW.KeyName')`
-- Hot reload enabled in dev mode
+- **Files:** `lang/en.json`, `lang/ru.json` (English and Russian)
+- **Access in code:** `game.i18n.localize('SHW.KeyName')`
+- **Key format:** Nested structure under `SHW` namespace (e.g., `SHW.attributes.natural`, `SHW.tabs.stats`)
+- **Hot reload:** Enabled in dev mode for both language files
 
 ## Common Pitfalls & Solutions
 

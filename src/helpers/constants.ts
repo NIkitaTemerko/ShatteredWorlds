@@ -37,4 +37,3 @@ export const HELPER_KEYS: (keyof ShwActorSystem['helpers'])[] = [
 
 export const ATTR_RIM = 15;
 export const ATTR_MAX_RIM = 25;
-

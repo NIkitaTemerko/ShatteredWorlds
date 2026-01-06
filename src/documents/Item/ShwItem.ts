@@ -1,9 +1,10 @@
-import { getAbilityImage, getConsumableImage, ItemFactory } from './ItemFactory';
+import { getAbilityImage, getConsumableImage, getSpellImage, ItemFactory } from './ItemFactory';
 import type { AbilitySystem } from './types/AbilityDataTypes';
 import type { ConsumableData } from './types/ConsumableDataTypes';
+import type { SpellSystem } from './types/SpellDataTypes';
 
 // Flattened: system IS the item data directly (no nested structure)
-type ShwItemSystem = ConsumableData | AbilitySystem;
+type ShwItemSystem = ConsumableData | AbilitySystem | SpellSystem;
 
 export class ShwItem extends Item {
   // @ts-expect-error
@@ -25,6 +26,10 @@ export class ShwItem extends Item {
     return this.type === 'ability';
   }
 
+  isSpell(): this is { system: SpellSystem } {
+    return this.type === 'spell';
+  }
+
   private prepareConsumable() {
     if (this.isConsumable() && !this.system.consumableType) {
       const item = ItemFactory.createConsumable('bomb', {
@@ -42,7 +47,17 @@ export class ShwItem extends Item {
         name: this.name,
       });
       Object.assign(this.system, item);
-      this.img = getAbilityImage(item.category);
+      this.img = getAbilityImage(this.system.category);
+    }
+  }
+
+  private prepareSpell() {
+    if (this.isSpell() && !this.system.kind) {
+      const item = ItemFactory.createSpell('arcane', 'attack', {
+        name: this.name,
+      });
+      Object.assign(this.system, item);
+      this.img = getSpellImage(this.system.category);
     }
   }
 
@@ -96,6 +111,8 @@ export class ShwItem extends Item {
       this.prepareConsumable();
     } else if (this.type === 'ability') {
       this.prepareAbility();
+    } else if (this.type === 'spell') {
+      this.prepareSpell();
     }
   }
 
@@ -104,6 +121,8 @@ export class ShwItem extends Item {
       return this.useConsumable();
     } else if (this.type === 'ability') {
       return this.useAbility();
+    } else if (this.type === 'spell') {
+      return this.useSpell();
     }
   }
 
@@ -116,6 +135,20 @@ export class ShwItem extends Item {
     // Проверка resource costs будет реализована позже
     if (ability.resourceCosts && ability.resourceCosts.length > 0) {
       console.log('Resource costs:', ability.resourceCosts);
+    }
+
+    return true;
+  }
+
+  private async useSpell() {
+    if (!this.isSpell()) return false;
+    const spell = this.system;
+
+    console.log(`Using spell: ${this.name} (${spell.category})`);
+
+    // Проверка resource costs будет реализована позже
+    if (spell.resourceCosts && spell.resourceCosts.length > 0) {
+      console.log('Resource costs:', spell.resourceCosts);
     }
 
     return true;

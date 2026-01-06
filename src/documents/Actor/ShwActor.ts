@@ -73,7 +73,9 @@ export class ShwActor<K extends keyof SystemByKind = ActorKind> extends Actor {
     const data: Record<string, unknown> = super.getRollData();
 
     // гарантируем, что initiative — число
-    const init = Number(this.system?.helpers?.totalInitiative ?? this.system?.additionalAttributes?.initiative ?? 0);
+    const init = Number(
+      this.system?.helpers?.totalInitiative ?? this.system?.additionalAttributes?.initiative ?? 0,
+    );
     // одновременно кладём дублирующее короткое поле,
     // чтобы формула '1d20 + @initiative' тоже работала
     data.initiative = init;

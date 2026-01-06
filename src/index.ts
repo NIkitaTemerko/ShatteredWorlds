@@ -7,6 +7,7 @@ import { AbilityItemApp } from './view/AbilityItem/ItemApp';
 import { CharacterApp } from './view/BaseCharacter/CharacterApp.js';
 import { ConsumableItemApp } from './view/ConsumableItem/ItemApp';
 import { NpcApp } from './view/NpcCharacter/NpcApp';
+import { SpellItemApp } from './view/SpellItem/ItemApp';
 import './main.css';
 
 (globalThis as any).MIN_WINDOW_HEIGHT = 200;
@@ -41,6 +42,10 @@ Hooks.once('setup', () => {
     types: ['ability'],
     makeDefault: true,
   });
+  foundry.documents.collections.Items.registerSheet('shw', SpellItemApp, {
+    types: ['spell'],
+    makeDefault: true,
+  });
 });
 
 Hooks.on('preCreateToken', (tokenDocument: any, tokenData: any) => {
@@ -62,7 +67,7 @@ Hooks.on('preCreateItem', (item: any, data: any, options: any) => {
   // Отслеживание связи с глобальным предметом при добавлении к актеру
   if (item.parent && item.parent instanceof ShwActor) {
     const originItemId = findOriginItem(item, options);
-    
+
     if (originItemId) {
       item.updateSource({ 'flags.shw.originItemId': originItemId });
     }
@@ -105,10 +110,8 @@ function findOriginItem(item: any, options: any): string | undefined {
   }
 
   // Поиск по имени + типу (для drag-drop из директории Items)
-  const byName = globalItems.find(
-    (gi: any) => gi.name === item.name && gi.type === item.type,
-  );
-  
+  const byName = globalItems.find((gi: any) => gi.name === item.name && gi.type === item.type);
+
   return byName?.id;
 }
 
@@ -150,14 +153,14 @@ async function syncGlobalToOwned(item: any, changes: any): Promise<void> {
   if (!actors) return;
 
   const ownedCopies = findOwnedCopies(actors, item.id);
-  
+
   if (ownedCopies.length === 0) return;
 
   // Обновление всех owned копий
   for (const { actor, itemId } of ownedCopies) {
     // Убираем _id из changes, чтобы не перезаписать ID owned предмета
     const { _id, ...changesWithoutId } = changes;
-    
+
     await actor.updateEmbeddedDocuments('Item', [{ _id: itemId, ...changesWithoutId }], {
       skipSync: true, // Предотвращаем бесконечную рекурсию
     });

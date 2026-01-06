@@ -1,5 +1,5 @@
-import type { I18nKey } from "../../i18n";
-import type { AdditionalAttributes } from "../types";
+import type { I18nKey } from '../../i18n';
+import type { AdditionalAttributes } from '../types';
 
 /** Labels for additional attributes (i18n keys) */
 export const ADDITIONAL_ATTRIBUTE_LABELS: Record<keyof AdditionalAttributes, I18nKey> = {

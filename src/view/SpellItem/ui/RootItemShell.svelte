@@ -15,12 +15,12 @@
 
   const updateSpell = getUpdateSpell(item);
 
-  function handleCategoryChange(category: SpellCategory) {
-    updateSpell("category", category);
+  function handleCategoryChange(category: SpellCategory, event?: Event) {
+    updateSpell("category", category, event);
   }
 
-  function handleKindChange(kind: SpellKind) {
-    updateSpell("spellKind", kind);
+  function handleKindChange(kind: SpellKind, event?: Event) {
+    updateSpell("spellKind", kind, event);
   }
 
   function handleUpdate(path: string, value: any) {

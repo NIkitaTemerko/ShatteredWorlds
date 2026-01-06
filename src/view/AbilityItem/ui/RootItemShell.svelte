@@ -20,12 +20,12 @@
 
   const updateAbility = getUpdateAbility(item);
 
-  function handleCategoryChange(category: AbilityCategory) {
-    updateAbility("category", category);
+  function handleCategoryChange(category: AbilityCategory, event?: Event) {
+    updateAbility("category", category, event);
   }
 
-  function handleKindChange(kind: ActiveAbilityKind | PassiveAbilityKind) {
-    updateAbility("kind", kind);
+  function handleKindChange(kind: ActiveAbilityKind | PassiveAbilityKind, event?: Event) {
+    updateAbility("kind", kind, event);
   }
 
   function handleUpdate(path: string, value: any) {

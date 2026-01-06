@@ -7,13 +7,14 @@
 
   interface Props {
     item: ShwItem;
-    onCategoryChange: (category: SpellCategory) => void;
-    onKindChange: (kind: SpellKind) => void;
+    onCategoryChange: (category: SpellCategory, event?: Event) => void;
+    onKindChange: (kind: SpellKind, event?: Event) => void;
   }
 
   let { item, onCategoryChange, onKindChange }: Props = $props();
 
   const system = $derived(item.system as import("../../../documents/Item/types/SpellDataTypes").SpellSystem);
+  const img = $derived(item.img);
 
   const SPELL_CATEGORIES = [
     { value: "code", label: "spell.category.code" },
@@ -36,17 +37,17 @@
 
   function handleCategoryChange(event: Event) {
     const value = (event.currentTarget as HTMLSelectElement).value as SpellCategory;
-    onCategoryChange(value);
+    onCategoryChange(value, event);
   }
 
   function handleKindChange(event: Event) {
     const value = (event.currentTarget as HTMLSelectElement).value as SpellKind;
-    onKindChange(value);
+    onKindChange(value, event);
   }
 </script>
 
 <header class="card-header">
-  <img src={item.img} data-edit="img" title={item.name} height="72" width="72" alt="img" />
+  <img src={img} data-edit="img" title={item.name} height="72" width="72" alt="img" />
 
   <div class="header-main">
     <Input

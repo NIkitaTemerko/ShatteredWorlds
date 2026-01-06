@@ -14,17 +14,18 @@
 
   if (!item.isConsumable()) throw new Error("Item is not a consumable");
   const system = $derived(item.system);
+  const img = $derived(item.img);
 
   const updateConsumable = getUpdateConsumable(item);
 
   function handleTypeChange(event: Event) {
     const value = (event.currentTarget as HTMLSelectElement).value as ConsumableType;
-    updateConsumable("consumableType", value);
+    updateConsumable("consumableType", value, event);
   }
 </script>
 
 <header class="card-header">
-  <img src={item.img} data-edit="img" title={item.name} height="72" width="72" alt="img" />
+  <img src={img} data-edit="img" title={item.name} height="72" width="72" alt="img" />
 
   <div class="header-main">
     <Input

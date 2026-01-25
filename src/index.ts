@@ -3,6 +3,7 @@ import { ShwItem } from './documents/Item/ShwItem';
 import { ShwTokenDocument } from './documents/ShwTokenDocument.js';
 import { migrateConsumableData, needsMigration } from './helpers/Item/migrateConsumableData';
 import { handleAddItem } from './helpers/Item/StackManager';
+import { ShopManagerApp } from './modules/shop';
 import { AbilityItemApp } from './view/AbilityItem/ItemApp';
 import { CharacterApp } from './view/BaseCharacter/CharacterApp.js';
 import { ConsumableItemApp } from './view/ConsumableItem/ItemApp';
@@ -22,6 +23,27 @@ Hooks.once('init', () => {
     formula: '1d20 + @initiative',
     decimals: 0,
   };
+
+  // Добавляем кнопку магазина в навигацию
+  Hooks.once('ready', () => {
+    const menu = document.querySelector('nav.tabs.faded-ui menu');
+    if (menu) {
+      const li = document.createElement('li');
+      const shopButton = document.createElement('button');
+      shopButton.type = 'button';
+      shopButton.className = 'ui-control plain icon fa-solid fa-store';
+      shopButton.addEventListener('click', () => {
+        new ShopManagerApp().render(true);
+      });
+      li.appendChild(shopButton);
+      const lastItem = menu.lastElementChild;
+      if (lastItem) {
+        menu.insertBefore(li, lastItem);
+      } else {
+        menu.appendChild(li);
+      }
+    }
+  });
 });
 
 Hooks.once('setup', () => {
@@ -62,7 +84,7 @@ Hooks.on('preCreateItem', (item: any, data: any, options: any) => {
   // Отслеживание связи с глобальным предметом при добавлении к актеру
   if (item.parent && item.parent instanceof ShwActor) {
     const originItemId = findOriginItem(item, options);
-    
+
     if (originItemId) {
       item.updateSource({ 'flags.shw.originItemId': originItemId });
     }
@@ -105,10 +127,8 @@ function findOriginItem(item: any, options: any): string | undefined {
   }
 
   // Поиск по имени + типу (для drag-drop из директории Items)
-  const byName = globalItems.find(
-    (gi: any) => gi.name === item.name && gi.type === item.type,
-  );
-  
+  const byName = globalItems.find((gi: any) => gi.name === item.name && gi.type === item.type);
+
   return byName?.id;
 }
 
@@ -150,14 +170,14 @@ async function syncGlobalToOwned(item: any, changes: any): Promise<void> {
   if (!actors) return;
 
   const ownedCopies = findOwnedCopies(actors, item.id);
-  
+
   if (ownedCopies.length === 0) return;
 
   // Обновление всех owned копий
   for (const { actor, itemId } of ownedCopies) {
     // Убираем _id из changes, чтобы не перезаписать ID owned предмета
     const { _id, ...changesWithoutId } = changes;
-    
+
     await actor.updateEmbeddedDocuments('Item', [{ _id: itemId, ...changesWithoutId }], {
       skipSync: true, // Предотвращаем бесконечную рекурсию
     });

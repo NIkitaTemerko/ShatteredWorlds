@@ -319,6 +319,88 @@
         "few": "abilities",
         "many": "abilities"
       }
+    },
+    "spell": {
+      "header": {
+        "namePlaceholder": "Spell Name",
+        "categoryLabel": "Category:",
+        "kindLabel": "Type:"
+      },
+      "category": {
+        "code": "Code",
+        "elemental": "Elemental",
+        "dark": "Dark",
+        "holy": "Holy",
+        "arcane": "Arcane"
+      },
+      "spellKind": {
+        "attack": "Attack",
+        "heal": "Heal",
+        "support": "Support",
+        "debuff": "Debuff",
+        "control": "Control",
+        "movement": "Movement",
+        "summon": "Summon",
+        "utility": "Utility"
+      },
+      "currentRank": "Current Rank",
+      "maxRank": "Max Rank",
+      "actionType": {
+        "label": "Action Type",
+        "action": "Action",
+        "bonus": "Bonus",
+        "reaction": "Reaction",
+        "free": "Free"
+      },
+      "castTime": "Cast Time",
+      "rangeKind": {
+        "label": "Range",
+        "self": "Self",
+        "melee": "Melee",
+        "ranged": "Ranged",
+        "area": "Area"
+      },
+      "range": {
+        "distance": "Distance",
+        "title": "Range & Targeting",
+        "radius": "Radius",
+        "shape": "Shape",
+        "shapeCircle": "Circle",
+        "shapeCone": "Cone",
+        "shapeLine": "Line"
+      },
+      "targetType": {
+        "label": "Target Type",
+        "self": "Self",
+        "ally": "Ally",
+        "enemy": "Enemy",
+        "any": "Any"
+      },
+      "maxTargets": "Max Targets",
+      "requiresLOS": "Requires LOS",
+      "channeled": "Channeled",
+      "togglable": "Togglable",
+      "usesPerRest": "Uses/Rest",
+      "usesPerEncounter": "Uses/Encounter",
+      "uses": {
+        "title": "Uses & Toggles"
+      },
+      "details": {
+        "title": "Spell Details"
+      }
+    },
+    "spells": {
+      "searchPlaceholder": "Search spells...",
+      "spellsCount": "{count} spells",
+      "deleteConfirmTitle": "Delete Spell",
+      "deleteConfirmContent": "Are you sure you want to delete <strong>{name}</strong>?",
+      "deleteSpell": "Delete spell",
+      "clearSearch": "Clear search",
+      "spellPlurals": {
+        "one": "spell",
+        "few": "spells",
+        "many": "spells"
+      }
     }
   }
 }

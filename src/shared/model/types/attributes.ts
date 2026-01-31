@@ -1,4 +1,4 @@
-import type { ShwActorSystem } from "../../../documents/Actor/types/ShwActorSystem";
+import type { ShwActorSystem } from '../../../documents/Actor/types/ShwActorSystem';
 
 /** Attribute key type */
 export type AttributeKey = keyof ShwActorSystem['attributes'];

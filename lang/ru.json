@@ -319,6 +319,88 @@
         "few": "способности",
         "many": "способностей"
       }
+    },
+    "spell": {
+      "header": {
+        "namePlaceholder": "Название заклинания",
+        "categoryLabel": "Категория:",
+        "kindLabel": "Тип:"
+      },
+      "category": {
+        "code": "Кодовая",
+        "elemental": "Стихийная",
+        "dark": "Темная",
+        "holy": "Святая",
+        "arcane": "Магическая"
+      },
+      "spellKind": {
+        "attack": "Атака",
+        "heal": "Лечение",
+        "support": "Поддержка",
+        "debuff": "Дебафф",
+        "control": "Контроль",
+        "movement": "Перемещение",
+        "summon": "Призыв",
+        "utility": "Утилита"
+      },
+      "currentRank": "Текущий ранг",
+      "maxRank": "Макс. ранг",
+      "actionType": {
+        "label": "Тип действия",
+        "action": "Действие",
+        "bonus": "Бонус",
+        "reaction": "Реакция",
+        "free": "Свободное"
+      },
+      "castTime": "Время каста",
+      "rangeKind": {
+        "label": "Дальность",
+        "self": "На себя",
+        "melee": "Ближний бой",
+        "ranged": "Дальний бой",
+        "area": "Область"
+      },
+      "range": {
+        "distance": "Расстояние",
+        "title": "Дальность и цели",
+        "radius": "Радиус",
+        "shape": "Форма",
+        "shapeCircle": "Круг",
+        "shapeCone": "Конус",
+        "shapeLine": "Линия"
+      },
+      "targetType": {
+        "label": "Тип цели",
+        "self": "Себя",
+        "ally": "Союзник",
+        "enemy": "Враг",
+        "any": "Любой"
+      },
+      "maxTargets": "Макс. целей",
+      "requiresLOS": "Требует видимость",
+      "channeled": "Поддерживаемая",
+      "togglable": "Переключаемая",
+      "usesPerRest": "Использ./отдых",
+      "usesPerEncounter": "Использ./бой",
+      "uses": {
+        "title": "Использования и переключения"
+      },
+      "details": {
+        "title": "Детали заклинания"
+      }
+    },
+    "spells": {
+      "searchPlaceholder": "Поиск заклинаний...",
+      "spellsCount": "{count} заклинаний",
+      "deleteConfirmTitle": "Удалить заклинание",
+      "deleteConfirmContent": "Вы уверены, что хотите удалить <strong>{name}</strong>?",
+      "deleteSpell": "Удалить заклинание",
+      "clearSearch": "Очистить поиск",
+      "spellPlurals": {
+        "one": "заклинание",
+        "few": "заклинания",
+        "many": "заклинаний"
+      }
     }
   }
 }

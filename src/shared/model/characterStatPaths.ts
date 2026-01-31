@@ -1,7 +1,7 @@
-import type { I18nKey } from '../i18n';
 import type { ShwActorSystem } from '../../documents/Actor/types/ShwActorSystem';
-import type { AttributeKey } from './types';
+import type { I18nKey } from '../i18n';
 import { ADDITIONAL_ATTRIBUTE_LABELS } from './constants';
+import type { AttributeKey } from './types';
 
 /**
  * Типизированные пути к характеристикам персонажа
@@ -43,7 +43,13 @@ export interface CharacterStatOption {
 /**
  * Конфигурация для генерации опций характеристик
  */
-const ATTRIBUTE_KEYS: AttributeKey[] = ['fortune', 'force', 'perception', 'psyDefence', 'diplomacy'];
+const ATTRIBUTE_KEYS: AttributeKey[] = [
+  'fortune',
+  'force',
+  'perception',
+  'psyDefence',
+  'diplomacy',
+];
 
 type AttributeFieldConfig = {
   field: AttributeFields;
@@ -59,7 +65,7 @@ const ATTRIBUTE_FIELD_CONFIGS: AttributeFieldConfig[] = [
 
 // Используем ключи из ADDITIONAL_ATTRIBUTE_LABELS чтобы не дублировать
 const ADDITIONAL_ATTRIBUTE_KEYS = Object.keys(
-  ADDITIONAL_ATTRIBUTE_LABELS
+  ADDITIONAL_ATTRIBUTE_LABELS,
 ) as AdditionalAttributeKey[];
 
 /**
@@ -73,7 +79,7 @@ export const CHARACTER_STAT_OPTIONS: CharacterStatOption[] = [
       value: `attributes.${attr}.${field}` as CharacterStatPath,
       labelKey,
       attributeKey: `attributes.${attr}` as I18nKey,
-    }))
+    })),
   ),
 
   // Дополнительные атрибуты

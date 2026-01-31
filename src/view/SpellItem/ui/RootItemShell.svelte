@@ -1,16 +1,11 @@
 <script lang="ts">
   import type { ShwItem } from "../../../documents/Item/ShwItem";
-  import type {
-    AbilityCategory,
-    ActiveAbilityKind,
-    PassiveAbilityKind,
-  } from "../../../documents/Item/types/AbilityDataTypes";
+  import type { SpellCategory, SpellKind } from "../../../documents/Item/types/SpellDataTypes";
   import { t } from "../../../shared/i18n";
-  import { getUpdateAbility } from "../utils/updateAbility";
-  import AbilityBasicStats from "./AbilityBasicStats.svelte";
-  import AbilityHeader from "./AbilityHeader.svelte";
-  import ActiveAbilityDetails from "./ActiveAbilityDetails.svelte";
-  import PassiveAbilityDetails from "./PassiveAbilityDetails.svelte";
+  import { getUpdateSpell } from "../utils/updateSpell";
+  import SpellBasicStats from "./SpellBasicStats.svelte";
+  import SpellHeader from "./SpellHeader.svelte";
+  import SpellDetails from "./SpellDetails.svelte";
 
   interface Props {
     item: ShwItem;
@@ -18,27 +13,27 @@
 
   let { item }: Props = $props();
 
-  const updateAbility = getUpdateAbility(item);
+  const updateSpell = getUpdateSpell(item);
 
-  function handleCategoryChange(category: AbilityCategory, event?: Event) {
-    updateAbility("category", category, event);
+  function handleCategoryChange(category: SpellCategory, event?: Event) {
+    updateSpell("category", category, event);
   }
 
-  function handleKindChange(kind: ActiveAbilityKind | PassiveAbilityKind, event?: Event) {
-    updateAbility("kind", kind, event);
+  function handleKindChange(kind: SpellKind, event?: Event) {
+    updateSpell("spellKind", kind, event);
   }
 
   function handleUpdate(path: string, value: any) {
-    updateAbility(path, value);
+    updateSpell(path, value);
   }
 </script>
 
-<div class="ability-card">
+<div class="spell-card">
   <!-- HEADER -->
-  <AbilityHeader {item} onCategoryChange={handleCategoryChange} onKindChange={handleKindChange} />
+  <SpellHeader {item} onCategoryChange={handleCategoryChange} onKindChange={handleKindChange} />
 
   <!-- BASIC STATS -->
-  <AbilityBasicStats {item} onUpdate={handleUpdate} />
+  <SpellBasicStats {item} onUpdate={handleUpdate} />
 
   <!-- DESCRIPTION -->
   <section class="description" style="--dark: #6B7280; --light: #F3F4F6">
@@ -46,17 +41,16 @@
     <textarea
       bind:value={item.system.description}
       placeholder={t("item.description.placeholder")}
-      onchange={(e) => updateAbility("description", e.currentTarget.value)}
+      onchange={(e) => updateSpell("description", e.currentTarget.value)}
     ></textarea>
   </section>
 
-  <!-- TYPE-SPECIFIC DETAILS -->
-  <ActiveAbilityDetails {item} onUpdate={handleUpdate} />
-  <PassiveAbilityDetails {item} onUpdate={handleUpdate} />
+  <!-- SPELL DETAILS -->
+  <SpellDetails {item} onUpdate={handleUpdate} />
 </div>
 
 <style>
-  .ability-card {
+  .spell-card {
     background: transparent;
     display: flex;
     flex-direction: column;

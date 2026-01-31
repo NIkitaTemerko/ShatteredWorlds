@@ -6,6 +6,7 @@ import type {
 } from './types/AbilityDataTypes';
 import type { ConsumableData, ConsumableType } from './types/ConsumableDataTypes';
 import type { BaseItemData } from './types/ItemDataInterface';
+import type { SpellCategory, SpellKind, SpellSystem } from './types/SpellDataTypes';
 
 /**
  * Get default image path for consumable type
@@ -34,6 +35,24 @@ export function getAbilityImage(category: AbilityCategory): string {
       return 'icons/svg/dice-target.svg';
     case 'passive':
       return 'icons/svg/aura.svg';
+  }
+}
+
+/**
+ * Get default image path for spell category
+ */
+export function getSpellImage(category: SpellCategory): string {
+  switch (category) {
+    case 'code':
+      return 'icons/svg/book.svg';
+    case 'elemental':
+      return 'icons/svg/fire.svg';
+    case 'dark':
+      return 'icons/svg/skull.svg';
+    case 'holy':
+      return 'icons/svg/angel.svg';
+    case 'arcane':
+      return 'icons/svg/portal.svg';
   }
 }
 
@@ -212,6 +231,51 @@ export class ItemFactory {
             }
           : null,
       triggers: passiveKind === 'triggered' ? [] : null,
+    };
+  }
+
+  static createSpell(
+    category: SpellCategory,
+    kind: SpellKind,
+    baseData: Partial<BaseItemData>,
+  ): SpellSystem {
+    const base = {
+      name: '',
+      description: '',
+      weight: 0,
+      rarity: 'common' as const,
+      ...baseData,
+    };
+
+    return {
+      ...base,
+      kind: 'spell' as const,
+      category,
+      spellKind: kind,
+      actionType: 'action',
+      castTime: 0,
+      range: {
+        kind: 'ranged',
+        distance: 30,
+        radius: 0,
+        shape: 'circle',
+      },
+      targeting: {
+        targetType: 'enemy',
+        maxTargets: 1,
+        requiresLineOfSight: true,
+      },
+      attackRoll: null,
+      savingThrow: null,
+      effects: [],
+      channeled: false,
+      togglable: false,
+      usesPerRest: null,
+      usesPerEncounter: null,
+      cooldown: null,
+      resourceCosts: [],
+      maxRank: 1,
+      currentRank: 1,
     };
   }
 }

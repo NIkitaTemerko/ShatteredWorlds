@@ -2,6 +2,7 @@
   import type { ShwActor } from "../../../../documents/Actor/ShwActor";
   import type { ShwItem } from "../../../../documents/Item/ShwItem";
   import { SpellTree } from "../../../../entities/spell";
+  import { localize, t } from "../../../../shared/i18n";
 
   interface Props {
     actor: ShwActor<"character">;
@@ -18,8 +19,8 @@
 
   async function handleDeleteSpell(item: ShwItem) {
     const confirmed = await foundry.appv1.api.Dialog.confirm({
-      title: game.i18n?.localize("SHW.spells.deleteConfirmTitle") ?? "Delete Spell",
-      content: `<p>${game.i18n?.format("SHW.spells.deleteConfirmContent", { name: item.name }) ?? `Delete ${item.name}?`}</p>`,
+      title: t("spells.deleteConfirmTitle") ?? "Delete Spell",
+      content: `<p>${localize("spells.deleteConfirmContent", { name: item.name }) ?? `Delete ${item.name}?`}</p>`,
     });
 
     if (confirmed) {

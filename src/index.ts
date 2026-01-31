@@ -8,6 +8,7 @@ import { AbilityItemApp } from './view/AbilityItem/ItemApp';
 import { CharacterApp } from './view/BaseCharacter/CharacterApp.js';
 import { ConsumableItemApp } from './view/ConsumableItem/ItemApp';
 import { NpcApp } from './view/NpcCharacter/NpcApp';
+import { SpellItemApp } from './view/SpellItem/ItemApp';
 import './main.css';
 
 (globalThis as any).MIN_WINDOW_HEIGHT = 200;
@@ -61,6 +62,10 @@ Hooks.once('setup', () => {
   });
   foundry.documents.collections.Items.registerSheet('shw', AbilityItemApp, {
     types: ['ability'],
+    makeDefault: true,
+  });
+  foundry.documents.collections.Items.registerSheet('shw', SpellItemApp, {
+    types: ['spell'],
     makeDefault: true,
   });
 });

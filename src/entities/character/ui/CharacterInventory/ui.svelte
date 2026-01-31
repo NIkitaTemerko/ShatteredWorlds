@@ -11,7 +11,9 @@
 
   let { actor }: Props = $props();
 
-  const inventoryItems = $derived(collectionToInventoryItems(actor.items).filter((item) => item.type !== "ability"));
+  const inventoryItems = $derived(
+    collectionToInventoryItems(actor.items).filter((item) => item.type !== "ability" && item.type !== "spell"),
+  );
 
   function handleSelectItem(item: ShwItem) {
     item.sheet?.render(true);

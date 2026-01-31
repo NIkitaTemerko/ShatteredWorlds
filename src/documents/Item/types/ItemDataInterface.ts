@@ -18,4 +18,11 @@ export interface StackableItem {
   stackLimit: number;
 }
 
-export type ItemType = 'weapon' | 'armor' | 'consumable' | 'equipment' | 'treasure' | 'ability';
+export type ItemType =
+  | 'weapon'
+  | 'armor'
+  | 'consumable'
+  | 'equipment'
+  | 'treasure'
+  | 'ability'
+  | 'spell';

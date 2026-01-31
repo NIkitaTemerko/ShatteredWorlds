@@ -7,6 +7,7 @@
     CharacterAbilities,
     CharacterHeader,
     CharacterInventory,
+    CharacterSpells,
   } from "../../../entities/character";
   import { TabNavigation } from "../../../features/navigation";
   import { RollPanel } from "../../../features/roll";
@@ -45,6 +46,8 @@
   />
 {:else if activeTab === "inventory"}
   <CharacterInventory {actor} />
+{:else if activeTab === "spells"}
+  <CharacterSpells {actor} />
 {:else if activeTab === "abilities"}
   <CharacterAbilities {actor} />
 {:else}

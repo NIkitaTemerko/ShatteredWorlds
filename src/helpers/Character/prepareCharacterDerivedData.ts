@@ -25,9 +25,7 @@ function calculateAdditionalAttributes(
   };
 }
 
-function resetAttributeBonuses(
-  attributes: ShwActorSystem['attributes'],
-): void {
+function resetAttributeBonuses(attributes: ShwActorSystem['attributes']): void {
   for (const k of STAT_KEYS) {
     const a = attributes[k];
     a.extra = 0;
@@ -41,7 +39,9 @@ function updateAttributeBonuses(
   attributes: ShwActorSystem['attributes'],
 ): void {
   for (const k of STAT_KEYS) {
-    const helperKey = HELPER_KEYS.find((key) => key.toLocaleLowerCase().includes(k.toLocaleLowerCase())) as keyof ShwActorSystem['helpers'];
+    const helperKey = HELPER_KEYS.find((key) =>
+      key.toLocaleLowerCase().includes(k.toLocaleLowerCase()),
+    ) as keyof ShwActorSystem['helpers'];
     const a = attributes[k];
 
     const bonus = Math.floor(helpers[helperKey] / 5);
@@ -71,7 +71,7 @@ export function prepareCharacterDerivedData(sys: ShwActorSystem, actor: ShwActor
   sys.helpers.totalPerception = attrs.perception.value;
   sys.helpers.totalPsyDefence = attrs.psyDefence.value;
   sys.helpers.totalDiplomacy = attrs.diplomacy.value;
-  
+
   sys.helpers.totalActions = sys.additionalAttributes.actions;
   sys.helpers.totalBonusActions = sys.additionalAttributes.bonusActions;
   sys.helpers.totalReactions = sys.additionalAttributes.reactions;

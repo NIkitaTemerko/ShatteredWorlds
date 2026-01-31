@@ -22,8 +22,9 @@ export function buildTreeFromFlatList(items: FlatItem[]): TreeNode[] {
         // Leaf node (actual item)
         const leafNode: TreeNode = {
           id: item.id,
-          label: segment,
+          label: item.label,
           color: item.color,
+          icon: item.icon,
           data: item.data,
           isLeaf: true,
         };
@@ -34,9 +35,13 @@ export function buildTreeFromFlatList(items: FlatItem[]): TreeNode[] {
         let categoryNode = nodeMap.get(currentPath);
 
         if (!categoryNode) {
+          // Определяем иконку для категории из categoryIcons
+          const categoryIcon = item.categoryIcons?.[i];
+
           categoryNode = {
             id: currentPath,
             label: segment,
+            icon: categoryIcon,
             children: [],
             isLeaf: false,
           };
@@ -125,4 +130,23 @@ export function collectLeafNodes(nodes: TreeNode[]): TreeNode[] {
 
   traverse(nodes);
   return leaves;
+}
+
+/**
+ * Collects all nodes (both leaves and categories) from the tree
+ */
+export function collectAllNodes(nodes: TreeNode[]): TreeNode[] {
+  const allNodes: TreeNode[] = [];
+
+  function traverse(nodes: TreeNode[]) {
+    for (const node of nodes) {
+      allNodes.push(node);
+      if (node.children) {
+        traverse(node.children);
+      }
+    }
+  }
+
+  traverse(nodes);
+  return allNodes;
 }

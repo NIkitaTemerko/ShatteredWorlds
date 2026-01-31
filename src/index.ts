@@ -3,6 +3,7 @@ import { ShwItem } from './documents/Item/ShwItem';
 import { ShwTokenDocument } from './documents/ShwTokenDocument.js';
 import { migrateConsumableData, needsMigration } from './helpers/Item/migrateConsumableData';
 import { handleAddItem } from './helpers/Item/StackManager';
+import { ShopManagerApp } from './modules/shop';
 import { AbilityItemApp } from './view/AbilityItem/ItemApp';
 import { CharacterApp } from './view/BaseCharacter/CharacterApp.js';
 import { ConsumableItemApp } from './view/ConsumableItem/ItemApp';
@@ -23,6 +24,27 @@ Hooks.once('init', () => {
     formula: '1d20 + @initiative',
     decimals: 0,
   };
+
+  // Добавляем кнопку магазина в навигацию
+  Hooks.once('ready', () => {
+    const menu = document.querySelector('nav.tabs.faded-ui menu');
+    if (menu) {
+      const li = document.createElement('li');
+      const shopButton = document.createElement('button');
+      shopButton.type = 'button';
+      shopButton.className = 'ui-control plain icon fa-solid fa-store';
+      shopButton.addEventListener('click', () => {
+        new ShopManagerApp().render(true);
+      });
+      li.appendChild(shopButton);
+      const lastItem = menu.lastElementChild;
+      if (lastItem) {
+        menu.insertBefore(li, lastItem);
+      } else {
+        menu.appendChild(li);
+      }
+    }
+  });
 });
 
 Hooks.once('setup', () => {

@@ -41,6 +41,11 @@
   }
 
   function handleSelect(node: TreeNode) {
+    // Обработка клика на ноду (разворачивание/сворачивание категорий)
+  }
+
+  function handleEdit(node: TreeNode, e: Event) {
+    e.stopPropagation();
     if (node.isLeaf && node.data) {
       const item = node.data as ShwItem;
       onSelectItem?.(item);
@@ -64,6 +69,7 @@
       initialExpandedIds={treeState.expandedIds}
       initialSelectedId={treeState.selectedId}
       onSelect={handleSelect}
+      onEdit={handleEdit}
       onDelete={handleDelete}
       onStateChange={handleStateChange}
     />

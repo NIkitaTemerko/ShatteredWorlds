@@ -401,6 +401,21 @@
         "few": "spells",
         "many": "spells"
       }
+    },
+    "shop": {
+      "merchantItem": {
+        "title": "Edit Item",
+        "merchant": "Merchant",
+        "price": "Price",
+        "quantity": "Quantity",
+        "quantityHelp": "-1 for unlimited quantity",
+        "quantityPlaceholder": "-1 for unlimited",
+        "pricePlaceholder": "Item price",
+        "cancel": "Cancel",
+        "save": "Save",
+        "unknownItem": "Unknown item",
+        "errorOpenItem": "Failed to open item"
+      }
     }
   }
 }

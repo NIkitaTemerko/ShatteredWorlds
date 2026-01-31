@@ -2,20 +2,74 @@
   import { mount } from "svelte";
   import ShopTree from "./ShopTree.svelte";
   import NodeEditorDialog from "./NodeEditorDialog.svelte";
+  import MerchantItemEditorDialog from "./MerchantItemEditorDialog.svelte";
   import {
     deleteNode,
     addNode,
     updateNode,
     loadShopDatabase,
+    updateMerchantItem,
+    deleteMerchantItem,
     type ShopNode,
     type LocationNode,
     type MerchantNode,
+    type MerchantInventoryItem,
   } from "../model";
 
   let shopTreeRef: ShopTree | undefined = $state();
 
   function handleEditNode(node: ShopNode) {
     openNodeEditor(node);
+  }
+
+  function handleEditMerchantItem(merchantId: string, item: MerchantInventoryItem) {
+    openMerchantItemEditor(merchantId, item);
+  }
+
+  function openMerchantItemEditor(merchantId: string, item: MerchantInventoryItem) {
+    const db = loadShopDatabase();
+    const merchant = db.nodes.find((n) => n.id === merchantId);
+
+    if (!merchant || merchant.type !== "merchant") {
+      ui.notifications?.error("Торговец не найден");
+      return;
+    }
+
+    const dialog = new Dialog(
+      {
+        title: " ",
+        content: '<div id="merchant-item-editor-mount"></div>',
+        buttons: {},
+        render: (html) => {
+          const container = html.find("#merchant-item-editor-mount")[0];
+          if (container) {
+            mount(MerchantItemEditorDialog, {
+              target: container,
+              props: {
+                merchantId,
+                merchantName: merchant.name,
+                item,
+                onSave: (updates: { price?: number; quantity?: number }) => {
+                  updateMerchantItem(merchantId, item.itemId, updates);
+                  shopTreeRef?.refreshTree();
+                  dialog.close();
+                  ui.notifications?.info("Предмет обновлен");
+                },
+                onCancel: () => {
+                  dialog.close();
+                },
+              },
+            });
+          }
+        },
+        close: () => {},
+      },
+      {
+        width: 500,
+        height: "auto",
+      },
+    );
+    dialog.render(true);
   }
 
   function openNodeEditor(node: ShopNode) {
@@ -217,7 +271,12 @@
   </div>
 
   <div class="content">
-    <ShopTree bind:this={shopTreeRef} onEditNode={handleEditNode} onDeleteNode={handleDeleteNode} />
+    <ShopTree
+      bind:this={shopTreeRef}
+      onEditNode={handleEditNode}
+      onDeleteNode={handleDeleteNode}
+      onEditMerchantItem={handleEditMerchantItem}
+    />
   </div>
 </div>
 

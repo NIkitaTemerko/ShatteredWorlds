@@ -2,7 +2,7 @@
   import { t } from "../../../shared/i18n";
   import { Input } from "../Input";
   import Tree from "./Tree.svelte";
-  import { buildTreeFromFlatList, collectLeafNodes, filterTree, findNodePath } from "./treeUtils";
+  import { buildTreeFromFlatList, collectAllNodes, filterTree, findNodePath } from "./treeUtils";
   import type { FlatItem, TreeNode } from "./types";
 
   interface TreeStateUpdate {
@@ -19,6 +19,7 @@
     onSelect?: (node: TreeNode) => void;
     onDelete?: (node: TreeNode, e: Event) => void;
     onEdit?: (node: TreeNode, e: Event) => void;
+    onDrop?: (node: TreeNode, itemData: any) => void;
     isDynamicTree?: boolean;
     onStateChange?: (state: TreeStateUpdate) => void;
   }
@@ -31,6 +32,7 @@
     onSelect,
     onDelete,
     onEdit,
+    onDrop,
     isDynamicTree = false,
     onStateChange,
   }: Props = $props();
@@ -56,12 +58,12 @@
 
   const fullTree = $derived(buildTreeFromFlatList(items));
   const filteredTree = $derived(filterTree(fullTree, searchQuery));
-  const allLeaves = $derived(collectLeafNodes(fullTree));
+  const allNodes = $derived(collectAllNodes(fullTree));
 
   const autocompleteMatches = $derived.by(() => {
-    if (!searchQuery.trim()) return allLeaves ?? [];
+    if (!searchQuery.trim()) return allNodes ?? [];
     const lower = searchQuery.toLowerCase();
-    return allLeaves.filter((leaf: TreeNode) => leaf.label.toLowerCase().includes(lower)).slice(0, 10);
+    return allNodes.filter((node: TreeNode) => node.label.toLowerCase().includes(lower)).slice(0, 10);
   });
 
   function handleSearchInput(e: Event) {
@@ -70,23 +72,28 @@
     showAutocomplete = !!searchQuery.trim();
   }
 
-  function handleAutocompleteSelect(leaf: TreeNode) {
+  function handleAutocompleteSelect(node: TreeNode) {
     searchQuery = "";
     showAutocomplete = false;
 
     // Find path to this node and expand all parents
-    const path = findNodePath(fullTree, leaf.id);
-    const parentIds = path.slice(0, -1); // All except the leaf itself
+    const path = findNodePath(fullTree, node.id);
+    const parentIds = path.slice(0, -1); // All except the node itself
+
+    // Если это категория (не лист), раскрываем её саму тоже
+    if (!node.isLeaf) {
+      parentIds.push(node.id);
+    }
 
     treeRef?.expandNodes(parentIds);
 
     // Highlight the item
-    selectedId = leaf.id;
-    highlightedId = leaf.id;
+    selectedId = node.id;
+    highlightedId = node.id;
 
     // Scroll to item (with slight delay for expansion animation)
     setTimeout(() => {
-      const element = document.getElementById(`tree-node-${leaf.id}`);
+      const element = document.getElementById(`tree-node-${node.id}`);
       element?.scrollIntoView({ behavior: "smooth", block: "center" });
     }, 100);
 
@@ -169,6 +176,7 @@
       onSelect={handleSelect}
       {onDelete}
       {onEdit}
+      {onDrop}
       {isDynamicTree}
     />
   </div>

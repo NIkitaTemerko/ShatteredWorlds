@@ -10,6 +10,7 @@
     onSelect?: (node: TreeNode) => void;
     onDelete?: (node: TreeNode, e: Event) => void;
     onEdit?: (node: TreeNode, e: Event) => void;
+    onDrop?: (node: TreeNode, itemData: any) => void;
     isDynamicTree?: boolean;
   }
 
@@ -21,6 +22,7 @@
     onSelect,
     onDelete,
     onEdit,
+    onDrop,
     isDynamicTree = false,
   }: Props = $props();
 
@@ -64,6 +66,7 @@
       onSelect={handleSelect}
       {onDelete}
       {onEdit}
+      {onDrop}
       {isDynamicTree}
       {expandedIds}
       {selectedId}

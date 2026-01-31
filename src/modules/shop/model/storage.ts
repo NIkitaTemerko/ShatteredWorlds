@@ -152,3 +152,141 @@ export function importDatabase(json: string): boolean {
 export function clearDatabase(): void {
   saveShopDatabase(createEmptyDatabase());
 }
+
+/**
+ * Добавляет предмет в инвентарь торговца
+ */
+export function addMerchantItem(
+  merchantId: string,
+  itemId: string,
+  price: number,
+  quantity: number,
+): boolean {
+  const db = loadShopDatabase();
+  const merchant = db.nodes.find((n) => n.id === merchantId && n.type === 'merchant');
+
+  if (!merchant || merchant.type !== 'merchant') {
+    console.warn(`Merchant with id ${merchantId} not found`);
+    return false;
+  }
+
+  // Проверяем дубликат
+  if (merchant.inventory.some((item) => item.itemId === itemId)) {
+    ui.notifications?.warn('Этот предмет уже есть у торговца');
+    return false;
+  }
+
+  merchant.inventory.push({ itemId, price, quantity });
+  saveShopDatabase(db);
+  return true;
+}
+
+/**
+ * Обновляет предмет в инвентаре торговца
+ */
+export function updateMerchantItem(
+  merchantId: string,
+  itemId: string,
+  updates: { price?: number; quantity?: number },
+): boolean {
+  const db = loadShopDatabase();
+  const merchant = db.nodes.find((n) => n.id === merchantId && n.type === 'merchant');
+
+  if (!merchant || merchant.type !== 'merchant') {
+    console.warn(`Merchant with id ${merchantId} not found`);
+    return false;
+  }
+
+  const itemIndex = merchant.inventory.findIndex((item) => item.itemId === itemId);
+  if (itemIndex === -1) {
+    console.warn(`Item ${itemId} not found in merchant ${merchantId} inventory`);
+    return false;
+  }
+
+  merchant.inventory[itemIndex] = { ...merchant.inventory[itemIndex], ...updates };
+  saveShopDatabase(db);
+  return true;
+}
+
+/**
+ * Удаляет предмет из инвентаря торговца
+ */
+export function deleteMerchantItem(merchantId: string, itemId: string): boolean {
+  const db = loadShopDatabase();
+  const merchant = db.nodes.find((n) => n.id === merchantId && n.type === 'merchant');
+
+  if (!merchant || merchant.type !== 'merchant') {
+    console.warn(`Merchant with id ${merchantId} not found`);
+    return false;
+  }
+
+  const initialLength = merchant.inventory.length;
+  merchant.inventory = merchant.inventory.filter((item) => item.itemId !== itemId);
+
+  if (merchant.inventory.length === initialLength) {
+    console.warn(`Item ${itemId} not found in merchant ${merchantId} inventory`);
+    return false;
+  }
+
+  saveShopDatabase(db);
+  return true;
+}
+
+/**
+ * Добавляет предмет всем торговцам в локации и её подлокациях
+ */
+export function addItemToLocation(
+  locationId: string,
+  itemId: string,
+  price: number,
+  quantity: number,
+): number {
+  const db = loadShopDatabase();
+  let addedCount = 0;
+
+  // Рекурсивно собираем всех торговцев в этой локации и подлокациях
+  function collectMerchants(parentId: string): string[] {
+    const merchants: string[] = [];
+
+    db.nodes.forEach((node) => {
+      if (node.parentId === parentId) {
+        if (node.type === 'merchant') {
+          merchants.push(node.id);
+        } else if (node.type === 'location') {
+          merchants.push(...collectMerchants(node.id));
+        }
+      }
+    });
+
+    return merchants;
+  }
+
+  const merchantIds = collectMerchants(locationId);
+
+  // Добавляем предмет всем торговцам в одной транзакции
+  merchantIds.forEach((merchantId) => {
+    const merchant = db.nodes.find((n) => n.id === merchantId && n.type === 'merchant');
+
+    if (!merchant || merchant.type !== 'merchant') {
+      console.warn(`Merchant with id ${merchantId} not found`);
+      return;
+    }
+
+    // Проверяем дубликат
+    if (merchant.inventory.some((item) => item.itemId === itemId)) {
+      console.log(`Item ${itemId} already exists in merchant ${merchantId}, skipping`);
+      return;
+    }
+
+    merchant.inventory.push({ itemId, price, quantity });
+    addedCount++;
+  });
+
+  // Сохраняем базу один раз после всех изменений
+  if (addedCount > 0) {
+    saveShopDatabase(db);
+    ui.notifications?.info(`Предмет добавлен ${addedCount} торговцам`);
+  }
+
+  return addedCount;
+}

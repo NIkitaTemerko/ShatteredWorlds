@@ -13,6 +13,8 @@
     onToggle: (nodeId: string) => void;
     onSelect: (node: TreeNode) => void;
     onDelete?: (node: TreeNode, e: Event) => void;
+    onEdit?: (node: TreeNode, e: Event) => void;
+    isDynamicTree?: boolean;
     expandedIds: Set<string>;
     selectedId?: string;
     highlightedId?: string;
@@ -27,6 +29,8 @@
     onToggle,
     onSelect,
     onDelete,
+    onEdit,
+    isDynamicTree = false,
     expandedIds,
     selectedId,
     highlightedId,
@@ -76,6 +80,11 @@
     e.stopPropagation();
     onDelete?.(node, e);
   }
+
+  function handleEditClick(e: Event) {
+    e.stopPropagation();
+    onEdit?.(node, e);
+  }
 </script>
 
 <div class="tree-node" class:highlighted={isHighlighted}>
@@ -105,20 +114,37 @@
       <span class="rarity-indicator" style:background-color={rarityColors[rarity]} title={rarity}></span>
     {/if}
 
-    {#if isLeaf && onDelete}
-      <ActionIcon
-        onclick={handleDeleteClick}
-        aria-label={t("inventory.deleteItem")}
-        title={t("inventory.deleteItem")}
-        variant="ghost"
-        size="sm"
-        class="delete-action tw:ml-auto"
-      >
-        {#snippet icon()}
-          <i class="fas fa-trash"></i>
-        {/snippet}
-      </ActionIcon>
-    {/if}
+    <div class="tree-actions">
+      {#if onEdit && (isDynamicTree || isLeaf)}
+        <ActionIcon
+          onclick={handleEditClick}
+          aria-label="Edit"
+          title="Edit"
+          variant="ghost"
+          size="sm"
+          class="edit-action"
+        >
+          {#snippet icon()}
+            <i class="fas fa-edit"></i>
+          {/snippet}
+        </ActionIcon>
+      {/if}
+
+      {#if onDelete && (isDynamicTree || isLeaf)}
+        <ActionIcon
+          onclick={handleDeleteClick}
+          aria-label={t("inventory.deleteItem")}
+          title={t("inventory.deleteItem")}
+          variant="ghost"
+          size="sm"
+          class="delete-action"
+        >
+          {#snippet icon()}
+            <i class="fas fa-trash"></i>
+          {/snippet}
+        </ActionIcon>
+      {/if}
+    </div>
   </div>
 
   {#if hasChildren && isExpanded}
@@ -133,6 +159,8 @@
           {onToggle}
           {onSelect}
           {onDelete}
+          {onEdit}
+          {isDynamicTree}
           {expandedIds}
           {selectedId}
           {highlightedId}
@@ -155,6 +183,18 @@
     border-radius: 4px;
     transition: background-color 0.15s;
     min-height: 36px;
+  }
+
+  .tree-actions {
+    margin-left: auto;
+    display: flex;
+    gap: 0.25rem;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .tree-node-content:hover .tree-actions {
+    opacity: 1;
   }
 
   .tree-node-content:hover {
@@ -215,19 +255,20 @@
     flex-shrink: 0;
   }
 
+  .tree-node-content :global(.edit-action),
   .tree-node-content :global(.delete-action) {
-    transition: opacity 0.15s;
-    color: gray;
-    margin-left: auto;
+    transition:
+      opacity 0.15s,
+      color 0.15s;
+    color: #64748b;
   }
 
-  .tree-node-content:hover :global(.delete-action) {
-    opacity: 1;
-    color: rgba(160, 82, 45, 0.9);
+  .tree-node-content :global(.edit-action:hover) {
+    color: #2563eb;
   }
 
   .tree-node-content :global(.delete-action:hover) {
-    color: crimson;
+    color: #dc2626;
   }
 
   .tree-children {

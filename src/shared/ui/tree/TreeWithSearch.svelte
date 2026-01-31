@@ -18,6 +18,8 @@
     initialSelectedId?: string;
     onSelect?: (node: TreeNode) => void;
     onDelete?: (node: TreeNode, e: Event) => void;
+    onEdit?: (node: TreeNode, e: Event) => void;
+    isDynamicTree?: boolean;
     onStateChange?: (state: TreeStateUpdate) => void;
   }
 
@@ -28,6 +30,8 @@
     initialSelectedId,
     onSelect,
     onDelete,
+    onEdit,
+    isDynamicTree = false,
     onStateChange,
   }: Props = $props();
 
@@ -164,6 +168,8 @@
       {highlightedId}
       onSelect={handleSelect}
       {onDelete}
+      {onEdit}
+      {isDynamicTree}
     />
   </div>
 </div>

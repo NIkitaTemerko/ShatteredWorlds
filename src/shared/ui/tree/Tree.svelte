@@ -9,9 +9,20 @@
     highlightedId?: string;
     onSelect?: (node: TreeNode) => void;
     onDelete?: (node: TreeNode, e: Event) => void;
+    onEdit?: (node: TreeNode, e: Event) => void;
+    isDynamicTree?: boolean;
   }
 
-  let { nodes, initialExpandedIds, selectedId, highlightedId, onSelect, onDelete }: Props = $props();
+  let {
+    nodes,
+    initialExpandedIds,
+    selectedId,
+    highlightedId,
+    onSelect,
+    onDelete,
+    onEdit,
+    isDynamicTree = false,
+  }: Props = $props();
 
   let expandedIds = $state(initialExpandedIds ? new Set(initialExpandedIds) : new Set<string>());
 
@@ -52,6 +63,8 @@
       onToggle={handleToggle}
       onSelect={handleSelect}
       {onDelete}
+      {onEdit}
+      {isDynamicTree}
       {expandedIds}
       {selectedId}
       {highlightedId}

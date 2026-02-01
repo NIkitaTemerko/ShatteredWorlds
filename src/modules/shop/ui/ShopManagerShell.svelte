@@ -1,5 +1,6 @@
 <script lang="ts">
   import { mount } from "svelte";
+  import { t, localize } from "../../../shared/i18n";
   import ShopTree from "./ShopTree.svelte";
   import NodeEditorDialog from "./NodeEditorDialog.svelte";
   import MerchantItemEditorDialog from "./MerchantItemEditorDialog.svelte";
@@ -31,7 +32,7 @@
     const merchant = db.nodes.find((n) => n.id === merchantId);
 
     if (!merchant || merchant.type !== "merchant") {
-      ui.notifications?.error("Торговец не найден");
+      ui.notifications?.error(t("shop.notifications.merchantNotFound"));
       return;
     }
 
@@ -53,7 +54,7 @@
                   updateMerchantItem(merchantId, item.itemId, updates);
                   shopTreeRef?.refreshTree();
                   dialog.close();
-                  ui.notifications?.info("Предмет обновлен");
+                  ui.notifications?.info(t("shop.notifications.itemUpdated"));
                 },
                 onCancel: () => {
                   dialog.close();
@@ -89,7 +90,9 @@
                   updateNode(node.id, updates);
                   shopTreeRef?.refreshTree();
                   dialog.close();
-                  ui.notifications?.info(`Обновлено: ${updates.name || node.name}`);
+                  ui.notifications?.info(
+                    localize("shop.notifications.nodeUpdated", { name: updates.name || node.name }),
+                  );
                 },
                 onCancel: () => {
                   dialog.close();
@@ -110,14 +113,14 @@
 
   async function handleDeleteNode(node: ShopNode) {
     const confirmed = await Dialog.confirm({
-      title: "Удалить ноду",
-      content: `<p>Вы уверены, что хотите удалить "${node.name}"? Все дочерние элементы также будут удалены.</p>`,
+      title: t("shop.dialogs.deleteNodeTitle"),
+      content: `<p>${localize("shop.dialogs.deleteNodeContent", { name: node.name })}</p>`,
     });
 
     if (confirmed) {
       deleteNode(node.id);
       shopTreeRef?.refreshTree();
-      ui.notifications?.info(`Удалено: ${node.name}`);
+      ui.notifications?.info(localize("shop.notifications.nodeDeleted", { name: node.name }));
     }
   }
 
@@ -132,16 +135,16 @@
     // Если есть локации, предлагаем выбрать родителя
     if (locations.length > 0) {
       const choices = {
-        "": "(Корень)",
+        "": t("shop.dialogs.rootLocation"),
         ...Object.fromEntries(locations.map((loc) => [loc.id, loc.name])),
       };
 
       const dialog2 = new Dialog({
-        title: "Добавить локацию",
+        title: t("shop.dialogs.addLocationTitle"),
         content: `
           <form>
             <div class="form-group">
-              <label>Родительская локация:</label>
+              <label>${t("shop.dialogs.parentLocation")}</label>
               <select id="parent-select" style="width: 100%; padding: 0.375rem 0.5rem; margin-top: 0.5rem; border: 1px solid #ccc; border-radius: 4px; background: white; font-size: 14px; color: #1a1820; line-height: 1.5; height: auto;">
                 ${Object.entries(choices)
                   .map(([value, label]) => `<option value="${value}">${label}</option>`)
@@ -152,7 +155,7 @@
         `,
         buttons: {
           ok: {
-            label: "Создать",
+            label: t("shop.dialogs.create"),
             callback: (html) => {
               const select = html.find("#parent-select")[0] as HTMLSelectElement;
               parentId = select.value || undefined;
@@ -161,7 +164,7 @@
 
               const newLocation: LocationNode = {
                 id: foundry.utils.randomID(),
-                name: "Новая локация",
+                name: t("shop.dialogs.newLocation"),
                 type: "location",
                 description: "",
                 parentId,
@@ -169,11 +172,11 @@
               addNode(newLocation);
               console.log("Location added, refreshing tree");
               shopTreeRef?.refreshTree();
-              ui.notifications?.info("Локация добавлена");
+              ui.notifications?.info(t("shop.notifications.locationAdded"));
             },
           },
           cancel: {
-            label: "Отмена",
+            label: t("shop.dialogs.cancel"),
           },
         },
         default: "ok",
@@ -184,14 +187,14 @@
       console.log("Creating root location");
       const newLocation: LocationNode = {
         id: foundry.utils.randomID(),
-        name: "Новая локация",
+        name: t("shop.dialogs.newLocation"),
         type: "location",
         description: "",
       };
       addNode(newLocation);
       console.log("Root location added, refreshing tree");
       shopTreeRef?.refreshTree();
-      ui.notifications?.info("Локация добавлена");
+      ui.notifications?.info(t("shop.notifications.locationAdded"));
     }
   }
 
@@ -200,18 +203,18 @@
     const locations = db.nodes.filter((n) => n.type === "location");
 
     if (locations.length === 0) {
-      ui.notifications?.warn("Сначала создайте локацию для торговца");
+      ui.notifications?.warn(t("shop.notifications.createLocationFirst"));
       return;
     }
 
     const choices = Object.fromEntries(locations.map((loc) => [loc.id, loc.name]));
 
     const dialog3 = new Dialog({
-      title: "Добавить торговца",
+      title: t("shop.dialogs.addMerchantTitle"),
       content: `
         <form>
           <div class="form-group">
-            <label>Локация торговца:</label>
+            <label>${t("shop.dialogs.merchantLocation")}</label>
             <select id="parent-select" style="width: 100%; padding: 0.375rem 0.5rem; margin-top: 0.5rem; border: 1px solid #ccc; border-radius: 4px; background: white; font-size: 14px; color: #1a1820; line-height: 1.5; height: auto;">
               ${Object.entries(choices)
                 .map(([value, label]) => `<option value="${value}">${label}</option>`)
@@ -222,19 +225,19 @@
       `,
       buttons: {
         ok: {
-          label: "Создать",
+          label: t("shop.dialogs.create"),
           callback: (html) => {
             const select = html.find("#parent-select")[0] as HTMLSelectElement;
             const parentId = select.value;
 
             if (!parentId) {
-              ui.notifications?.warn("Выберите локацию");
+              ui.notifications?.warn(t("shop.notifications.selectLocation"));
               return;
             }
 
             const newMerchant: MerchantNode = {
               id: foundry.utils.randomID(),
-              name: "Новый торговец",
+              name: t("shop.dialogs.newMerchant"),
               type: "merchant",
               description: "",
               inventory: [],
@@ -242,11 +245,11 @@
             };
             addNode(newMerchant);
             shopTreeRef?.refreshTree();
-            ui.notifications?.info("Торговец добавлен");
+            ui.notifications?.info(t("shop.notifications.merchantAdded"));
           },
         },
         cancel: {
-          label: "Отмена",
+          label: t("shop.dialogs.cancel"),
         },
       },
       default: "ok",

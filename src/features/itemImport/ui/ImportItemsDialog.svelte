@@ -11,39 +11,27 @@
   let jsonText = $state("");
   let validationReport: ValidationReport | null = $state(null);
   let importReport: ImportReport | null = $state(null);
-  let updateExisting = $state(true);
   let skipImages = $state(false);
   let isProcessing = $state(false);
   let errorMessage = $state("");
 
   function handleFileSelect(e: Event) {
-    const input = e.target as HTMLInputElement;
-    const file = input.files?.[0];
+    const file = (e.target as HTMLInputElement).files?.[0];
     if (!file) return;
-
     const reader = new FileReader();
-    reader.onload = (event) => {
-      jsonText = event.target?.result as string;
+    reader.onload = (ev) => {
+      jsonText = ev.target?.result as string;
       errorMessage = "";
     };
     reader.readAsText(file);
   }
 
-  async function handleValidate() {
+  async function runImport(dryRun: boolean) {
     try {
       errorMessage = "";
-      const items = parseItemCores(jsonText);
-      validationReport = validateItemCores(items);
-      importReport = null;
-    } catch (error) {
-      errorMessage = error instanceof Error ? error.message : "Ошибка парсинга JSON";
       validationReport = null;
-    }
-  }
+      importReport = null;
 
-  async function handleDryRun() {
-    try {
-      errorMessage = "";
       const items = parseItemCores(jsonText);
       const report = validateItemCores(items);
       if (!report.valid) {
@@ -52,42 +40,30 @@
       }
 
       isProcessing = true;
-      importReport = await importItemCores(items, {
-        dryRun: true,
-        skipImages,
-      });
-    } catch (error) {
-      errorMessage = error instanceof Error ? error.message : "Ошибка при dry run";
+      importReport = await importItemCores(items, { dryRun, skipImages });
+
+      if (!dryRun) {
+        const msg =
+          importReport.errors === 0
+            ? `✓ Импорт: ${importReport.created} создано, ${importReport.updated} обновлено`
+            : `⚠ Импорт завершён с ${importReport.errors} ошибками`;
+        ui.notifications?.[importReport.errors ? "warn" : "info"](msg);
+      }
+    } catch (e) {
+      errorMessage = e instanceof Error ? e.message : "Ошибка";
     } finally {
       isProcessing = false;
     }
   }
 
-  async function handleImport() {
+  function handleValidate() {
     try {
       errorMessage = "";
-      const items = parseItemCores(jsonText);
-      const report = validateItemCores(items);
-      if (!report.valid) {
-        validationReport = report;
-        return;
-      }
-
-      isProcessing = true;
-      importReport = await importItemCores(items, {
-        dryRun: false,
-        skipImages,
-      });
-
-      if (importReport.errors === 0) {
-        ui.notifications?.info(`✓ Импортировано: ${importReport.created} создано, ${importReport.updated} обновлено`);
-      } else {
-        ui.notifications?.warn(`⚠ Импорт завершён с ${importReport.errors} ошибками`);
-      }
-    } catch (error) {
-      errorMessage = error instanceof Error ? error.message : "Ошибка при импорте";
-    } finally {
-      isProcessing = false;
+      importReport = null;
+      validationReport = validateItemCores(parseItemCores(jsonText));
+    } catch (e) {
+      errorMessage = e instanceof Error ? e.message : "Ошибка парсинга";
+      validationReport = null;
     }
   }
 </script>
@@ -103,9 +79,6 @@
   </div>
 
   <div class="options-section">
-    <label class="checkbox-label">
-      <input type="checkbox" bind:checked={updateExisting} disabled /> Обновлять существующие (по baseId)
-    </label>
     <label class="checkbox-label">
       <input type="checkbox" bind:checked={skipImages} /> Пропустить изображения
     </label>
@@ -179,12 +152,12 @@
   {/if}
 
   <div class="button-group">
-    <button onclick={handleValidate} disabled={!jsonText || isProcessing} class="btn-secondary"> Проверить </button>
-    <button onclick={handleDryRun} disabled={!jsonText || isProcessing} class="btn-secondary">
-      {isProcessing ? "Обработка..." : "Сухой прогон"}
+    <button onclick={handleValidate} disabled={!jsonText || isProcessing} class="btn-secondary">Проверить</button>
+    <button onclick={() => runImport(true)} disabled={!jsonText || isProcessing} class="btn-secondary">
+      {isProcessing ? "..." : "Сухой прогон"}
     </button>
-    <button onclick={handleImport} disabled={!jsonText || isProcessing} class="btn-primary">
-      {isProcessing ? "Импорт..." : "Импортировать"}
+    <button onclick={() => runImport(false)} disabled={!jsonText || isProcessing} class="btn-primary">
+      {isProcessing ? "..." : "Импортировать"}
     </button>
     <button onclick={onClose} disabled={isProcessing} class="btn-cancel">Закрыть</button>
   </div>

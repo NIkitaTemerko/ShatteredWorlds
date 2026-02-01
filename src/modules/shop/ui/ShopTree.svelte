@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { t } from "../../../shared/i18n";
   import type { TreeNode } from "../../../shared/ui/tree";
   import { TreeWithSearch } from "../../../shared/ui/tree";
   import {
@@ -161,12 +162,12 @@
 
     // Проверяем что это Foundry Item
     if (!itemData || itemData.type !== "Item") {
-      ui.notifications?.warn("Можно добавлять только предметы");
+      ui.notifications?.warn(t("shop.notifications.onlyItemsAllowed"));
       return;
     }
 
     if (!itemData.uuid) {
-      ui.notifications?.warn("Неверные данные предмета");
+      ui.notifications?.warn(t("shop.notifications.invalidItemData"));
       return;
     }
 
@@ -175,28 +176,28 @@
 
     if (!shopNode) {
       console.error("Could not find shop node for:", node);
-      ui.notifications?.warn("Неверная нода магазина");
+      ui.notifications?.warn(t("shop.notifications.invalidShopNode"));
       return;
     }
 
     // Диалог для ввода цены и количества
     new Dialog({
-      title: "Добавить предмет",
+      title: t("shop.dialogs.addItemTitle"),
       content: `
         <form>
           <div class="form-group">
-            <label>Цена:</label>
+            <label>${t("shop.dialogs.priceLabel")}</label>
             <input type="number" name="price" value="10" min="0" step="1" />
           </div>
           <div class="form-group">
-            <label>Количество (-1 для неограниченного):</label>
+            <label>${t("shop.dialogs.quantityLabel")}</label>
             <input type="number" name="quantity" value="-1" step="1" />
           </div>
         </form>
       `,
       buttons: {
         add: {
-          label: "Добавить",
+          label: t("shop.dialogs.add"),
           callback: (html: JQuery) => {
             // html это jQuery объект, используем jQuery методы
             const priceInput = html.find('[name="price"]')[0] as HTMLInputElement;
@@ -215,7 +216,7 @@
           },
         },
         cancel: {
-          label: "Отмена",
+          label: t("shop.dialogs.cancel"),
         },
       },
       default: "add",

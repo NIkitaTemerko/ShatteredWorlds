@@ -1,102 +1,57 @@
 import type { ShwItem } from '../../../documents/Item/ShwItem';
 import { ItemCoresArraySchema } from './schemas';
-import type {
-  ImportReport,
-  ImportResult,
-  ItemCore,
-  ValidationError,
-  ValidationReport,
-} from './types';
+import type { ImportReport, ImportResult, ItemCore, ValidationReport } from './types';
 
-/**
- * Форматирует путь ошибки Zod в понятный вид
- */
-function formatErrorPath(path: readonly (string | number)[]): string {
-  if (path.length === 0) return 'корень';
-  return path
-    .map((p, i) => {
-      if (typeof p === 'number') {
-        return `[${p}]`;
-      }
-      return i === 0 ? p : `.${p}`;
-    })
-    .join('');
+/** Форматирует путь ошибки Zod */
+function formatPath(path: readonly (string | number)[]): string {
+  if (!path.length) return 'корень';
+  return path.map((p, i) => (typeof p === 'number' ? `[${p}]` : i === 0 ? p : `.${p}`)).join('');
 }
 
-/**
- * Парсит JSON текст в массив ItemCore с валидацией через Zod
- */
+/** Парсит и валидирует JSON через Zod */
 export function parseItemCores(jsonText: string): ItemCore[] {
   const parsed = JSON.parse(jsonText);
-  if (!Array.isArray(parsed)) {
-    throw new Error('JSON должен быть массивом объектов');
-  }
+  if (!Array.isArray(parsed)) throw new Error('JSON должен быть массивом');
 
-  // Валидация через Zod - применит defaults автоматически
   const result = ItemCoresArraySchema.safeParse(parsed);
-  if (!result.success) {
-    // Группируем ошибки по индексу элемента
-    const errorsByItem = new Map<number, string[]>();
+  if (result.success) return result.data as ItemCore[];
 
-    for (const issue of result.error.issues) {
-      const itemIndex = typeof issue.path[0] === 'number' ? issue.path[0] : -1;
-      const restPath = issue.path
-        .slice(1)
-        .filter((p): p is string | number => typeof p === 'string' || typeof p === 'number');
-      const fieldPath = formatErrorPath(restPath);
-      const errorMsg = `  • ${fieldPath}: ${issue.message}`;
-
-      if (!errorsByItem.has(itemIndex)) {
-        errorsByItem.set(itemIndex, []);
-      }
-      errorsByItem.get(itemIndex)!.push(errorMsg);
-    }
-
-    // Формируем понятное сообщение
-    const messages: string[] = ['Ошибки валидации:'];
-    for (const [index, errors] of errorsByItem) {
-      const itemName =
-        index >= 0 && parsed[index]?.name ? `"${parsed[index].name}"` : `элемент ${index}`;
-      messages.push(`\nЭлемент [${index}] ${itemName}:`);
-      messages.push(...errors);
-    }
-
-    throw new Error(messages.join('\n'));
+  // Группируем ошибки по элементу
+  const byItem = new Map<number, string[]>();
+  for (const issue of result.error.issues) {
+    const idx = typeof issue.path[0] === 'number' ? issue.path[0] : -1;
+    const path = issue.path.slice(1).filter((p): p is string | number => typeof p !== 'symbol');
+    const msg = `  • ${formatPath(path)}: ${issue.message}`;
+    byItem.set(idx, [...(byItem.get(idx) || []), msg]);
   }
 
-  return result.data as ItemCore[];
+  const lines = ['Ошибки валидации:'];
+  for (const [idx, errs] of byItem) {
+    const name = idx >= 0 && parsed[idx]?.name ? `"${parsed[idx].name}"` : `#${idx}`;
+    lines.push(`\n[${idx}] ${name}:`, ...errs);
+  }
+  throw new Error(lines.join('\n'));
 }
 
-/**
- * Валидирует массив ItemCore (упрощенная, т.к. Zod уже провалидировал в parseItemCores)
- */
+/** Проверяет дубликаты baseId */
 export function validateItemCores(items: ItemCore[]): ValidationReport {
-  const errors: ValidationError[] = [];
-  const seenBaseIds = new Set<string>();
+  const seen = new Set<string>();
   const duplicates: string[] = [];
-
-  items.forEach((item, index) => {
-    // Проверяем только дубликаты baseId (остальное уже проверил Zod)
-    if (seenBaseIds.has(item.baseId)) {
-      if (!duplicates.includes(item.baseId)) {
-        duplicates.push(item.baseId);
+  const errors = items
+    .map((item, index) => {
+      if (seen.has(item.baseId)) {
+        if (!duplicates.includes(item.baseId)) duplicates.push(item.baseId);
+        return { index, baseId: item.baseId, message: 'Дублирующийся baseId' };
       }
-      errors.push({
-        index,
-        baseId: item.baseId,
-        message: 'Дублирующийся baseId в пакете импорта',
-      });
-      return;
-    }
-    seenBaseIds.add(item.baseId);
-  });
+      seen.add(item.baseId);
+      return null;
+    })
+    .filter(Boolean) as { index: number; baseId: string; message: string }[];
 
-  return { valid: errors.length === 0, errors, duplicates };
+  return { valid: !errors.length, errors, duplicates };
 }
 
-/**
- * Импортирует ItemCore в Foundry
- */
+/** Импортирует items в Foundry */
 export async function importItemCores(
   items: ItemCore[],
   opts: { dryRun?: boolean; skipImages?: boolean } = {},
@@ -112,86 +67,55 @@ export async function importItemCores(
   };
 
   const gameItems = (game as unknown as { items: Collection<ShwItem> }).items;
+  const ItemClass = (globalThis as unknown as { Item: typeof Item }).Item;
 
-  for (const itemData of items) {
+  for (const item of items) {
     try {
-      const existing = gameItems.find((item: ShwItem) => item.system?.baseId === itemData.baseId);
-      const result: ImportResult = { itemId: '', baseId: itemData.baseId, status: 'created' };
+      const existing = gameItems.find((i) => i.system?.baseId === item.baseId);
+      const result: ImportResult = { itemId: '', baseId: item.baseId, status: 'created' };
+
+      // Собираем данные
+      const data: Record<string, unknown> = {
+        name: item.name,
+        type: item.type,
+        system: { ...item.system, baseId: item.baseId },
+      };
+      if (item.img && !opts.skipImages) data.img = item.img;
+      if (item.effects) data.effects = item.effects;
+
+      // Флаги с pendingLinks
+      if (item.flags || item.pendingLinks) {
+        const flags = { ...(existing?.flags || {}), ...item.flags } as Record<string, unknown>;
+        if (item.pendingLinks) {
+          flags.shw = { ...((flags.shw as object) || {}), pendingLinks: item.pendingLinks };
+        }
+        data.flags = flags;
+      }
 
       if (existing) {
-        // UPDATE
         result.status = 'updated';
         result.itemId = existing.id || '';
-
-        if (!opts.dryRun) {
-          const updateData: Record<string, unknown> = {
-            name: itemData.name,
-            system: {
-              ...itemData.system,
-              baseId: itemData.baseId,
-            },
-          };
-
-          if (itemData.img && !opts.skipImages) updateData.img = itemData.img;
-          if (itemData.effects) updateData.effects = itemData.effects;
-          if (itemData.flags) updateData.flags = { ...existing.flags, ...itemData.flags };
-          if (itemData.pendingLinks) {
-            updateData.flags = updateData.flags || {};
-            const flags = updateData.flags as Record<string, unknown>;
-            flags.shw = {
-              ...((flags.shw as Record<string, unknown>) || {}),
-              pendingLinks: itemData.pendingLinks,
-            };
-          }
-
-          await existing.update(updateData);
-        }
-
+        if (!opts.dryRun) await existing.update(data);
         report.updated++;
       } else {
-        // CREATE
-        result.status = 'created';
-
         if (!opts.dryRun) {
-          const createData: Record<string, unknown> = {
-            name: itemData.name,
-            type: itemData.type,
-            system: { ...itemData.system, baseId: itemData.baseId },
-          };
-
-          if (itemData.img && !opts.skipImages) createData.img = itemData.img;
-          if (itemData.effects) createData.effects = itemData.effects;
-          if (itemData.flags) createData.flags = itemData.flags;
-          if (itemData.pendingLinks) {
-            createData.flags = createData.flags || {};
-            const flags = createData.flags as Record<string, unknown>;
-            flags.shw = {
-              ...((flags.shw as Record<string, unknown>) || {}),
-              pendingLinks: itemData.pendingLinks,
-            };
-          }
-
-          const created = await (
-            globalThis as unknown as typeof globalThis & {
-              Item: { create(data: Record<string, unknown>): Promise<ShwItem> };
-            }
-          ).Item.create(createData);
-          if (!created) throw new Error('Ошибка создания item');
-
+          const created = (await ItemClass.create(
+            data as Parameters<typeof ItemClass.create>[0],
+          )) as unknown as ShwItem | null;
+          if (!created) throw new Error('Item.create вернул null');
           result.itemId = created.id || '';
         }
-
         report.created++;
       }
 
       report.results.push(result);
-    } catch (error) {
+    } catch (e) {
       report.errors++;
       report.results.push({
         itemId: '',
-        baseId: itemData.baseId,
+        baseId: item.baseId,
         status: 'skipped',
-        error: error instanceof Error ? error.message : String(error),
+        error: e instanceof Error ? e.message : String(e),
       });
     }
   }

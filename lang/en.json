@@ -415,7 +415,51 @@
         "save": "Save",
         "unknownItem": "Unknown item",
         "errorOpenItem": "Failed to open item"
+      },
+      "notifications": {
+        "merchantNotFound": "Merchant not found",
+        "itemUpdated": "Item updated",
+        "nodeUpdated": "Updated: {name}",
+        "nodeDeleted": "Deleted: {name}",
+        "locationAdded": "Location added",
+        "merchantAdded": "Merchant added",
+        "createLocationFirst": "Create a location for the merchant first",
+        "selectLocation": "Select a location",
+        "onlyItemsAllowed": "Only items can be added",
+        "invalidItemData": "Invalid item data",
+        "invalidShopNode": "Invalid shop node",
+        "saveError": "Failed to save shop data",
+        "importError": "Failed to import database",
+        "itemAlreadyExists": "This item already exists for this merchant",
+        "itemAddedToMerchants": "Item added to {count} merchants"
+      },
+      "dialogs": {
+        "deleteNodeTitle": "Delete Node",
+        "deleteNodeContent": "Are you sure you want to delete \"{name}\"? All child elements will also be deleted.",
+        "addLocationTitle": "Add Location",
+        "addMerchantTitle": "Add Merchant",
+        "addItemTitle": "Add Item",
+        "parentLocation": "Parent location:",
+        "merchantLocation": "Merchant location:",
+        "rootLocation": "(Root)",
+        "create": "Create",
+        "cancel": "Cancel",
+        "add": "Add",
+        "priceLabel": "Price:",
+        "quantityLabel": "Quantity (-1 for unlimited):",
+        "newLocation": "New Location",
+        "newMerchant": "New Merchant"
       }
+    },
+    "stack": {
+      "increased": "Stack \"{name}\" increased: {from} → {to}",
+      "filledToMax": "Stack \"{name}\" filled to max: {from} → {to}",
+      "additionalCreated": "Additional stacks \"{name}\" created: {count}",
+      "abilityExists": "Character already has ability \"{name}\""
+    },
+    "tree": {
+      "readItemDataError": "Failed to read item data",
+      "dropError": "Error processing drop"
     }
   }
 }

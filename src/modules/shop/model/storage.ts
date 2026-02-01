@@ -1,3 +1,4 @@
+import { localize, t } from '../../../shared/i18n';
 import { SHOP_DATABASE_VERSION, SHOP_STORAGE_KEY } from './constants';
 import type { ShopDatabase, ShopNode } from './types';
 
@@ -47,7 +48,7 @@ export function saveShopDatabase(database: ShopDatabase): void {
     localStorage.setItem(SHOP_STORAGE_KEY, JSON.stringify(database));
   } catch (error) {
     console.error('Failed to save shop database:', error);
-    ui.notifications?.error('Не удалось сохранить данные магазина');
+    ui.notifications?.error(t('shop.notifications.saveError'));
   }
 }
 
@@ -141,7 +142,7 @@ export function importDatabase(json: string): boolean {
     return true;
   } catch (error) {
     console.error('Failed to import database:', error);
-    ui.notifications?.error('Не удалось импортировать базу данных');
+    ui.notifications?.error(t('shop.notifications.importError'));
     return false;
   }
 }
@@ -172,7 +173,7 @@ export function addMerchantItem(
 
   // Проверяем дубликат
   if (merchant.inventory.some((item) => item.itemId === itemId)) {
-    ui.notifications?.warn('Этот предмет уже есть у торговца');
+    ui.notifications?.warn(t('shop.notifications.itemAlreadyExists'));
     return false;
   }
 
@@ -285,7 +286,9 @@ export function addItemToLocation(
   // Сохраняем базу один раз после всех изменений
   if (addedCount > 0) {
     saveShopDatabase(db);
-    ui.notifications?.info(`Предмет добавлен ${addedCount} торговцам`);
+    ui.notifications?.info(
+      localize('shop.notifications.itemAddedToMerchants', { count: String(addedCount) }),
+    );
   }
 
   return addedCount;

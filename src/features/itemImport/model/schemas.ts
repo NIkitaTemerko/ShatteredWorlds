@@ -1,42 +1,28 @@
 import { z } from 'zod';
 import foundryIconsList from '../../../shared/data/foundryIcons.json';
 
-/**
- * Все допустимые иконки Foundry из встроенного набора
- */
+// Общие схемы
 const FOUNDRY_ICONS = new Set(foundryIconsList);
 
-/**
- * Проверяет, является ли путь валидной иконкой Foundry
- * Путь должен начинаться с "icons/" и быть в списке допустимых
- */
-const foundryIconValidator = z
-  .string()
-  .refine((iconPath) => FOUNDRY_ICONS.has(iconPath), {
-    message: 'Иконка не найдена в встроенном наборе Foundry',
-  });
+const rarity = z.enum(['common', 'uncommon', 'rare', 'epic', 'legendary']).default('common');
+const foundryIcon = z.string().refine((p) => FOUNDRY_ICONS.has(p), {
+  message: 'Иконка не найдена в встроенном наборе Foundry',
+});
 
-/**
- * Схема для Consumable (potion/bomb/scroll/food/poison)
- */
-const ConsumableSystemSchema = z.object({
-  consumableType: z.enum(['potion', 'bomb', 'scroll', 'food', 'poison']).default('potion'),
+// Базовые поля для всех консьюмаблов
+const BaseConsumableFields = {
   quantity: z.number().default(1),
   stackLimit: z.number().default(99),
   price: z.number().default(0),
   description: z.string().default(''),
   weight: z.number().default(0),
-  rarity: z.enum(['common', 'uncommon', 'rare', 'epic', 'legendary']).default('common'),
-
-  // Defaults для activation
+  rarity,
   activation: z
     .object({
       type: z.enum(['action', 'bonus', 'reaction']).default('action'),
       cost: z.number().default(1),
     })
     .default({ type: 'action', cost: 1 }),
-
-  // Defaults для uses
   uses: z
     .object({
       value: z.number().default(1),
@@ -44,21 +30,95 @@ const ConsumableSystemSchema = z.object({
       per: z.enum(['charges', 'uses', 'turns']).default('charges'),
     })
     .default({ value: 1, max: 1, per: 'charges' }),
+};
 
-  // Специфичные поля (опциональные)
-  effects: z.array(z.unknown()).optional().default([]),
-  damage: z.unknown().optional(),
-  radius: z.number().optional(),
-  save: z.unknown().optional(),
-  spell: z.unknown().optional(),
-  requirements: z.unknown().optional(),
-  nutrition: z.unknown().optional(),
-  application: z.enum(['contact', 'injury', 'ingested', 'inhaled']).optional(),
+// === Консьюмаблы по типам ===
+
+const PotionSystemSchema = z.object({
+  ...BaseConsumableFields,
+  consumableType: z.literal('potion'),
+  effects: z
+    .array(
+      z.object({
+        type: z.enum(['heal', 'buff', 'cure']),
+        amount: z.number(),
+        duration: z.number(),
+        attribute: z.string().optional(),
+      }),
+    )
+    .min(1, 'Зелье должно иметь хотя бы один эффект'),
 });
 
-/**
- * Схема для Ability
- */
+const BombSystemSchema = z.object({
+  ...BaseConsumableFields,
+  consumableType: z.literal('bomb'),
+  damage: z.object({
+    amount: z.union([z.string(), z.number()]),
+    type: z.enum(['fire', 'acid', 'cold', 'lightning', 'thunder', 'force']),
+  }),
+  radius: z.number().min(1, 'Радиус бомбы должен быть >= 1'),
+  save: z.object({
+    type: z.string(),
+    dc: z.number(),
+  }),
+});
+
+const ScrollSystemSchema = z.object({
+  ...BaseConsumableFields,
+  consumableType: z.literal('scroll'),
+  spell: z.object({
+    name: z.string().min(1),
+    level: z.number(),
+    school: z.string(),
+  }),
+  requirements: z.object({
+    ability: z.string(),
+    dc: z.number(),
+  }),
+});
+
+const FoodSystemSchema = z.object({
+  ...BaseConsumableFields,
+  consumableType: z.literal('food'),
+  nutrition: z.object({
+    value: z.number(),
+    duration: z.number(),
+  }),
+  effects: z
+    .array(
+      z.object({
+        type: z.string(),
+        duration: z.number(),
+        value: z.number(),
+      }),
+    )
+    .default([]),
+});
+
+const PoisonSystemSchema = z.object({
+  ...BaseConsumableFields,
+  consumableType: z.literal('poison'),
+  damage: z.object({
+    initial: z.union([z.string(), z.number()]),
+    recurring: z.union([z.string(), z.number()]),
+    duration: z.number(),
+  }),
+  save: z.object({
+    type: z.string(),
+    dc: z.number(),
+  }),
+  application: z.enum(['contact', 'injury', 'ingested', 'inhaled']),
+});
+
+const ConsumableSystemSchema = z.discriminatedUnion('consumableType', [
+  PotionSystemSchema,
+  BombSystemSchema,
+  ScrollSystemSchema,
+  FoodSystemSchema,
+  PoisonSystemSchema,
+]);
+
+// Ability
 const AbilitySystemSchema = z.object({
   abilityType: z.enum(['active', 'passive']).default('active'),
   category: z.enum(['active', 'passive']).default('active'),
@@ -66,32 +126,24 @@ const AbilitySystemSchema = z.object({
   name: z.string().default(''),
   description: z.string().default(''),
   weight: z.number().default(0),
-  rarity: z.enum(['common', 'uncommon', 'rare', 'epic', 'legendary']).default('common'),
-
+  rarity,
   activeKind: z.enum(['attack', 'defense', 'utility', 'movement']).optional(),
   passiveKind: z.enum(['stat-bonus', 'aura', 'triggered']).optional(),
-
   cooldown: z.unknown().nullable().default(null),
   resourceCosts: z.array(z.unknown()).default([]),
   maxRank: z.number().default(1),
   currentRank: z.number().default(1),
-
-  // Active specific
   actionType: z.enum(['action', 'bonus', 'reaction']).optional(),
   castTime: z.number().optional(),
   range: z.unknown().optional(),
   targeting: z.unknown().optional(),
-
-  // Passive specific
   mode: z.enum(['always-on', 'toggle']).optional(),
   statBonuses: z.unknown().nullable().optional(),
   aura: z.unknown().nullable().optional(),
   triggers: z.array(z.unknown()).nullable().optional(),
 });
 
-/**
- * Схема для Spell
- */
+// Spell
 const SpellSystemSchema = z.object({
   category: z.enum(['code', 'elemental', 'dark', 'holy', 'arcane']).default('arcane'),
   spellKind: z.enum(['attack', 'defense', 'utility', 'movement']).default('attack'),
@@ -99,8 +151,7 @@ const SpellSystemSchema = z.object({
   name: z.string().default(''),
   description: z.string().default(''),
   weight: z.number().default(0),
-  rarity: z.enum(['common', 'uncommon', 'rare', 'epic', 'legendary']).default('common'),
-
+  rarity,
   level: z.number().default(1),
   resourceCosts: z.array(z.unknown()).default([]),
   castTime: z.number().default(0),
@@ -110,23 +161,45 @@ const SpellSystemSchema = z.object({
   effects: z.array(z.unknown()).default([]),
 });
 
-/**
- * Главная схема ItemCore с union по типу
- */
-export const ItemCoreSchema = z.object({
+// Главная схема - discriminated по type
+const ConsumableItemSchema = z.object({
   baseId: z.string().min(1, 'baseId обязателен'),
-  type: z.enum(['consumable', 'ability', 'spell']),
+  type: z.literal('consumable'),
   name: z.string().min(1, 'name обязателен'),
-  img: foundryIconValidator.optional(),
+  img: foundryIcon.optional(),
   effects: z.array(z.unknown()).optional(),
   flags: z.record(z.string(), z.unknown()).optional(),
   pendingLinks: z.unknown().optional(),
-  system: z.union([ConsumableSystemSchema, AbilitySystemSchema, SpellSystemSchema]),
+  system: ConsumableSystemSchema,
 });
 
-export type ValidatedItemCore = z.infer<typeof ItemCoreSchema>;
+const AbilityItemSchema = z.object({
+  baseId: z.string().min(1, 'baseId обязателен'),
+  type: z.literal('ability'),
+  name: z.string().min(1, 'name обязателен'),
+  img: foundryIcon.optional(),
+  effects: z.array(z.unknown()).optional(),
+  flags: z.record(z.string(), z.unknown()).optional(),
+  pendingLinks: z.unknown().optional(),
+  system: AbilitySystemSchema,
+});
 
-/**
- * Схема для массива items
- */
+const SpellItemSchema = z.object({
+  baseId: z.string().min(1, 'baseId обязателен'),
+  type: z.literal('spell'),
+  name: z.string().min(1, 'name обязателен'),
+  img: foundryIcon.optional(),
+  effects: z.array(z.unknown()).optional(),
+  flags: z.record(z.string(), z.unknown()).optional(),
+  pendingLinks: z.unknown().optional(),
+  system: SpellSystemSchema,
+});
+
+export const ItemCoreSchema = z.discriminatedUnion('type', [
+  ConsumableItemSchema,
+  AbilityItemSchema,
+  SpellItemSchema,
+]);
+
 export const ItemCoresArraySchema = z.array(ItemCoreSchema);
+export type ValidatedItemCore = z.infer<typeof ItemCoreSchema>;

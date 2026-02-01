@@ -415,7 +415,51 @@
         "save": "Сохранить",
         "unknownItem": "Неизвестный предмет",
         "errorOpenItem": "Не удалось открыть предмет"
+      },
+      "notifications": {
+        "merchantNotFound": "Торговец не найден",
+        "itemUpdated": "Предмет обновлен",
+        "nodeUpdated": "Обновлено: {name}",
+        "nodeDeleted": "Удалено: {name}",
+        "locationAdded": "Локация добавлена",
+        "merchantAdded": "Торговец добавлен",
+        "createLocationFirst": "Сначала создайте локацию для торговца",
+        "selectLocation": "Выберите локацию",
+        "onlyItemsAllowed": "Можно добавлять только предметы",
+        "invalidItemData": "Неверные данные предмета",
+        "invalidShopNode": "Неверная нода магазина",
+        "saveError": "Не удалось сохранить данные магазина",
+        "importError": "Не удалось импортировать базу данных",
+        "itemAlreadyExists": "Этот предмет уже есть у торговца",
+        "itemAddedToMerchants": "Предмет добавлен {count} торговцам"
+      },
+      "dialogs": {
+        "deleteNodeTitle": "Удалить ноду",
+        "deleteNodeContent": "Вы уверены, что хотите удалить \"{name}\"? Все дочерние элементы также будут удалены.",
+        "addLocationTitle": "Добавить локацию",
+        "addMerchantTitle": "Добавить торговца",
+        "addItemTitle": "Добавить предмет",
+        "parentLocation": "Родительская локация:",
+        "merchantLocation": "Локация торговца:",
+        "rootLocation": "(Корень)",
+        "create": "Создать",
+        "cancel": "Отмена",
+        "add": "Добавить",
+        "priceLabel": "Цена:",
+        "quantityLabel": "Количество (-1 для неограниченного):",
+        "newLocation": "Новая локация",
+        "newMerchant": "Новый торговец"
       }
+    },
+    "stack": {
+      "increased": "Стак \"{name}\" увеличен: {from} → {to}",
+      "filledToMax": "Стак \"{name}\" заполнен до максимума: {from} → {to}",
+      "additionalCreated": "Создано дополнительных стаков \"{name}\": {count}",
+      "abilityExists": "У персонажа уже есть способность \"{name}\""
+    },
+    "tree": {
+      "readItemDataError": "Не удалось прочитать данные предмета",
+      "dropError": "Ошибка при обработке перетаскивания"
     }
   }
 }

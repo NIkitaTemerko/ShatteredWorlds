@@ -1,141 +1,223 @@
 [
   {
-    "baseId": "potion-antidote-b",
+    "baseId": "potion-rage",
     "type": "consumable",
-    "name": "Антидот яда",
-    "img": "icons/consumables/potions/bottle-round-label-cork-green.webp",
-    "system": {
-      "consumableType": "potion",
-      "quantity": 1,
-      "stackLimit": 20,
-      "description": "Нейтрализует яд в организме"
-    }
-  },
-  {
-    "baseId": "potion-healing-minor-b",
-    "type": "consumable",
-    "name": "Малое зелье исцеления",
+    "name": "Зелье ярости",
     "img": "icons/consumables/potions/bottle-round-label-cork-red.webp",
     "system": {
       "consumableType": "potion",
-      "quantity": 5,
-      "stackLimit": 20,
-      "description": "Восстанавливает 20 HP при использовании"
+      "quantity": 2,
+      "stackLimit": 5,
+      "rarity": "rare",
+      "price": 250,
+      "weight": 0.3,
+      "effects": [
+        { "type": "buff", "amount": 30, "duration": 5, "attribute": "damage" },
+        { "type": "buff", "amount": -10, "duration": 5, "attribute": "defense" }
+      ],
+      "description": "Красноватая жидкость с запахом железа. Вызывает боевое безумие."
     }
   },
   {
-    "baseId": "bomb-smoke-b",
+    "baseId": "potion-speed",
     "type": "consumable",
-    "name": "Дымовая бомба",
-    "img": "icons/weapons/thrown/bomb-fuse-brown.webp",
+    "name": "Зелье скорости",
+    "img": "icons/consumables/potions/bottle-round-label-cork-green.webp",
+    "system": {
+      "consumableType": "potion",
+      "quantity": 3,
+      "stackLimit": 8,
+      "rarity": "uncommon",
+      "price": 100,
+      "weight": 0.25,
+      "effects": [
+        { "type": "buff", "amount": 100, "duration": 3, "attribute": "speed" }
+      ],
+      "description": "Мерцающая зелёная жидкость. Мир вокруг замедляется."
+    }
+  },
+  {
+    "baseId": "bomb-acid",
+    "type": "consumable",
+    "name": "Кислотная бомба",
+    "img": "icons/weapons/thrown/bomb-fuse-black.webp",
     "system": {
       "consumableType": "bomb",
       "quantity": 3,
-      "stackLimit": 5,
-      "rarity": "common",
-      "price": 50,
+      "stackLimit": 6,
+      "rarity": "uncommon",
+      "price": 90,
       "weight": 0.5,
-      "description": "Создаёт облако дыма, скрывающее до 3 противников"
+      "damage": { "amount": "2d8", "type": "acid" },
+      "radius": 3,
+      "save": { "type": "dex", "dc": 14 },
+      "description": "Разъедает броню на 2 при провале спасброска."
     }
   },
   {
-    "baseId": "bomb-explosive-b",
+    "baseId": "bomb-fire",
     "type": "consumable",
-    "name": "Взрывчатая бомба",
-    "img": "icons/weapons/thrown/bomb-fuse-red-black.webp",
+    "name": "Огненная бомба",
+    "img": "icons/weapons/thrown/bomb-fuse-brown-grey.webp",
     "system": {
       "consumableType": "bomb",
-      "quantity": 1,
-      "stackLimit": 3,
-      "rarity": "uncommon",
-      "price": 150,
-      "weight": 0.8,
-      "description": "Наносит 30 урона всем врагам в радиусе"
+      "quantity": 2,
+      "stackLimit": 5,
+      "rarity": "common",
+      "price": 60,
+      "weight": 0.6,
+      "damage": { "amount": "1d6", "type": "fire" },
+      "radius": 2,
+      "save": { "type": "dex", "dc": 12 },
+      "description": "Поджигает область на 3 раунда."
     }
   },
   {
-    "baseId": "scroll-fireball-b",
+    "baseId": "scroll-heal",
     "type": "consumable",
-    "name": "Свиток Огненного шара",
+    "name": "Свиток массового исцеления",
     "img": "icons/sundries/scrolls/scroll-magical-yellow.webp",
     "system": {
       "consumableType": "scroll",
-      "quantity": 2,
-      "stackLimit": 5,
-      "rarity": "uncommon",
-      "price": 200,
-      "weight": 0.1,
-      "description": "Одноразовое заклинание, наносит урон огнём"
-    }
-  },
-  {
-    "baseId": "poison-paralyze-b",
-    "type": "consumable",
-    "name": "Парализующий яд",
-    "img": "icons/consumables/potions/bottle-round-label-cork-purple.webp",
-    "system": {
-      "consumableType": "poison",
       "quantity": 1,
       "stackLimit": 3,
       "rarity": "rare",
-      "price": 500,
-      "weight": 0.2,
-      "description": "Парализует противника на 2 раунда"
+      "price": 400,
+      "weight": 0.1,
+      "spell": { "name": "Mass Cure Wounds", "level": 5, "school": "evocation" },
+      "requirements": { "ability": "wis", "dc": 15 },
+      "description": "Древний свиток с молитвой Солнечного Храма."
     }
   },
   {
-    "baseId": "food-bread-b",
+    "baseId": "poison-sleep",
     "type": "consumable",
-    "name": "Ржаной хлеб",
+    "name": "Сонный яд",
+    "img": "icons/consumables/potions/bottle-round-label-cork-purple.webp",
+    "system": {
+      "consumableType": "poison",
+      "quantity": 4,
+      "stackLimit": 10,
+      "rarity": "common",
+      "price": 45,
+      "weight": 0.1,
+      "damage": { "initial": 0, "recurring": 0, "duration": 4 },
+      "save": { "type": "con", "dc": 13 },
+      "application": "ingested",
+      "description": "Извлечён из сонных маков. Не наносит урона, только усыпляет."
+    }
+  },
+  {
+    "baseId": "food-dragon-steak",
+    "type": "consumable",
+    "name": "Стейк из дракона",
     "img": "icons/consumables/food/berries-ration-round-red.webp",
     "system": {
       "consumableType": "food",
-      "quantity": 10,
-      "stackLimit": 20,
-      "rarity": "common",
-      "price": 5,
-      "weight": 0.3,
-      "description": "Утоляет голод и восстанавливает 5 HP"
+      "quantity": 1,
+      "stackLimit": 3,
+      "rarity": "epic",
+      "price": 500,
+      "weight": 1.0,
+      "nutrition": { "value": 8, "duration": 48 },
+      "effects": [
+        { "type": "fire_resistance", "duration": 8, "value": 50 },
+        { "type": "strength", "duration": 8, "value": 2 }
+      ],
+      "description": "Редкий деликатес из мяса огненного дракона."
     }
   },
   {
-    "baseId": "ability-armor-stance-b",
+    "baseId": "ability-backstab",
     "type": "ability",
-    "name": "Стойка брони",
-    "img": "icons/equipment/shield/buckler-wooden-boss-brown.webp",
+    "name": "Удар в спину",
+    "img": "icons/skills/melee/maneuver-daggers-paired-orange.webp",
     "system": {
       "abilityType": "active",
       "activeKind": "attack",
-      "level": 1,
-      "cost": 10,
-      "cooldown": 3,
-      "description": "Принять боевую стойку для снижения получаемого урона на 50%"
+      "description": "Наносит тройной урон при атаке незаметного врага"
     }
   },
   {
-    "baseId": "ability-dodge-passive-b",
+    "baseId": "ability-evasion",
     "type": "ability",
-    "name": "Боевая акробатика",
-    "img": "icons/equipment/feet/boots-leather-brown.webp",
+    "name": "Уклонение",
+    "img": "icons/magic/movement/trail-streak-pink.webp",
     "system": {
       "abilityType": "passive",
-      "passiveKind": "stat_bonus",
-      "level": 1,
-      "description": "Увеличивает ловкость на 2, повышая шанс уклонения"
+      "passiveKind": "triggered",
+      "description": "При успешном спасброске от AOE получает 0 урона вместо половины"
     }
   },
   {
-    "baseId": "ability-berserker-rage-b",
+    "baseId": "ability-taunt",
     "type": "ability",
-    "name": "Боевой клич берсеркера",
-    "img": "icons/weapons/swords/greatsword-crossguard-engraved-green.webp",
+    "name": "Провокация",
+    "img": "icons/skills/social/intimidation-impressing.webp",
     "system": {
       "abilityType": "active",
-      "activeKind": "buff",
-      "level": 5,
-      "cost": 20,
-      "cooldown": 5,
-      "description": "Войти в боевое напряжение: все атаки наносят на 50% больше урона в течение 3 раундов"
+      "activeKind": "utility",
+      "description": "Заставляет всех врагов в радиусе 5м атаковать только вас на 2 раунда"
+    }
+  },
+  {
+    "baseId": "ability-second-wind",
+    "type": "ability",
+    "name": "Второе дыхание",
+    "img": "icons/magic/life/heart-cross-strong-green.webp",
+    "system": {
+      "abilityType": "active",
+      "activeKind": "defense",
+      "description": "Восстанавливает 1d10 + уровень HP бонусным действием"
+    }
+  },
+  {
+    "baseId": "spell-fireball",
+    "type": "spell",
+    "name": "Огненный шар",
+    "img": "icons/magic/fire/projectile-fireball-orange-yellow.webp",
+    "system": {
+      "category": "elemental",
+      "spellKind": "attack",
+      "level": 3,
+      "description": "Взрыв огня в радиусе 6м, наносящий 8d6 огненного урона"
+    }
+  },
+  {
+    "baseId": "spell-ice-wall",
+    "type": "spell",
+    "name": "Ледяная стена",
+    "img": "icons/magic/water/barrier-ice-crystal-wall-jagged-blue.webp",
+    "system": {
+      "category": "elemental",
+      "spellKind": "defense",
+      "level": 4,
+      "description": "Создаёт стену льда 10x3м с 50 HP"
+    }
+  },
+  {
+    "baseId": "spell-bless",
+    "type": "spell",
+    "name": "Благословение",
+    "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+    "system": {
+      "category": "holy",
+      "spellKind": "utility",
+      "level": 1,
+      "description": "До 3 союзников получают +1d4 к атакам и спасброскам на 1 минуту"
+    }
+  },
+  {
+    "baseId": "spell-curse",
+    "type": "spell",
+    "name": "Проклятие",
+    "img": "icons/magic/unholy/orb-glowing-purple.webp",
+    "system": {
+      "category": "dark",
+      "spellKind": "utility",
+      "level": 2,
+      "rarity": "uncommon",
+      "description": "Цель получает помеху на все броски на 1 минуту"
     }
   }
 ]

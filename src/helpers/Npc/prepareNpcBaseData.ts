@@ -1,14 +1,15 @@
 import type { ShwActorSystem, ShwNpcSystem } from '../../documents/Actor/types/ShwActorSystem';
 import { ADDITIONAL_KEYS, STAT_KEYS, UTIL_KEYS } from '../constants';
 
-const NPC_HELPER_KEYS: (keyof ShwNpcSystem['helpers'])[] = [
+// Ключи helpers, используемые для NPC
+const NPC_HELPER_KEYS = [
   'totalImpulse',
   'totalHealth',
   'totalSpeed',
   'totalDamageReduction',
   'totalArmorClass',
   'totalRange',
-];
+] as const;
 
 const emptyAttr = () => ({
   value: 0,
@@ -39,7 +40,7 @@ const emptyAdditionalMap: ShwActorSystem['additionalAttributes'] = {
   additionalCloseCombatDamage: 0,
   additionalRangeDamage: 0,
 };
-const emptyHelperMap = {
+const emptyHelperMap: Record<(typeof NPC_HELPER_KEYS)[number], number> = {
   totalImpulse: 0,
   totalHealth: 0,
   totalSpeed: 0,
@@ -61,5 +62,7 @@ export function prepareNpcBaseData(sys: ShwNpcSystem) {
   for (const k of STAT_KEYS) sys.attributes[k] ??= emptyAttr();
   for (const k of UTIL_KEYS) sys.utility[k] ??= emptyUtilMap[k];
   for (const k of ADDITIONAL_KEYS) sys.additionalAttributes[k] ??= emptyAdditionalMap[k];
-  for (const k of NPC_HELPER_KEYS) sys.helpers[k] ??= emptyHelperMap[k];
+  for (const k of NPC_HELPER_KEYS) {
+    (sys.helpers as unknown as Record<string, number>)[k] ??= emptyHelperMap[k];
+  }
 }

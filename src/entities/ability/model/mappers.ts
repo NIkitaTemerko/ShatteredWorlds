@@ -1,11 +1,12 @@
 import type { ShwItem } from '../../../documents/Item/ShwItem';
 import type { AbilityCategory } from '../../../documents/Item/types/AbilityDataTypes';
+import type { I18nKey } from '../../../shared/i18n';
 import { t } from '../../../shared/i18n';
 import type { FlatItem } from '../../../shared/ui/tree';
 import { ABILITY_CATEGORY_COLORS } from './constants';
 
-// Ability category translation keys
-const abilityCategoryKeys: Record<AbilityCategory, string> = {
+// Ключи локализации для категорий способностей
+const abilityCategoryKeys: Record<AbilityCategory, I18nKey> = {
   active: 'ability.category.active',
   passive: 'ability.category.passive',
 };

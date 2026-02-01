@@ -1,0 +1,141 @@
+[
+  {
+    "baseId": "potion-antidote-b",
+    "type": "consumable",
+    "name": "Антидот яда",
+    "img": "icons/consumables/potions/bottle-round-label-cork-green.webp",
+    "system": {
+      "consumableType": "potion",
+      "quantity": 1,
+      "stackLimit": 20,
+      "description": "Нейтрализует яд в организме"
+    }
+  },
+  {
+    "baseId": "potion-healing-minor-b",
+    "type": "consumable",
+    "name": "Малое зелье исцеления",
+    "img": "icons/consumables/potions/bottle-round-label-cork-red.webp",
+    "system": {
+      "consumableType": "potion",
+      "quantity": 5,
+      "stackLimit": 20,
+      "description": "Восстанавливает 20 HP при использовании"
+    }
+  },
+  {
+    "baseId": "bomb-smoke-b",
+    "type": "consumable",
+    "name": "Дымовая бомба",
+    "img": "icons/weapons/thrown/bomb-fuse-brown.webp",
+    "system": {
+      "consumableType": "bomb",
+      "quantity": 3,
+      "stackLimit": 5,
+      "rarity": "common",
+      "price": 50,
+      "weight": 0.5,
+      "description": "Создаёт облако дыма, скрывающее до 3 противников"
+    }
+  },
+  {
+    "baseId": "bomb-explosive-b",
+    "type": "consumable",
+    "name": "Взрывчатая бомба",
+    "img": "icons/weapons/thrown/bomb-fuse-red-black.webp",
+    "system": {
+      "consumableType": "bomb",
+      "quantity": 1,
+      "stackLimit": 3,
+      "rarity": "uncommon",
+      "price": 150,
+      "weight": 0.8,
+      "description": "Наносит 30 урона всем врагам в радиусе"
+    }
+  },
+  {
+    "baseId": "scroll-fireball-b",
+    "type": "consumable",
+    "name": "Свиток Огненного шара",
+    "img": "icons/sundries/scrolls/scroll-magical-yellow.webp",
+    "system": {
+      "consumableType": "scroll",
+      "quantity": 2,
+      "stackLimit": 5,
+      "rarity": "uncommon",
+      "price": 200,
+      "weight": 0.1,
+      "description": "Одноразовое заклинание, наносит урон огнём"
+    }
+  },
+  {
+    "baseId": "poison-paralyze-b",
+    "type": "consumable",
+    "name": "Парализующий яд",
+    "img": "icons/consumables/potions/bottle-round-label-cork-purple.webp",
+    "system": {
+      "consumableType": "poison",
+      "quantity": 1,
+      "stackLimit": 3,
+      "rarity": "rare",
+      "price": 500,
+      "weight": 0.2,
+      "description": "Парализует противника на 2 раунда"
+    }
+  },
+  {
+    "baseId": "food-bread-b",
+    "type": "consumable",
+    "name": "Ржаной хлеб",
+    "img": "icons/consumables/food/berries-ration-round-red.webp",
+    "system": {
+      "consumableType": "food",
+      "quantity": 10,
+      "stackLimit": 20,
+      "rarity": "common",
+      "price": 5,
+      "weight": 0.3,
+      "description": "Утоляет голод и восстанавливает 5 HP"
+    }
+  },
+  {
+    "baseId": "ability-armor-stance-b",
+    "type": "ability",
+    "name": "Стойка брони",
+    "img": "icons/equipment/shield/buckler-wooden-boss-brown.webp",
+    "system": {
+      "abilityType": "active",
+      "activeKind": "attack",
+      "level": 1,
+      "cost": 10,
+      "cooldown": 3,
+      "description": "Принять боевую стойку для снижения получаемого урона на 50%"
+    }
+  },
+  {
+    "baseId": "ability-dodge-passive-b",
+    "type": "ability",
+    "name": "Боевая акробатика",
+    "img": "icons/equipment/feet/boots-leather-brown.webp",
+    "system": {
+      "abilityType": "passive",
+      "passiveKind": "stat_bonus",
+      "level": 1,
+      "description": "Увеличивает ловкость на 2, повышая шанс уклонения"
+    }
+  },
+  {
+    "baseId": "ability-berserker-rage-b",
+    "type": "ability",
+    "name": "Боевой клич берсеркера",
+    "img": "icons/weapons/swords/greatsword-crossguard-engraved-green.webp",
+    "system": {
+      "abilityType": "active",
+      "activeKind": "buff",
+      "level": 5,
+      "cost": 20,
+      "cooldown": 5,
+      "description": "Войти в боевое напряжение: все атаки наносят на 50% больше урона в течение 3 раундов"
+    }
+  }
+]

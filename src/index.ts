@@ -1,6 +1,7 @@
 import { ShwActor } from './documents/Actor/ShwActor';
 import { ShwItem } from './documents/Item/ShwItem';
 import { ShwTokenDocument } from './documents/ShwTokenDocument.js';
+import { ImportItemsApp } from './features/itemImport';
 import { migrateConsumableData, needsMigration } from './helpers/Item/migrateConsumableData';
 import { handleAddItem } from './helpers/Item/StackManager';
 import { ShopManagerApp } from './modules/shop';
@@ -25,23 +26,37 @@ Hooks.once('init', () => {
     decimals: 0,
   };
 
-  // Добавляем кнопку магазина в навигацию
+  // Добавляем кнопки магазина и импорта в навигацию
   Hooks.once('ready', () => {
     const menu = document.querySelector('nav.tabs.faded-ui menu');
     if (menu) {
-      const li = document.createElement('li');
+      // Кнопка магазина
+      const shopLi = document.createElement('li');
       const shopButton = document.createElement('button');
       shopButton.type = 'button';
       shopButton.className = 'ui-control plain icon fa-solid fa-store';
       shopButton.addEventListener('click', () => {
         new ShopManagerApp().render(true);
       });
-      li.appendChild(shopButton);
+      shopLi.appendChild(shopButton);
+
+      // Кнопка импорта
+      const importLi = document.createElement('li');
+      const importButton = document.createElement('button');
+      importButton.type = 'button';
+      importButton.className = 'ui-control plain icon fa-solid fa-file-import';
+      importButton.addEventListener('click', () => {
+        new ImportItemsApp().render(true);
+      });
+      importLi.appendChild(importButton);
+
       const lastItem = menu.lastElementChild;
       if (lastItem) {
-        menu.insertBefore(li, lastItem);
+        menu.insertBefore(importLi, lastItem);
+        menu.insertBefore(shopLi, importLi);
       } else {
-        menu.appendChild(li);
+        menu.appendChild(shopLi);
+        menu.appendChild(importLi);
       }
     }
   });

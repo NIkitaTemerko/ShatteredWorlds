@@ -460,6 +460,41 @@
     "tree": {
       "readItemDataError": "Не удалось прочитать данные предмета",
       "dropError": "Ошибка при обработке перетаскивания"
+    },
+    "import": {
+      "title": "Импорт предметов",
+      "jsonData": "JSON Данные",
+      "schemaForAi": "Схема для ИИ",
+      "copyForAi": "Скопировать для ИИ",
+      "placeholder": "Или вставьте JSON массив предметов здесь...",
+      "skipImages": "Пропустить изображения",
+      "error": "Ошибка:",
+      "copyFailed": "Не удалось скопировать в буфер обмена",
+      "schemaCopied": "Схема скопирована!",
+      "iconsCopied": "Промпт для иконок скопирован!",
+      "iconsForAi": "Иконки для ИИ",
+      "noJsonForIcons": "Сначала вставьте JSON с предметами",
+      "errorsCopied": "Ошибки скопированы!",
+      "validationSuccess": "Валидация успешна",
+      "noErrors": "ошибок не найдено",
+      "hasDuplicates": "но есть дубликаты",
+      "validationErrors": "Ошибки валидации",
+      "andMore": "...и ещё {count}",
+      "dryRunLabel": "Сухой прогон:",
+      "importResultLabel": "Результат импорта:",
+      "created": "Создано:",
+      "updated": "Обновлено:",
+      "skipped": "Пропущено:",
+      "errors": "Ошибок:",
+      "errorDetails": "Детали ошибок",
+      "validate": "Проверить",
+      "dryRun": "Сухой прогон",
+      "importBtn": "Импортировать",
+      "close": "Закрыть",
+      "processing": "...",
+      "parseError": "Ошибка парсинга",
+      "importSuccess": "Импорт: {created} создано, {updated} обновлено",
+      "importWarning": "Импорт завершён с {errors} ошибками"
     }
   }
 }

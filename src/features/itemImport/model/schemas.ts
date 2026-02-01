@@ -53,12 +53,12 @@ const BombSystemSchema = z.object({
   ...BaseConsumableFields,
   consumableType: z.literal('bomb'),
   damage: z.object({
-    amount: z.union([z.string(), z.number()]),
-    type: z.enum(['fire', 'acid', 'cold', 'lightning', 'thunder', 'force']),
+    amount: z.number(),
+    type: z.enum(['fire', 'acid', 'cold', 'lightning', 'poison', 'physical', 'force']),
   }),
   radius: z.number().min(1, 'Радиус бомбы должен быть >= 1'),
   save: z.object({
-    type: z.string(),
+    type: z.enum(['force', 'perception', 'psyDefence', 'fortune', 'diplomacy']),
     dc: z.number(),
   }),
 });
@@ -72,7 +72,7 @@ const ScrollSystemSchema = z.object({
     school: z.string(),
   }),
   requirements: z.object({
-    ability: z.string(),
+    ability: z.enum(['fortune', 'force', 'perception', 'psyDefence', 'diplomacy']),
     dc: z.number(),
   }),
 });
@@ -104,7 +104,7 @@ const PoisonSystemSchema = z.object({
     duration: z.number(),
   }),
   save: z.object({
-    type: z.string(),
+    type: z.enum(['force', 'perception', 'psyDefence', 'fortune', 'diplomacy']),
     dc: z.number(),
   }),
   application: z.enum(['contact', 'injury', 'ingested', 'inhaled']),

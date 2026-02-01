@@ -460,6 +460,41 @@
     "tree": {
       "readItemDataError": "Failed to read item data",
       "dropError": "Error processing drop"
+    },
+    "import": {
+      "title": "Import Items",
+      "jsonData": "JSON Data",
+      "schemaForAi": "Schema for AI",
+      "copyForAi": "Copy for AI",
+      "placeholder": "Or paste JSON array of items here...",
+      "skipImages": "Skip images",
+      "error": "Error:",
+      "copyFailed": "Failed to copy to clipboard",
+      "schemaCopied": "Schema copied!",
+      "iconsCopied": "Icons prompt copied!",
+      "iconsForAi": "Icons for AI",
+      "noJsonForIcons": "First paste JSON with items",
+      "errorsCopied": "Errors copied!",
+      "validationSuccess": "Validation successful",
+      "noErrors": "no errors found",
+      "hasDuplicates": "but has duplicates",
+      "validationErrors": "Validation errors",
+      "andMore": "...and {count} more",
+      "dryRunLabel": "Dry run:",
+      "importResultLabel": "Import result:",
+      "created": "Created:",
+      "updated": "Updated:",
+      "skipped": "Skipped:",
+      "errors": "Errors:",
+      "errorDetails": "Error details",
+      "validate": "Validate",
+      "dryRun": "Dry run",
+      "importBtn": "Import",
+      "close": "Close",
+      "processing": "...",
+      "parseError": "Parse error",
+      "importSuccess": "Import: {created} created, {updated} updated",
+      "importWarning": "Import completed with {errors} errors"
     }
   }
 }

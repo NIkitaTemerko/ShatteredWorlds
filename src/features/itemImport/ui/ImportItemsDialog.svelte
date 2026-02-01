@@ -1,6 +1,14 @@
 <script lang="ts">
-  import { parseItemCores, validateItemCores, importItemCores } from "../model";
+  import {
+    parseItemCores,
+    validateItemCores,
+    importItemCores,
+    generateSchemaPrompt,
+    generateErrorPrompt,
+    generateIconsPrompt,
+  } from "../model";
   import type { ValidationReport, ImportReport } from "../model";
+  import { t, localize } from "../../../shared/i18n";
 
   interface Props {
     onClose: () => void;
@@ -14,6 +22,7 @@
   let skipImages = $state(false);
   let isProcessing = $state(false);
   let errorMessage = $state("");
+  let copySuccess = $state("");
 
   function handleFileSelect(e: Event) {
     const file = (e.target as HTMLInputElement).files?.[0];
@@ -24,6 +33,34 @@
       errorMessage = "";
     };
     reader.readAsText(file);
+  }
+
+  async function copyToClipboard(text: string, successMessage: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+      copySuccess = successMessage;
+      setTimeout(() => (copySuccess = ""), 2000);
+    } catch {
+      ui.notifications?.error(t("import.copyFailed"));
+    }
+  }
+
+  function handleCopySchema() {
+    copyToClipboard(generateSchemaPrompt(), t("import.schemaCopied"));
+  }
+
+  function handleCopyIcons() {
+    if (!jsonText.trim()) {
+      ui.notifications?.warn(t("import.noJsonForIcons"));
+      return;
+    }
+    const prompt = generateIconsPrompt(jsonText);
+    copyToClipboard(prompt, t("import.iconsCopied"));
+  }
+
+  function handleCopyErrors() {
+    const prompt = generateErrorPrompt(errorMessage, jsonText);
+    copyToClipboard(prompt, t("import.errorsCopied"));
   }
 
   async function runImport(dryRun: boolean) {
@@ -45,12 +82,12 @@
       if (!dryRun) {
         const msg =
           importReport.errors === 0
-            ? `✓ Импорт: ${importReport.created} создано, ${importReport.updated} обновлено`
-            : `⚠ Импорт завершён с ${importReport.errors} ошибками`;
+            ? `✓ ${localize("import.importSuccess", { created: String(importReport.created), updated: String(importReport.updated) })}`
+            : `⚠ ${localize("import.importWarning", { errors: String(importReport.errors) })}`;
         ui.notifications?.[importReport.errors ? "warn" : "info"](msg);
       }
     } catch (e) {
-      errorMessage = e instanceof Error ? e.message : "Ошибка";
+      errorMessage = e instanceof Error ? e.message : t("import.parseError");
     } finally {
       isProcessing = false;
     }
@@ -62,7 +99,7 @@
       importReport = null;
       validationReport = validateItemCores(parseItemCores(jsonText));
     } catch (e) {
-      errorMessage = e instanceof Error ? e.message : "Ошибка парсинга";
+      errorMessage = e instanceof Error ? e.message : t("import.parseError");
       validationReport = null;
     }
   }
@@ -70,24 +107,46 @@
 
 <div class="shw-import-dialog">
   <div class="import-section">
-    <h3>JSON Данные</h3>
+    <div class="section-header">
+      <h3>{t("import.jsonData")}</h3>
+      <div class="header-buttons">
+        <button class="btn-icon" onclick={handleCopySchema} title={t("import.schemaForAi")}>
+          <i class="fas fa-robot"></i>
+          {t("import.schemaForAi")}
+        </button>
+        <button class="btn-icon" onclick={handleCopyIcons} disabled={!jsonText.trim()} title={t("import.iconsForAi")}>
+          <i class="fas fa-image"></i>
+          {t("import.iconsForAi")}
+        </button>
+      </div>
+    </div>
     <div class="file-upload">
       <input type="file" accept=".json" onchange={handleFileSelect} />
     </div>
-    <textarea placeholder="Или вставьте JSON массив итемов здесь..." bind:value={jsonText} class="json-input"
-    ></textarea>
+    <textarea placeholder={t("import.placeholder")} bind:value={jsonText} class="json-input"></textarea>
   </div>
+
+  {#if copySuccess}
+    <div class="copy-success">{copySuccess}</div>
+  {/if}
 
   <div class="options-section">
     <label class="checkbox-label">
-      <input type="checkbox" bind:checked={skipImages} /> Пропустить изображения
+      <input type="checkbox" bind:checked={skipImages} />
+      {t("import.skipImages")}
     </label>
   </div>
 
   {#if errorMessage}
     <div class="error-box">
-      <strong>Ошибка:</strong>
-      {errorMessage}
+      <div class="error-header">
+        <strong>{t("import.error")}</strong>
+        <button class="btn-copy-error" onclick={handleCopyErrors} title={t("import.copyForAi")}>
+          <i class="fas fa-copy"></i>
+          {t("import.copyForAi")}
+        </button>
+      </div>
+      <pre class="error-text">{errorMessage}</pre>
     </div>
   {/if}
 
@@ -95,10 +154,12 @@
     <div class="validation-box">
       {#if validationReport.valid}
         <div class="success">
-          ✓ Валидация успешна ({validationReport.errors.length === 0 ? "ошибок не найдено" : "но есть дубликаты"})
+          ✓ {t("import.validationSuccess")} ({validationReport.errors.length === 0
+            ? t("import.noErrors")
+            : t("import.hasDuplicates")})
         </div>
       {:else}
-        <div class="error">✗ Ошибки валидации ({validationReport.errors.length})</div>
+        <div class="error">✗ {t("import.validationErrors")} ({validationReport.errors.length})</div>
         <ul class="error-list">
           {#each validationReport.errors.slice(0, 5) as err}
             <li>
@@ -110,7 +171,7 @@
             </li>
           {/each}
           {#if validationReport.errors.length > 5}
-            <li>...и ещё {validationReport.errors.length - 5}</li>
+            <li>{localize("import.andMore", { count: String(validationReport.errors.length - 5) })}</li>
           {/if}
         </ul>
       {/if}
@@ -121,23 +182,23 @@
     <div class="report-box">
       <div class="report-header">
         {#if importReport.dryRun}
-          <strong>Сухой прогон:</strong>
+          <strong>{t("import.dryRunLabel")}</strong>
         {:else}
-          <strong>Результат импорта:</strong>
+          <strong>{t("import.importResultLabel")}</strong>
         {/if}
       </div>
       <div class="report-stats">
-        <div>✓ Создано: <strong>{importReport.created}</strong></div>
-        <div>↻ Обновлено: <strong>{importReport.updated}</strong></div>
-        <div>⊘ Пропущено: <strong>{importReport.skipped}</strong></div>
+        <div>✓ {t("import.created")} <strong>{importReport.created}</strong></div>
+        <div>↻ {t("import.updated")} <strong>{importReport.updated}</strong></div>
+        <div>⊘ {t("import.skipped")} <strong>{importReport.skipped}</strong></div>
         {#if importReport.errors > 0}
-          <div class="error-count">✗ Ошибок: <strong>{importReport.errors}</strong></div>
+          <div class="error-count">✗ {t("import.errors")} <strong>{importReport.errors}</strong></div>
         {/if}
       </div>
       {#if importReport.results.some((r) => r.error)}
         <details class="error-details">
           <summary>
-            Детали ошибок ({importReport.results.filter((r) => r.error).length})
+            {t("import.errorDetails")} ({importReport.results.filter((r) => r.error).length})
           </summary>
           <ul>
             {#each importReport.results.filter((r) => r.error).slice(0, 5) as result}
@@ -152,14 +213,16 @@
   {/if}
 
   <div class="button-group">
-    <button onclick={handleValidate} disabled={!jsonText || isProcessing} class="btn-secondary">Проверить</button>
+    <button onclick={handleValidate} disabled={!jsonText || isProcessing} class="btn-secondary"
+      >{t("import.validate")}</button
+    >
     <button onclick={() => runImport(true)} disabled={!jsonText || isProcessing} class="btn-secondary">
-      {isProcessing ? "..." : "Сухой прогон"}
+      {isProcessing ? t("import.processing") : t("import.dryRun")}
     </button>
     <button onclick={() => runImport(false)} disabled={!jsonText || isProcessing} class="btn-primary">
-      {isProcessing ? "..." : "Импортировать"}
+      {isProcessing ? t("import.processing") : t("import.importBtn")}
     </button>
-    <button onclick={onClose} disabled={isProcessing} class="btn-cancel">Закрыть</button>
+    <button onclick={onClose} disabled={isProcessing} class="btn-cancel">{t("import.close")}</button>
   </div>
 </div>
 
@@ -176,32 +239,78 @@
   .import-section {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.5rem;
   }
 
-  .import-section h3 {
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    background: rgba(180, 179, 186, 0.5);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 3px 3px 0 0;
+  }
+
+  .header-buttons {
+    display: flex;
+    gap: 0.3rem;
+  }
+
+  .section-header h3 {
     margin: 0;
-    padding: 0.75rem 1rem;
-    font-size: 0.85rem;
+    padding: 0;
+    font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
+    letter-spacing: 0.03em;
     color: #fff;
-    background: rgba(180, 179, 186, 0.6);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 4px 4px 0 0;
+    border: none;
+    background: none;
+  }
+
+  .btn-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.25rem 0.5rem;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 3px;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .btn-icon:hover {
+    background: rgba(255, 255, 255, 0.25);
+  }
+
+  .copy-success {
+    padding: 0.4rem 0.75rem;
+    background: rgba(76, 175, 80, 0.12);
+    border: 1px solid rgba(76, 175, 80, 0.35);
+    border-radius: 3px;
+    color: #2e7d32;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-align: center;
   }
 
   .file-upload {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
   }
 
   .file-upload input[type="file"] {
-    padding: 0.5rem;
-    background: rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
+    padding: 0.4rem;
+    background: rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 3px;
     color: #1a1820;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
   }
 
   .json-input {
@@ -369,24 +478,69 @@
     font-size: 0.75rem;
   }
 
+  .error-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.4rem;
+  }
+
+  .btn-copy-error {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.2rem 0.4rem;
+    background: rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 2px;
+    color: #555;
+    font-size: 0.65rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .btn-copy-error:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: #333;
+  }
+
+  .error-text {
+    margin: 0;
+    padding: 0.75rem;
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+    font-family: "Courier New", monospace;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 150px;
+    overflow-y: auto;
+    color: #1a1820;
+  }
+
   .button-group {
     display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    padding-top: 0.5rem;
+    justify-content: flex-end;
+    gap: 0.4rem;
+    padding-top: 0.75rem;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
   }
 
   .btn-primary,
   .btn-secondary,
   .btn-cancel {
-    padding: 0.5rem 1rem;
+    padding: 0.4rem 0.75rem;
     border: none;
-    border-radius: 4px;
-    font-size: 0.85rem;
+    border-radius: 3px;
+    font-size: 0.8rem;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.15s ease;
+    white-space: nowrap;
   }
 
   .btn-primary {

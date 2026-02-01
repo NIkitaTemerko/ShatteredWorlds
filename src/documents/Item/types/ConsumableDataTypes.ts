@@ -30,8 +30,8 @@ export interface PotionData extends BaseConsumableData {
 export interface BombData extends BaseConsumableData {
   consumableType: 'bomb';
   damage: {
-    amount: string | number;
-    type: 'fire' | 'acid' | 'cold' | 'lightning' | 'thunder' | 'force';
+    amount: number;
+    type: 'fire' | 'acid' | 'cold' | 'lightning' | 'poison' | 'physical' | 'force';
   };
   radius: number;
   save: {

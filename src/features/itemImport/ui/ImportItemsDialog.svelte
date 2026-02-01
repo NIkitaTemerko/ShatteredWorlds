@@ -170,7 +170,7 @@
     flex-direction: column;
     gap: 1.5rem;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    color: #ccc;
+    color: #1a1820;
   }
 
   .import-section {
@@ -181,10 +181,14 @@
 
   .import-section h3 {
     margin: 0;
-    font-size: 0.9rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
     font-weight: 600;
     text-transform: uppercase;
     color: #fff;
+    background: rgba(180, 179, 186, 0.6);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 4px 4px 0 0;
   }
 
   .file-upload {
@@ -193,23 +197,27 @@
 
   .file-upload input[type="file"] {
     padding: 0.5rem;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius: 4px;
-    color: #ccc;
+    color: #1a1820;
     font-size: 0.85rem;
   }
 
   .json-input {
     padding: 0.75rem;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius: 4px;
-    color: #ccc;
+    color: #1a1820;
     font-family: "Courier New", monospace;
     font-size: 0.8rem;
     min-height: 200px;
     resize: vertical;
+  }
+
+  .json-input::placeholder {
+    color: rgba(26, 24, 32, 0.5);
   }
 
   .options-section {
@@ -217,7 +225,8 @@
     flex-direction: column;
     gap: 0.5rem;
     padding: 0.75rem;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 4px;
   }
 
@@ -227,6 +236,7 @@
     gap: 0.5rem;
     cursor: pointer;
     font-size: 0.9rem;
+    color: #1a1820;
   }
 
   .checkbox-label input[type="checkbox"] {
@@ -248,18 +258,23 @@
   }
 
   .error-box {
-    background: rgba(220, 53, 69, 0.15);
+    background: rgba(220, 53, 69, 0.1);
     border: 1px solid rgba(220, 53, 69, 0.3);
-    color: #ff8080;
+    color: #c62828;
+  }
+
+  .validation-box {
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.1);
   }
 
   .validation-box .success {
-    color: #66bb6a;
+    color: #2e7d32;
     font-weight: 500;
   }
 
   .validation-box .error {
-    color: #ff8080;
+    color: #c62828;
     font-weight: 500;
   }
 
@@ -267,6 +282,7 @@
     margin: 0.5rem 0 0 0;
     padding-left: 1.5rem;
     list-style: disc;
+    color: #1a1820;
   }
 
   .error-list li {
@@ -274,20 +290,21 @@
   }
 
   .error-list code {
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.08);
     padding: 0.2rem 0.4rem;
     border-radius: 2px;
     font-size: 0.8rem;
+    color: #1a1820;
   }
 
   .report-box {
-    background: rgba(76, 175, 80, 0.1);
+    background: rgba(76, 175, 80, 0.08);
     border: 1px solid rgba(76, 175, 80, 0.3);
   }
 
   .report-header {
     margin-bottom: 0.75rem;
-    color: #fff;
+    color: #1a1820;
     font-weight: 600;
   }
 
@@ -300,22 +317,23 @@
 
   .report-stats div {
     padding: 0.5rem;
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.05);
     border-radius: 3px;
     font-size: 0.85rem;
+    color: #1a1820;
   }
 
   .report-stats strong {
-    color: #66bb6a;
+    color: #2e7d32;
     font-weight: 600;
   }
 
   .report-stats .error-count {
-    color: #ff8080;
+    color: #c62828;
   }
 
   .report-stats .error-count strong {
-    color: #ff8080;
+    color: #c62828;
   }
 
   .error-details {
@@ -325,10 +343,11 @@
 
   .error-details summary {
     padding: 0.5rem;
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.05);
     border-radius: 3px;
     font-size: 0.85rem;
     user-select: none;
+    color: #1a1820;
   }
 
   .error-details ul {
@@ -340,10 +359,11 @@
   .error-details li {
     margin-top: 0.25rem;
     font-size: 0.8rem;
+    color: #1a1820;
   }
 
   .error-details code {
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.08);
     padding: 0.2rem 0.4rem;
     border-radius: 2px;
     font-size: 0.75rem;
@@ -353,6 +373,8 @@
     display: flex;
     gap: 0.5rem;
     flex-wrap: wrap;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
   }
 
   .btn-primary,
@@ -373,26 +395,26 @@
   }
 
   .btn-primary:hover:not(:disabled) {
-    background: #66bb6a;
+    background: #43a047;
   }
 
   .btn-secondary {
-    background: rgba(100, 150, 200, 0.6);
-    color: #fff;
+    background: rgba(100, 150, 200, 0.5);
+    color: #1a1820;
   }
 
   .btn-secondary:hover:not(:disabled) {
-    background: rgba(100, 150, 200, 0.8);
+    background: rgba(100, 150, 200, 0.7);
   }
 
   .btn-cancel {
-    background: transparent;
-    color: #ccc;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.1);
+    color: #1a1820;
+    border: 1px solid rgba(0, 0, 0, 0.2);
   }
 
   .btn-cancel:hover:not(:disabled) {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.15);
   }
 
   button:disabled {

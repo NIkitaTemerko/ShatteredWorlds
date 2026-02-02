@@ -37,7 +37,9 @@ export class ShwItem extends Item {
       });
       // Flatten: assign item fields directly to system
       Object.assign(this.system, item);
-      this.img = getConsumableImage('bomb');
+      if (!this.img || this.img === 'icons/svg/item-bag.svg') {
+        this.img = getConsumableImage('bomb');
+      }
     }
   }
 
@@ -47,7 +49,9 @@ export class ShwItem extends Item {
         name: this.name,
       });
       Object.assign(this.system, item);
-      this.img = getAbilityImage(this.system.category);
+      if (!this.img || this.img === 'icons/svg/item-bag.svg') {
+        this.img = getAbilityImage(this.system.category);
+      }
     }
   }
 
@@ -57,7 +61,9 @@ export class ShwItem extends Item {
         name: this.name,
       });
       Object.assign(this.system, item);
-      this.img = getSpellImage(this.system.category);
+      if (!this.img || this.img === 'icons/svg/item-bag.svg') {
+        this.img = getSpellImage(this.system.category);
+      }
     }
   }
 

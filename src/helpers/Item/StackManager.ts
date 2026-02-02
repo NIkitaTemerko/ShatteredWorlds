@@ -1,5 +1,6 @@
 import { ShwActor } from '../../documents/Actor/ShwActor';
 import type { ShwItem } from '../../documents/Item/ShwItem';
+import { localize } from '../../shared/i18n';
 
 /**
  * Centralized item stacking and duplicate prevention logic
@@ -112,7 +113,11 @@ export function incrementStack(existingItem: ShwItem, incomingData: ItemDataLike
       })
       .then(() => {
         ui.notifications?.info(
-          `Стак "${existingItem.name}" увеличен: ${currentQuantity} → ${totalQuantity}`,
+          localize('stack.increased', {
+            name: existingItem.name,
+            from: String(currentQuantity),
+            to: String(totalQuantity),
+          }),
         );
       });
     return;
@@ -128,7 +133,11 @@ export function incrementStack(existingItem: ShwItem, incomingData: ItemDataLike
     })
     .then(() => {
       ui.notifications?.info(
-        `Стак "${existingItem.name}" заполнен до максимума: ${currentQuantity} → ${stackLimit}`,
+        localize('stack.filledToMax', {
+          name: existingItem.name,
+          from: String(currentQuantity),
+          to: String(stackLimit),
+        }),
       );
     });
 
@@ -179,7 +188,10 @@ export function incrementStack(existingItem: ShwItem, incomingData: ItemDataLike
         // Clear flag after creation completes
         isCreatingOverflowStacks = false;
         ui.notifications?.info(
-          `Создано дополнительных стаков "${existingItem.name}": ${newStacks.length}`,
+          localize('stack.additionalCreated', {
+            name: existingItem.name,
+            count: String(newStacks.length),
+          }),
         );
       });
     }
@@ -212,7 +224,7 @@ export function handleAddItem(
 
   // Ability duplicate - block creation
   if (isAbility(itemData)) {
-    ui.notifications?.warn(`У персонажа уже есть способность "${itemData.name}"`);
+    ui.notifications?.warn(localize('stack.abilityExists', { name: itemData.name }));
     return 'blocked';
   }
 

@@ -11,6 +11,8 @@
 
   let { item }: Props = $props();
 
+  console.log("BasicStats item:", item);
+
   const updateConsumable = getUpdateConsumable(item);
 
   if (!item.isConsumable()) throw new Error("Item is not a consumable");

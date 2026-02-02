@@ -160,7 +160,7 @@
 
       if (!itemData) {
         console.warn("No drag data found");
-        ui.notifications?.warn("Не удалось прочитать данные предмета");
+        ui.notifications?.warn(t("tree.readItemDataError"));
         return;
       }
 
@@ -168,12 +168,13 @@
       onDrop(node, itemData);
     } catch (error) {
       console.error("Failed to handle drop:", error);
-      ui.notifications?.error("Ошибка при обработке перетаскивания");
+      ui.notifications?.error(t("tree.dropError"));
     }
   }
 </script>
 
 <div
+  role="region"
   class="tree-node"
   class:highlighted={isHighlighted}
   ondragover={handleDragOver}

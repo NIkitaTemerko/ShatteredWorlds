@@ -5,7 +5,7 @@
   "private": true,
   "type": "module",
   "author": "Nikita Temerko",
-  "version": "0.12.9",
+  "version": "0.12.10",
   "contributors": [
     "Nikita Temerko"
   ],
@@ -15,7 +15,8 @@
     "@sveltejs/vite-plugin-svelte": "^6.2.1",
     "clsx": "^2.1.1",
     "cssnano": "^7.1.2",
-    "vite": "^7.2.2"
+    "vite": "^7.2.2",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.6",
@@ -27,6 +28,7 @@
     "svelte": "^5.43.11",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.17",
+    "terser": "^5.46.0",
     "typescript": "^5.9.3"
   },
   "browserslist": [
@@ -34,10 +36,11 @@
     "not IE 11"
   ],
   "scripts": {
-    "build": "vite build",
+    "build": "vite build --mode production",
+    "build:dev": "vite build --mode development",
     "dev": "vite",
     "lint": "biome check",
-    "watch": "vite build --watch",
+    "watch": "vite build --watch --mode development",
     "pack": "npm run build && zip -r shattered-worlds.zip dist/ lang/ templates/ template.json system.json",
     "bump:patch": "npm version patch --no-git-tag-version && node scripts/update-system-version.js && node scripts/update-readme.js",
     "bump:minor": "npm version minor --no-git-tag-version && node scripts/update-system-version.js && node scripts/update-readme.js",

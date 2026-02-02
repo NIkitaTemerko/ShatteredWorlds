@@ -1,10 +1,11 @@
 import type { ShwItem } from '../../../documents/Item/ShwItem';
 import type { ConsumableType } from '../../../documents/Item/types/ConsumableDataTypes';
 import type { ItemType } from '../../../documents/Item/types/ItemDataInterface';
+import type { I18nKey } from '../../../shared/i18n';
 import { t } from '../../../shared/i18n';
 import type { FlatItem } from '../../../shared/ui/tree';
 
-// Rarity colors for visual distinction (matching consumables)
+// Цвета редкости для визуального различия
 const rarityColors: Record<string, string> = {
   common: '#9CA3AF',
   uncommon: '#10B981',
@@ -12,18 +13,19 @@ const rarityColors: Record<string, string> = {
   legendary: '#F97316',
 };
 
-// Item type category translation keys
-const itemTypeKeys: Record<ItemType, string> = {
+// Ключи локализации для типов предметов
+const itemTypeKeys: Record<ItemType, I18nKey> = {
   consumable: 'inventory.categories.consumable',
   ability: 'inventory.categories.ability',
   weapon: 'inventory.categories.weapon',
   armor: 'inventory.categories.armor',
   equipment: 'inventory.categories.equipment',
   treasure: 'inventory.categories.treasure',
+  spell: 'tabs.spells',
 };
 
-// Consumable type subcategory translation keys
-const consumableTypeKeys: Record<ConsumableType, string> = {
+// Ключи локализации для типов расходников
+const consumableTypeKeys: Record<ConsumableType, I18nKey> = {
   potion: 'inventory.consumableTypes.potion',
   bomb: 'inventory.consumableTypes.bomb',
   scroll: 'inventory.consumableTypes.scroll',

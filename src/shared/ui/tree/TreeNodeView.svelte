@@ -174,6 +174,7 @@
 </script>
 
 <div
+  role="region"
   class="tree-node"
   class:highlighted={isHighlighted}
   ondragover={handleDragOver}

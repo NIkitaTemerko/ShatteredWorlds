@@ -59,7 +59,7 @@ export class ShwActor<K extends 'character' | 'npc'> extends Actor {
 1. `prepareBaseData()` - Initialize defaults, ensure all fields exist
 2. `prepareDerivedData()` - Calculate bonuses, totals (e.g., `totalHealth`, attribute bonuses)
 
-### Item Types: `consumable` | `ability`
+### Item Types: `consumable` | `ability` | `spell`
 
 Items use factory pattern (`ItemFactory.createConsumable()`, `ItemFactory.createAbility()`) with discriminated unions:
 
@@ -68,10 +68,14 @@ Items use factory pattern (`ItemFactory.createConsumable()`, `ItemFactory.create
 type ConsumableData = BombData | PotionData | ScrollData | PoisonData | FoodData;
 // src/documents/Item/types/AbilityDataTypes.ts
 type AbilityData = ActiveAbilityData | PassiveAbilityData;
+// src/documents/Item/types/SpellDataTypes.ts
+type SpellCategory = 'code' | 'elemental' | 'dark' | 'holy' | 'arcane';
+type SpellKind = 'attack' | 'heal' | 'support' | 'debuff' | 'control' | 'movement' | 'summon' | 'utility';
 ```
 
 **Consumable types** have specific fields (e.g., `bomb.damage.amount`, `potion.effects[]`)
 **Ability types** distinguish between `active` (with cooldowns, costs) and `passive` (always-on effects)
+**Spell types** have `spellKind`, `category`, `actionType`, `castTime`, `range`, `targeting`, `effects[]`, `savingThrow[]`, `rank`, cooldowns, and resource costs
 
 ## Development Workflow
 
@@ -236,22 +240,33 @@ src/
   documents/        # Foundry document classes (Actor, Item, Token)
   helpers/          # Pure functions for data preparation (prepareBaseData, prepareDerivedData)
   sheets/           # Base classes (SvelteActorSheet, ShwItemSheet)
-  view/             # Sheet applications (CharacterApp, ItemApp) + Root Svelte shells
+  view/             # Sheet applications (CharacterApp, ItemApp, SpellItemApp) + Root Svelte shells
     */ui/           # Svelte components (RootCharacterShell.svelte, etc)
     */store/        # Svelte stores (legacy, prefer runes in new code)
   entities/         # Domain models + UI components organized by entity
     character/      # Character-specific types, constants, and components
       model/        # Types, interfaces, constants (CharacterTab, AttributeColors)
       ui/           # Character-specific Svelte components (AttributeStats, CharacterHeader)
-  features/         # Cross-cutting features (navigation, roll)
+    ability/        # Ability entity with AbilityTree component
+    consumable/     # Consumable entity with type mappings
+    spell/          # Spell entity with SpellTree, category colors
+    inventory/      # Cross-item inventory (hierarchical tree of all non-ability items)
+  features/         # Cross-cutting features (navigation, roll, activation, uses, itemImport)
     navigation/     # Tab navigation components
     roll/           # Roll panel and roll logic
-  shared/ui/        # Reusable Svelte components (Input, ActionIcon)
+    activation/     # ActivationControl: action/bonus/reaction type + cost selector
+    uses/           # UsesControl: charges/uses/turns with current/max tracking
+    itemImport/     # Bulk JSON import with Zod validation, dry-run, duplicate detection
+  modules/          # Standalone application modules
+    shop/           # ShopManagerApp: merchant/location tree, localStorage persistence
+  shared/ui/        # Reusable Svelte components (Input, ActionIcon, Tree)
+    tree/           # Generic Tree, TreeWithSearch, TreeNodeView (used across entities)
 ```
 
 **Architecture pattern:** 
-- `entities/` = domain-driven slices (character, npc, item) with model + UI
+- `entities/` = domain-driven slices (character, ability, spell, inventory) with model + UI
 - `features/` = cross-cutting functionality used across multiple entities
+- `modules/` = standalone application windows (shop manager)
 - `view/` = Foundry sheet adapters that wire entities/features together
 
 **Import pattern example:**
@@ -263,6 +278,14 @@ import { RollPanel } from '../../../features/roll';
 ```
 
 This keeps domain logic (entities) separate from presentation wiring (view) and shared features.
+
+### Shared Tree System
+
+A generic tree UI (`src/shared/ui/tree/`) is reused across inventory, abilities, spells, and shop:
+- `FlatItem` → `TreeNode` conversion utilities
+- Search/filter support via `TreeWithSearch`
+- Per-node colors, icons, and category icons
+- State tracking: `expandedIds`, `selectedId`, `highlightedId`
 
 ## Foundry VTT Integration
 
@@ -298,6 +321,9 @@ Hooks.once('setup', () => {
   foundry.documents.collections.Items.registerSheet('shw', AbilityItemApp, {
     types: ['ability'], makeDefault: true
   });
+  foundry.documents.collections.Items.registerSheet('shw', SpellItemApp, {
+    types: ['spell'], makeDefault: true
+  });
 });
 
 Hooks.on('preCreateToken', (tokenDocument, tokenData) => {
@@ -308,27 +334,58 @@ Hooks.on('preCreateToken', (tokenDocument, tokenData) => {
   }
 });
 
-Hooks.on('preCreateItem', (item, data) => {
-  // Auto-migrate legacy consumable data + handle stacking logic
+Hooks.on('preCreateItem', (item, data, options) => {
+  // Auto-migrate legacy consumable data
   if (needsMigration(data)) {
     const migrated = migrateConsumableData(data);
     item.updateSource({ system: migrated.system });
   }
   
-  // Stack management for items added to actors
+  // Track origin + stack management for items added to actors
   if (item.parent && item.parent instanceof ShwActor) {
+    const originItemId = findOriginItem(item, options);
+    if (originItemId) {
+      item.updateSource({ 'flags.shw.originItemId': originItemId });
+    }
     const result = handleAddItem(item.parent, {
       type: item.type, name: item.name, system: item.system
     });
-    // Prevent creation if item was stacked or blocked
     if (result === 'stacked' || result === 'blocked') return false;
+  }
+});
+
+// Two-way sync: owned ↔ global items
+Hooks.on('updateItem', async (item, changes, options) => {
+  if (options?.skipSync) return;
+  if (item.parent instanceof ShwActor) {
+    // Owned → Global: sync to origin item
+    await syncOwnedToGlobal(item, changes);
+  } else if (!item.parent) {
+    // Global → Owned: propagate to all copies
+    await syncGlobalToOwned(item, changes);
   }
 });
 ```
 
 ### Data Model (`template.json`)
 
-Minimal schema - actual structure defined in TypeScript types (`src/documents/*/types/`). Only declares actor/item types, not full data structure.
+Minimal schema - actual structure defined in TypeScript types (`src/documents/*/types/`). Only declares actor/item types (`character`, `npc`, `consumable`, `ability`, `spell`), not full data structure.
+
+### Item Synchronization System
+
+Owned items (on actors) maintain a two-way sync with their global source items:
+
+- **Origin tracking:** `flags.shw.originItemId` links owned items to their global source
+- **Origin discovery:** By explicit ID → by `baseId` → by name+type (drag-drop fallback)
+- **Owned → Global:** Editing an owned item syncs changes to the global source
+- **Global → Owned:** Editing a global item propagates to all owned copies across all actors
+- **Recursion prevention:** `skipSync` option flag prevents infinite update loops
+
+### Nav Bar Buttons
+
+Two custom buttons are injected into Foundry's nav bar via `Hooks.once('ready')` with DOM manipulation:
+- **Shop** (`fa-solid fa-store`) — Opens `ShopManagerApp`
+- **Import** (`fa-solid fa-file-import`) — Opens `ImportItemsApp`
 
 ## Common Tasks
 
@@ -348,6 +405,13 @@ Minimal schema - actual structure defined in TypeScript types (`src/documents/*/
 3. Create Svelte component in `src/view/ConsumableItem/ui/`
 4. Add conditional rendering in `RootItemShell.svelte`
 5. Update `typeColors` in `consumableConstants.ts`
+
+### Adding a New Spell Category or Kind
+
+1. Add to discriminated union in `src/documents/Item/types/SpellDataTypes.ts`
+2. Update category colors in `src/entities/spell/model/`
+3. Update `SpellTree.svelte` if tree grouping changes
+4. Add localization keys to `lang/en.json` and `lang/ru.json`
 
 ### Modifying Attribute Calculations
 
@@ -570,10 +634,12 @@ existingItem.update({ 'system.quantity': totalQuantity }).then(() => {
 
 ## External Dependencies
 
-- **Foundry VTT Types:** `@league-of-foundry-developers/foundry-vtt-types`
+- **Foundry VTT Types:** `@league-of-foundry-developers/foundry-vtt-types` (v13)
 - **Svelte 5:** Latest runes API (not Svelte 4 stores)
 - **Tailwind v4:** Uses new `@tailwindcss/vite` plugin (not PostCSS)
 - **Biome:** Replaces ESLint/Prettier for linting and formatting
+- **Zod:** Schema validation (used in item import for JSON validation)
+- **clsx + tailwind-merge:** Utility class merging (via `cn()` helper in `src/shared/lib/cn.ts`)
 
 ## Localization
 
@@ -632,7 +698,7 @@ Respect hook order: `init` → `setup` → `ready`. Register document classes in
 ## Testing & Quality
 
 - **No automated tests** currently - manual testing in Foundry required
-- **Biome checks:** Run `pnpm biome check` before commits
+- **Biome checks:** Run `pnpm lint` before commits
 - **Build validation:** Ensure `pnpm build` succeeds without errors
 - **Manual testing workflow:**
   1. Start Foundry on `:30000`
@@ -640,3 +706,17 @@ Respect hook order: `init` → `setup` → `ready`. Register document classes in
   3. Create test actors/items in Foundry
   4. Verify sheet rendering and data updates
   5. Check browser console for errors
+
+## Available Scripts
+
+```bash
+pnpm dev          # Vite dev server on :30001, proxies to Foundry :30000
+pnpm build        # Production build to dist/
+pnpm build:dev    # Development build (unminified)
+pnpm watch        # Build + watch mode (development)
+pnpm lint         # Biome check (linting + formatting)
+pnpm pack         # Build + create shattered-worlds.zip
+pnpm bump:patch   # Bump patch version across all manifests
+pnpm bump:minor   # Bump minor version
+pnpm bump:major   # Bump major version
+```

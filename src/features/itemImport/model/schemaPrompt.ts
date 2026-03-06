@@ -1,36 +1,25 @@
-import foundryIconsList from '../../../shared/data/foundryIcons.json';
-
-// Категории иконок по типам предметов
-const ICON_CATEGORIES: Record<string, string[]> = {
-  potion: ['icons/consumables/potions/'],
-  bomb: ['icons/weapons/thrown/bomb'],
-  scroll: ['icons/sundries/scrolls/'],
-  food: ['icons/consumables/food/'],
-  poison: ['icons/consumables/potions/', 'icons/consumables/poison/'],
-  ability: ['icons/skills/'],
-  spell: ['icons/magic/'],
-};
-
 /**
- * Фильтрует иконки по типу предмета
- */
-function getIconsForType(type: string, consumableType?: string): string[] {
-  const category = consumableType || type;
-  const prefixes = ICON_CATEGORIES[category] || [];
-  if (prefixes.length === 0) return [];
-
-  return (foundryIconsList as string[]).filter((icon) =>
-    prefixes.some((prefix) => icon.startsWith(prefix)),
-  );
-}
-
-/**
- * Генерирует промпт со схемами для ИИ (без иконок - они опциональны)
+ * Генерирует промпт со схемами для ИИ (без иконок — они опциональны)
  */
 export function generateSchemaPrompt(): string {
   return `# Shattered Worlds Item Import Schema
 
 Создай JSON массив предметов для импорта в систему Shattered Worlds (Foundry VTT).
+
+---
+
+## СТРОГИЕ ПРАВИЛА (нарушение = невалидный результат)
+
+1. **НЕ УКАЗЫВАЙ опциональные поля** если пользователь не задал конкретное значение. Система автоматически подставит значения по умолчанию. Если поле помечено "По умолчанию: X" — НЕ включай его в JSON.
+2. **quantity** — ЗАПРЕЩЕНО указывать. Это поле управляется инвентарём, не предметом.
+3. **Указывай ТОЛЬКО**: обязательные поля (помечены "ОБЯЗАТЕЛЬНО") + поля, которые пользователь явно попросил задать.
+4. **description** — ОБЯЗАТЕЛЬНО заполняй развёрнутым лорным описанием (2-4 предложения). Описание должно раскрывать суть предмета, его историю или применение в мире.
+5. **baseId** — формат: \`{type}-{subtype}-{name}\`, например \`potion-heal-greater\`, \`bomb-fire-cluster\`. Только латиница, kebab-case.
+6. **name** — на русском языке, лорное название.
+7. **Числовые значения** (damage, amount, dc, radius и т.д.) — указывай ТОЛЬКО если пользователь задал или описал силу предмета. Иначе используй минимальные разумные значения из примеров.
+8. **rarity** — указывай ТОЛЬКО если пользователь явно попросил определённую редкость.
+9. **img** — НЕ указывай. Иконки подбираются отдельным шагом.
+10. **Формат ответа** — ТОЛЬКО валидный JSON массив без markdown, комментариев, пояснений.
 
 ---
 
@@ -55,20 +44,20 @@ interface ItemCore {
 \`\`\`typescript
 interface BaseConsumableFields {
   consumableType: "potion" | "bomb" | "scroll" | "food" | "poison";  // ОБЯЗАТЕЛЬНО - дискриминатор
-  quantity?: number;         // По умолчанию: 1
-  stackLimit?: number;       // По умолчанию: 99
-  price?: number;            // По умолчанию: 0
-  weight?: number;           // По умолчанию: 0
-  rarity?: "common" | "uncommon" | "rare" | "epic" | "legendary";  // По умолчанию: "common"
-  description?: string;      // По умолчанию: ""
-  activation?: {
-    type?: "action" | "bonus" | "reaction";  // По умолчанию: "action"
-    cost?: number;           // По умолчанию: 1
+  description: string;       // ОБЯЗАТЕЛЬНО — лорное описание предмета (2-4 предложения)
+  // ↓ Опциональные поля — НЕ УКАЗЫВАЙ если пользователь не просил ↓
+  stackLimit?: number;       // НЕ УКАЗЫВАЙ (дефолт: 99)
+  price?: number;            // НЕ УКАЗЫВАЙ (дефолт: 0)
+  weight?: number;           // НЕ УКАЗЫВАЙ (дефолт: 0)
+  rarity?: "common" | "uncommon" | "rare" | "epic" | "legendary";  // НЕ УКАЗЫВАЙ (дефолт: "common")
+  activation?: {             // НЕ УКАЗЫВАЙ (дефолт: action, cost 1)
+    type?: "action" | "bonus" | "reaction";
+    cost?: number;
   };
-  uses?: {
-    value?: number;          // По умолчанию: 1
-    max?: number;            // По умолчанию: 1
-    per?: "charges" | "uses" | "turns";  // По умолчанию: "charges"
+  uses?: {                   // НЕ УКАЗЫВАЙ (дефолт: 1/1, charges)
+    value?: number;
+    max?: number;
+    per?: "charges" | "uses" | "turns";
   };
 }
 \`\`\`
@@ -97,11 +86,9 @@ interface PotionEffect {
   "baseId": "potion-heal-greater",
   "type": "consumable",
   "name": "Большое зелье лечения",
-  "img": "icons/consumables/potions/bottle-round-label-cork-red.webp",
   "system": {
     "consumableType": "potion",
-    "rarity": "uncommon",
-    "price": 100,
+    "description": "Густая алая жидкость, мерцающая в свете факелов. Варится алхимиками Красной Гильдии из корня мандрагоры и крови феникса. Мгновенно затягивает раны и восстанавливает силы.",
     "effects": [{ "type": "heal", "amount": 50, "duration": 0 }]
   }
 }
@@ -132,11 +119,9 @@ interface BombSystem extends BaseConsumableFields {
   "baseId": "bomb-fire-standard",
   "type": "consumable",
   "name": "Огненная бомба",
-  "img": "icons/weapons/thrown/bomb-fuse-red.webp",
   "system": {
     "consumableType": "bomb",
-    "rarity": "uncommon",
-    "price": 75,
+    "description": "Глиняная сфера, начинённая алхимическим огнём. При ударе о поверхность воспламеняется, разбрызгивая горящую смесь в радиусе нескольких метров. Излюбленное оружие горных разбойников.",
     "damage": { "amount": 50, "type": "fire" },
     "radius": 3,
     "save": { "type": "perception", "dc": 14 }
@@ -169,11 +154,9 @@ interface ScrollSystem extends BaseConsumableFields {
   "baseId": "scroll-fireball",
   "type": "consumable",
   "name": "Свиток огненного шара",
-  "img": "icons/sundries/scrolls/scroll-magical-red.webp",
   "system": {
     "consumableType": "scroll",
-    "rarity": "rare",
-    "price": 300,
+    "description": "Пергамент из драконьей кожи, испещрённый пылающими рунами. При активации руны вырываются с поверхности и формируют разрушительную сферу пламени. Одноразовый — после прочтения рассыпается в пепел.",
     "spell": { "name": "Fireball", "level": 3, "school": "evocation" },
     "requirements": { "ability": "perception", "dc": 13 }
   }
@@ -207,11 +190,9 @@ interface FoodEffect {
   "baseId": "food-dragon-steak",
   "type": "consumable",
   "name": "Стейк дракона",
-  "img": "icons/consumables/food/meat-cooked-steak.webp",
   "system": {
     "consumableType": "food",
-    "rarity": "epic",
-    "price": 500,
+    "description": "Щедрый кусок мяса огненного дракона, прожаренный на его же пламени. Волокна пронизаны остаточной магией, дающей едоку временную устойчивость к огню. Деликатес, доступный лишь сильнейшим охотникам.",
     "nutrition": { "value": 8, "duration": 24 },
     "effects": [{ "type": "fire_resistance", "duration": 8, "value": 50 }]
   }
@@ -244,11 +225,9 @@ interface PoisonSystem extends BaseConsumableFields {
   "baseId": "poison-sleep",
   "type": "consumable",
   "name": "Сонный яд",
-  "img": "icons/consumables/potions/bottle-round-corked-purple.webp",
   "system": {
     "consumableType": "poison",
-    "rarity": "uncommon",
-    "price": 100,
+    "description": "Бесцветная маслянистая жидкость, добываемая из шипов лунного цветка. Парализует нервную систему жертвы, погружая в глубокий неестественный сон. Ассасины Южного Берега щедро сдабривают ею клинки.",
     "damage": { "initial": "1d4", "recurring": "1d4", "duration": 3 },
     "save": { "type": "force", "dc": 14 },
     "application": "injury"
@@ -262,9 +241,10 @@ interface PoisonSystem extends BaseConsumableFields {
 
 \`\`\`typescript
 interface AbilitySystem {
-  abilityType?: "active" | "passive";  // По умолчанию: "active"
-  description?: string;                // По умолчанию: ""
-  rarity?: "common" | "uncommon" | "rare" | "epic" | "legendary";
+  description: string;     // ОБЯЗАТЕЛЬНО — лорное описание (2-4 предложения)
+  // ↓ Опциональные поля — НЕ УКАЗЫВАЙ если пользователь не просил ↓
+  abilityType?: "active" | "passive";  // НЕ УКАЗЫВАЙ (дефолт: "active")
+  rarity?: "common" | "uncommon" | "rare" | "epic" | "legendary";  // НЕ УКАЗЫВАЙ (дефолт: "common")
   
   // Для активных способностей (abilityType: "active")
   activeKind?: "attack" | "defense" | "utility" | "movement";
@@ -275,11 +255,11 @@ interface AbilitySystem {
   passiveKind?: "stat-bonus" | "aura" | "triggered";
   mode?: "always-on" | "toggle";
   
-  // Общие опциональные поля
-  maxRank?: number;        // По умолчанию: 1
-  currentRank?: number;    // По умолчанию: 1
-  cooldown?: unknown;      // По умолчанию: null
-  resourceCosts?: unknown[];  // По умолчанию: []
+  // Общие — НЕ УКАЗЫВАЙ (есть дефолты)
+  maxRank?: number;
+  currentRank?: number;
+  cooldown?: unknown;
+  resourceCosts?: unknown[];
 }
 \`\`\`
 
@@ -289,13 +269,11 @@ interface AbilitySystem {
   "baseId": "ability-backstab",
   "type": "ability",
   "name": "Удар в спину",
-  "img": "icons/skills/melee/strike-dagger-orange.webp",
   "system": {
     "abilityType": "active",
     "activeKind": "attack",
     "actionType": "action",
-    "rarity": "uncommon",
-    "description": "Наносит тройной урон скрытому врагу"
+    "description": "Стремительный выпад из тени, направленный в уязвимое место противника. Мастера этой техники обучаются годами в гильдиях воров, оттачивая точность до совершенства. Наносит утроенный урон скрытому врагу."
   }
 }
 \`\`\`
@@ -306,13 +284,11 @@ interface AbilitySystem {
   "baseId": "ability-danger-sense",
   "type": "ability",
   "name": "Чувство опасности",
-  "img": "icons/skills/social/intimidation-imp-orange.webp",
   "system": {
     "abilityType": "passive",
     "passiveKind": "triggered",
     "mode": "always-on",
-    "rarity": "rare",
-    "description": "Преимущество на спасброски от ловушек"
+    "description": "Обострённое шестое чувство, выработанное выживанием в подземельях. За мгновение до удара тело инстинктивно уклоняется, предчувствуя угрозу. Даёт преимущество на спасброски от ловушек и засад."
   }
 }
 \`\`\`
@@ -323,14 +299,15 @@ interface AbilitySystem {
 
 \`\`\`typescript
 interface SpellSystem {
-  category?: "code" | "elemental" | "dark" | "holy" | "arcane";  // По умолчанию: "arcane"
-  spellKind?: "attack" | "defense" | "utility" | "movement";     // По умолчанию: "attack"
-  level?: number;           // По умолчанию: 1
-  description?: string;     // По умолчанию: ""
-  rarity?: "common" | "uncommon" | "rare" | "epic" | "legendary";
-  castTime?: number;        // По умолчанию: 0
-  resourceCosts?: unknown[];  // По умолчанию: []
-  effects?: unknown[];      // По умолчанию: []
+  description: string;     // ОБЯЗАТЕЛЬНО — лорное описание (2-4 предложения)
+  // ↓ Опциональные поля — НЕ УКАЗЫВАЙ если пользователь не просил ↓
+  category?: "code" | "elemental" | "dark" | "holy" | "arcane";  // НЕ УКАЗЫВАЙ (дефолт: "arcane")
+  spellKind?: "attack" | "defense" | "utility" | "movement";     // НЕ УКАЗЫВАЙ (дефолт: "attack")
+  level?: number;           // НЕ УКАЗЫВАЙ (дефолт: 1)
+  rarity?: "common" | "uncommon" | "rare" | "epic" | "legendary";  // НЕ УКАЗЫВАЙ (дефолт: "common")
+  castTime?: number;        // НЕ УКАЗЫВАЙ (дефолт: 0)
+  resourceCosts?: unknown[];  // НЕ УКАЗЫВАЙ (дефолт: [])
+  effects?: unknown[];      // НЕ УКАЗЫВАЙ (дефолт: [])
 }
 \`\`\`
 
@@ -340,47 +317,34 @@ interface SpellSystem {
   "baseId": "spell-fireball",
   "type": "spell",
   "name": "Огненный шар",
-  "img": "icons/magic/fire/projectile-fireball-orange.webp",
   "system": {
     "category": "elemental",
     "spellKind": "attack",
     "level": 3,
-    "rarity": "rare",
-    "description": "Взрыв огня радиусом 6м, 8d6 огненного урона"
+    "description": "Сгусток чистой огненной маны, сжатый до предела и выпущенный в цель. При столкновении взрывается, испепеляя всё в радиусе шести метров. Одно из первых боевых заклинаний, которым обучают в Академии Элементов."
   }
 }
 \`\`\`
 
 ---
 
-## Иконки (опционально)
+## Иконки
 
-Поле \`img\` опционально. Если не указано - система подставит иконку по умолчанию.
-Если указываешь иконку, используй формат: \`icons/{category}/{subcategory}/{name}.webp\`
-
-Примеры валидных путей:
-- Зелья: \`icons/consumables/potions/bottle-round-corked-red.webp\`
-- Бомбы: \`icons/weapons/thrown/bomb-fuse-black.webp\`
-- Свитки: \`icons/sundries/scrolls/scroll-bound-gold-tan.webp\`
-- Еда: \`icons/consumables/food/cooked-drumstick-bone-brown.webp\`
-- Способности: \`icons/skills/melee/blade-tip-orange.webp\`
-- Заклинания: \`icons/magic/fire/projectile-fireball-orange.webp\`
-
-**Рекомендация:** Не указывай \`img\` при генерации. Иконки можно подобрать отдельно.
+**НЕ УКАЗЫВАЙ поле \`img\`.** Иконки подбираются отдельным шагом после генерации.
 
 ---
 
 ## Требования к ответу
 
-1. **baseId** - уникальный для каждого предмета
-2. **type** - обязательно указать "consumable", "ability" или "spell"
-3. **consumableType** - ОБЯЗАТЕЛЬНО для консьюмаблов (дискриминатор)
-4. **Названия** - на русском языке
-5. **Описания** - краткие, лорные (механика уже в полях)
+1. **baseId** — уникальный, kebab-case, латиница
+2. **type** — обязательно: "consumable", "ability" или "spell"
+3. **consumableType** — ОБЯЗАТЕЛЬНО для консьюмаблов
+4. **name** — на русском, лорное название
+5. **description** — ОБЯЗАТЕЛЬНО, развёрнутое лорное описание (2-4 предложения)
+6. **Опциональные поля** — НЕ ВКЛЮЧАЙ если пользователь не задал конкретные значения
 
 ## ВАЖНО - Формат ответа:
 - Верни ТОЛЬКО JSON массив, без markdown-разметки и комментариев
-- Верни ПОЛНЫЕ объекты со ВСЕМИ полями, не сокращай
 - JSON должен быть готов к копированию целиком
 
 ---
@@ -399,120 +363,3 @@ interface SpellSystem {
 `;
 }
 
-/**
- * Генерирует промпт с ошибками для исправления ИИ
- */
-export function generateErrorPrompt(errorMessage: string, jsonText: string): string {
-  // Определяем нужны ли иконки для исправления
-  const needsIcons =
-    errorMessage.toLowerCase().includes('иконк') ||
-    errorMessage.toLowerCase().includes('icon') ||
-    errorMessage.toLowerCase().includes('img');
-
-  let iconSection = '';
-  if (needsIcons) {
-    // Парсим JSON чтобы понять какие типы предметов
-    try {
-      const items = JSON.parse(jsonText);
-      const types = new Set<string>();
-      for (const item of items) {
-        if (item.system?.consumableType) {
-          types.add(item.system.consumableType);
-        } else if (item.type) {
-          types.add(item.type);
-        }
-      }
-
-      // Собираем релевантные иконки
-      const relevantIcons: string[] = [];
-      for (const type of types) {
-        relevantIcons.push(...getIconsForType(type, type));
-      }
-
-      if (relevantIcons.length > 0) {
-        iconSection = `
-
-## Доступные иконки для этих типов предметов:
-\`\`\`json
-${JSON.stringify(relevantIcons.slice(0, 200), null, 2)}
-\`\`\`
-${relevantIcons.length > 200 ? `\n(показано 200 из ${relevantIcons.length})` : ''}
-`;
-      }
-    } catch {
-      // Если не удалось распарсить - не добавляем иконки
-    }
-  }
-
-  return `# Исправь ошибки в JSON
-
-## Ошибки валидации:
-\`\`\`
-${errorMessage}
-\`\`\`
-
-## Исходный JSON:
-\`\`\`json
-${jsonText}
-\`\`\`
-${iconSection}
-## Требования:
-1. Исправь все указанные ошибки
-2. Сохрани ВСЕ поля и данные каждого объекта
-
-## ВАЖНО - Формат ответа:
-- Верни ПОЛНЫЙ JSON массив со ВСЕМИ объектами и ВСЕМИ их полями
-- Не сокращай, не пропускай поля
-- JSON должен быть готов к копированию целиком
-`;
-}
-
-/**
- * Генерирует промпт для подбора иконок к предметам
- */
-export function generateIconsPrompt(jsonText: string): string {
-  let items: Array<Record<string, unknown>> = [];
-  try {
-    items = JSON.parse(jsonText);
-  } catch {
-    return 'Ошибка: невалидный JSON';
-  }
-
-  // Собираем уникальные типы
-  const types = new Set<string>();
-  for (const item of items) {
-    const system = item.system as { consumableType?: string } | undefined;
-    const type = system?.consumableType || (item.type as string) || 'unknown';
-    types.add(type);
-  }
-
-  // Собираем все релевантные иконки
-  const allIcons: string[] = [];
-  for (const type of types) {
-    allIcons.push(...getIconsForType(type, type));
-  }
-  const uniqueIcons = [...new Set(allIcons)];
-
-  return `# Подбери иконки для предметов Shattered Worlds
-
-## Исходные предметы:
-\`\`\`json
-${jsonText}
-\`\`\`
-
-## Доступные иконки (выбирай ТОЛЬКО из этого списка):
-\`\`\`json
-${JSON.stringify(uniqueIcons, null, 2)}
-\`\`\`
-
-## Задача:
-1. Для КАЖДОГО предмета добавь или замени поле "img" на подходящую иконку
-2. Выбирай иконку по смыслу: potions для зелий, bomb для бомб, scrolls для свитков, food для еды, skills для способностей, magic для заклинаний
-3. Верни ПОЛНЫЙ JSON массив со ВСЕМИ полями каждого предмета
-
-## ВАЖНО:
-- Верни ВЕСЬ JSON целиком, не только изменённые поля
-- Каждый объект должен содержать ВСЕ оригинальные поля + обновлённое "img"
-- Формат: готовый к копированию JSON массив
-`;
-}

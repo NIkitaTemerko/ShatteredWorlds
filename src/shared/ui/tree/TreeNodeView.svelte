@@ -1,6 +1,8 @@
 <script lang="ts">
   import { t } from "../../../shared/i18n";
   import ActionIcon from "../ActionIcon/ui.svelte";
+  import { PopupMenu, closeActivePopup } from "../PopupMenu";
+  import type { PopupMenuItem } from "../PopupMenu";
   import TreeNodeViewSelf from "./TreeNodeView.svelte";
   import type { TreeNode } from "./types";
 
@@ -15,6 +17,7 @@
     onDelete?: (node: TreeNode, e: Event) => void;
     onEdit?: (node: TreeNode, e: Event) => void;
     onDrop?: (node: TreeNode, itemData: any) => void;
+    getMenuItems?: (node: TreeNode) => PopupMenuItem[];
     isDynamicTree?: boolean;
     expandedIds: Set<string>;
     selectedId?: string;
@@ -32,6 +35,7 @@
     onDelete,
     onEdit,
     onDrop,
+    getMenuItems,
     isDynamicTree = false,
     expandedIds,
     selectedId,
@@ -39,32 +43,18 @@
   }: Props = $props();
 
   let isDragOver = $state(false);
+  let menuOpen = $state(false);
+  let menuBtnEl: HTMLElement | undefined = $state();
 
   const hasChildren = node.children && node.children.length > 0;
   const indent = level * 16;
   const isLeaf = !hasChildren;
 
-  // Extract item data for leaves
-  const itemData = $derived(isLeaf && node.data ? node.data : null);
+  // Показываем бургер-меню если есть коллбэк для формирования пунктов
+  const showBurgerMenu = $derived(!!getMenuItems);
 
-  const rarity = $derived.by(() => {
-    if (!itemData || typeof itemData !== "object") return null;
-    const item = itemData as any;
-    return item.type === "consumable" ? item.system?.consumable?.rarity : null;
-  });
-
-  const quantity = $derived.by(() => {
-    if (!itemData || typeof itemData !== "object") return null;
-    const item = itemData as any;
-    return item.type === "consumable" ? item.system?.consumable?.quantity : null;
-  });
-
-  const rarityColors: Record<string, string> = {
-    common: "#9CA3AF",
-    uncommon: "#10B981",
-    rare: "#3B82F6",
-    legendary: "#F97316",
-  };
+  // Пункты меню — формируются снаружи через getMenuItems
+  const menuItems: PopupMenuItem[] = $derived(getMenuItems ? getMenuItems(node) : []);
 
   function handleClick() {
     if (hasChildren) {
@@ -90,11 +80,23 @@
     onEdit?.(node, e);
   }
 
+  // Бургер-меню: переключение
+  function toggleMenu(e: Event) {
+    e.stopPropagation();
+    if (!menuOpen) {
+      closeActivePopup();
+    }
+    menuOpen = !menuOpen;
+  }
+
+  function closeMenu() {
+    menuOpen = false;
+  }
+
   function handleDragOver(e: DragEvent) {
     if (!onDrop) return;
     e.preventDefault();
     e.stopPropagation();
-    console.log("dragover event", e.dataTransfer?.types);
     isDragOver = true;
   }
 
@@ -110,7 +112,6 @@
       return;
     }
 
-    console.log("dragleave event - cursor left bounds");
     isDragOver = false;
   }
 
@@ -119,52 +120,27 @@
     e.stopPropagation();
     isDragOver = false;
 
-    console.log("drop event fired!");
-    console.log("dataTransfer types:", e.dataTransfer?.types);
-    console.log("dataTransfer effectAllowed:", e.dataTransfer?.effectAllowed);
-    console.log("dataTransfer dropEffect:", e.dataTransfer?.dropEffect);
-
-    if (!onDrop) {
-      console.log("onDrop handler is not defined");
-      return;
-    }
+    if (!onDrop) return;
 
     try {
-      // Логируем все доступные типы данных
-      if (e.dataTransfer?.types) {
-        console.log("Iterating through types...");
-        for (const type of e.dataTransfer.types) {
-          const data = e.dataTransfer.getData(type);
-          console.log(`Data type '${type}': length=${data?.length}, value:`, data);
-        }
-      }
-
       // Foundry использует несколько форматов данных
       let itemData;
 
-      // Пробуем application/json (новый формат Foundry)
       const jsonData = e.dataTransfer?.getData("application/json");
-      console.log("application/json result:", jsonData);
       if (jsonData) {
-        console.log("Found application/json data");
         itemData = JSON.parse(jsonData);
       } else {
-        // Пробуем text/plain (старый формат)
         const textData = e.dataTransfer?.getData("text/plain");
-        console.log("text/plain result:", textData, "length:", textData?.length);
         if (textData) {
-          console.log("Attempting to parse text/plain...");
           itemData = JSON.parse(textData);
         }
       }
 
       if (!itemData) {
-        console.warn("No drag data found");
         ui.notifications?.warn(t("tree.readItemDataError"));
         return;
       }
 
-      console.log("Parsed item data:", itemData);
       onDrop(node, itemData);
     } catch (error) {
       console.error("Failed to handle drop:", error);
@@ -218,12 +194,21 @@
       </span>
     {/if}
 
-    {#if isLeaf && rarity}
-      <span class="rarity-indicator" style:background-color={rarityColors[rarity]} title={rarity}></span>
+    {#if isLeaf && node.badge}
+      <span class="badge-indicator" style:background-color={node.badge.color} title={node.badge.label}></span>
     {/if}
 
     <div class="tree-actions">
-      {#if onEdit && (isDynamicTree || isLeaf)}
+      {#if showBurgerMenu && isLeaf}
+        <div class="burger-menu-container" data-popup-menu-id={node.id} bind:this={menuBtnEl}>
+          <ActionIcon onclick={toggleMenu} aria-label="Menu" title="Menu" variant="ghost" size="sm" class="menu-action">
+            {#snippet icon()}
+              <i class="fas fa-bars"></i>
+            {/snippet}
+          </ActionIcon>
+        </div>
+        <PopupMenu open={menuOpen} anchorEl={menuBtnEl} items={menuItems} onClose={closeMenu} menuId={node.id} />
+      {:else if onEdit && (isDynamicTree || isLeaf)}
         <ActionIcon
           onclick={handleEditClick}
           aria-label="Edit"
@@ -269,6 +254,7 @@
           {onDelete}
           {onEdit}
           {onDrop}
+          {getMenuItems}
           {isDynamicTree}
           {expandedIds}
           {selectedId}
@@ -400,7 +386,7 @@
     }
   }
 
-  .rarity-indicator {
+  .badge-indicator {
     width: 12px;
     height: 12px;
     border-radius: 50%;
@@ -417,12 +403,28 @@
     color: #64748b;
   }
 
+  .tree-node-content :global(.menu-action) {
+    transition:
+      opacity 0.15s,
+      color 0.15s;
+    color: #64748b;
+  }
+
+  .tree-node-content :global(.menu-action:hover) {
+    color: #374151;
+  }
+
   .tree-node-content :global(.edit-action:hover) {
     color: #2563eb;
   }
 
   .tree-node-content :global(.delete-action:hover) {
     color: #dc2626;
+  }
+
+  /* Бургер-меню */
+  .burger-menu-container {
+    position: relative;
   }
 
   .tree-children {

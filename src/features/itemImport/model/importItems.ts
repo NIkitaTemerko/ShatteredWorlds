@@ -1,55 +1,5 @@
 import type { ShwItem } from '../../../documents/Item/ShwItem';
-import { ItemCoresArraySchema } from './schemas';
-import type { ImportReport, ImportResult, ItemCore, ValidationReport } from './types';
-
-/** Форматирует путь ошибки Zod */
-function formatPath(path: readonly (string | number)[]): string {
-  if (!path.length) return 'корень';
-  return path.map((p, i) => (typeof p === 'number' ? `[${p}]` : i === 0 ? p : `.${p}`)).join('');
-}
-
-/** Парсит и валидирует JSON через Zod */
-export function parseItemCores(jsonText: string): ItemCore[] {
-  const parsed = JSON.parse(jsonText);
-  if (!Array.isArray(parsed)) throw new Error('JSON должен быть массивом');
-
-  const result = ItemCoresArraySchema.safeParse(parsed);
-  if (result.success) return result.data as ItemCore[];
-
-  // Группируем ошибки по элементу
-  const byItem = new Map<number, string[]>();
-  for (const issue of result.error.issues) {
-    const idx = typeof issue.path[0] === 'number' ? issue.path[0] : -1;
-    const path = issue.path.slice(1).filter((p): p is string | number => typeof p !== 'symbol');
-    const msg = `  • ${formatPath(path)}: ${issue.message}`;
-    byItem.set(idx, [...(byItem.get(idx) || []), msg]);
-  }
-
-  const lines = ['Ошибки валидации:'];
-  for (const [idx, errs] of byItem) {
-    const name = idx >= 0 && parsed[idx]?.name ? `"${parsed[idx].name}"` : `#${idx}`;
-    lines.push(`\n[${idx}] ${name}:`, ...errs);
-  }
-  throw new Error(lines.join('\n'));
-}
-
-/** Проверяет дубликаты baseId */
-export function validateItemCores(items: ItemCore[]): ValidationReport {
-  const seen = new Set<string>();
-  const duplicates: string[] = [];
-  const errors = items
-    .map((item, index) => {
-      if (seen.has(item.baseId)) {
-        if (!duplicates.includes(item.baseId)) duplicates.push(item.baseId);
-        return { index, baseId: item.baseId, message: 'Дублирующийся baseId' };
-      }
-      seen.add(item.baseId);
-      return null;
-    })
-    .filter(Boolean) as { index: number; baseId: string; message: string }[];
-
-  return { valid: !errors.length, errors, duplicates };
-}
+import type { ImportReport, ImportResult, ItemCore } from './types';
 
 /** Импортирует items в Foundry */
 export async function importItemCores(

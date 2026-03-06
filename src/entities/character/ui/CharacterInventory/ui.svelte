@@ -29,6 +29,16 @@
       await item.delete();
     }
   }
+
+  async function handleDuplicateItem(item: ShwItem) {
+    const itemData = item.toObject();
+    itemData.system.quantity = 1;
+    await actor.createEmbeddedDocuments("Item", [itemData], { skipStack: true });
+  }
+
+  async function handleQuantityChange(item: ShwItem, newQuantity: number) {
+    await item.update({ "system.quantity": newQuantity });
+  }
 </script>
 
 <div class="character-inventory">
@@ -39,6 +49,8 @@
       itemCount={inventoryItems.length}
       onSelectItem={handleSelectItem}
       onDeleteItem={handleDeleteItem}
+      onDuplicateItem={handleDuplicateItem}
+      onQuantityChange={handleQuantityChange}
     />
   {/if}
 </div>

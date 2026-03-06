@@ -66,6 +66,7 @@ export function mapInventoryToFlatItems(items: ShwItem[]): FlatItem[] {
         label,
         path,
         color: rarityColors[rarity],
+        badge: { color: rarityColors[rarity] ?? rarityColors.common, label: rarity },
         data: item,
       };
     });

@@ -40,7 +40,8 @@
     return t("spells.spellPlurals.many");
   }
 
-  function handleSelect(node: TreeNode) {
+  function handleEdit(node: TreeNode, e: Event) {
+    e.stopPropagation();
     if (node.isLeaf && node.data) {
       const item = node.data as ShwItem;
       onSelectSpell?.(item);
@@ -63,7 +64,7 @@
       initialSearchQuery={treeState.searchQuery}
       initialExpandedIds={treeState.expandedIds}
       initialSelectedId={treeState.selectedId ?? undefined}
-      onSelect={handleSelect}
+      onEdit={handleEdit}
       onDelete={handleDelete}
       onStateChange={handleStateChange}
     />

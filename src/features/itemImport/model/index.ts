@@ -1,5 +1,8 @@
-export { importItemCores, parseItemCores, validateItemCores } from './importCoreItems';
-export { generateErrorPrompt, generateIconsPrompt, generateSchemaPrompt } from './schemaPrompt';
+export { generateErrorPrompt } from './errorPrompt';
+export { generateIconsPrompt } from './iconsPrompt';
+export { importItemCores } from './importItems';
+export { parseItemCores } from './parseItems';
+export { generateSchemaPrompt } from './schemaPrompt';
 export type {
   ImportReport,
   ImportResult,
@@ -7,3 +10,4 @@ export type {
   ValidationError,
   ValidationReport,
 } from './types';
+export { validateItemCores } from './validateItems';

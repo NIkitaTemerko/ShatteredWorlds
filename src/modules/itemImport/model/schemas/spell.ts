@@ -1,0 +1,38 @@
+import { z } from 'zod';
+import { RangeSchema, rarity, TargetingSchema } from './common';
+
+export const SpellSystemSchema = z.object({
+  category: z.enum(['code', 'elemental', 'dark', 'holy', 'arcane']),
+  spellKind: z.enum([
+    'attack',
+    'heal',
+    'support',
+    'debuff',
+    'control',
+    'movement',
+    'summon',
+    'utility',
+  ]),
+  kind: z.literal('spell').default('spell'),
+  name: z.string().default(''),
+  description: z.string().default(''),
+  weight: z.number().default(0),
+  rarity,
+  actionType: z.enum(['action', 'bonus', 'reaction', 'free']).default('action'),
+  level: z.number().default(1),
+  resourceCosts: z.array(z.unknown()).default([]),
+  castTime: z.number().default(0),
+  range: RangeSchema,
+  targeting: TargetingSchema,
+  attackRoll: z.unknown().nullable().optional(),
+  savingThrow: z.unknown().nullable().optional(),
+  effects: z.array(z.unknown()).default([]),
+  damage: z.unknown().optional(),
+  channeled: z.boolean().optional(),
+  togglable: z.boolean().optional(),
+  usesPerRest: z.number().nullable().optional(),
+  usesPerEncounter: z.number().nullable().optional(),
+  cooldown: z.unknown().nullable().optional(),
+  maxRank: z.number().optional(),
+  currentRank: z.number().optional(),
+});

@@ -80,21 +80,6 @@
   </div>
 
   <div class="stat-col" style="--dark: #3B82F6; --light: #DBEAFE">
-    <div class="stat-header">{t("item.basicStats.quantity")}</div>
-    <div class="stat-body">
-      <Input
-        type="number"
-        min="0"
-        bind:value={system.quantity}
-        variant="underline"
-        textAlign="center"
-        fullWidth
-        onchange={(e) => updateConsumable("quantity", Number(e.currentTarget.value))}
-      />
-    </div>
-  </div>
-
-  <div class="stat-col" style="--dark: #3B82F6; --light: #DBEAFE">
     <div class="stat-header">{t("item.basicStats.stack")}</div>
     <div class="stat-body">
       <Input

@@ -305,6 +305,12 @@
         "scroll": "Scrolls",
         "food": "Food",
         "poison": "Poisons"
+      },
+      "menu": {
+        "edit": "Edit",
+        "duplicate": "Duplicate",
+        "quantity": "Qty",
+        "delete": "Delete"
       }
     },
     "abilities": {

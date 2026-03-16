@@ -5,6 +5,7 @@
   import { StatsCard } from "../../../entities/consumable";
   import { t } from "../../../shared/i18n";
   import { BonusCharacteristics, Input, SelectInput } from "../../../shared/ui";
+  import { PASSIVE_MODES, AREA_SHAPES, AURA_AFFECTS } from "../constants/abilityConstants";
 
   interface Props {
     item: ShwItem;
@@ -58,11 +59,7 @@
         <div class="stat-body">
           <SelectInput
             value={system.mode}
-            options={[
-              { value: "always-on", label: "ability.passiveMode.alwaysOn" },
-              { value: "toggle", label: "ability.passiveMode.toggle" },
-              { value: "triggered", label: "ability.passiveMode.triggered" },
-            ]}
+            options={PASSIVE_MODES}
             variant="underline"
             fullWidth
             onchange={(e) => onUpdate("mode", e.currentTarget.value)}
@@ -120,11 +117,7 @@
           <div class="stat-body">
             <SelectInput
               value={system.aura.shape}
-              options={[
-                { value: "circle", label: "ability.areaShape.circle" },
-                { value: "cone", label: "ability.areaShape.cone" },
-                { value: "line", label: "ability.areaShape.line" },
-              ]}
+              options={AREA_SHAPES}
               variant="underline"
               fullWidth
               onchange={(e) => onUpdate("aura.shape", e.currentTarget.value)}
@@ -137,12 +130,7 @@
           <div class="stat-body">
             <SelectInput
               value={system.aura.affect}
-              options={[
-                { value: "self", label: "ability.targetType.self" },
-                { value: "allies", label: "ability.passiveDetails.allies" },
-                { value: "enemies", label: "ability.passiveDetails.enemies" },
-                { value: "everyone", label: "ability.passiveDetails.everyone" },
-              ]}
+              options={AURA_AFFECTS}
               variant="underline"
               fullWidth
               onchange={(e) => onUpdate("aura.affect", e.currentTarget.value)}

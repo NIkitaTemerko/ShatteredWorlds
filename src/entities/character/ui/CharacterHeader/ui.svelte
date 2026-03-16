@@ -55,7 +55,7 @@
             />
           </label>
         </h1>
-        <span class="tw:text-xl">({actor.system.helpers.totalSpeed})</span>
+        <span class="total-speed">({actor.system.helpers.totalSpeed})</span>
       </div>
     </div>
 
@@ -85,6 +85,10 @@
     display: flex;
     gap: 0.5rem;
     align-items: baseline;
+  }
+
+  .total-speed {
+    font-size: 1.25rem;
   }
 
   .level {

@@ -4,6 +4,70 @@
 
 This is a **Foundry VTT game system** for "Shattered Worlds" - a techno-fantasy RPG with roguelike elements. The system uses a modern stack with **Svelte 5**, **TypeScript**, **Vite**, and **Tailwind CSS v4**.
 
+## FSD Architecture (Feature-Sliced Design)
+
+The project follows an **adapted FSD methodology** — a strict layered architecture where each layer has defined responsibilities and import rules.
+
+### Layers (bottom → top)
+
+| Layer | Path | Responsibility | Can import from |
+|---|---|---|---|
+| **shared** | `src/shared/` | Reusable UI, utilities, types, constants. No business logic. | Only itself |
+| **entities** | `src/entities/` | Domain models + entity-specific UI (character, ability, spell, inventory, consumable) | `shared` |
+| **features** | `src/features/` | Cross-cutting user-facing functionality (navigation, roll, activation, uses) | `shared`, `entities` |
+| **modules** | `src/modules/` | Standalone application windows (shop manager, item import) | `shared`, `entities`, `features` |
+| **view** | `src/view/` | Foundry sheet adapters — wire entities + features into Foundry application windows | All layers above |
+
+Two additional non-FSD layers exist alongside:
+- **documents** (`src/documents/`) — Foundry document classes (`ShwActor`, `ShwItem`, `ShwTokenDocument`). Used by all layers as data source.
+- **helpers** (`src/helpers/`) — Pure data preparation functions (`prepareBaseData`, `prepareDerivedData`, `StackManager`). Used by `documents` and `view`.
+
+### Import Direction Rule
+
+**Imports go strictly downward.** A lower layer NEVER imports from a higher layer:
+
+```
+shared ← entities ← features ← modules ← view
+                                              ↑
+                                     documents + helpers (used by all)
+```
+
+❌ **Violation:** `shared/ui/tree/TreeNodeView.svelte` importing from `entities/inventory/`
+✅ **Correct:** `entities/inventory/ui/InventoryTree.svelte` importing from `shared/ui/tree/`
+
+### Slice Structure
+
+Each slice (entity, feature, module) follows the `model/` + `ui/` convention:
+
+```
+entities/ability/
+  index.ts           # Barrel: public API of the slice
+  model/             # Types, constants, state, mappers, business logic
+    index.ts         # Barrel: re-exports model pieces
+    types.ts
+    constants.ts
+    mappers.ts
+    abilityTreeState.ts
+  ui/                # Svelte components specific to this entity
+    index.ts         # Barrel: re-exports components
+    AbilityTree.svelte
+```
+
+### Barrel Export Conventions
+
+- **Standard:** `export * from './model'; export * from './ui'` (ability, character, spell, consumable)
+- **Selective API:** Only expose what consumers need (inventory exports only mappers + InventoryTree, not internal state)
+- **Encapsulated modules:** Only expose the Application class (shop exports only `ShopManagerApp`)
+
+### Key FSD Principle: Domain Knowledge in the Right Layer
+
+Generic components in `shared/` must NOT contain domain-specific logic:
+
+❌ **Wrong:** TreeNodeView has `rarityColors` map and reads `node.data.system.rarity`
+✅ **Right:** TreeNode has generic `badge?: TreeBadge` field, populated by entity mapper in `entities/inventory/model/mappers.ts`
+
+The rule: **shared knows shapes, entities fill them with domain meaning.**
+
 ## Architecture: Hybrid Handlebars + Svelte
 
 The system uses a **two-layer rendering approach**:
@@ -59,7 +123,7 @@ export class ShwActor<K extends 'character' | 'npc'> extends Actor {
 1. `prepareBaseData()` - Initialize defaults, ensure all fields exist
 2. `prepareDerivedData()` - Calculate bonuses, totals (e.g., `totalHealth`, attribute bonuses)
 
-### Item Types: `consumable` | `ability`
+### Item Types: `consumable` | `ability` | `spell`
 
 Items use factory pattern (`ItemFactory.createConsumable()`, `ItemFactory.createAbility()`) with discriminated unions:
 
@@ -68,10 +132,14 @@ Items use factory pattern (`ItemFactory.createConsumable()`, `ItemFactory.create
 type ConsumableData = BombData | PotionData | ScrollData | PoisonData | FoodData;
 // src/documents/Item/types/AbilityDataTypes.ts
 type AbilityData = ActiveAbilityData | PassiveAbilityData;
+// src/documents/Item/types/SpellDataTypes.ts
+type SpellCategory = 'code' | 'elemental' | 'dark' | 'holy' | 'arcane';
+type SpellKind = 'attack' | 'heal' | 'support' | 'debuff' | 'control' | 'movement' | 'summon' | 'utility';
 ```
 
 **Consumable types** have specific fields (e.g., `bomb.damage.amount`, `potion.effects[]`)
 **Ability types** distinguish between `active` (with cooldowns, costs) and `passive` (always-on effects)
+**Spell types** have `spellKind`, `category`, `actionType`, `castTime`, `range`, `targeting`, `effects[]`, `savingThrow[]`, `rank`, cooldowns, and resource costs
 
 ## Development Workflow
 
@@ -233,36 +301,177 @@ let { onTabChange }: Props = $props();
 
 ```
 src/
-  documents/        # Foundry document classes (Actor, Item, Token)
-  helpers/          # Pure functions for data preparation (prepareBaseData, prepareDerivedData)
-  sheets/           # Base classes (SvelteActorSheet, ShwItemSheet)
-  view/             # Sheet applications (CharacterApp, ItemApp) + Root Svelte shells
-    */ui/           # Svelte components (RootCharacterShell.svelte, etc)
-    */store/        # Svelte stores (legacy, prefer runes in new code)
-  entities/         # Domain models + UI components organized by entity
-    character/      # Character-specific types, constants, and components
-      model/        # Types, interfaces, constants (CharacterTab, AttributeColors)
-      ui/           # Character-specific Svelte components (AttributeStats, CharacterHeader)
-  features/         # Cross-cutting features (navigation, roll)
-    navigation/     # Tab navigation components
-    roll/           # Roll panel and roll logic
-  shared/ui/        # Reusable Svelte components (Input, ActionIcon)
-```
+  documents/              # [NON-FSD] Foundry document classes
+    Actor/ShwActor.ts     # ShwActor<K> with type guards + prepare hooks
+    Actor/types/          # ShwActorSystem type definitions
+    Item/ShwItem.ts       # ShwItem with sync hooks
+    Item/ItemFactory.ts   # Factory for creating typed items
+    Item/types/           # ConsumableDataTypes, AbilityDataTypes, SpellDataTypes, ItemDataInterface
+    ShwTokenDocument.ts   # Token auto-link logic
 
-**Architecture pattern:** 
-- `entities/` = domain-driven slices (character, npc, item) with model + UI
-- `features/` = cross-cutting functionality used across multiple entities
-- `view/` = Foundry sheet adapters that wire entities/features together
+  helpers/                # [NON-FSD] Pure data preparation functions
+    Character/            # prepareCharacterBaseData, prepareDerivedData, characterRoll, calculateItemBonuses
+    Item/                 # StackManager (stacking + dedup), migrateConsumableData
+    Npc/                  # prepareNpcBaseData, prepareNpcDerivedData
+    constants.ts          # Global constants
+
+  sheets/                 # [NON-FSD] Base Foundry sheet adapters
+    Actor/SvelteActorSheet.ts   # Svelte mount/unmount lifecycle for actor sheets
+    Item/SveltItemSheet.ts      # Svelte mount/unmount lifecycle for item sheets
+
+  shared/                 # [FSD: shared] Reusable, no business logic
+    data/foundryIcons.json  # Static icon catalog for item import
+    i18n/index.ts           # Type-safe t() and localize() with I18nKey autocomplete
+    lib/cn.ts               # clsx + tailwind-merge utility
+    model/                  # Shared types and constants
+      types/attributes.ts   # AttributeKey, AdditionalAttributes (derived from actor schema)
+      constants/attributes.ts # ADDITIONAL_ATTRIBUTE_LABELS with i18n keys
+      characterStatPaths.ts # Stat path mappings for roll system
+    ui/                     # Reusable Svelte components
+      ActionIcon/           # Icon button with variants (ghost, filled)
+      BonusCharacteristics/ # Bonus display widget
+      Input/                # Styled text input
+      SelectInput/          # Styled select dropdown
+      ReactiveDocumentWrapper/  # Foundry hook subscriber → Svelte reactivity bridge
+      PopupMenu/            # Generic popup menu with action portal pattern
+      tree/                 # Generic tree: Tree, TreeWithSearch, TreeNodeView, types, treeUtils
+
+  entities/               # [FSD: entities] Domain models + entity-specific UI
+    character/            # Character entity
+      model/types.ts      # CharacterTab, RollMode, TAB_CONFIGS, ATTRIBUTE_COLORS
+      ui/                 # CharacterHeader, AttributeStats, AdditionalStats, CharacterAbilities,
+                          # CharacterInventory, CharacterSpells
+    ability/              # Ability entity
+      model/              # types, constants, mappers (ability → FlatItem), abilityTreeState
+      ui/AbilityTree.svelte
+    spell/                # Spell entity
+      model/              # types, constants, mappers (spell → FlatItem), spellTreeState
+      ui/SpellTree.svelte
+    consumable/           # Consumable entity
+      model/              # types (ActivationType, PerType, RarityType), constants
+      ui/StatsCard/       # Consumable stats display
+    inventory/            # Cross-item inventory entity
+      model/              # types, mappers (item → FlatItem with badge), inventoryTreeState
+      ui/InventoryTree.svelte  # Tree with Foundry hooks, popup menu, drag-and-drop
+
+  features/               # [FSD: features] Cross-cutting user-facing functionality
+    navigation/           # Tab navigation component (TabNavigation)
+    roll/                 # Roll panel for dice rolls (RollPanel)
+    activation/           # Action/bonus/reaction type + cost selector (ActivationControl)
+    uses/                 # Charges/uses/turns tracker (UsesControl)
+
+  modules/                # [FSD: modules] Standalone application windows
+    shop/                 # ShopManagerApp: merchant/location tree
+      ShopManagerApp.ts   # Foundry Application class
+      model/              # types, constants, mappers, storage (localStorage), shopTreeState
+      ui/                 # ShopManagerShell, ShopTree, NodeEditorDialog, MerchantItemEditorDialog
+    itemImport/           # Bulk JSON import with Zod validation
+      ImportItemsApp.ts   # Foundry Application wrapper
+      model/              # parseItems, validateItems, importItems, schemas/, schemaPrompt,
+                          # errorPrompt, iconsPrompt, iconCategories, types
+      ui/ImportItemsDialog.svelte
+
+  view/                   # [FSD: view] Foundry sheet adapters wiring entities + features
+    BaseCharacter/        # CharacterApp → RootCharacterShell (main character sheet)
+    NpcCharacter/         # NpcApp → NpcCharacterShell
+    ConsumableItem/       # ConsumableItemApp → RootItemShell with type-specific views
+    AbilityItem/          # AbilityItemApp → RootItemShell with active/passive views
+    SpellItem/            # SpellItemApp → RootItemShell with spell details
+
+templates/                # Handlebars shells (minimal, just mount points for Svelte)
+```
 
 **Import pattern example:**
 ```typescript
-// In view/BaseCharacter/ui/RootCharacterShell.svelte
-import { CharacterHeader, AttributeStats } from '../../../entities/character';
-import { TabNavigation } from '../../../features/navigation';
-import { RollPanel } from '../../../features/roll';
+// In view/BaseCharacter/ui/RootCharacterShell.svelte (view layer)
+import { CharacterHeader, AttributeStats } from '../../../entities/character';  // entities
+import { TabNavigation } from '../../../features/navigation';                   // features
+import { RollPanel } from '../../../features/roll';                             // features
 ```
 
 This keeps domain logic (entities) separate from presentation wiring (view) and shared features.
+
+### Shared Tree System
+
+A generic tree UI (`src/shared/ui/tree/`) is reused across inventory, abilities, spells, and shop:
+
+**Core types:**
+```typescript
+interface TreeBadge { color: string; label: string; }
+
+interface FlatItem {
+  id: string; label: string; path: string[];
+  color?: string; icon?: string; categoryIcons?: string[];
+  badge?: TreeBadge; data?: unknown;
+}
+
+interface TreeNode {
+  id: string; label: string; color?: string; icon?: string;
+  badge?: TreeBadge; children?: TreeNode[];
+  data?: unknown; isLeaf?: boolean;
+}
+```
+
+**Components chain:** `TreeWithSearch` → `Tree` → `TreeNodeView`
+- `TreeWithSearch` — adds search input + `filterTree()` above the tree
+- `Tree` — renders root nodes, passes callbacks down
+- `TreeNodeView` — renders a single node with expand/collapse, badge indicator, drag-and-drop, popup menu
+- `buildTreeFromFlatList()` — converts `FlatItem[]` → `TreeNode[]` using hierarchical `path`
+
+**Badge pattern (FSD-compliant):** Instead of TreeNodeView reading domain data (`node.data.system.rarity`), nodes carry a generic `badge?: TreeBadge`. Entity mappers fill the badge with domain-specific meaning:
+```typescript
+// entities/inventory/model/mappers.ts — sets badge from rarity
+badge: { color: rarityColors[rarity], label: rarity }
+```
+
+**Menu delegation pattern:** TreeNodeView accepts `getMenuItems?: (node: TreeNode) => PopupMenuItem[]` callback prop, which is passed down through the component chain. The entity/feature layer provides the menu items, keeping TreeNodeView generic.
+
+**State per tree:** Each entity maintains in-memory state per actor ID (`expandedIds`, `selectedId`, `searchQuery`) — survives scrolling/resizing, resets on page refresh:
+```typescript
+// Pattern used by ability, spell, inventory trees
+const treeStates = new Map<string, TreeState>();
+export function getTreeState(actorId: string): TreeState
+export function updateTreeState(actorId: string, updates: Partial<TreeState>)
+export function clearTreeState(actorId: string)
+```
+
+### PopupMenu System
+
+A generic popup menu (`src/shared/ui/PopupMenu/`) used for tree node context menus:
+
+**Architecture:**
+- **Action portal pattern:** Component lives in Svelte tree (full reactivity) but DOM is teleported to `document.body` via `use:portal` action for correct z-index stacking
+- **Singleton:** Only one popup open at a time — `closeActivePopup()` closes previous before opening new
+- **Positioned:** Uses `anchorEl.getBoundingClientRect()` for placement below the trigger button
+
+**Menu item types:**
+```typescript
+type PopupMenuItem = MenuActionItem | MenuQuantityItem;
+// Action: { type: 'action', label, icon?, danger?, onClick }
+// Quantity: { type: 'quantity', label, value, min, max, onChange }
+```
+
+**MenuQuantity specifics:**
+- Uses local `$state` for instant UI feedback, clamps to `[min, max]`
+- Forces DOM sync on external value changes (Foundry hooks update quantity)
+- Calls `onChange` which triggers Foundry item update
+
+**Usage in InventoryTree:** Menu items are built per-node using live Foundry data (quantity, stackLimit). The `getMenuItems` callback reads fresh data from `item.parent.items.get(id)` to stay in sync.
+
+### Type-Safe Internationalization
+
+The i18n system (`src/shared/i18n/`) provides compile-time key validation:
+
+```typescript
+// Recursive type extracts all dot-notation paths from lang JSON
+type I18nKey = PathsToStringProps<typeof translations['SHW']>;
+// e.g.: 'attributes.natural' | 'tabs.stats' | 'inventory.categories.consumable'
+
+export function t(key: I18nKey): string        // Simple lookup
+export function localize(key: I18nKey, data?): string  // With template substitution
+```
+
+All translation keys get full TypeScript autocomplete from `lang/en.json` structure.
 
 ## Foundry VTT Integration
 
@@ -298,6 +507,9 @@ Hooks.once('setup', () => {
   foundry.documents.collections.Items.registerSheet('shw', AbilityItemApp, {
     types: ['ability'], makeDefault: true
   });
+  foundry.documents.collections.Items.registerSheet('shw', SpellItemApp, {
+    types: ['spell'], makeDefault: true
+  });
 });
 
 Hooks.on('preCreateToken', (tokenDocument, tokenData) => {
@@ -308,27 +520,58 @@ Hooks.on('preCreateToken', (tokenDocument, tokenData) => {
   }
 });
 
-Hooks.on('preCreateItem', (item, data) => {
-  // Auto-migrate legacy consumable data + handle stacking logic
+Hooks.on('preCreateItem', (item, data, options) => {
+  // Auto-migrate legacy consumable data
   if (needsMigration(data)) {
     const migrated = migrateConsumableData(data);
     item.updateSource({ system: migrated.system });
   }
   
-  // Stack management for items added to actors
+  // Track origin + stack management for items added to actors
   if (item.parent && item.parent instanceof ShwActor) {
+    const originItemId = findOriginItem(item, options);
+    if (originItemId) {
+      item.updateSource({ 'flags.shw.originItemId': originItemId });
+    }
     const result = handleAddItem(item.parent, {
       type: item.type, name: item.name, system: item.system
     });
-    // Prevent creation if item was stacked or blocked
     if (result === 'stacked' || result === 'blocked') return false;
+  }
+});
+
+// Two-way sync: owned ↔ global items
+Hooks.on('updateItem', async (item, changes, options) => {
+  if (options?.skipSync) return;
+  if (item.parent instanceof ShwActor) {
+    // Owned → Global: sync to origin item
+    await syncOwnedToGlobal(item, changes);
+  } else if (!item.parent) {
+    // Global → Owned: propagate to all copies
+    await syncGlobalToOwned(item, changes);
   }
 });
 ```
 
 ### Data Model (`template.json`)
 
-Minimal schema - actual structure defined in TypeScript types (`src/documents/*/types/`). Only declares actor/item types, not full data structure.
+Minimal schema - actual structure defined in TypeScript types (`src/documents/*/types/`). Only declares actor/item types (`character`, `npc`, `consumable`, `ability`, `spell`), not full data structure.
+
+### Item Synchronization System
+
+Owned items (on actors) maintain a two-way sync with their global source items:
+
+- **Origin tracking:** `flags.shw.originItemId` links owned items to their global source
+- **Origin discovery:** By explicit ID → by `baseId` → by name+type (drag-drop fallback)
+- **Owned → Global:** Editing an owned item syncs changes to the global source
+- **Global → Owned:** Editing a global item propagates to all owned copies across all actors
+- **Recursion prevention:** `skipSync` option flag prevents infinite update loops
+
+### Nav Bar Buttons
+
+Two custom buttons are injected into Foundry's nav bar via `Hooks.once('ready')` with DOM manipulation:
+- **Shop** (`fa-solid fa-store`) — Opens `ShopManagerApp`
+- **Import** (`fa-solid fa-file-import`) — Opens `ImportItemsApp`
 
 ## Common Tasks
 
@@ -348,6 +591,13 @@ Minimal schema - actual structure defined in TypeScript types (`src/documents/*/
 3. Create Svelte component in `src/view/ConsumableItem/ui/`
 4. Add conditional rendering in `RootItemShell.svelte`
 5. Update `typeColors` in `consumableConstants.ts`
+
+### Adding a New Spell Category or Kind
+
+1. Add to discriminated union in `src/documents/Item/types/SpellDataTypes.ts`
+2. Update category colors in `src/entities/spell/model/`
+3. Update `SpellTree.svelte` if tree grouping changes
+4. Add localization keys to `lang/en.json` and `lang/ru.json`
 
 ### Modifying Attribute Calculations
 
@@ -421,6 +671,42 @@ Hooks.on('preCreateItem', (item, data) => {
 });
 ```
 
+## Item Import Feature
+
+The `modules/itemImport/` slice provides bulk JSON import of items with validation:
+
+**Pipeline:** Parse JSON → Zod validate → dry-run report → import with dedup
+
+**Model files (split by responsibility):**
+- `parseItems.ts` — `parseItemCores()`: JSON parsing, path formatting
+- `validateItems.ts` — `validateItemCores()`: Zod schema validation, duplicate detection
+- `importItems.ts` — `importItemCores()`: Foundry item creation/update via `baseId` matching
+- `schemas/` — Zod schemas for consumable, ability, spell item structures (split by entity)
+- `schemaPrompt.ts` — Generates schema description for AI-assisted item creation
+- `errorPrompt.ts` — Formats validation errors for AI correction
+- `iconsPrompt.ts` — Generates icon assignment prompt
+- `iconCategories.ts` — Icon catalog organized by item type
+- `types.ts` — `ItemCore`, `ValidationReport`, `ImportReport`, `ImportResult`
+
+**Key types:**
+```typescript
+interface ItemCore {
+  baseId: string;           // Unique identifier for deduplication
+  type: 'consumable' | 'ability' | 'spell';
+  name: string;
+  img?: string;
+  system: Record<string, unknown>;
+}
+
+interface ImportReport {
+  dryRun: boolean;
+  total: number;
+  created: number; updated: number; skipped: number;
+}
+```
+
+**UI:** `ImportItemsDialog.svelte` — single dialog component handling the full import workflow with step-by-step feedback.
+
 ## Patterns & Best Practices
 
 ### Component Communication
@@ -471,20 +757,12 @@ Components use CSS variables for type-specific colors:
 </div>
 ```
 
-### Ability Tree State Management
+### Tree State Management
 
-Ability tree UI state (search, expanded nodes, selection) is managed per-actor in memory:
-
-```typescript
-// src/entities/ability/model/abilityTreeState.ts
-
-// Per-actor state storage
-const treeStates = new Map<string, AbilityTreeState>();
-
-export function getAbilityTreeState(actorId: string): AbilityTreeState
-export function updateAbilityTreeState(actorId: string, updates: Partial<AbilityTreeState>)
-export function clearAbilityTreeState(actorId: string)
-```
+Tree UI state (search, expanded nodes, selection) is managed per-actor in memory using `Map<string, TreeState>`. Three independent implementations exist:
+- `src/entities/ability/model/abilityTreeState.ts`
+- `src/entities/spell/model/spellTreeState.ts`
+- `src/entities/inventory/model/inventoryTreeState.ts`
 
 **Pattern:** State persists during session but resets on page refresh. This keeps UI responsive without polluting actor data with transient UI state.
 
@@ -492,7 +770,6 @@ export function clearAbilityTreeState(actorId: string)
 ```typescript
 let treeState = $state(getAbilityTreeState(actor.id));
 
-// Update search query
 function handleSearch(query: string) {
   updateAbilityTreeState(actor.id, { searchQuery: query });
   treeState = getAbilityTreeState(actor.id);
@@ -570,15 +847,17 @@ existingItem.update({ 'system.quantity': totalQuantity }).then(() => {
 
 ## External Dependencies
 
-- **Foundry VTT Types:** `@league-of-foundry-developers/foundry-vtt-types`
+- **Foundry VTT Types:** `@league-of-foundry-developers/foundry-vtt-types` (v13)
 - **Svelte 5:** Latest runes API (not Svelte 4 stores)
 - **Tailwind v4:** Uses new `@tailwindcss/vite` plugin (not PostCSS)
 - **Biome:** Replaces ESLint/Prettier for linting and formatting
+- **Zod:** Schema validation (used in item import for JSON validation)
+- **clsx + tailwind-merge:** Utility class merging (via `cn()` helper in `src/shared/lib/cn.ts`)
 
 ## Localization
 
 - **Files:** `lang/en.json`, `lang/ru.json` (English and Russian)
-- **Access in code:** `game.i18n.localize('SHW.KeyName')`
+- **Access in code:** Use type-safe `t()` / `localize()` from `src/shared/i18n/` (see Type-Safe Internationalization section above)
 - **Key format:** Nested structure under `SHW` namespace (e.g., `SHW.attributes.natural`, `SHW.tabs.stats`)
 - **Hot reload:** Enabled in dev mode for both language files
 
@@ -632,7 +911,7 @@ Respect hook order: `init` → `setup` → `ready`. Register document classes in
 ## Testing & Quality
 
 - **No automated tests** currently - manual testing in Foundry required
-- **Biome checks:** Run `pnpm biome check` before commits
+- **Biome checks:** Run `pnpm lint` before commits
 - **Build validation:** Ensure `pnpm build` succeeds without errors
 - **Manual testing workflow:**
   1. Start Foundry on `:30000`
@@ -640,3 +919,17 @@ Respect hook order: `init` → `setup` → `ready`. Register document classes in
   3. Create test actors/items in Foundry
   4. Verify sheet rendering and data updates
   5. Check browser console for errors
+
+## Available Scripts
+
+```bash
+pnpm dev          # Vite dev server on :30001, proxies to Foundry :30000
+pnpm build        # Production build to dist/
+pnpm build:dev    # Development build (unminified)
+pnpm watch        # Build + watch mode (development)
+pnpm lint         # Biome check (linting + formatting)
+pnpm pack         # Build + create shattered-worlds.zip
+pnpm bump:patch   # Bump patch version across all manifests
+pnpm bump:minor   # Bump minor version
+pnpm bump:major   # Bump major version
+```

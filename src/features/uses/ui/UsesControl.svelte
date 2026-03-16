@@ -42,7 +42,7 @@
         value={usesValue}
         variant="underline"
         textAlign="center"
-        class="tw:flex-1"
+        class="uses-input"
         onchange={handleValueChange}
       />
       <span class="divider">{t("controls.usesOf")}</span>
@@ -52,7 +52,7 @@
         value={usesMax}
         variant="underline"
         textAlign="center"
-        class="tw:flex-1"
+        class="uses-input"
         onchange={handleMaxChange}
       />
     </div>
@@ -94,6 +94,10 @@
     gap: 0.5rem;
     background: transparent;
     padding: 0;
+  }
+
+  .uses-inputs :global(.uses-input) {
+    flex: 1 1 0%;
   }
 
   .divider {

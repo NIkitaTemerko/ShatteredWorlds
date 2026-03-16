@@ -1,6 +1,7 @@
 <script lang="ts">
   import { t } from "../../../shared/i18n";
   import { Input } from "../Input";
+  import type { PopupMenuItem } from "../PopupMenu";
   import Tree from "./Tree.svelte";
   import { buildTreeFromFlatList, collectAllNodes, filterTree, findNodePath } from "./treeUtils";
   import type { FlatItem, TreeNode } from "./types";
@@ -20,6 +21,7 @@
     onDelete?: (node: TreeNode, e: Event) => void;
     onEdit?: (node: TreeNode, e: Event) => void;
     onDrop?: (node: TreeNode, itemData: any) => void;
+    getMenuItems?: (node: TreeNode) => PopupMenuItem[];
     isDynamicTree?: boolean;
     onStateChange?: (state: TreeStateUpdate) => void;
   }
@@ -33,6 +35,7 @@
     onDelete,
     onEdit,
     onDrop,
+    getMenuItems,
     isDynamicTree = false,
     onStateChange,
   }: Props = $props();
@@ -177,6 +180,7 @@
       {onDelete}
       {onEdit}
       {onDrop}
+      {getMenuItems}
       {isDynamicTree}
     />
   </div>

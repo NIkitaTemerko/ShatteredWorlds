@@ -72,7 +72,7 @@
       <span class="label">{t(ADDITIONAL_ATTRIBUTE_LABELS[key])}</span>
       {#if isEditable(key)}
         <Input
-          class="tw:w-10"
+          class="stat-input"
           variant="underline"
           type="number"
           min="0"
@@ -117,6 +117,10 @@
     font-size: 14px;
     width: 16px;
     text-align: center;
+  }
+
+  .stat-tile :global(.stat-input) {
+    width: 2.5rem;
   }
 
   .stat-tile.editable {

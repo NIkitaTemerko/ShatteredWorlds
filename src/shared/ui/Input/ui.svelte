@@ -1,23 +1,21 @@
 <script lang="ts">
-  import type { HTMLInputAttributes } from 'svelte/elements';
-  import { cn } from '../../lib/cn';
-
+  import type { HTMLInputAttributes } from "svelte/elements";
   interface Props extends HTMLInputAttributes {
     value?: string | number;
     background?: string;
-    textAlign?: 'left' | 'center' | 'right';
+    textAlign?: "left" | "center" | "right";
     fullWidth?: boolean;
-    variant?: 'default' | 'underline';
+    variant?: "default" | "underline";
   }
 
   let {
-    value = $bindable(''),
-    background = 'transparent',
-    textAlign = 'center',
+    value = $bindable(""),
+    background = "transparent",
+    textAlign = "center",
     fullWidth = false,
-    variant = 'default',
-    class: className = '',
-    type = 'text',
+    variant = "default",
+    class: className = "",
+    type = "text",
     ...restProps
   }: Props = $props();
 </script>
@@ -27,7 +25,7 @@
   {type}
   class="shw-input {className}"
   class:full-width={fullWidth}
-  class:variant-underline={variant === 'underline'}
+  class:variant-underline={variant === "underline"}
   style:background
   style:text-align={textAlign}
   {...restProps}
@@ -76,12 +74,12 @@
   }
 
   /* Number input specific */
-  .shw-input[type='number'] {
+  .shw-input[type="number"] {
     appearance: textfield;
   }
 
-  .shw-input[type='number']::-webkit-inner-spin-button,
-  .shw-input[type='number']::-webkit-outer-spin-button {
+  .shw-input[type="number"]::-webkit-inner-spin-button,
+  .shw-input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }

@@ -6,8 +6,8 @@
     PassiveAbilityKind,
   } from "../../../documents/Item/types/AbilityDataTypes";
   import { t } from "../../../shared/i18n";
-  import { cn } from "../../../shared/lib/cn";
   import { Input, SelectInput } from "../../../shared/ui";
+  import { ABILITY_CATEGORIES, ACTIVE_KINDS, PASSIVE_KINDS } from "../constants/abilityConstants";
 
   interface Props {
     item: ShwItem;
@@ -19,29 +19,6 @@
 
   const system = $derived(item.system as import("../../../documents/Item/types/AbilityDataTypes").AbilitySystem);
   const img = $derived(item.img);
-
-  const ABILITY_CATEGORIES = [
-    { value: "active", label: "ability.category.active" },
-    { value: "passive", label: "ability.category.passive" },
-  ];
-
-  const ACTIVE_KINDS = [
-    { value: "attack", label: "ability.activeKind.attack" },
-    { value: "heal", label: "ability.activeKind.heal" },
-    { value: "support", label: "ability.activeKind.support" },
-    { value: "debuff", label: "ability.activeKind.debuff" },
-    { value: "control", label: "ability.activeKind.control" },
-    { value: "movement", label: "ability.activeKind.movement" },
-    { value: "summon", label: "ability.activeKind.summon" },
-    { value: "utility", label: "ability.activeKind.utility" },
-  ];
-
-  const PASSIVE_KINDS = [
-    { value: "stat-bonus", label: "ability.passiveKind.statBonus" },
-    { value: "aura", label: "ability.passiveKind.aura" },
-    { value: "triggered", label: "ability.passiveKind.triggered" },
-    { value: "mechanic", label: "ability.passiveKind.mechanic" },
-  ];
 
   const kindOptions = $derived(system.category === "active" ? ACTIVE_KINDS : PASSIVE_KINDS);
 
@@ -61,7 +38,7 @@
 
   <div class="header-main">
     <Input
-      class={cn("tw:text-[20px] tw:font-bold tw:py-[0.4rem]")}
+      class="header-name-input"
       type="text"
       bind:value={item.name}
       placeholder={t("ability.header.namePlaceholder")}
@@ -70,7 +47,7 @@
     />
 
     <div class="type-wrapper">
-      <span class="tw:opacity-80 tw:text-[20px]">{t("ability.header.categoryLabel")}</span>
+      <span class="type-label">{t("ability.header.categoryLabel")}</span>
       <SelectInput
         value={system.category}
         options={ABILITY_CATEGORIES}
@@ -80,7 +57,7 @@
     </div>
 
     <div class="type-wrapper">
-      <span class="tw:opacity-80 tw:text-[16px]">{t("ability.header.kindLabel")}</span>
+      <span class="kind-label">{t("ability.header.kindLabel")}</span>
       <SelectInput
         value={system.category === "active" ? system.activeKind : system.passiveKind}
         options={kindOptions}
@@ -110,5 +87,22 @@
     display: flex;
     align-items: baseline;
     gap: 0.5rem;
+  }
+
+  .header-main :global(.header-name-input) {
+    font-size: 20px;
+    font-weight: 700;
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+  }
+
+  .type-label {
+    opacity: 0.8;
+    font-size: 20px;
+  }
+
+  .kind-label {
+    opacity: 0.8;
+    font-size: 16px;
   }
 </style>

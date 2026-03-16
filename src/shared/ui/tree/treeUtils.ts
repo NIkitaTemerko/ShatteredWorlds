@@ -25,6 +25,7 @@ export function buildTreeFromFlatList(items: FlatItem[]): TreeNode[] {
           label: item.label,
           color: item.color,
           icon: item.icon,
+          badge: item.badge,
           data: item.data,
           isLeaf: true,
         };

@@ -4,6 +4,7 @@
   import { RARITY_TYPES, type RarityType, StatsCard } from "../../../entities/consumable";
   import { t } from "../../../shared/i18n";
   import { Input, SelectInput } from "../../../shared/ui";
+  import { rarityColors } from "../constants/abilityConstants";
 
   interface Props {
     item: ShwItem;
@@ -18,14 +19,6 @@
     const value = (event.currentTarget as HTMLSelectElement).value as RarityType;
     onUpdate("rarity", value);
   }
-
-  const rarityColors: Record<"common" | "uncommon" | "rare" | "epic" | "legendary", { dark: string; light: string }> = {
-    common: { dark: "#9CA3AF", light: "#F3F4F6" },
-    uncommon: { dark: "#10B981", light: "#D1FAE5" },
-    rare: { dark: "#3B82F6", light: "#DBEAFE" },
-    epic: { dark: "#A855F7", light: "#F3E8FF" },
-    legendary: { dark: "#F97316", light: "#FFEDD5" },
-  };
 
   const currentRarityColors = $derived(rarityColors[system.rarity]);
 </script>

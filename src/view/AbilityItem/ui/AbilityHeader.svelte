@@ -7,6 +7,7 @@
   } from "../../../documents/Item/types/AbilityDataTypes";
   import { t } from "../../../shared/i18n";
   import { Input, SelectInput } from "../../../shared/ui";
+  import { ABILITY_CATEGORIES, ACTIVE_KINDS, PASSIVE_KINDS } from "../constants/abilityConstants";
 
   interface Props {
     item: ShwItem;
@@ -18,29 +19,6 @@
 
   const system = $derived(item.system as import("../../../documents/Item/types/AbilityDataTypes").AbilitySystem);
   const img = $derived(item.img);
-
-  const ABILITY_CATEGORIES = [
-    { value: "active", label: "ability.category.active" },
-    { value: "passive", label: "ability.category.passive" },
-  ];
-
-  const ACTIVE_KINDS = [
-    { value: "attack", label: "ability.activeKind.attack" },
-    { value: "heal", label: "ability.activeKind.heal" },
-    { value: "support", label: "ability.activeKind.support" },
-    { value: "debuff", label: "ability.activeKind.debuff" },
-    { value: "control", label: "ability.activeKind.control" },
-    { value: "movement", label: "ability.activeKind.movement" },
-    { value: "summon", label: "ability.activeKind.summon" },
-    { value: "utility", label: "ability.activeKind.utility" },
-  ];
-
-  const PASSIVE_KINDS = [
-    { value: "stat-bonus", label: "ability.passiveKind.statBonus" },
-    { value: "aura", label: "ability.passiveKind.aura" },
-    { value: "triggered", label: "ability.passiveKind.triggered" },
-    { value: "mechanic", label: "ability.passiveKind.mechanic" },
-  ];
 
   const kindOptions = $derived(system.category === "active" ? ACTIVE_KINDS : PASSIVE_KINDS);
 

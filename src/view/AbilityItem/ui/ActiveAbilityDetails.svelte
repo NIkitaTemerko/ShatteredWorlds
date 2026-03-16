@@ -4,6 +4,7 @@
   import { StatsCard } from "../../../entities/consumable";
   import { t } from "../../../shared/i18n";
   import { Input, SelectInput } from "../../../shared/ui";
+  import { ACTION_TYPES, RANGE_KINDS, AREA_SHAPES, TARGET_TYPES } from "../constants/abilityConstants";
 
   interface Props {
     item: ShwItem;
@@ -26,12 +27,7 @@
         <div class="stat-body">
           <SelectInput
             value={system.actionType}
-            options={[
-              { value: "action", label: "ability.actionType.action" },
-              { value: "bonus", label: "ability.actionType.bonus" },
-              { value: "reaction", label: "ability.actionType.reaction" },
-              { value: "free", label: "ability.actionType.free" },
-            ]}
+            options={ACTION_TYPES}
             variant="underline"
             fullWidth
             onchange={(e) => onUpdate("actionType", e.currentTarget.value)}
@@ -66,12 +62,7 @@
         <div class="stat-body">
           <SelectInput
             value={system.range.kind}
-            options={[
-              { value: "self", label: "ability.rangeKind.self" },
-              { value: "melee", label: "ability.rangeKind.melee" },
-              { value: "ranged", label: "ability.rangeKind.ranged" },
-              { value: "area", label: "ability.rangeKind.area" },
-            ]}
+            options={RANGE_KINDS}
             variant="underline"
             fullWidth
             onchange={(e) => onUpdate("range.kind", e.currentTarget.value)}
@@ -117,11 +108,7 @@
           <div class="stat-body">
             <SelectInput
               value={system.range.shape || "circle"}
-              options={[
-                { value: "circle", label: "ability.areaShape.circle" },
-                { value: "cone", label: "ability.areaShape.cone" },
-                { value: "line", label: "ability.areaShape.line" },
-              ]}
+              options={AREA_SHAPES}
               variant="underline"
               fullWidth
               onchange={(e) => onUpdate("range.shape", e.currentTarget.value)}
@@ -137,12 +124,7 @@
         <div class="stat-body">
           <SelectInput
             value={system.targeting.targetType}
-            options={[
-              { value: "self", label: "ability.targetType.self" },
-              { value: "ally", label: "ability.targetType.ally" },
-              { value: "enemy", label: "ability.targetType.enemy" },
-              { value: "any", label: "ability.targetType.any" },
-            ]}
+            options={TARGET_TYPES}
             variant="underline"
             fullWidth
             onchange={(e) => onUpdate("targeting.targetType", e.currentTarget.value)}

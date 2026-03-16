@@ -14,8 +14,8 @@ The project follows an **adapted FSD methodology** — a strict layered architec
 |---|---|---|---|
 | **shared** | `src/shared/` | Reusable UI, utilities, types, constants. No business logic. | Only itself |
 | **entities** | `src/entities/` | Domain models + entity-specific UI (character, ability, spell, inventory, consumable) | `shared` |
-| **features** | `src/features/` | Cross-cutting user-facing functionality (navigation, roll, activation, uses, itemImport) | `shared`, `entities` |
-| **modules** | `src/modules/` | Standalone application windows (shop manager) | `shared`, `entities`, `features` |
+| **features** | `src/features/` | Cross-cutting user-facing functionality (navigation, roll, activation, uses) | `shared`, `entities` |
+| **modules** | `src/modules/` | Standalone application windows (shop manager, item import) | `shared`, `entities`, `features` |
 | **view** | `src/view/` | Foundry sheet adapters — wire entities + features into Foundry application windows | All layers above |
 
 Two additional non-FSD layers exist alongside:
@@ -359,17 +359,17 @@ src/
     roll/                 # Roll panel for dice rolls (RollPanel)
     activation/           # Action/bonus/reaction type + cost selector (ActivationControl)
     uses/                 # Charges/uses/turns tracker (UsesControl)
-    itemImport/           # Bulk JSON import with Zod validation
-      ImportItemsApp.ts   # Foundry Application wrapper
-      model/              # parseItems, validateItems, importItems, schemas, schemaPrompt,
-                          # errorPrompt, iconsPrompt, iconCategories, types
-      ui/ImportItemsDialog.svelte
 
   modules/                # [FSD: modules] Standalone application windows
     shop/                 # ShopManagerApp: merchant/location tree
       ShopManagerApp.ts   # Foundry Application class
       model/              # types, constants, mappers, storage (localStorage), shopTreeState
       ui/                 # ShopManagerShell, ShopTree, NodeEditorDialog, MerchantItemEditorDialog
+    itemImport/           # Bulk JSON import with Zod validation
+      ImportItemsApp.ts   # Foundry Application wrapper
+      model/              # parseItems, validateItems, importItems, schemas/, schemaPrompt,
+                          # errorPrompt, iconsPrompt, iconCategories, types
+      ui/ImportItemsDialog.svelte
 
   view/                   # [FSD: view] Foundry sheet adapters wiring entities + features
     BaseCharacter/        # CharacterApp → RootCharacterShell (main character sheet)
@@ -673,7 +673,7 @@ Hooks.on('preCreateItem', (item, data) => {
 
 ## Item Import Feature
 
-The `features/itemImport/` slice provides bulk JSON import of items with validation:
+The `modules/itemImport/` slice provides bulk JSON import of items with validation:
 
 **Pipeline:** Parse JSON → Zod validate → dry-run report → import with dedup
 
@@ -681,7 +681,7 @@ The `features/itemImport/` slice provides bulk JSON import of items with validat
 - `parseItems.ts` — `parseItemCores()`: JSON parsing, path formatting
 - `validateItems.ts` — `validateItemCores()`: Zod schema validation, duplicate detection
 - `importItems.ts` — `importItemCores()`: Foundry item creation/update via `baseId` matching
-- `schemas.ts` — Zod schemas for consumable, ability, spell item structures
+- `schemas/` — Zod schemas for consumable, ability, spell item structures (split by entity)
 - `schemaPrompt.ts` — Generates schema description for AI-assisted item creation
 - `errorPrompt.ts` — Formats validation errors for AI correction
 - `iconsPrompt.ts` — Generates icon assignment prompt

@@ -1,7 +1,6 @@
 import { ShwActor } from './documents/Actor/ShwActor';
 import { ShwItem } from './documents/Item/ShwItem';
 import { ShwTokenDocument } from './documents/ShwTokenDocument.js';
-import { ImportItemsApp } from './features/itemImport';
 import { migrateConsumableData, needsMigration } from './helpers/Item/migrateConsumableData';
 import { handleAddItem } from './helpers/Item/StackManager';
 import { ShopManagerApp } from './modules/shop';
@@ -45,7 +44,8 @@ Hooks.once('init', () => {
       const importButton = document.createElement('button');
       importButton.type = 'button';
       importButton.className = 'ui-control plain icon fa-solid fa-file-import';
-      importButton.addEventListener('click', () => {
+      importButton.addEventListener('click', async () => {
+        const { ImportItemsApp } = await import('./modules/itemImport');
         new ImportItemsApp().render(true);
       });
       importLi.appendChild(importButton);

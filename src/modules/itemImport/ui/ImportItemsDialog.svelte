@@ -9,6 +9,12 @@
   } from "../model";
   import type { ValidationReport, ImportReport } from "../model";
   import { t, localize } from "../../../shared/i18n";
+  import { loadFoundryIcons } from "../../../shared/data/foundryIconsLoader";
+  import { getSchemas } from "../model/schemas";
+
+  // Предзагрузка иконок и схем при открытии диалога
+  loadFoundryIcons();
+  getSchemas();
 
   interface Props {
     onClose: () => void;
@@ -69,7 +75,7 @@
       validationReport = null;
       importReport = null;
 
-      const items = parseItemCores(jsonText);
+      const items = await parseItemCores(jsonText);
       const report = validateItemCores(items);
       if (!report.valid) {
         validationReport = report;
@@ -93,11 +99,11 @@
     }
   }
 
-  function handleValidate() {
+  async function handleValidate() {
     try {
       errorMessage = "";
       importReport = null;
-      validationReport = validateItemCores(parseItemCores(jsonText));
+      validationReport = validateItemCores(await parseItemCores(jsonText));
     } catch (e) {
       errorMessage = e instanceof Error ? e.message : t("import.parseError");
       validationReport = null;

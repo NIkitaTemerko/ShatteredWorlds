@@ -1,6 +1,7 @@
 /* eslint-env node */
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import tailwind from '@tailwindcss/vite';
+import { visualizer } from 'rollup-plugin-visualizer';
 import { postcssConfig } from './postcssConfig';
 import moduleJSON from './system.json';
 import { terserConfig } from './terserConfig';
@@ -65,7 +66,7 @@ export default ({ mode }) => {
       open: false,
       proxy: {
         // Serves static files from main Foundry server.
-        [`^(/${s_PACKAGE_ID}/(assets|lang|packs|dist/${moduleJSON.id}.css))`]:
+        [`^(/${s_PACKAGE_ID}/(assets|data|lang|packs|dist/${moduleJSON.id}.css))`]:
           'http://localhost:30000',
 
         // All other paths besides package ID path are served from main Foundry server.
@@ -90,13 +91,14 @@ export default ({ mode }) => {
       minify: s_COMPRESS ? 'terser' : false,
       target: ['es2022'],
       terserOptions: s_COMPRESS ? { ...terserConfig(), ecma: 2022 } : void 0,
-      lib: {
-        entry: './index.ts',
-        formats: ['es'],
-        fileName: moduleJSON.id,
-      },
+      cssCodeSplit: false,
+      assetsInlineLimit: 100000,
       rollupOptions: {
+        input: 'src/index.ts',
         output: {
+          format: 'es',
+          entryFileNames: `${moduleJSON.id}.js`,
+          chunkFileNames: 'chunks/[name]-[hash].js',
           // Rewrite the default style.css to a more recognizable file name.
           assetFileNames: (assetInfo) =>
             assetInfo.name === 'style.css' ? `${moduleJSON.id}.css` : assetInfo.name,
@@ -119,6 +121,9 @@ export default ({ mode }) => {
         compilerOptions,
       }),
       tailwind(),
+      ...(process.env.ANALYZE
+        ? [visualizer({ filename: 'stats.html', open: true, gzipSize: true, template: 'treemap' })]
+        : []),
     ],
   };
 };

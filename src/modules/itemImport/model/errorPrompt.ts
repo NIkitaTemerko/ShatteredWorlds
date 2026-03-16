@@ -1,7 +1,9 @@
 import { getIconsForType } from './iconCategories';
+import { getJsonSchemaForTypes } from './schemas';
 
 /**
- * Генерирует промпт с ошибками для исправления ИИ
+ * Генерирует промпт с ошибками для исправления ИИ.
+ * К моменту вызова схемы уже загружены (валидация прошла).
  */
 export function generateErrorPrompt(errorMessage: string, jsonText: string): string {
   // Определяем нужны ли иконки для исправления
@@ -45,6 +47,25 @@ ${relevantIcons.length > 200 ? `\n(показано 200 из ${relevantIcons.len
     }
   }
 
+  // Определяем типы предметов из JSON для фильтрации схем
+  const itemTypes = new Set<string>();
+  try {
+    const items = JSON.parse(jsonText);
+    for (const item of items) {
+      if (item.type) itemTypes.add(item.type);
+    }
+  } catch {
+    // Если не удалось распарсить — покажем все типы
+    itemTypes.add('consumable');
+    itemTypes.add('ability');
+    itemTypes.add('spell');
+  }
+
+  const schemas = getJsonSchemaForTypes(itemTypes);
+  const schemaBlocks = Object.entries(schemas)
+    .map(([type, schema]) => `### ${type}\n\`\`\`json\n${JSON.stringify(schema, null, 2)}\n\`\`\``)
+    .join('\n\n');
+
   return `# Исправь ошибки в JSON
 
 ## Ошибки валидации:
@@ -57,8 +78,12 @@ ${errorMessage}
 ${jsonText}
 \`\`\`
 ${iconSection}
+## JSON Schema (сгенерирована из Zod, используй как справку по допустимым значениям):
+
+${schemaBlocks}
+
 ## Требования:
-1. Исправь все указанные ошибки
+1. Исправь все указанные ошибки, используя JSON Schema выше как справку
 2. Сохрани ВСЕ поля и данные каждого объекта
 
 ## ВАЖНО - Формат ответа:

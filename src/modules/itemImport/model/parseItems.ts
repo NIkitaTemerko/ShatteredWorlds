@@ -1,4 +1,4 @@
-import { ItemCoresArraySchema } from './schemas';
+import { getSchemas } from './schemas';
 import type { ItemCore } from './types';
 
 /** Форматирует путь ошибки Zod */
@@ -8,10 +8,11 @@ function formatPath(path: readonly (string | number)[]): string {
 }
 
 /** Парсит и валидирует JSON через Zod */
-export function parseItemCores(jsonText: string): ItemCore[] {
+export async function parseItemCores(jsonText: string): Promise<ItemCore[]> {
   const parsed = JSON.parse(jsonText);
   if (!Array.isArray(parsed)) throw new Error('JSON должен быть массивом');
 
+  const { ItemCoresArraySchema } = await getSchemas();
   const result = ItemCoresArraySchema.safeParse(parsed);
   if (result.success) return result.data as ItemCore[];
 

@@ -1,4 +1,4 @@
-import foundryIconsList from '../../../shared/data/foundryIcons.json';
+import { getFoundryIconsCached } from '../../../shared/data/foundryIconsLoader';
 
 // Категории иконок по типам предметов
 const ICON_CATEGORIES: Record<string, string[]> = {
@@ -19,7 +19,7 @@ export function getIconsForType(type: string, consumableType?: string): string[]
   const prefixes = ICON_CATEGORIES[category] || [];
   if (prefixes.length === 0) return [];
 
-  return (foundryIconsList as string[]).filter((icon) =>
+  return getFoundryIconsCached().filter((icon) =>
     prefixes.some((prefix) => icon.startsWith(prefix)),
   );
 }

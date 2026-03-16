@@ -25,6 +25,7 @@
     "@tsconfig/svelte": "^4.0.1",
     "autoprefixer": "^10.4.22",
     "postcss-preset-env": "^10.4.0",
+    "rollup-plugin-visualizer": "^7.0.1",
     "svelte": "^5.43.11",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.17",
@@ -36,12 +37,13 @@
     "not IE 11"
   ],
   "scripts": {
+    "analyze": "ANALYZE=1 vite build --mode production",
     "build": "vite build --mode production",
     "build:dev": "vite build --mode development",
     "dev": "vite",
     "lint": "biome check",
     "watch": "vite build --watch --mode development",
-    "pack": "npm run build && zip -r shattered-worlds.zip dist/ lang/ templates/ template.json system.json",
+    "pack": "npm run build && zip -r shattered-worlds.zip dist/ data/ lang/ templates/ template.json system.json",
     "bump:patch": "npm version patch --no-git-tag-version && node scripts/update-system-version.js && node scripts/update-readme.js",
     "bump:minor": "npm version minor --no-git-tag-version && node scripts/update-system-version.js && node scripts/update-readme.js",
     "bump:major": "npm version major --no-git-tag-version && node scripts/update-system-version.js && node scripts/update-readme.js"

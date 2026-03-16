@@ -6,7 +6,6 @@
     PassiveAbilityKind,
   } from "../../../documents/Item/types/AbilityDataTypes";
   import { t } from "../../../shared/i18n";
-  import { cn } from "../../../shared/lib/cn";
   import { Input, SelectInput } from "../../../shared/ui";
 
   interface Props {
@@ -61,7 +60,7 @@
 
   <div class="header-main">
     <Input
-      class={cn("tw:text-[20px] tw:font-bold tw:py-[0.4rem]")}
+      class="header-name-input"
       type="text"
       bind:value={item.name}
       placeholder={t("ability.header.namePlaceholder")}
@@ -70,7 +69,7 @@
     />
 
     <div class="type-wrapper">
-      <span class="tw:opacity-80 tw:text-[20px]">{t("ability.header.categoryLabel")}</span>
+      <span class="type-label">{t("ability.header.categoryLabel")}</span>
       <SelectInput
         value={system.category}
         options={ABILITY_CATEGORIES}
@@ -80,7 +79,7 @@
     </div>
 
     <div class="type-wrapper">
-      <span class="tw:opacity-80 tw:text-[16px]">{t("ability.header.kindLabel")}</span>
+      <span class="kind-label">{t("ability.header.kindLabel")}</span>
       <SelectInput
         value={system.category === "active" ? system.activeKind : system.passiveKind}
         options={kindOptions}
@@ -110,5 +109,22 @@
     display: flex;
     align-items: baseline;
     gap: 0.5rem;
+  }
+
+  .header-main :global(.header-name-input) {
+    font-size: 20px;
+    font-weight: 700;
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+  }
+
+  .type-label {
+    opacity: 0.8;
+    font-size: 20px;
+  }
+
+  .kind-label {
+    opacity: 0.8;
+    font-size: 16px;
   }
 </style>

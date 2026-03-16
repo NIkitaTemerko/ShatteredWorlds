@@ -93,7 +93,7 @@
       <div class="cell header">{col.label}</div>
       <div class="cell value">
         <Input
-          class="tw:w-10"
+          class="stat-input"
           variant="underline"
           type="number"
           value={col.base}
@@ -110,7 +110,7 @@
       <div class="cell value">
         {#if isNpc}
           <Input
-            class="tw:w-10"
+            class="stat-input"
             variant="underline"
             type="number"
             value={col.extra}
@@ -127,7 +127,7 @@
       <div class="cell value">
         {#if isNpc && col.charBonusBase !== undefined}
           <Input
-            class="tw:w-10"
+            class="stat-input"
             variant="underline"
             type="number"
             value={col.charBonusBase}
@@ -144,7 +144,7 @@
       <div class="cell value">
         {#if isNpc && col.saveBonusBase !== undefined}
           <Input
-            class="tw:w-10"
+            class="stat-input"
             variant="underline"
             type="number"
             value={col.saveBonusBase}
@@ -207,6 +207,10 @@
     font-size: 0.85em;
     opacity: 0.75;
     font-weight: 600;
+  }
+
+  .cell :global(.stat-input) {
+    width: 2.5rem;
   }
 
   @media (max-width: 900px) {

@@ -73,7 +73,7 @@
     {/if}
 
     <div class="section-header">
-      <span class="tw:text-20 tw:font-bold">{t("item.potionFood.effectsTitle")}</span>
+      <span class="section-title">{t("item.potionFood.effectsTitle")}</span>
       <button type="button" class="add-btn" onclick={addEffect}>{t("item.potionFood.addEffect")}</button>
     </div>
 
@@ -183,6 +183,11 @@
   .section-header h3 {
     margin: 0;
     font-size: var(--font-size-16);
+    font-weight: 700;
+  }
+
+  .section-title {
+    font-size: 20px;
     font-weight: 700;
   }
 

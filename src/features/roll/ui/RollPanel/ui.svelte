@@ -42,19 +42,19 @@
     <div class="roll-value">
       <label>
         {t("roll.base")}
-        <Input variant="underline" class="tw:w-10" type="number" bind:value={natRoll} min="0" max="999" />
+        <Input variant="underline" class="roll-input" type="number" bind:value={natRoll} min="0" max="999" />
       </label>
     </div>
     <div class="roll-value bonus">
       <label>
         {t("roll.bonus")}
-        <Input variant="underline" class="tw:w-10" type="number" bind:value={rollBonus} min="0" max="999" />
+        <Input variant="underline" class="roll-input" type="number" bind:value={rollBonus} min="0" max="999" />
       </label>
     </div>
     <div class="roll-value">
       <label>
         {t("roll.actions")}
-        <Input variant="underline" class="tw:w-10" type="number" bind:value={actions} min="0" max="999" />
+        <Input variant="underline" class="roll-input" type="number" bind:value={actions} min="0" max="999" />
       </label>
     </div>
 
@@ -157,6 +157,10 @@
     justify-content: center;
     align-items: center;
     padding: 1rem;
+  }
+
+  .roll-value :global(.roll-input) {
+    width: 2.5rem;
   }
 
   .roll-value.bonus {

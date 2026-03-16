@@ -1,6 +1,5 @@
 /* eslint-env node */
 import { svelte } from '@sveltejs/vite-plugin-svelte';
-import tailwind from '@tailwindcss/vite';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { postcssConfig } from './postcssConfig';
 import moduleJSON from './system.json';
@@ -120,7 +119,6 @@ export default ({ mode }) => {
       svelte({
         compilerOptions,
       }),
-      tailwind(),
       ...(process.env.ANALYZE
         ? [visualizer({ filename: 'stats.html', open: true, gzipSize: true, template: 'treemap' })]
         : []),

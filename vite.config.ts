@@ -91,16 +91,14 @@ export default ({ mode }) => {
       target: ['es2022'],
       terserOptions: s_COMPRESS ? { ...terserConfig(), ecma: 2022 } : void 0,
       cssCodeSplit: false,
-      assetsInlineLimit: 100000,
       rollupOptions: {
         input: 'src/index.ts',
         output: {
           format: 'es',
           entryFileNames: `${moduleJSON.id}.js`,
           chunkFileNames: 'chunks/[name]-[hash].js',
-          // Rewrite the default style.css to a more recognizable file name.
-          assetFileNames: (assetInfo) =>
-            assetInfo.name === 'style.css' ? `${moduleJSON.id}.css` : assetInfo.name,
+          assetFileNames: ({ name }) =>
+            name === 'style.css' ? `${moduleJSON.id}.css` : `fonts/${name}`,
         },
         plugins: [
           // No assets to copy since 'public/' does not exist; remove copy plugin.

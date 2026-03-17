@@ -5,6 +5,7 @@ import { migrateConsumableData, needsMigration } from './helpers/Item/migrateCon
 import { handleAddItem } from './helpers/Item/StackManager';
 import { ShopManagerApp } from './modules/shop';
 import { AbilityItemApp } from './view/AbilityItem/ItemApp';
+import { EquipmentItemApp } from './view/EquipmentItem/ItemApp';
 import { CharacterApp } from './view/BaseCharacter/CharacterApp.js';
 import { ConsumableItemApp } from './view/ConsumableItem/ItemApp';
 import { NpcApp } from './view/NpcCharacter/NpcApp';
@@ -81,6 +82,10 @@ Hooks.once('setup', () => {
   });
   foundry.documents.collections.Items.registerSheet('shw', SpellItemApp, {
     types: ['spell'],
+    makeDefault: true,
+  });
+  foundry.documents.collections.Items.registerSheet('shw', EquipmentItemApp, {
+    types: ['equipment'],
     makeDefault: true,
   });
 });

@@ -60,14 +60,3 @@ export const AURA_AFFECTS = [
   { value: 'enemies', label: 'ability.passiveDetails.enemies' },
   { value: 'everyone', label: 'ability.passiveDetails.everyone' },
 ];
-
-export const rarityColors: Record<
-  'common' | 'uncommon' | 'rare' | 'epic' | 'legendary',
-  { dark: string; light: string }
-> = {
-  common: { dark: '#9CA3AF', light: '#F3F4F6' },
-  uncommon: { dark: '#10B981', light: '#D1FAE5' },
-  rare: { dark: '#3B82F6', light: '#DBEAFE' },
-  epic: { dark: '#A855F7', light: '#F3E8FF' },
-  legendary: { dark: '#F97316', light: '#FFEDD5' },
-};

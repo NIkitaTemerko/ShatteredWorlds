@@ -1,10 +1,17 @@
-import { getAbilityImage, getConsumableImage, getSpellImage, ItemFactory } from './ItemFactory';
+import {
+  getAbilityImage,
+  getConsumableImage,
+  getEquipmentImage,
+  getSpellImage,
+  ItemFactory,
+} from './ItemFactory';
 import type { AbilitySystem } from './types/AbilityDataTypes';
 import type { ConsumableData } from './types/ConsumableDataTypes';
+import type { EquipmentSystem } from './types/EquipmentDataTypes';
 import type { SpellSystem } from './types/SpellDataTypes';
 
 // Flattened: system IS the item data directly (no nested structure)
-type ShwItemSystem = ConsumableData | AbilitySystem | SpellSystem;
+type ShwItemSystem = ConsumableData | AbilitySystem | SpellSystem | EquipmentSystem;
 
 export class ShwItem extends Item {
   // @ts-expect-error
@@ -28,6 +35,10 @@ export class ShwItem extends Item {
 
   isSpell(): this is { system: SpellSystem } {
     return this.type === 'spell';
+  }
+
+  isEquipment(): this is { system: EquipmentSystem } {
+    return this.type === 'equipment';
   }
 
   private prepareConsumable() {
@@ -63,6 +74,18 @@ export class ShwItem extends Item {
       Object.assign(this.system, item);
       if (!this.img || this.img === 'icons/svg/item-bag.svg') {
         this.img = getSpellImage(this.system.category);
+      }
+    }
+  }
+
+  private prepareEquipment() {
+    if (this.isEquipment() && !this.system.kind) {
+      const item = ItemFactory.createEquipment('body', {
+        name: this.name,
+      });
+      Object.assign(this.system, item);
+      if (!this.img || this.img === 'icons/svg/item-bag.svg') {
+        this.img = getEquipmentImage(this.system.slot);
       }
     }
   }
@@ -119,6 +142,8 @@ export class ShwItem extends Item {
       this.prepareAbility();
     } else if (this.type === 'spell') {
       this.prepareSpell();
+    } else if (this.type === 'equipment') {
+      this.prepareEquipment();
     }
   }
 

@@ -131,6 +131,39 @@
         "defaultEffect": "buff"
       }
     },
+    "equipment": {
+      "header": {
+        "namePlaceholder": "Equipment Name",
+        "slotLabel": "Slot:"
+      },
+      "slot": {
+        "head": "Head",
+        "cloak": "Cloak",
+        "amulet": "Amulet",
+        "hands": "Hands",
+        "body": "Body",
+        "belt": "Belt",
+        "oneHand": "One Hand",
+        "twoHand": "Two-Handed",
+        "boots": "Boots",
+        "ring": "Ring"
+      },
+      "stats": {
+        "armorClass": "Armor Class"
+      },
+      "bonuses": {
+        "title": "Passive Bonuses",
+        "statModifiers": "Stat Modifiers"
+      },
+      "linkedItems": {
+        "title": "Linked Abilities & Spells",
+        "dropHint": "Drag abilities or spells here to link them",
+        "remove": "Remove link",
+        "alreadyLinked": "This item is already linked",
+        "wrongType": "Only abilities and spells can be linked to equipment",
+        "deleted": "Item deleted"
+      }
+    },
     "ability": {
       "header": {
         "namePlaceholder": "Ability Name",
@@ -295,7 +328,6 @@
         "consumable": "Consumables",
         "ability": "Abilities",
         "weapon": "Weapons",
-        "armor": "Armor",
         "equipment": "Equipment",
         "treasure": "Treasure"
       },
@@ -461,7 +493,7 @@
       "increased": "Stack \"{name}\" increased: {from} → {to}",
       "filledToMax": "Stack \"{name}\" filled to max: {from} → {to}",
       "additionalCreated": "Additional stacks \"{name}\" created: {count}",
-      "abilityExists": "Character already has ability \"{name}\""
+      "duplicateExists": "Character already has \"{name}\""
     },
     "tree": {
       "readItemDataError": "Failed to read item data",

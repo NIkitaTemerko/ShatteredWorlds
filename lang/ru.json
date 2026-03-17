@@ -131,6 +131,39 @@
         "defaultEffect": "бафф"
       }
     },
+    "equipment": {
+      "header": {
+        "namePlaceholder": "Название снаряжения",
+        "slotLabel": "Слот:"
+      },
+      "slot": {
+        "head": "Голова",
+        "cloak": "Плащ",
+        "amulet": "Амулет",
+        "hands": "Руки (перчатки)",
+        "body": "Тело (броня)",
+        "belt": "Пояс",
+        "oneHand": "Одна рука",
+        "twoHand": "Двуручное",
+        "boots": "Ботинки",
+        "ring": "Кольцо"
+      },
+      "stats": {
+        "armorClass": "Класс брони"
+      },
+      "bonuses": {
+        "title": "Пассивные бонусы",
+        "statModifiers": "Модификаторы характеристик"
+      },
+      "linkedItems": {
+        "title": "Привязанные способности и заклинания",
+        "dropHint": "Перетащите сюда способности или заклинания",
+        "remove": "Удалить привязку",
+        "alreadyLinked": "Этот предмет уже привязан",
+        "wrongType": "К снаряжению можно привязать только способности и заклинания",
+        "deleted": "Предмет удалён"
+      }
+    },
     "ability": {
       "header": {
         "namePlaceholder": "Название способности",
@@ -290,7 +323,6 @@
         "consumable": "Расходники",
         "ability": "Способности",
         "weapon": "Оружие",
-        "armor": "Броня",
         "equipment": "Снаряжение",
         "treasure": "Сокровища"
       },
@@ -461,7 +493,7 @@
       "increased": "Стак \"{name}\" увеличен: {from} → {to}",
       "filledToMax": "Стак \"{name}\" заполнен до максимума: {from} → {to}",
       "additionalCreated": "Создано дополнительных стаков \"{name}\": {count}",
-      "abilityExists": "У персонажа уже есть способность \"{name}\""
+      "duplicateExists": "У персонажа уже есть \"{name}\""
     },
     "tree": {
       "readItemDataError": "Не удалось прочитать данные предмета",

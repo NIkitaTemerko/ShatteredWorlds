@@ -5,6 +5,7 @@ import type {
   PassiveAbilityKind,
 } from './types/AbilityDataTypes';
 import type { ConsumableData, ConsumableType } from './types/ConsumableDataTypes';
+import type { EquipmentSlot, EquipmentSystem } from './types/EquipmentDataTypes';
 import type { BaseItemData } from './types/ItemDataInterface';
 import type { SpellCategory, SpellKind, SpellSystem } from './types/SpellDataTypes';
 
@@ -54,6 +55,26 @@ export function getSpellImage(category: SpellCategory): string {
     case 'arcane':
       return 'icons/svg/portal.svg';
   }
+}
+
+/**
+ * Дефолтные иконки для слотов снаряжения
+ */
+const EQUIPMENT_SLOT_IMAGES: Record<EquipmentSlot, string> = {
+  head: 'icons/equipment/head/helm-barbute-brass-steel.webp',
+  cloak: 'icons/equipment/back/cloak-collared-blue.webp',
+  amulet: 'icons/equipment/neck/amulet-geometric-gold-green.webp',
+  hands: 'icons/equipment/hand/gauntlet-armored-grey.webp',
+  body: 'icons/equipment/chest/breastplate-banded-steel-grey.webp',
+  belt: 'icons/equipment/waist/belt-buckle-gold.webp',
+  'one-hand': 'icons/weapons/swords/sword-guard-steel-green.webp',
+  'two-hand': 'icons/weapons/swords/greatsword-crossguard-steel.webp',
+  boots: 'icons/equipment/feet/boots-armored-steel.webp',
+  ring: 'icons/equipment/finger/ring-cabochon-bronze-green.webp',
+};
+
+export function getEquipmentImage(slot: EquipmentSlot): string {
+  return EQUIPMENT_SLOT_IMAGES[slot];
 }
 
 // biome-ignore lint/complexity/noStaticOnlyClass: смысла 0
@@ -276,6 +297,26 @@ export class ItemFactory {
       resourceCosts: [],
       maxRank: 1,
       currentRank: 1,
+    };
+  }
+
+  static createEquipment(slot: EquipmentSlot, baseData: Partial<BaseItemData>): EquipmentSystem {
+    const base = {
+      name: '',
+      description: '',
+      weight: 0,
+      rarity: 'common' as const,
+      price: 0,
+      ...baseData,
+    };
+
+    return {
+      ...base,
+      kind: 'equipment' as const,
+      slot,
+      armorClass: 0,
+      statBonuses: null,
+      linkedItemIds: [],
     };
   }
 }

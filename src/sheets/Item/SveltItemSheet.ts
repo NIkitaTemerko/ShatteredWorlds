@@ -23,7 +23,6 @@ export class ShwItemSheet extends foundry.appv1.sheets.ItemSheet {
     return foundry.utils.mergeObject(foundry.appv1.sheets.ItemSheet.defaultOptions, {
       width: 500,
       height: 500,
-      // scrollY можно оставить, но используем ручное восстановление скролла ниже
     });
   }
 

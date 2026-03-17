@@ -1,14 +1,5 @@
 <script lang="ts" module>
-  // Глобальный трекер: только один попап может быть открыт одновременно
-  let activeMenuClose: (() => void) | null = null;
-
-  /** Закрыть текущий открытый попап (если есть) */
-  export function closeActivePopup() {
-    if (activeMenuClose) {
-      activeMenuClose();
-      activeMenuClose = null;
-    }
-  }
+  import { closeActivePopup, setActiveMenuClose } from "./closeActivePopup";
 </script>
 
 <script lang="ts">
@@ -27,6 +18,25 @@
 
   let top = $state(0);
   let left = $state(0);
+  let leaveTimer: ReturnType<typeof setTimeout> | null = null;
+
+  function cancelLeaveTimer() {
+    if (leaveTimer !== null) {
+      clearTimeout(leaveTimer);
+      leaveTimer = null;
+    }
+  }
+
+  function handleMouseLeave() {
+    cancelLeaveTimer();
+    leaveTimer = setTimeout(() => {
+      onClose();
+    }, 300);
+  }
+
+  function handleMouseEnter() {
+    cancelLeaveTimer();
+  }
 
   // Svelte action: телепортирует DOM-узел в document.body.
   // Компонент остаётся в дереве Svelte → полная реактивность пропсов.
@@ -43,17 +53,18 @@
     if (!open) return;
 
     // Singleton: закрываем предыдущий попап
-    if (activeMenuClose) {
-      activeMenuClose();
-      activeMenuClose = null;
-    }
-    activeMenuClose = onClose;
+    closeActivePopup();
+    setActiveMenuClose(onClose);
 
     // Позиция относительно якоря
     if (anchorEl) {
       const rect = anchorEl.getBoundingClientRect();
       top = rect.bottom + 2;
       left = rect.left + rect.width / 2;
+
+      // Якорь тоже участвует в hover-зоне попапа
+      anchorEl.addEventListener("mouseenter", handleMouseEnter);
+      anchorEl.addEventListener("mouseleave", handleMouseLeave);
     }
 
     // Закрытие по клику вне меню
@@ -71,8 +82,13 @@
 
     return () => {
       clearTimeout(timeoutId);
+      cancelLeaveTimer();
       document.removeEventListener("click", handleDocClick);
-      activeMenuClose = null;
+      if (anchorEl) {
+        anchorEl.removeEventListener("mouseenter", handleMouseEnter);
+        anchorEl.removeEventListener("mouseleave", handleMouseLeave);
+      }
+      setActiveMenuClose(null);
     };
   });
 </script>
@@ -81,7 +97,11 @@
   <div
     use:portal
     data-popup-menu-id={menuId}
+    role="menu"
+    tabindex="-1"
     style="position: fixed; top: {top}px; left: {left}px; transform: translateX(-50%); z-index: 999999; pointer-events: auto;"
+    onmouseleave={handleMouseLeave}
+    onmouseenter={handleMouseEnter}
   >
     <PopupMenuDropdown {items} />
   </div>

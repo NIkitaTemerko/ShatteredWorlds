@@ -14,9 +14,10 @@ import type { SpellSystem } from './types/SpellDataTypes';
 type ShwItemSystem = ConsumableData | AbilitySystem | SpellSystem | EquipmentSystem;
 
 export class ShwItem extends Item {
-  // @ts-expect-error
+  // @ts-expect-error — Foundry тип слишком узкий
   declare system: ShwItemSystem;
-  declare type: any;
+  // @ts-expect-error — Foundry тип слишком узкий для кастомных item types
+  declare type: string;
   declare name: string;
   declare img: string;
   declare update: (

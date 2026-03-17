@@ -50,7 +50,10 @@ export function buildTreeFromFlatList(items: FlatItem[]): TreeNode[] {
           nodeMap.set(currentPath, categoryNode);
         }
 
-        currentLevel = categoryNode.children!;
+        if (!categoryNode.children) {
+          categoryNode.children = [];
+        }
+        currentLevel = categoryNode.children;
       }
     }
   }

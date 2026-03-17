@@ -104,9 +104,8 @@ export function mapShopNodesToFlatItems(nodes: ShopNode[]): FlatItem[] {
         } else if (currentNode.type === 'location') {
           categoryIcons.unshift('fas fa-map-marker-alt');
         }
-        currentNode = currentNode.parentId
-          ? nodes.find((n) => n.id === currentNode!.parentId)
-          : undefined;
+        const parentId: string | undefined = currentNode.parentId;
+        currentNode = parentId ? nodes.find((n) => n.id === parentId) : undefined;
       }
 
       // Если у торговца НЕТ предметов, добавляем его как лист
@@ -150,9 +149,8 @@ export function mapShopNodesToFlatItems(nodes: ShopNode[]): FlatItem[] {
         if (currentNode.type === 'location') {
           categoryIcons.unshift('fas fa-map-marker-alt');
         }
-        currentNode = currentNode.parentId
-          ? nodes.find((n) => n.id === currentNode!.parentId)
-          : undefined;
+        const parentId: string | undefined = currentNode.parentId;
+        currentNode = parentId ? nodes.find((n) => n.id === parentId) : undefined;
       }
 
       result.push({

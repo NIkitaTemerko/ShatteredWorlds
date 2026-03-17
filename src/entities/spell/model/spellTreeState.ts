@@ -15,14 +15,17 @@ const treeStates = new Map<string, SpellTreeState>();
 
 /** Получить состояние дерева заклинаний для актора */
 export function getSpellTreeState(actorId: string): SpellTreeState {
-  if (!treeStates.has(actorId)) {
-    treeStates.set(actorId, {
-      searchQuery: '',
-      expandedIds: new Set<string>(),
-      selectedId: null,
-    });
-  }
-  return treeStates.get(actorId)!;
+  const existing = treeStates.get(actorId);
+  if (existing) return existing;
+
+  const created: SpellTreeState = {
+    searchQuery: '',
+    expandedIds: new Set<string>(),
+    selectedId: null,
+  };
+
+  treeStates.set(actorId, created);
+  return created;
 }
 
 /** Обновить состояние дерева заклинаний */

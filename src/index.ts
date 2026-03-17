@@ -5,20 +5,24 @@ import { migrateConsumableData, needsMigration } from './helpers/Item/migrateCon
 import { handleAddItem } from './helpers/Item/StackManager';
 import { ShopManagerApp } from './modules/shop';
 import { AbilityItemApp } from './view/AbilityItem/ItemApp';
-import { EquipmentItemApp } from './view/EquipmentItem/ItemApp';
 import { CharacterApp } from './view/BaseCharacter/CharacterApp.js';
 import { ConsumableItemApp } from './view/ConsumableItem/ItemApp';
+import { EquipmentItemApp } from './view/EquipmentItem/ItemApp';
 import { NpcApp } from './view/NpcCharacter/NpcApp';
 import { SpellItemApp } from './view/SpellItem/ItemApp';
 import './main.css';
 
-(globalThis as any).MIN_WINDOW_HEIGHT = 200;
-(globalThis as any).MIN_WINDOW_WIDTH = 200;
+type GlobalLimits = {
+  MIN_WINDOW_HEIGHT: number;
+  MIN_WINDOW_WIDTH: number;
+};
+
+const globalWithLimits = globalThis as typeof globalThis & Partial<GlobalLimits>;
+globalWithLimits.MIN_WINDOW_HEIGHT = 200;
+globalWithLimits.MIN_WINDOW_WIDTH = 200;
 
 Hooks.once('init', () => {
-  //@ts-expect-error
   CONFIG.Actor.documentClass = ShwActor;
-  //@ts-expect-error
   CONFIG.Item.documentClass = ShwItem;
   CONFIG.Token.documentClass = ShwTokenDocument;
   CONFIG.Combat.initiative = {
@@ -90,28 +94,39 @@ Hooks.once('setup', () => {
   });
 });
 
+/**
+ * Автолинк токенов для персонажей.
+ * @see https://foundryvtt.com/api/v12/classes/client.TokenDocument.html#updateSource
+ */
 Hooks.on('preCreateToken', (tokenDocument: any, tokenData: any) => {
-  const actor = (game as any).actors.get(tokenData.actorId);
+  const actor = tokenData.actorId
+    ? (game.actors?.get(tokenData.actorId) as ShwActor | undefined)
+    : undefined;
+
   if (actor?.type === 'character') {
     tokenDocument.updateSource({ actorLink: true });
   }
 });
 
-// Хук для создания предметов: миграция данных
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+/**
+ * Хук для создания предметов: миграция данных и стекирование.
+ * @see https://foundryvtt.com/api/v12/classes/client.Item.html#_preCreate
+ */
 Hooks.on('preCreateItem', (item: any, data: any, options: any) => {
+  const createdItem = item as ShwItem;
+
   // Миграция устаревших данных consumable
   if (needsMigration(data)) {
     const migrated = migrateConsumableData(data);
-    item.updateSource({ system: migrated.system });
+    createdItem.updateSource({ system: migrated.system });
   }
 
   // Управление стеком предметов при добавлении к актеру (skipStack обходит стекирование при дублировании)
-  if (item.parent && item.parent instanceof ShwActor && !options?.skipStack) {
-    const result = handleAddItem(item.parent, {
-      type: item.type,
-      name: item.name,
-      system: item.system,
+  if (createdItem.parent && createdItem.parent instanceof ShwActor && !options?.skipStack) {
+    const result = handleAddItem(createdItem.parent, {
+      type: createdItem.type,
+      name: createdItem.name,
+      system: createdItem.system as any,
     });
 
     if (result === 'stacked' || result === 'blocked') {
@@ -122,11 +137,11 @@ Hooks.on('preCreateItem', (item: any, data: any, options: any) => {
 
 // Batch migrate existing items on world initialization (one-time on world load)
 Hooks.once('setup', async () => {
-  const items = (game as any).items;
+  const items = game.items as unknown as Collection<Item>;
   if (!items || items.size === 0) return;
 
   let migratedCount = 0;
-  const itemsToMigrate: any[] = [];
+  const itemsToMigrate: Item[] = [];
 
   // Collect items that need migration
   for (const item of items) {

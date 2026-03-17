@@ -60,6 +60,11 @@ function updateHelpers(
   sys.helpers.totalSpeed += sys.utility.speed;
 }
 
+const hasCalculatedAdditionalValue = (
+  key: keyof ShwActorSystem['additionalAttributes'],
+  map: ReturnType<typeof calculateAdditionalAttributes>,
+): key is keyof ReturnType<typeof calculateAdditionalAttributes> => key in map;
+
 export function prepareCharacterDerivedData(sys: ShwActorSystem, actor: ShwActor<'character'>) {
   const attrs = sys.attributes;
   const isLevelAboveFive = sys.utility.level >= 5;
@@ -89,8 +94,8 @@ export function prepareCharacterDerivedData(sys: ShwActorSystem, actor: ShwActor
   updateHelpers(sys, addAttrMap);
 
   for (const k of ADDITIONAL_KEYS) {
-    if (k in addAttrMap && k in sys.additionalAttributes && k !== 'impulse') {
-      sys.additionalAttributes[k] += (addAttrMap as any)[k];
+    if (k !== 'impulse' && hasCalculatedAdditionalValue(k, addAttrMap)) {
+      sys.additionalAttributes[k] += addAttrMap[k];
     }
   }
 

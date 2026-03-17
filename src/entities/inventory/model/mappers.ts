@@ -57,10 +57,9 @@ export function mapInventoryToFlatItems(items: ShwItem[]): FlatItem[] {
         id: (item.id ?? item._id) || '',
         label,
         path,
-        color: RARITY_COLORS[rarity as keyof typeof RARITY_COLORS]?.dark,
+        color: RARITY_COLORS[rarity]?.dark,
         badge: {
-          color:
-            RARITY_COLORS[rarity as keyof typeof RARITY_COLORS]?.dark ?? RARITY_COLORS.common.dark,
+          color: RARITY_COLORS[rarity]?.dark ?? RARITY_COLORS.common.dark,
           label: rarity,
         },
         data: item,

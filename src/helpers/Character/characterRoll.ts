@@ -13,6 +13,21 @@ const STAT_NAME_KEYS = {
   natural: 'attributes.natural',
 } as const;
 
+interface RollResultLike {
+  total?: number | null;
+}
+
+interface PoolTermLike {
+  rolls: RollResultLike[];
+}
+
+const hasPoolRolls = (term: unknown): term is PoolTermLike => {
+  if (typeof term !== 'object' || term === null) return false;
+  if (!('rolls' in term)) return false;
+  const maybeTerm = term as { rolls?: unknown };
+  return Array.isArray(maybeTerm.rolls);
+};
+
 function buildDiceFormula(advantage: 'adv' | 'dis' | 'normal', diceSize: number): string {
   if (advantage === 'adv') {
     return `2d${diceSize}kh1`;
@@ -61,10 +76,10 @@ export async function characterRoll(
 
   // достаём тоталы под-роллов пула (adv/dis уже учтены внутри total)
   let results: number[];
-  const poolTerm = roll.terms.find((t: any) => t?.rolls && Array.isArray(t.rolls));
+  const poolTerm = (roll.terms as unknown[]).find(hasPoolRolls);
 
   if (poolTerm) {
-    results = (poolTerm as any).rolls.map((r: any) => Number(r.total ?? 0));
+    results = poolTerm.rolls.map((r: RollResultLike) => Number(r.total ?? 0));
   } else {
     results = [Number(roll.total ?? 0)];
   }
@@ -94,13 +109,11 @@ export async function characterRoll(
   const flavor = `${rollTypePrefix}${bonusText}${advantageText}${multipleText}`;
 
   // Get current roll mode from game settings
-  const rollMode = (game as any).settings.get('core', 'rollMode');
+  const rollMode = game.settings.get('core', 'rollMode') as string;
 
   // Prepare chat message data
-  const messageData = {
-    speaker: ChatMessage.getSpeaker({
-      actor: actor as unknown as Actor<'base' | foundry.abstract.Document.ModuleSubType>,
-    }),
+  const messageData: Record<string, unknown> = {
+    speaker: ChatMessage.getSpeaker({ actor } as any),
     flavor,
     rolls: [roll],
     content: wrapper.innerHTML,
@@ -110,7 +123,7 @@ export async function characterRoll(
   (ChatMessage as any).applyRollMode(messageData, rollMode);
 
   // Create the chat message
-  await (ChatMessage as any).create(messageData);
+  await ChatMessage.create(messageData);
 
   return;
 }

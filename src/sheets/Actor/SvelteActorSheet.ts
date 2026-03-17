@@ -1,24 +1,23 @@
-import { mount, unmount } from 'svelte';
+import { type Component, mount, unmount } from 'svelte';
 import type { ShwActor } from '../../documents/Actor/ShwActor';
 
 export type SvelteHandle = { destroy: () => Promise<void> };
 
 export function mountSvelte(
-  Component: any,
+  component: Component<any>,
   target: Element,
-  props?: Record<string, any>,
+  props?: Record<string, unknown>,
 ): SvelteHandle {
-  const inst = mount(Component, { target, props });
+  const inst = mount(component, { target, props });
   return { destroy: () => unmount(inst, { outro: true }) };
 }
 
 export abstract class SvelteActorSheet extends foundry.appv1.sheets.ActorSheet {
   /** Хэндл смонтированного Svelte-компонента (Svelte 5) */
-  private _svelte: any = null;
+  private _svelte: ReturnType<typeof mount> | null = null;
   /** ID актёра, для которого смонтирован компонент */
   private _mountedActorId: string | null = null;
-
-  override render(force?: boolean, options?: any): this {
+  override render(force?: boolean, options?: object): this {
     // Only do full render if not yet rendered or force=true
     if (force || !this.rendered) {
       super.render(force, options);
@@ -52,7 +51,8 @@ export abstract class SvelteActorSheet extends foundry.appv1.sheets.ActorSheet {
 
     // Mount component with getter function for reactivity
     if (!this._svelte) {
-      const Shell = (this.constructor as any).Shell as any;
+      const Shell = (this.constructor as { Shell?: Component<any> }).Shell;
+      if (!Shell) return;
       const getActor = () => this.actor;
       this._svelte = mount(Shell, { target, props: { getActor } });
       this._mountedActorId = this.actor.id;
@@ -69,7 +69,7 @@ export abstract class SvelteActorSheet extends foundry.appv1.sheets.ActorSheet {
       });
   }
 
-  async close(options?: any) {
+  async close(options?: object) {
     try {
       if (this._svelte) {
         unmount(this._svelte);
@@ -84,18 +84,18 @@ export abstract class SvelteActorSheet extends foundry.appv1.sheets.ActorSheet {
     }
   }
 
-  activateListeners(html: any) {
+  activateListeners(html: JQuery) {
     super.activateListeners(html);
 
-    html.find('[data-action="toggle-defense"]').click((ev: any) => {
+    html.find('[data-action="toggle-defense"]').click((ev: JQuery.ClickEvent) => {
       $(ev.currentTarget).toggleClass('active');
     });
 
-    html.find('[data-action="apply-damage"]').click((ev: any) => {
+    html.find('[data-action="apply-damage"]').click((ev: JQuery.ClickEvent) => {
       const wrapper = $(ev.currentTarget).closest('.hp-damage-wrapper');
       const input = wrapper.find('.damage-input');
       const shield = wrapper.find('.shield-icon');
-      const actor: ShwActor<'character'> | ShwActor<'npc'> = this.actor as any;
+      const actor = this.actor as unknown as ShwActor<'character'> | ShwActor<'npc'>;
 
       let damage = parseInt(input.val() as string, 10) || 0;
       const defense = actor.system.additionalAttributes.armorClass ?? 0;

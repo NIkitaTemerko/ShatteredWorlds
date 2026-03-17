@@ -3,8 +3,10 @@ import type { ShwItem } from '../../../documents/Item/ShwItem';
 import type { EquipmentSlot } from '../../../documents/Item/types/EquipmentDataTypes';
 
 export const getUpdateEquipment = (item: ShwItem) =>
-  async function updateEquipment(path: string, value: any, e?: Event) {
+  async function updateEquipment(path: string, value: unknown, e?: Event) {
     e?.stopPropagation();
+
+    if (!item.isEquipment()) return;
 
     if (path === 'slot') {
       const equipment = ItemFactory.createEquipment(value as EquipmentSlot, {

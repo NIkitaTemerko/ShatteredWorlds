@@ -1,10 +1,10 @@
 <script lang="ts">
   import type { ShwItem } from "../../../documents/Item/ShwItem";
-  import type { PassiveAbilitySystem, StatModifier } from "../../../documents/Item/types/AbilityDataTypes";
-  import type { CharacterStatPath } from "../../../shared/model/characterStatPaths";
+  import type { PassiveAbilitySystem, StatModifierBlock } from "../../../documents/Item/types/AbilityDataTypes";
   import { StatsCard } from "../../../entities/consumable";
+  import { StatBonusesEditor } from "../../../features/statBonuses";
   import { t } from "../../../shared/i18n";
-  import { BonusCharacteristics, Input, SelectInput } from "../../../shared/ui";
+  import { Input, SelectInput } from "../../../shared/ui";
   import { PASSIVE_MODES, AREA_SHAPES, AURA_AFFECTS } from "../constants/abilityConstants";
 
   interface Props {
@@ -16,35 +16,8 @@
 
   const system = $derived(item.system as PassiveAbilitySystem);
 
-  // Инициализация statBonuses если null
-  const statModifiers = $derived(system.statBonuses?.modifiers ?? []);
-
-  function handleAddModifier(stat: CharacterStatPath) {
-    const newModifier: StatModifier = {
-      stat,
-      mode: "add",
-      value: 0,
-      scaling: null,
-      condition: undefined,
-    };
-
-    const updatedModifiers = [...statModifiers, newModifier];
-    onUpdate("statBonuses", { modifiers: updatedModifiers });
-  }
-
-  function handleRemoveModifier(index: number) {
-    const updatedModifiers = statModifiers.filter((_, i) => i !== index);
-    onUpdate("statBonuses", { modifiers: updatedModifiers });
-  }
-
-  function handleUpdateModifierValue(index: number, value: number) {
-    const updatedModifiers = statModifiers.map((mod, i) => (i === index ? { ...mod, value } : mod));
-    onUpdate("statBonuses", { modifiers: updatedModifiers });
-  }
-
-  function handleUpdateModifierMode(index: number, mode: "add" | "mul" | "override") {
-    const updatedModifiers = statModifiers.map((mod, i) => (i === index ? { ...mod, mode } : mod));
-    onUpdate("statBonuses", { modifiers: updatedModifiers });
+  function handleStatBonusesUpdate(statBonuses: StatModifierBlock) {
+    onUpdate("statBonuses", statBonuses);
   }
 </script>
 
@@ -71,24 +44,12 @@
 
   <!-- STAT BONUSES (for stat-bonus kind) -->
   {#if system.passiveKind === "stat-bonus"}
-    <section style="--dark: #10B981; --light: #D1FAE5">
-      <div class="section-header">{t("ability.passiveDetails.statBonuses")}</div>
-
-      <StatsCard columns={1}>
-        <div class="stat-col full" style="--dark: #10B981; --light: #D1FAE5">
-          <div class="stat-header">{t("ability.passiveDetails.bonusesInfo")}</div>
-          <div class="stat-body">
-            <BonusCharacteristics
-              modifiers={statModifiers}
-              onAdd={handleAddModifier}
-              onRemove={handleRemoveModifier}
-              onUpdateValue={handleUpdateModifierValue}
-              onUpdateMode={handleUpdateModifierMode}
-            />
-          </div>
-        </div>
-      </StatsCard>
-    </section>
+    <StatBonusesEditor
+      statBonuses={system.statBonuses}
+      onUpdate={handleStatBonusesUpdate}
+      title={t("ability.passiveDetails.statBonuses")}
+      subtitle={t("ability.passiveDetails.bonusesInfo")}
+    />
   {/if}
 
   <!-- AURA (for aura kind) -->

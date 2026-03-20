@@ -486,7 +486,11 @@
         "priceLabel": "Цена:",
         "quantityLabel": "Количество (-1 для неограниченного):",
         "newLocation": "Новая локация",
-        "newMerchant": "Новый торговец"
+        "newMerchant": "Новый торговец",
+        "nameLabel": "Название:",
+        "namePlaceholder": "Введите название",
+        "nameRequired": "Введите название",
+        "nameDuplicate": "Название \"{name}\" уже существует на этом уровне"
       }
     },
     "stack": {

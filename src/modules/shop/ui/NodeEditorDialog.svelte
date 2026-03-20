@@ -1,8 +1,9 @@
 <script lang="ts">
   import { Input, SelectInput } from "../../../shared/ui";
+  import { localize, t } from "../../../shared/i18n";
   import type { ShopNode, LocationNode, MerchantNode } from "../model/types";
   import { SHOP_NODE_COLORS } from "../model/constants";
-  import { loadShopDatabase } from "../model/storage";
+  import { loadShopDatabase, hasSiblingWithName } from "../model/storage";
 
   interface Props {
     node: ShopNode;
@@ -52,9 +53,21 @@
   });
 
   function handleSave() {
+    const trimmedName = name.trim();
+    if (!trimmedName) {
+      ui.notifications?.warn(t("shop.dialogs.nameRequired"));
+      return;
+    }
+
+    const targetParentId = parentId || undefined;
+    if (hasSiblingWithName(trimmedName, targetParentId, node.id)) {
+      ui.notifications?.warn(localize("shop.dialogs.nameDuplicate", { name: trimmedName }));
+      return;
+    }
+
     const updates: Partial<ShopNode> = {
-      name,
-      parentId: parentId || undefined,
+      name: trimmedName,
+      parentId: targetParentId,
     };
 
     if ("description" in node) {

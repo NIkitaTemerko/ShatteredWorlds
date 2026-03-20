@@ -8,9 +8,9 @@
     deleteNode,
     addNode,
     updateNode,
+    hasSiblingWithName,
     loadShopDatabase,
     updateMerchantItem,
-    deleteMerchantItem,
     type ShopNode,
     type LocationNode,
     type MerchantNode,
@@ -36,13 +36,13 @@
       return;
     }
 
-    const dialog = new Dialog(
+    const dialog = new foundry.appv1.api.Dialog(
       {
         title: " ",
         content: '<div id="merchant-item-editor-mount"></div>',
         buttons: {},
         render: (html) => {
-          const container = html.find("#merchant-item-editor-mount")[0];
+          const container = html[0].querySelector("#merchant-item-editor-mount");
           if (container) {
             mount(MerchantItemEditorDialog, {
               target: container,
@@ -74,13 +74,13 @@
   }
 
   function openNodeEditor(node: ShopNode) {
-    const dialog = new Dialog(
+    const dialog = new foundry.appv1.api.Dialog(
       {
         title: " ",
         content: '<div id="node-editor-mount"></div>',
         buttons: {},
         render: (html) => {
-          const container = html.find("#node-editor-mount")[0];
+          const container = html[0].querySelector("#node-editor-mount");
           if (container) {
             mount(NodeEditorDialog, {
               target: container,
@@ -112,7 +112,7 @@
   }
 
   async function handleDeleteNode(node: ShopNode) {
-    const confirmed = await Dialog.confirm({
+    const confirmed = await foundry.appv1.api.Dialog.confirm({
       title: t("shop.dialogs.deleteNodeTitle"),
       content: `<p>${localize("shop.dialogs.deleteNodeContent", { name: node.name })}</p>`,
     });
@@ -128,74 +128,68 @@
     const db = loadShopDatabase();
     const locations = db.nodes.filter((n) => n.type === "location");
 
-    console.log("handleAddLocation called, locations count:", locations.length);
+    const parentOptions = [
+      `<option value="">${t("shop.dialogs.rootLocation")}</option>`,
+      ...locations.map((loc) => `<option value="${loc.id}">${loc.name}</option>`),
+    ].join("");
 
-    let parentId: string | undefined = undefined;
-
-    // Если есть локации, предлагаем выбрать родителя
-    if (locations.length > 0) {
-      const choices = {
-        "": t("shop.dialogs.rootLocation"),
-        ...Object.fromEntries(locations.map((loc) => [loc.id, loc.name])),
-      };
-
-      const dialog2 = new Dialog({
-        title: t("shop.dialogs.addLocationTitle"),
-        content: `
-          <form>
-            <div class="form-group">
-              <label>${t("shop.dialogs.parentLocation")}</label>
-              <select id="parent-select" style="width: 100%; padding: 0.375rem 0.5rem; margin-top: 0.5rem; border: 1px solid #ccc; border-radius: 4px; background: white; font-size: 14px; color: #1a1820; line-height: 1.5; height: auto;">
-                ${Object.entries(choices)
-                  .map(([value, label]) => `<option value="${value}">${label}</option>`)
-                  .join("")}
-              </select>
-            </div>
-          </form>
-        `,
-        buttons: {
-          ok: {
-            label: t("shop.dialogs.create"),
-            callback: (html) => {
-              const select = html.find("#parent-select")[0] as HTMLSelectElement;
-              parentId = select.value || undefined;
-
-              console.log("Creating location with parentId:", parentId);
-
-              const newLocation: LocationNode = {
-                id: foundry.utils.randomID(),
-                name: t("shop.dialogs.newLocation"),
-                type: "location",
-                description: "",
-                parentId,
-              };
-              addNode(newLocation);
-              console.log("Location added, refreshing tree");
-              shopTreeRef?.refreshTree();
-              ui.notifications?.info(t("shop.notifications.locationAdded"));
-            },
-          },
-          cancel: {
-            label: t("shop.dialogs.cancel"),
+    const result = (await foundry.appv1.api.Dialog.wait({
+      title: t("shop.dialogs.addLocationTitle"),
+      content: `
+        <form>
+          <div class="form-group">
+            <label>${t("shop.dialogs.nameLabel")}</label>
+            <input type="text" name="name" placeholder="${t("shop.dialogs.namePlaceholder")}" autofocus />
+          </div>
+          <div class="form-group">
+            <label>${t("shop.dialogs.parentLocation")}</label>
+            <select name="parent" style="width: 100%; padding: 0.375rem 0.5rem; margin-top: 0.5rem; border: 1px solid #ccc; border-radius: 4px; background: white; font-size: 14px; color: #1a1820; line-height: 1.5; height: auto;">
+              ${parentOptions}
+            </select>
+          </div>
+        </form>
+      `,
+      buttons: {
+        ok: {
+          label: t("shop.dialogs.create"),
+          callback: (html) => {
+            const form = html[0].querySelector("form") as HTMLFormElement;
+            const formData = new FormData(form);
+            return {
+              name: (formData.get("name") as string)?.trim() || "",
+              parentId: (formData.get("parent") as string) || undefined,
+            };
           },
         },
-        default: "ok",
-      });
-      dialog2.render(true);
-    } else {
-      // Если локаций нет, создаем корневую
-      console.log("Creating root location");
-      const newLocation: LocationNode = {
-        id: foundry.utils.randomID(),
-        name: t("shop.dialogs.newLocation"),
-        type: "location",
-        description: "",
-      };
-      addNode(newLocation);
-      console.log("Root location added, refreshing tree");
-      shopTreeRef?.refreshTree();
-      ui.notifications?.info(t("shop.notifications.locationAdded"));
+        cancel: {
+          label: t("shop.dialogs.cancel"),
+        },
+      },
+      default: "ok",
+    })) as { name: string; parentId: string | undefined } | null;
+
+    if (!result) return;
+
+    if (!result.name) {
+      ui.notifications?.warn(t("shop.dialogs.nameRequired"));
+      return;
     }
+
+    if (hasSiblingWithName(result.name, result.parentId)) {
+      ui.notifications?.warn(localize("shop.dialogs.nameDuplicate", { name: result.name }));
+      return;
+    }
+
+    const newLocation: LocationNode = {
+      id: foundry.utils.randomID(),
+      name: result.name,
+      type: "location",
+      description: "",
+      parentId: result.parentId,
+    };
+    addNode(newLocation);
+    shopTreeRef?.refreshTree();
+    ui.notifications?.info(t("shop.notifications.locationAdded"));
   }
 
   async function handleAddMerchant() {
@@ -207,18 +201,20 @@
       return;
     }
 
-    const choices = Object.fromEntries(locations.map((loc) => [loc.id, loc.name]));
+    const parentOptions = locations.map((loc) => `<option value="${loc.id}">${loc.name}</option>`).join("");
 
-    const dialog3 = new Dialog({
+    const result = (await foundry.appv1.api.Dialog.wait({
       title: t("shop.dialogs.addMerchantTitle"),
       content: `
         <form>
           <div class="form-group">
+            <label>${t("shop.dialogs.nameLabel")}</label>
+            <input type="text" name="name" placeholder="${t("shop.dialogs.namePlaceholder")}" autofocus />
+          </div>
+          <div class="form-group">
             <label>${t("shop.dialogs.merchantLocation")}</label>
-            <select id="parent-select" style="width: 100%; padding: 0.375rem 0.5rem; margin-top: 0.5rem; border: 1px solid #ccc; border-radius: 4px; background: white; font-size: 14px; color: #1a1820; line-height: 1.5; height: auto;">
-              ${Object.entries(choices)
-                .map(([value, label]) => `<option value="${value}">${label}</option>`)
-                .join("")}
+            <select name="parent" style="width: 100%; padding: 0.375rem 0.5rem; margin-top: 0.5rem; border: 1px solid #ccc; border-radius: 4px; background: white; font-size: 14px; color: #1a1820; line-height: 1.5; height: auto;">
+              ${parentOptions}
             </select>
           </div>
         </form>
@@ -227,25 +223,12 @@
         ok: {
           label: t("shop.dialogs.create"),
           callback: (html) => {
-            const select = html.find("#parent-select")[0] as HTMLSelectElement;
-            const parentId = select.value;
-
-            if (!parentId) {
-              ui.notifications?.warn(t("shop.notifications.selectLocation"));
-              return;
-            }
-
-            const newMerchant: MerchantNode = {
-              id: foundry.utils.randomID(),
-              name: t("shop.dialogs.newMerchant"),
-              type: "merchant",
-              description: "",
-              inventory: [],
-              parentId,
+            const form = html[0].querySelector("form") as HTMLFormElement;
+            const formData = new FormData(form);
+            return {
+              name: (formData.get("name") as string)?.trim() || "",
+              parentId: formData.get("parent") as string,
             };
-            addNode(newMerchant);
-            shopTreeRef?.refreshTree();
-            ui.notifications?.info(t("shop.notifications.merchantAdded"));
           },
         },
         cancel: {
@@ -253,8 +236,36 @@
         },
       },
       default: "ok",
-    });
-    dialog3.render(true);
+    })) as { name: string; parentId: string } | null;
+
+    if (!result) return;
+
+    if (!result.name) {
+      ui.notifications?.warn(t("shop.dialogs.nameRequired"));
+      return;
+    }
+
+    if (!result.parentId) {
+      ui.notifications?.warn(t("shop.notifications.selectLocation"));
+      return;
+    }
+
+    if (hasSiblingWithName(result.name, result.parentId)) {
+      ui.notifications?.warn(localize("shop.dialogs.nameDuplicate", { name: result.name }));
+      return;
+    }
+
+    const newMerchant: MerchantNode = {
+      id: foundry.utils.randomID(),
+      name: result.name,
+      type: "merchant",
+      description: "",
+      inventory: [],
+      parentId: result.parentId,
+    };
+    addNode(newMerchant);
+    shopTreeRef?.refreshTree();
+    ui.notifications?.info(t("shop.notifications.merchantAdded"));
   }
 </script>
 

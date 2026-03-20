@@ -486,7 +486,11 @@
         "priceLabel": "Price:",
         "quantityLabel": "Quantity (-1 for unlimited):",
         "newLocation": "New Location",
-        "newMerchant": "New Merchant"
+        "newMerchant": "New Merchant",
+        "nameLabel": "Name:",
+        "namePlaceholder": "Enter name",
+        "nameRequired": "Enter a name",
+        "nameDuplicate": "Name \"{name}\" already exists at this level"
       }
     },
     "stack": {

@@ -1,9 +1,8 @@
 import { ShwActor } from './documents/Actor/ShwActor';
 import { ShwItem } from './documents/Item/ShwItem';
 import { ShwTokenDocument } from './documents/ShwTokenDocument.js';
-import { migrateConsumableData, needsMigration } from './helpers/Item/migrateConsumableData';
-import { handleAddItem } from './helpers/Item/StackManager';
 import { ShopManagerApp } from './modules/shop';
+import { ensureFolderStructure, getTargetFolderId, handleAddItem } from './shared/helpers/Item';
 import { AbilityItemApp } from './view/AbilityItem/ItemApp';
 import { CharacterApp } from './view/BaseCharacter/CharacterApp.js';
 import { ConsumableItemApp } from './view/ConsumableItem/ItemApp';
@@ -29,6 +28,11 @@ Hooks.once('init', () => {
     formula: '1d20 + @initiative',
     decimals: 0,
   };
+
+  // Создаём структуру папок при старте мира
+  Hooks.once('ready', async () => {
+    await ensureFolderStructure();
+  });
 
   // Добавляем кнопки магазина и импорта в навигацию
   Hooks.once('ready', () => {
@@ -115,10 +119,12 @@ Hooks.on('preCreateToken', (tokenDocument: any, tokenData: any) => {
 Hooks.on('preCreateItem', (item: any, data: any, options: any) => {
   const createdItem = item as ShwItem;
 
-  // Миграция устаревших данных consumable
-  if (needsMigration(data)) {
-    const migrated = migrateConsumableData(data);
-    createdItem.updateSource({ system: migrated.system });
+  // Автоназначение папки для глобальных предметов (не owned)
+  if (!createdItem.parent) {
+    const folderId = getTargetFolderId(createdItem.type, createdItem.system as any);
+    if (folderId && !data.folder) {
+      createdItem.updateSource({ folder: folderId });
+    }
   }
 
   // Управление стеком предметов при добавлении к актеру (skipStack обходит стекирование при дублировании)
@@ -132,36 +138,5 @@ Hooks.on('preCreateItem', (item: any, data: any, options: any) => {
     if (result === 'stacked' || result === 'blocked') {
       return false;
     }
-  }
-});
-
-// Batch migrate existing items on world initialization (one-time on world load)
-Hooks.once('setup', async () => {
-  const items = game.items as unknown as Collection<Item>;
-  if (!items || items.size === 0) return;
-
-  let migratedCount = 0;
-  const itemsToMigrate: Item[] = [];
-
-  // Collect items that need migration
-  for (const item of items) {
-    if (needsMigration(item)) {
-      itemsToMigrate.push(item);
-      migratedCount++;
-    }
-  }
-
-  // Batch update all at once
-  if (migratedCount > 0) {
-    const updates = itemsToMigrate.map((item) => {
-      const migrated = migrateConsumableData(item);
-      return {
-        _id: item.id,
-        system: migrated.system,
-      };
-    });
-
-    await Item.updateDocuments(updates);
-    console.log(`[SHW Migration] Migrated ${migratedCount} consumable items to flat structure`);
   }
 });

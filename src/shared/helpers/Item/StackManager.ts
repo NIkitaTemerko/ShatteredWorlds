@@ -1,42 +1,28 @@
-import { ShwActor } from '../../documents/Actor/ShwActor';
-import type { ShwItem } from '../../documents/Item/ShwItem';
-import { localize } from '../../shared/i18n';
+import { ShwActor } from '../../../documents/Actor/ShwActor';
+import type { ShwItem } from '../../../documents/Item/ShwItem';
+import { localize } from '../../i18n';
+import type { ItemDataLike } from '../../model/types/itemHelpers';
 
-/**
- * Centralized item stacking and duplicate prevention logic
- */
-
-interface ItemDataLike {
-  type: string;
-  name: string;
-  system?: Record<string, unknown> & {
-    baseId?: string;
-    quantity?: number;
-  };
-}
-
-/**
- * Check if item type is stackable (consumables)
- */
+/** Проверяет, стекируется ли предмет данного типа */
 export function isStackable(itemData: ItemDataLike): boolean {
   return itemData.type === 'consumable';
 }
 
 /**
- * Generate identity key for item comparison
- * Uses baseId if available, otherwise falls back to type + name
+ * Генерирует ключ идентификации предмета.
+ * Использует baseId если есть, иначе type + name.
  */
 export function getIdentityKey(itemData: ItemDataLike): string {
   if (itemData.system?.baseId) {
     return itemData.system.baseId;
   }
-  // Fallback: type + normalized name
+  // Fallback: тип + нормализованное имя
   return `${itemData.type}:${itemData.name?.toLowerCase().trim()}`;
 }
 
 /**
- * Find existing item in actor's inventory matching the identity
- * Prioritizes non-full stacks (with available space)
+ * Находит существующий стек в инвентаре актёра.
+ * Приоритет у незаполненных стеков.
  */
 export function findExistingStack(actor: ShwActor, itemData: ItemDataLike): ShwItem | null {
   const identityKey = getIdentityKey(itemData);
@@ -50,45 +36,43 @@ export function findExistingStack(actor: ShwActor, itemData: ItemDataLike): ShwI
     });
 
     if (existingKey === identityKey) {
-      // For stackable items, prioritize non-full stacks
+      // Для стекируемых: приоритет у незаполненных
       if (item.isConsumable()) {
         const currentQty = item.system.quantity || 0;
         const stackLimit = item.system.stackLimit || Number.POSITIVE_INFINITY;
 
-        // Found a non-full stack - return immediately
+        // Нашли незаполненный стек
         if (currentQty < stackLimit) {
           return item;
         }
 
-        // Remember first match (even if full) as fallback
+        // Запоминаем первое совпадение (даже если полный) как fallback
         if (!firstMatch) {
           firstMatch = item;
         }
       } else {
-        // For non-stackable items, return first match
+        // Нестекируемый предмет — возвращаем первое совпадение
         return item;
       }
     }
   }
 
-  // Return first match (might be full stack, but incrementStack will handle overflow)
+  // Возвращаем первое совпадение (может быть полным, incrementStack обработает overflow)
   return firstMatch;
 }
 
-// Global flag to prevent recursion during overflow stack creation
+// Глобальный флаг предотвращения рекурсии при создании overflow-стеков
 let isCreatingOverflowStacks = false;
 
-/**
- * Check if we're currently in overflow stack creation (to prevent recursion)
- */
+/** Проверка, идёт ли сейчас создание overflow-стеков */
 export function isInOverflowCreation(): boolean {
   return isCreatingOverflowStacks;
 }
 
 /**
- * Increment stack quantity for existing item
- * If quantity exceeds stackLimit, fills current stack and creates overflow stacks
- * Fires updates asynchronously but returns immediately
+ * Увеличивает количество в стеке.
+ * При превышении stackLimit заполняет текущий и создаёт новые.
+ * Выполняет обновления асинхронно, возвращает контроль сразу.
  */
 export function incrementStack(existingItem: ShwItem, incomingData: ItemDataLike): void {
   if (!existingItem.isConsumable()) return;
@@ -98,7 +82,7 @@ export function incrementStack(existingItem: ShwItem, incomingData: ItemDataLike
   const stackLimit = existingItem.system.stackLimit || Number.POSITIVE_INFINITY;
   const totalQuantity = currentQuantity + incomingQuantity;
 
-  // Case 1: Total fits in current stack
+  // Case 1: вмещается в текущий стек
   if (totalQuantity <= stackLimit) {
     existingItem
       .update({
@@ -116,10 +100,10 @@ export function incrementStack(existingItem: ShwItem, incomingData: ItemDataLike
     return;
   }
 
-  // Case 2: Overflow - fill current stack to limit and create new stacks
+  // Case 2: переполнение — заполняем текущий и создаём новые
   const overflow = totalQuantity - stackLimit;
 
-  // Fill current stack to max
+  // Заполняем текущий стек до максимума
   existingItem
     .update({
       'system.quantity': stackLimit,
@@ -134,7 +118,7 @@ export function incrementStack(existingItem: ShwItem, incomingData: ItemDataLike
       );
     });
 
-  // Create additional stacks for overflow
+  // Создаём дополнительные стеки для остатка
   const parent = existingItem.parent;
   if (parent && parent instanceof ShwActor) {
     const fullStacks = Math.floor(overflow / stackLimit);
@@ -147,7 +131,7 @@ export function incrementStack(existingItem: ShwItem, incomingData: ItemDataLike
       system: Record<string, unknown>;
     }> = [];
 
-    // Create full stacks
+    // Полные стеки
     for (let i = 0; i < fullStacks; i++) {
       newStacks.push({
         name: existingItem.name,
@@ -160,7 +144,7 @@ export function incrementStack(existingItem: ShwItem, incomingData: ItemDataLike
       });
     }
 
-    // Create partial stack if needed
+    // Частичный стек если есть остаток
     if (partialStack > 0) {
       newStacks.push({
         name: existingItem.name,
@@ -174,11 +158,11 @@ export function incrementStack(existingItem: ShwItem, incomingData: ItemDataLike
     }
 
     if (newStacks.length > 0) {
-      // Set global flag to prevent recursion
+      // Устанавливаем флаг против рекурсии
       isCreatingOverflowStacks = true;
 
       parent.createEmbeddedDocuments('Item', newStacks as never).then(() => {
-        // Clear flag after creation completes
+        // Сбрасываем флаг после создания
         isCreatingOverflowStacks = false;
         ui.notifications?.info(
           localize('stack.additionalCreated', {
@@ -192,36 +176,34 @@ export function incrementStack(existingItem: ShwItem, incomingData: ItemDataLike
 }
 
 /**
- * Handle item addition to actor with stacking logic
- * Synchronous check, returns immediately whether to allow creation
- * Returns:
- * - 'allow': Allow normal creation
- * - 'stacked': Item was stacked, prevent creation
- * - 'blocked': Duplicate ability, prevent creation
+ * Обрабатывает добавление предмета в инвентарь с логикой стекирования.
+ * - 'allow': разрешить создание
+ * - 'stacked': предмет добавлен в стек, создание не нужно
+ * - 'blocked': дубликат, создание заблокировано
  */
 export function handleAddItem(
   actor: ShwActor,
   itemData: ItemDataLike,
 ): 'allow' | 'stacked' | 'blocked' {
-  // Skip stacking logic during overflow stack creation (prevent infinite loop)
+  // Пропускаем логику при создании overflow-стеков (предотвращаем бесконечный цикл)
   if (isInOverflowCreation()) {
     return 'allow';
   }
 
   const existing = findExistingStack(actor, itemData);
 
-  // No existing item - allow creation
+  // Нет существующего предмета — разрешаем создание
   if (!existing) {
     return 'allow';
   }
 
-  // Stackable item - increment and block creation
+  // Стекируемый предмет — увеличиваем и блокируем создание
   if (isStackable(itemData)) {
     incrementStack(existing, itemData);
     return 'stacked';
   }
 
-  // Non-stackable duplicate - block creation
+  // Нестекируемый дубликат — блокируем
   ui.notifications?.warn(localize('stack.duplicateExists', { name: itemData.name }));
   return 'blocked';
 }

@@ -1,8 +1,9 @@
-import { characterRoll } from '../../helpers/Character/characterRoll';
-import { prepareCharacterBaseData } from '../../helpers/Character/prepareCharacterBaseData';
-import { prepareCharacterDerivedData } from '../../helpers/Character/prepareCharacterDerivedData';
-import { prepareNpcBaseData } from '../../helpers/Npc/prepareNpcBaseData';
-import { prepareNpcDerivedData } from '../../helpers/Npc/prepareNpcDerivedData';
+import {
+  characterRoll,
+  prepareCharacterBaseData,
+  prepareCharacterDerivedData,
+} from '../../shared/helpers/Character';
+import { prepareNpcBaseData, prepareNpcDerivedData } from '../../shared/helpers/Npc';
 import type { ShwItem } from '../Item/ShwItem';
 import type { ShwActorSystem, ShwNpcSystem } from './types/ShwActorSystem';
 

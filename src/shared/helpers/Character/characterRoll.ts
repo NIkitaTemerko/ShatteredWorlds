@@ -1,17 +1,7 @@
-import type { ShwActor } from '../../documents/Actor/ShwActor';
-import type { ShwActorSystem } from '../../documents/Actor/types/ShwActorSystem';
-import type { RollMode, RollType } from '../../entities/character/model';
-import { localize, t } from '../../shared/i18n';
-
-// I18n keys for attribute names
-const STAT_NAME_KEYS = {
-  fortune: 'attributes.fortune',
-  force: 'attributes.force',
-  perception: 'attributes.perception',
-  psyDefence: 'attributes.psyDefence',
-  diplomacy: 'attributes.diplomacy',
-  natural: 'attributes.natural',
-} as const;
+import type { ShwActor } from '../../../documents/Actor/ShwActor';
+import type { ShwActorSystem } from '../../../documents/Actor/types/ShwActorSystem';
+import { localize, t } from '../../i18n';
+import { STAT_NAME_KEYS } from '../../model/constants/characterDefaults';
 
 interface RollResultLike {
   total?: number | null;

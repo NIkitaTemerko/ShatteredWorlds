@@ -1,31 +1,9 @@
-import type { ShwActor } from '../../documents/Actor/ShwActor';
-import type { ShwActorSystem } from '../../documents/Actor/types/ShwActorSystem';
-import type {
-  AbilitySystem,
-  PassiveAbilitySystem,
-  StatModifier,
-} from '../../documents/Item/types/AbilityDataTypes';
-import type { CharacterStatPath } from '../../shared/model/characterStatPaths';
-
-type SplitPath<T extends string> = T extends `${infer First}.${infer Rest}`
-  ? First | SplitPath<Rest>
-  : T;
-
-type PathPart = SplitPath<CharacterStatPath>;
-
-export interface ItemBonusResult {
-  bonuses: Map<CharacterStatPath, number>;
-}
-
-const EDITABLE_STATS = new Set([
-  'actions',
-  'bonusActions',
-  'reactions',
-  'initiative',
-  'impulse',
-] as const);
-
-type ModifierMode = 'add' | 'mul' | 'override';
+import type { ShwActor } from '../../../documents/Actor/ShwActor';
+import type { ShwActorSystem } from '../../../documents/Actor/types/ShwActorSystem';
+import type { PassiveAbilitySystem } from '../../../documents/Item/types/AbilityDataTypes';
+import type { CharacterStatPath } from '../../model/characterStatPaths';
+import { EDITABLE_STATS } from '../../model/constants/characterDefaults';
+import type { ItemBonusResult, ModifierMode, ParsedPath, PathPart } from '../../model/types/characterBonuses';
 
 const applyModifier = (current: number, value: number, mode: ModifierMode): number => {
   switch (mode) {
@@ -37,14 +15,13 @@ const applyModifier = (current: number, value: number, mode: ModifierMode): numb
   }
 };
 
-const hasStatBonuses = (system: PassiveAbilitySystem) => {
+const hasStatBonuses = (system: PassiveAbilitySystem): boolean => {
   if (typeof system !== 'object' || system === null) return false;
 
-  const itemSystem = system as PassiveAbilitySystem;
   return (
-    itemSystem.statBonuses?.modifiers !== undefined &&
-    Array.isArray(itemSystem.statBonuses.modifiers) &&
-    itemSystem.statBonuses.modifiers.length > 0
+    system.statBonuses?.modifiers !== undefined &&
+    Array.isArray(system.statBonuses.modifiers) &&
+    system.statBonuses.modifiers.length > 0
   );
 };
 
@@ -78,13 +55,6 @@ const hasTotalField = (
   system: ShwActorSystem,
   totalKey: keyof ShwActorSystem['helpers'],
 ): boolean => totalKey in system.helpers && typeof system.helpers[totalKey] === 'number';
-
-interface ParsedPath {
-  parts: PathPart[];
-  isAttributeValue: boolean;
-  isEditableStat: boolean;
-  attributeKey?: PathPart;
-}
 
 const parsePath = (path: CharacterStatPath): ParsedPath => {
   const parts = path.split('.') as PathPart[];

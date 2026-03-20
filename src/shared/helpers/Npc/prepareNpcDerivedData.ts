@@ -1,5 +1,5 @@
-import type { ShwNpcSystem } from '../../documents/Actor/types/ShwActorSystem';
-import { ADDITIONAL_KEYS, ATTR_RIM, STAT_KEYS } from '../constants';
+import type { ShwNpcSystem } from '../../../documents/Actor/types/ShwActorSystem';
+import { ADDITIONAL_KEYS, ATTR_RIM, STAT_KEYS } from '../../model/constants/actorKeys';
 
 export function prepareNpcDerivedData(sys: ShwNpcSystem) {
   const attrs = sys.attributes;

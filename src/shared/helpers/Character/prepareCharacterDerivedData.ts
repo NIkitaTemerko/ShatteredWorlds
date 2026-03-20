@@ -1,6 +1,12 @@
-import type { ShwActor } from '../../documents/Actor/ShwActor';
-import type { ShwActorSystem } from '../../documents/Actor/types/ShwActorSystem';
-import { ADDITIONAL_KEYS, ATTR_MAX_RIM, ATTR_RIM, HELPER_KEYS, STAT_KEYS } from '../constants';
+import type { ShwActor } from '../../../documents/Actor/ShwActor';
+import type { ShwActorSystem } from '../../../documents/Actor/types/ShwActorSystem';
+import {
+  ADDITIONAL_KEYS,
+  ATTR_MAX_RIM,
+  ATTR_RIM,
+  HELPER_KEYS,
+  STAT_KEYS,
+} from '../../model/constants/actorKeys';
 import { applyBonus, calculateItemBonuses } from './calculateItemBonuses';
 
 function calculateAdditionalAttributes(

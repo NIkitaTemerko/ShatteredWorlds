@@ -3,6 +3,7 @@ import { rarity } from './common';
 
 // Базовые поля для всех консьюмаблов
 const BaseConsumableFields = {
+  name: z.string().default(''),
   quantity: z.number().default(1),
   stackLimit: z.number().default(99),
   price: z.number().default(0),

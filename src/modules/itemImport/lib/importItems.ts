@@ -1,4 +1,5 @@
 import type { ShwItem } from '../../../documents/Item/ShwItem';
+import { getTargetFolderId } from '../../../shared/helpers/Item';
 import type { ImportReport, ImportResult, ItemCore } from '../model';
 
 /** Импортирует items в Foundry */
@@ -44,7 +45,14 @@ export async function importItemCores(
       if (existing) {
         result.status = 'updated';
         result.itemId = existing.id || '';
-        if (!opts.dryRun) await existing.update(data);
+        if (!opts.dryRun) {
+          // Перемещаем в правильную папку если предмет не в ней
+          const folderId = getTargetFolderId(item.type, item.system as Record<string, unknown>);
+          if (folderId && (existing as any).folder?.id !== folderId) {
+            data.folder = folderId;
+          }
+          await existing.update(data);
+        }
         report.updated++;
       } else {
         if (!opts.dryRun) {

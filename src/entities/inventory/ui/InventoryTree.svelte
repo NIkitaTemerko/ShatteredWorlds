@@ -6,7 +6,7 @@
   import type { TreeNode } from "../../../shared/ui/tree";
   import { TreeWithSearch } from "../../../shared/ui/tree";
   import { getInventoryTreeState, updateInventoryTreeState } from "../model/inventoryTreeState";
-  import { mapInventoryToFlatItems } from "../model/mappers";
+  import { mapInventoryToFlatItems } from "../lib/mappers";
 
   interface Props {
     actorId: string;

@@ -3,7 +3,7 @@
   import type { ShwItem } from "../../../../documents/Item/ShwItem";
   import { localize, t } from "../../../../shared/i18n";
   import { InventoryTree } from "../../../inventory";
-  import { collectionToInventoryItems } from "../../../inventory/model/mappers";
+  import { collectionToInventoryItems } from "../../../inventory/lib/mappers";
 
   interface Props {
     actor: ShwActor<"character">;

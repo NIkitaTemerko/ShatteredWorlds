@@ -1,6 +1,7 @@
 import type { EquipmentSlot } from '../../../documents/Item/types/EquipmentDataTypes';
+import type { SelectOption } from '../../consumable/model/types';
 
-export const EQUIPMENT_SLOTS: { value: EquipmentSlot; label: string }[] = [
+export const EQUIPMENT_SLOTS: SelectOption<EquipmentSlot>[] = [
   { value: 'head', label: 'equipment.slot.head' },
   { value: 'cloak', label: 'equipment.slot.cloak' },
   { value: 'amulet', label: 'equipment.slot.amulet' },
@@ -12,3 +13,8 @@ export const EQUIPMENT_SLOTS: { value: EquipmentSlot; label: string }[] = [
   { value: 'boots', label: 'equipment.slot.boots' },
   { value: 'ring', label: 'equipment.slot.ring' },
 ];
+
+/** Маппинг слот → i18n-ключ для быстрого доступа */
+export const EQUIPMENT_SLOT_KEYS: Record<EquipmentSlot, string> = Object.fromEntries(
+  EQUIPMENT_SLOTS.map((s) => [s.value, s.label]),
+) as Record<EquipmentSlot, string>;

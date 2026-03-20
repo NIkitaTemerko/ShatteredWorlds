@@ -5,6 +5,7 @@ import type { I18nKey } from '../../../shared/i18n';
 import { t } from '../../../shared/i18n';
 import { RARITY_COLORS } from '../../../shared/model/constants';
 import type { FlatItem } from '../../../shared/ui/tree';
+import { EQUIPMENT_SLOT_KEYS } from '../model/constants';
 
 // Ключи локализации для типов предметов
 const itemTypeKeys: Record<ItemType, I18nKey> = {
@@ -25,6 +26,7 @@ const consumableTypeKeys: Record<ConsumableType, I18nKey> = {
   poison: 'inventory.consumableTypes.poison',
 };
 
+
 /**
  * Maps inventory items to flat tree structure with hierarchical paths
  * Path structure: [ItemType, Subcategory?, ItemName]
@@ -40,6 +42,11 @@ export function mapInventoryToFlatItems(items: ShwItem[]): FlatItem[] {
       // Add subcategory for consumables
       if (item.type === 'consumable' && 'consumableType' in item.system) {
         path.push(t(consumableTypeKeys[item.system.consumableType]));
+      }
+
+      // Add subcategory for equipment by slot
+      if (item.type === 'equipment' && 'slot' in item.system) {
+        path.push(t(EQUIPMENT_SLOT_KEYS[item.system.slot] as I18nKey));
       }
 
       // Add item name with quantity (only for stackable items)

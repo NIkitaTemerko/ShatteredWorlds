@@ -3,7 +3,7 @@
   import type { EquipmentSlot, EquipmentSystem } from "../../../documents/Item/types/EquipmentDataTypes";
   import { t } from "../../../shared/i18n";
   import { Input, SelectInput } from "../../../shared/ui";
-  import { EQUIPMENT_SLOTS } from "../constants/equipmentConstants";
+  import { EQUIPMENT_SLOTS } from "../../../entities/inventory/model/constants";
   import { getUpdateEquipment } from "../utils/updateEquipment";
 
   interface Props {

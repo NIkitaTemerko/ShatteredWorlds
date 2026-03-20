@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { AbilitySystemSchema } from './ability';
 import { ConsumableSystemSchema } from './consumable';
+import { EquipmentSystemSchema } from './equipment';
 import { SpellSystemSchema } from './spell';
 
 export function createItemCoreSchemas(foundryIcons: Set<string>) {
@@ -41,10 +42,22 @@ export function createItemCoreSchemas(foundryIcons: Set<string>) {
     system: SpellSystemSchema,
   });
 
+  const EquipmentItemSchema = z.object({
+    baseId: z.string().min(1, 'baseId обязателен'),
+    type: z.literal('equipment'),
+    name: z.string().min(1, 'name обязателен'),
+    img: foundryIcon.optional(),
+    effects: z.array(z.unknown()).optional(),
+    flags: z.record(z.string(), z.unknown()).optional(),
+    pendingLinks: z.unknown().optional(),
+    system: EquipmentSystemSchema,
+  });
+
   const ItemCoreSchema = z.discriminatedUnion('type', [
     ConsumableItemSchema,
     AbilityItemSchema,
     SpellItemSchema,
+    EquipmentItemSchema,
   ]);
 
   const ItemCoresArraySchema = z.array(ItemCoreSchema);
@@ -55,6 +68,7 @@ export function createItemCoreSchemas(foundryIcons: Set<string>) {
     ConsumableItemSchema,
     AbilityItemSchema,
     SpellItemSchema,
+    EquipmentItemSchema,
   };
 }
 

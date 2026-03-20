@@ -1,4 +1,4 @@
-import { getIconsForType } from './iconCategories';
+import { getIconsForType } from '../lib';
 
 /**
  * Генерирует промпт для подбора иконок к предметам

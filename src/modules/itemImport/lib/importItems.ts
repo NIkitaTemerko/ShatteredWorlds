@@ -1,5 +1,5 @@
 import type { ShwItem } from '../../../documents/Item/ShwItem';
-import type { ImportReport, ImportResult, ItemCore } from './types';
+import type { ImportReport, ImportResult, ItemCore } from '../model';
 
 /** Импортирует items в Foundry */
 export async function importItemCores(
@@ -16,8 +16,7 @@ export async function importItemCores(
     results: [],
   };
 
-  const gameItems = (game as unknown as { items: Collection<ShwItem> }).items;
-  const ItemClass = (globalThis as unknown as { Item: typeof Item }).Item;
+  const gameItems = game.items as unknown as Collection<ShwItem>;
 
   for (const item of items) {
     try {
@@ -49,9 +48,7 @@ export async function importItemCores(
         report.updated++;
       } else {
         if (!opts.dryRun) {
-          const created = (await ItemClass.create(
-            data as Parameters<typeof ItemClass.create>[0],
-          )) as unknown as ShwItem | null;
+          const created = (await Item.create(data as any)) as ShwItem | null;
           if (!created) throw new Error('Item.create вернул null');
           result.itemId = created.id || '';
         }

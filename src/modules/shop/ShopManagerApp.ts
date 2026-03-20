@@ -2,7 +2,7 @@ import { mount, unmount } from 'svelte';
 import ShopManagerShell from './ui/ShopManagerShell.svelte';
 
 export class ShopManagerApp extends Application {
-  private _svelte: any = null;
+  private _svelte: ReturnType<typeof mount> | null = null;
 
   static get defaultOptions() {
     return foundry.utils.mergeObject(Application.defaultOptions, {

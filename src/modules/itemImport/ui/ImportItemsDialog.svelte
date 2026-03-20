@@ -1,13 +1,8 @@
 <script lang="ts">
-  import {
-    parseItemCores,
-    validateItemCores,
-    importItemCores,
-    generateSchemaPrompt,
-    generateErrorPrompt,
-    generateIconsPrompt,
-  } from "../model";
-  import type { ValidationReport, ImportReport } from "../model";
+  import { parseItemCores, validateItemCores, importItemCores } from "../lib";
+  import { generateSchemaPrompt, generateErrorPrompt, generateIconsPrompt } from "../prompts";
+  import { IMPORT_ITEM_TYPES } from "../model";
+  import type { ValidationReport, ImportReport, ShwItemType } from "../model";
   import { t, localize } from "../../../shared/i18n";
   import { loadFoundryIcons } from "../../../shared/data/foundryIconsLoader";
   import { getSchemas } from "../model/schemas";
@@ -29,6 +24,17 @@
   let isProcessing = $state(false);
   let errorMessage = $state("");
   let copySuccess = $state("");
+  let selectedTypes = $state<Set<ShwItemType>>(new Set(IMPORT_ITEM_TYPES));
+
+  function toggleType(type: ShwItemType) {
+    const next = new Set(selectedTypes);
+    if (next.has(type)) {
+      if (next.size > 1) next.delete(type);
+    } else {
+      next.add(type);
+    }
+    selectedTypes = next;
+  }
 
   function handleFileSelect(e: Event) {
     const file = (e.target as HTMLInputElement).files?.[0];
@@ -52,7 +58,7 @@
   }
 
   function handleCopySchema() {
-    copyToClipboard(generateSchemaPrompt(), t("import.schemaCopied"));
+    copyToClipboard(generateSchemaPrompt(selectedTypes), t("import.schemaCopied"));
   }
 
   function handleCopyIcons() {
@@ -112,10 +118,22 @@
 </script>
 
 <div class="shw-import-dialog">
-  <div class="import-section">
+  <div class="ai-tools-section">
     <div class="section-header">
-      <h3>{t("import.jsonData")}</h3>
-      <div class="header-buttons">
+      <h3>{t("import.aiTools")}</h3>
+    </div>
+    <div class="ai-tools-body">
+      <div class="type-selector">
+        <span class="type-selector-label">{t("import.typesForSchema")}</span>
+        <div class="type-chips">
+          {#each IMPORT_ITEM_TYPES as type}
+            <button class="type-chip" class:active={selectedTypes.has(type)} onclick={() => toggleType(type)}>
+              {t(`import.types.${type}`)}
+            </button>
+          {/each}
+        </div>
+      </div>
+      <div class="ai-buttons">
         <button class="btn-icon" onclick={handleCopySchema} title={t("import.schemaForAi")}>
           <i class="fas fa-robot"></i>
           {t("import.schemaForAi")}
@@ -124,7 +142,22 @@
           <i class="fas fa-image"></i>
           {t("import.iconsForAi")}
         </button>
+        {#if errorMessage}
+          <button class="btn-icon btn-icon-error" onclick={handleCopyErrors} title={t("import.copyForAi")}>
+            <i class="fas fa-bug"></i>
+            {t("import.copyForAi")}
+          </button>
+        {/if}
       </div>
+    </div>
+    {#if copySuccess}
+      <div class="copy-success">{copySuccess}</div>
+    {/if}
+  </div>
+
+  <div class="import-section">
+    <div class="section-header">
+      <h3>{t("import.jsonData")}</h3>
     </div>
     <div class="file-upload">
       <input type="file" accept=".json" onchange={handleFileSelect} />
@@ -132,26 +165,9 @@
     <textarea placeholder={t("import.placeholder")} bind:value={jsonText} class="json-input"></textarea>
   </div>
 
-  {#if copySuccess}
-    <div class="copy-success">{copySuccess}</div>
-  {/if}
-
-  <div class="options-section">
-    <label class="checkbox-label">
-      <input type="checkbox" bind:checked={skipImages} />
-      {t("import.skipImages")}
-    </label>
-  </div>
-
   {#if errorMessage}
     <div class="error-box">
-      <div class="error-header">
-        <strong>{t("import.error")}</strong>
-        <button class="btn-copy-error" onclick={handleCopyErrors} title={t("import.copyForAi")}>
-          <i class="fas fa-copy"></i>
-          {t("import.copyForAi")}
-        </button>
-      </div>
+      <strong>{t("import.error")}</strong>
       <pre class="error-text">{errorMessage}</pre>
     </div>
   {/if}
@@ -218,17 +234,23 @@
     </div>
   {/if}
 
-  <div class="button-group">
-    <button onclick={handleValidate} disabled={!jsonText || isProcessing} class="btn-secondary"
-      >{t("import.validate")}</button
-    >
-    <button onclick={() => runImport(true)} disabled={!jsonText || isProcessing} class="btn-secondary">
-      {isProcessing ? t("import.processing") : t("import.dryRun")}
-    </button>
-    <button onclick={() => runImport(false)} disabled={!jsonText || isProcessing} class="btn-primary">
-      {isProcessing ? t("import.processing") : t("import.importBtn")}
-    </button>
-    <button onclick={onClose} disabled={isProcessing} class="btn-cancel">{t("import.close")}</button>
+  <div class="bottom-bar">
+    <label class="checkbox-label">
+      <input type="checkbox" bind:checked={skipImages} />
+      {t("import.skipImages")}
+    </label>
+    <div class="button-group">
+      <button onclick={handleValidate} disabled={!jsonText || isProcessing} class="btn-secondary"
+        >{t("import.validate")}</button
+      >
+      <button onclick={() => runImport(true)} disabled={!jsonText || isProcessing} class="btn-secondary">
+        {isProcessing ? t("import.processing") : t("import.dryRun")}
+      </button>
+      <button onclick={() => runImport(false)} disabled={!jsonText || isProcessing} class="btn-primary">
+        {isProcessing ? t("import.processing") : t("import.importBtn")}
+      </button>
+      <button onclick={onClose} disabled={isProcessing} class="btn-cancel">{t("import.close")}</button>
+    </div>
   </div>
 </div>
 
@@ -248,6 +270,28 @@
     gap: 0.5rem;
   }
 
+  .ai-tools-section {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ai-tools-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-top: none;
+    border-radius: 0 0 3px 3px;
+  }
+
+  .ai-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
   .section-header {
     display: flex;
     justify-content: space-between;
@@ -256,11 +300,6 @@
     background: rgba(180, 179, 186, 0.5);
     border-bottom: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 3px 3px 0 0;
-  }
-
-  .header-buttons {
-    display: flex;
-    gap: 0.3rem;
   }
 
   .section-header h3 {
@@ -279,27 +318,45 @@
     display: inline-flex;
     align-items: center;
     gap: 0.3rem;
-    padding: 0.25rem 0.5rem;
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    padding: 0.3rem 0.6rem;
+    background: rgba(138, 84, 162, 0.1);
+    border: 1px solid rgba(138, 84, 162, 0.25);
     border-radius: 3px;
-    color: #fff;
-    font-size: 0.7rem;
+    color: #6b3a8a;
+    font-size: 0.75rem;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.15s;
     white-space: nowrap;
+    width: auto;
   }
 
-  .btn-icon:hover {
-    background: rgba(255, 255, 255, 0.25);
+  .btn-icon:hover:not(:disabled) {
+    background: rgba(138, 84, 162, 0.2);
+    border-color: rgba(138, 84, 162, 0.4);
+  }
+
+  .btn-icon:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .btn-icon-error {
+    background: rgba(220, 53, 69, 0.1);
+    border-color: rgba(220, 53, 69, 0.25);
+    color: #c62828;
+  }
+
+  .btn-icon-error:hover:not(:disabled) {
+    background: rgba(220, 53, 69, 0.2);
+    border-color: rgba(220, 53, 69, 0.4);
   }
 
   .copy-success {
     padding: 0.4rem 0.75rem;
     background: rgba(76, 175, 80, 0.12);
     border: 1px solid rgba(76, 175, 80, 0.35);
-    border-radius: 3px;
+    border-radius: 0 0 3px 3px;
     color: #2e7d32;
     font-size: 0.8rem;
     font-weight: 500;
@@ -335,14 +392,48 @@
     color: rgba(26, 24, 32, 0.5);
   }
 
-  .options-section {
+  .type-selector {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    padding: 0.75rem;
-    background: rgba(0, 0, 0, 0.03);
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
+    gap: 0.4rem;
+  }
+
+  .type-selector-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #1a1820;
+  }
+
+  .type-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .type-chip {
+    padding: 0.25rem 0.6rem;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.04);
+    color: #1a1820;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+    width: auto;
+  }
+
+  .type-chip:hover {
+    background: rgba(138, 84, 162, 0.1);
+    border-color: rgba(138, 84, 162, 0.3);
+  }
+
+  .type-chip.active {
+    background: rgba(138, 84, 162, 0.15);
+    border-color: #8a54a2;
+    color: #6b3a8a;
+    font-weight: 600;
   }
 
   .checkbox-label {
@@ -484,34 +575,6 @@
     font-size: 0.75rem;
   }
 
-  .error-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.4rem;
-  }
-
-  .btn-copy-error {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.2rem 0.4rem;
-    background: rgba(0, 0, 0, 0.06);
-    border: 1px solid rgba(0, 0, 0, 0.12);
-    border-radius: 2px;
-    color: #555;
-    font-size: 0.65rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.15s;
-    white-space: nowrap;
-  }
-
-  .btn-copy-error:hover {
-    background: rgba(0, 0, 0, 0.1);
-    color: #333;
-  }
-
   .error-text {
     margin: 0;
     padding: 0.75rem;
@@ -532,6 +595,12 @@
     display: flex;
     justify-content: flex-end;
     gap: 0.4rem;
+  }
+
+  .bottom-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding-top: 0.75rem;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
   }

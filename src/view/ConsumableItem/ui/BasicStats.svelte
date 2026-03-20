@@ -3,6 +3,7 @@
   import { RARITY_TYPES, type RarityType, StatsCard } from "../../../entities/consumable";
   import { t } from "../../../shared/i18n";
   import { Input, SelectInput } from "../../../shared/ui";
+  import { RARITY_COLORS } from "../../../shared/model/constants";
   import { getUpdateConsumable } from "../utils/updateConsumable";
 
   interface Props {
@@ -10,8 +11,6 @@
   }
 
   let { item }: Props = $props();
-
-  console.log("BasicStats item:", item);
 
   const updateConsumable = getUpdateConsumable(item);
 
@@ -23,15 +22,7 @@
     updateConsumable("rarity", value);
   }
 
-  const rarityColors: Record<RarityType, { dark: string; light: string }> = {
-    common: { dark: "#9CA3AF", light: "#F3F4F6" },
-    uncommon: { dark: "#10B981", light: "#D1FAE5" },
-    rare: { dark: "#3B82F6", light: "#DBEAFE" },
-    epic: { dark: "#9333EA", light: "#F3E8FF" },
-    legendary: { dark: "#F97316", light: "#FFEDD5" },
-  };
-
-  const currentRarityColors = $derived(rarityColors[system.rarity]);
+  const currentRarityColors = $derived(RARITY_COLORS[system.rarity]);
 </script>
 
 <StatsCard columns={3}>

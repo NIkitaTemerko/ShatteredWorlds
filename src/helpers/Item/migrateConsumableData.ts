@@ -12,16 +12,37 @@ import type { ConsumableData } from '../../documents/Item/types/ConsumableDataTy
 
 interface LegacyItemSystem {
   consumable?: ConsumableData;
+  consumableType?: unknown;
+}
+
+interface MigratableItemData {
+  type?: string;
+  system?: LegacyItemSystem;
+  [key: string]: unknown;
+}
+
+interface UpdatableItemLike extends MigratableItemData {
+  update?: (
+    data: { system: ConsumableData },
+    operation?: { diff?: boolean; recursive?: boolean },
+  ) => Promise<unknown>;
+}
+
+interface MigratedItemData extends Omit<MigratableItemData, 'system'> {
+  system?: ConsumableData;
 }
 
 /**
  * Checks if item data needs migration (has nested .consumable object)
  */
-export function needsMigration(itemData: any): boolean {
+export function needsMigration(itemData: unknown): itemData is MigratableItemData {
+  if (typeof itemData !== 'object' || itemData === null) return false;
+  const data = itemData as MigratableItemData;
+
   return (
-    itemData?.type === 'consumable' &&
-    itemData?.system?.consumable !== undefined &&
-    itemData?.system?.consumableType === undefined
+    data.type === 'consumable' &&
+    data.system?.consumable !== undefined &&
+    data.system?.consumableType === undefined
   );
 }
 
@@ -31,7 +52,7 @@ export function needsMigration(itemData: any): boolean {
  * @param itemData - Item data with potentially nested consumable
  * @returns Migrated item data with flattened system
  */
-export function migrateConsumableData(itemData: any): any {
+export function migrateConsumableData<T>(itemData: T): T {
   if (!needsMigration(itemData)) {
     return itemData;
   }
@@ -47,13 +68,13 @@ export function migrateConsumableData(itemData: any): any {
   return {
     ...itemData,
     system: consumableData,
-  };
+  } as T;
 }
 
 /**
  * Batch migration for multiple items
  */
-export function migrateConsumableItems(items: any[]): any[] {
+export function migrateConsumableItems<T>(items: T[]): T[] {
   return items.map(migrateConsumableData);
 }
 
@@ -61,16 +82,26 @@ export function migrateConsumableItems(items: any[]): any[] {
  * In-place migration for Foundry Item documents
  * Call this in a Foundry hook (e.g., 'preCreateItem' or during world migration)
  */
-export async function migrateItemDocument(item: any): Promise<void> {
+export async function migrateItemDocument(item: unknown): Promise<void> {
   if (!needsMigration(item)) {
     return;
   }
 
-  const migratedData = migrateConsumableData(item);
+  const migratableItem = item as UpdatableItemLike;
+  if (typeof migratableItem.update !== 'function') {
+    return;
+  }
 
-  await item.update(
+  const migratedData = migrateConsumableData(item);
+  const migratedSystem = (migratedData as MigratedItemData).system;
+
+  if (!migratedSystem) {
+    return;
+  }
+
+  await migratableItem.update(
     {
-      system: migratedData.system,
+      system: migratedSystem,
     },
     { diff: false, recursive: false },
   );

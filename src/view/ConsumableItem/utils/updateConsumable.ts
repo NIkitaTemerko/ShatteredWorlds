@@ -3,8 +3,10 @@ import type { ShwItem } from '../../../documents/Item/ShwItem';
 import type { ConsumableType } from '../../../documents/Item/types/ConsumableDataTypes';
 
 export const getUpdateConsumable = (item: ShwItem) =>
-  async function updateConsumable(path: string, value: any, e?: Event) {
+  async function updateConsumable(path: string, value: unknown, e?: Event) {
     e?.stopPropagation();
+
+    if (!item.isConsumable()) return;
 
     if (path === 'consumableType') {
       const consumable = ItemFactory.createConsumable(value as ConsumableType, {

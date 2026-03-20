@@ -1,14 +1,13 @@
-// src/lib/svelte-host.ts
-import { mount, unmount } from 'svelte';
+import { type Component, mount, unmount } from 'svelte';
 
 export type SvelteHandle = { destroy: () => Promise<void> };
 
 export function mountSvelte(
-  Component: any,
+  component: Component<any>,
   target: Element,
-  props?: Record<string, any>,
+  props?: Record<string, unknown>,
 ): SvelteHandle {
-  const inst = mount(Component, { target, props });
+  const inst = mount(component, { target, props });
   return { destroy: () => unmount(inst, { outro: true }) };
 }
 
@@ -17,13 +16,12 @@ export class ShwItemSheet extends foundry.appv1.sheets.ItemSheet {
   private _svelte: SvelteHandle | null = null;
 
   /** Потомок должен объявить:  static Shell = RootItemShell; */
-  static Shell: any;
+  static Shell: Component<any>;
 
   static override get defaultOptions() {
     return foundry.utils.mergeObject(foundry.appv1.sheets.ItemSheet.defaultOptions, {
       width: 500,
       height: 500,
-      // scrollY можно оставить, но используем ручное восстановление скролла ниже
     });
   }
 
@@ -62,7 +60,7 @@ export class ShwItemSheet extends foundry.appv1.sheets.ItemSheet {
       });
   }
 
-  override async close(options?: any) {
+  override async close(options?: object) {
     try {
       await this._svelte?.destroy?.();
       this._svelte = null;

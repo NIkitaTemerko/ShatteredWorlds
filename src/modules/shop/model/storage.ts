@@ -53,6 +53,24 @@ export function saveShopDatabase(database: ShopDatabase): void {
 }
 
 /**
+ * Проверяет, существует ли нода с таким же именем среди сиблингов (тот же parentId)
+ * Можно исключить ноду по ID (при переименовании)
+ */
+export function hasSiblingWithName(
+  name: string,
+  parentId: string | undefined,
+  excludeId?: string,
+): boolean {
+  const db = loadShopDatabase();
+  return db.nodes.some(
+    (n) =>
+      n.id !== excludeId &&
+      n.parentId === parentId &&
+      n.name.toLowerCase().trim() === name.toLowerCase().trim(),
+  );
+}
+
+/**
  * Добавляет ноду в базу данных
  */
 export function addNode(node: ShopNode): void {

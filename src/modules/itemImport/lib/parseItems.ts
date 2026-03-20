@@ -1,5 +1,5 @@
-import { getSchemas } from './schemas';
-import type { ItemCore } from './types';
+import type { ItemCore } from '../model';
+import { getSchemas } from '../model/schemas';
 
 /** Форматирует путь ошибки Zod */
 function formatPath(path: readonly (string | number)[]): string {

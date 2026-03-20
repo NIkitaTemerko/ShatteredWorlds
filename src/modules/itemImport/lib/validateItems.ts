@@ -1,4 +1,4 @@
-import type { ItemCore, ValidationReport } from './types';
+import type { ItemCore, ValidationReport } from '../model';
 
 /** Проверяет дубликаты baseId */
 export function validateItemCores(items: ItemCore[]): ValidationReport {

@@ -4,7 +4,7 @@
   import { RARITY_TYPES, type RarityType, StatsCard } from "../../../entities/consumable";
   import { t } from "../../../shared/i18n";
   import { Input, SelectInput } from "../../../shared/ui";
-  import { rarityColors } from "../constants/abilityConstants";
+  import { RARITY_COLORS } from "../../../shared/model/constants";
 
   interface Props {
     item: ShwItem;
@@ -20,7 +20,7 @@
     onUpdate("rarity", value);
   }
 
-  const currentRarityColors = $derived(rarityColors[system.rarity]);
+  const currentRarityColors = $derived(RARITY_COLORS[system.rarity]);
 </script>
 
 <StatsCard columns={1}>

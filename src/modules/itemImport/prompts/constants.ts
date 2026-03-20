@@ -1,47 +1,8 @@
-import { getJsonSchemaForTypes } from './schemas';
+import type { ShwItemType } from '../model';
 
-const ALL_TYPES = new Set(['consumable', 'ability', 'spell']);
-
-/**
- * Генерирует промпт со схемами для ИИ (без иконок — они опциональны).
- * Схемы должны быть загружены через getSchemas() до вызова.
- */
-export function generateSchemaPrompt(): string {
-  const schemas = getJsonSchemaForTypes(ALL_TYPES);
-  const schemaBlocks = Object.entries(schemas)
-    .map(([type, schema]) => `### ${type}\n\`\`\`json\n${JSON.stringify(schema, null, 2)}\n\`\`\``)
-    .join('\n\n');
-
-  return `# Shattered Worlds Item Import Schema
-
-Создай JSON массив предметов для импорта в систему Shattered Worlds (Foundry VTT).
-
----
-
-## СТРОГИЕ ПРАВИЛА (нарушение = невалидный результат)
-
-1. **НЕ УКАЗЫВАЙ опциональные поля** если пользователь не задал конкретное значение. Система автоматически подставит значения по умолчанию (поля с "default" в схеме).
-2. **quantity** — ЗАПРЕЩЕНО указывать. Это поле управляется инвентарём, не предметом.
-3. **Указывай ТОЛЬКО**: обязательные поля (listed in "required" в JSON Schema) + поля, которые пользователь явно попросил задать.
-4. **description** — ОБЯЗАТЕЛЬНО заполняй развёрнутым лорным описанием (2-4 предложения). Описание должно раскрывать суть предмета, его историю или применение в мире.
-5. **baseId** — формат: \`{type}-{subtype}-{name}\`, например \`potion-heal-greater\`, \`bomb-fire-cluster\`. Только латиница, kebab-case.
-6. **name** — на русском языке, лорное название.
-7. **Числовые значения** (damage, amount, dc, radius и т.д.) — указывай ТОЛЬКО если пользователь задал или описал силу предмета. Иначе используй минимальные разумные значения из примеров.
-8. **rarity** — указывай ТОЛЬКО если пользователь явно попросил определённую редкость.
-9. **img** — НЕ указывай. Иконки подбираются отдельным шагом.
-10. **Формат ответа** — ТОЛЬКО валидный JSON массив без markdown, комментариев, пояснений.
-
----
-
-## JSON Schema (сгенерирована из Zod, является единственным источником истины)
-
-${schemaBlocks}
-
----
-
-## Примеры
-
-### Consumable — Potion
+/** Примеры по типам предметов */
+export const EXAMPLES_BY_TYPE: Record<ShwItemType, string> = {
+  consumable: `### Consumable — Potion
 \`\`\`json
 {
   "baseId": "potion-heal-greater",
@@ -115,9 +76,9 @@ ${schemaBlocks}
     "application": "injury"
   }
 }
-\`\`\`
+\`\`\``,
 
-### Ability — Active
+  ability: `### Ability — Active
 \`\`\`json
 {
   "baseId": "ability-backstab",
@@ -145,9 +106,9 @@ ${schemaBlocks}
     "description": "Обострённое шестое чувство, выработанное выживанием в подземельях. За мгновение до удара тело инстинктивно уклоняется, предчувствуя угрозу. Даёт преимущество на спасброски от ловушек и засад."
   }
 }
-\`\`\`
+\`\`\``,
 
-### Spell
+  spell: `### Spell
 \`\`\`json
 {
   "baseId": "spell-fireball",
@@ -161,26 +122,46 @@ ${schemaBlocks}
     "targeting": { "targetType": "enemy", "maxTargets": "all" }
   }
 }
+\`\`\``,
+
+  equipment: `### Equipment
+\`\`\`json
+{
+  "baseId": "equipment-body-chainmail",
+  "type": "equipment",
+  "name": "Кольчуга стражника",
+  "system": {
+    "slot": "body",
+    "description": "Прочная кольчуга из стальных колец, выкованная в кузницах Стального Бастиона. Стандартная экипировка городской стражи — надёжно защищает корпус, не сковывая движений.",
+    "armorClass": 3,
+    "price": 150
+  }
+}
 \`\`\`
 
----
-
-## Иконки
-
-**НЕ УКАЗЫВАЙ поле \`img\`.** Иконки подбираются отдельным шагом после генерации.
-
----
-
-## Требования к ответу
-
-1. **baseId** — уникальный, kebab-case, латиница
-2. **type** — обязательно: "consumable", "ability" или "spell"
-3. **consumableType** — ОБЯЗАТЕЛЬНО для консьюмаблов
-4. **name** — на русском, лорное название
-5. **description** — ОБЯЗАТЕЛЬНО, развёрнутое лорное описание (2-4 предложения)
-6. **Опциональные поля** — НЕ ВКЛЮЧАЙ если пользователь не задал конкретные значения
-
-## ВАЖНО - Формат ответа:
-- Верни ТОЛЬКО JSON массив, без markdown-разметки и комментариев
-- JSON должен быть готов к копированию целиком`;
+### Equipment — с бонусами характеристик
+\`\`\`json
+{
+  "baseId": "equipment-ring-fortune",
+  "type": "equipment",
+  "name": "Кольцо удачи",
+  "system": {
+    "slot": "ring",
+    "description": "Тонкий золотой обруч с мерцающим изумрудом. Легенды гласят, что камень впитал удачу сотни авантюристов, павших в Расколотых Землях. Владелец чувствует необъяснимую уверенность в каждом броске.",
+    "rarity": "rare",
+    "statBonuses": {
+      "modifiers": [
+        { "stat": "attributes.fortune.value", "mode": "add", "value": 2 }
+      ]
+    }
+  }
 }
+\`\`\``,
+};
+
+/** Правила, специфичные для типов предметов */
+export const RULES_BY_TYPE: Partial<Record<ShwItemType, string>> = {
+  consumable: '- **consumableType** — ОБЯЗАТЕЛЬНО для консьюмаблов',
+  equipment:
+    '- **slot** — ОБЯЗАТЕЛЬНО для снаряжения (head, cloak, amulet, hands, body, belt, one-hand, two-hand, boots, ring)',
+};

@@ -1,15 +1,23 @@
-import { getAbilityImage, getConsumableImage, getSpellImage, ItemFactory } from './ItemFactory';
+import {
+  getAbilityImage,
+  getConsumableImage,
+  getEquipmentImage,
+  getSpellImage,
+  ItemFactory,
+} from './ItemFactory';
 import type { AbilitySystem } from './types/AbilityDataTypes';
 import type { ConsumableData } from './types/ConsumableDataTypes';
+import type { EquipmentSystem } from './types/EquipmentDataTypes';
 import type { SpellSystem } from './types/SpellDataTypes';
 
 // Flattened: system IS the item data directly (no nested structure)
-type ShwItemSystem = ConsumableData | AbilitySystem | SpellSystem;
+type ShwItemSystem = ConsumableData | AbilitySystem | SpellSystem | EquipmentSystem;
 
 export class ShwItem extends Item {
-  // @ts-expect-error
+  // @ts-expect-error — Foundry тип слишком узкий
   declare system: ShwItemSystem;
-  declare type: any;
+  // @ts-expect-error — Foundry тип слишком узкий для кастомных item types
+  declare type: string;
   declare name: string;
   declare img: string;
   declare update: (
@@ -30,6 +38,10 @@ export class ShwItem extends Item {
     return this.type === 'spell';
   }
 
+  isEquipment(): this is { system: EquipmentSystem } {
+    return this.type === 'equipment';
+  }
+
   private prepareConsumable() {
     if (this.isConsumable() && !this.system.consumableType) {
       const item = ItemFactory.createConsumable('bomb', {
@@ -37,9 +49,9 @@ export class ShwItem extends Item {
       });
       // Flatten: assign item fields directly to system
       Object.assign(this.system, item);
-      if (!this.img || this.img === 'icons/svg/item-bag.svg') {
-        this.img = getConsumableImage('bomb');
-      }
+    }
+    if (this.isConsumable() && (!this.img || this.img === 'icons/svg/item-bag.svg')) {
+      this.img = getConsumableImage(this.system.consumableType);
     }
   }
 
@@ -49,9 +61,9 @@ export class ShwItem extends Item {
         name: this.name,
       });
       Object.assign(this.system, item);
-      if (!this.img || this.img === 'icons/svg/item-bag.svg') {
-        this.img = getAbilityImage(this.system.category);
-      }
+    }
+    if (this.isAbility() && (!this.img || this.img === 'icons/svg/item-bag.svg')) {
+      this.img = getAbilityImage(this.system.category);
     }
   }
 
@@ -61,9 +73,21 @@ export class ShwItem extends Item {
         name: this.name,
       });
       Object.assign(this.system, item);
-      if (!this.img || this.img === 'icons/svg/item-bag.svg') {
-        this.img = getSpellImage(this.system.category);
-      }
+    }
+    if (this.isSpell() && (!this.img || this.img === 'icons/svg/item-bag.svg')) {
+      this.img = getSpellImage(this.system.category);
+    }
+  }
+
+  private prepareEquipment() {
+    if (this.isEquipment() && !this.system.kind) {
+      const item = ItemFactory.createEquipment('body', {
+        name: this.name,
+      });
+      Object.assign(this.system, item);
+    }
+    if (this.isEquipment() && (!this.img || this.img === 'icons/svg/item-bag.svg')) {
+      this.img = getEquipmentImage(this.system.slot);
     }
   }
 
@@ -119,6 +143,8 @@ export class ShwItem extends Item {
       this.prepareAbility();
     } else if (this.type === 'spell') {
       this.prepareSpell();
+    } else if (this.type === 'equipment') {
+      this.prepareEquipment();
     }
   }
 

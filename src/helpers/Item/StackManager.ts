@@ -23,13 +23,6 @@ export function isStackable(itemData: ItemDataLike): boolean {
 }
 
 /**
- * Check if item type is ability (non-stackable, unique)
- */
-export function isAbility(itemData: ItemDataLike): boolean {
-  return itemData.type === 'ability';
-}
-
-/**
  * Generate identity key for item comparison
  * Uses baseId if available, otherwise falls back to type + name
  */
@@ -222,18 +215,13 @@ export function handleAddItem(
     return 'allow';
   }
 
-  // Ability duplicate - block creation
-  if (isAbility(itemData)) {
-    ui.notifications?.warn(localize('stack.abilityExists', { name: itemData.name }));
-    return 'blocked';
-  }
-
   // Stackable item - increment and block creation
   if (isStackable(itemData)) {
     incrementStack(existing, itemData);
     return 'stacked';
   }
 
-  // Default: allow creation for other types
-  return 'allow';
+  // Non-stackable duplicate - block creation
+  ui.notifications?.warn(localize('stack.duplicateExists', { name: itemData.name }));
+  return 'blocked';
 }

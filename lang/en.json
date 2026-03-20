@@ -131,6 +131,39 @@
         "defaultEffect": "buff"
       }
     },
+    "equipment": {
+      "header": {
+        "namePlaceholder": "Equipment Name",
+        "slotLabel": "Slot:"
+      },
+      "slot": {
+        "head": "Head",
+        "cloak": "Cloak",
+        "amulet": "Amulet",
+        "hands": "Hands",
+        "body": "Body",
+        "belt": "Belt",
+        "oneHand": "One Hand",
+        "twoHand": "Two-Handed",
+        "boots": "Boots",
+        "ring": "Ring"
+      },
+      "stats": {
+        "armorClass": "Armor Class"
+      },
+      "bonuses": {
+        "title": "Passive Bonuses",
+        "statModifiers": "Stat Modifiers"
+      },
+      "linkedItems": {
+        "title": "Linked Abilities & Spells",
+        "dropHint": "Drag abilities or spells here to link them",
+        "remove": "Remove link",
+        "alreadyLinked": "This item is already linked",
+        "wrongType": "Only abilities and spells can be linked to equipment",
+        "deleted": "Item deleted"
+      }
+    },
     "ability": {
       "header": {
         "namePlaceholder": "Ability Name",
@@ -295,7 +328,6 @@
         "consumable": "Consumables",
         "ability": "Abilities",
         "weapon": "Weapons",
-        "armor": "Armor",
         "equipment": "Equipment",
         "treasure": "Treasure"
       },
@@ -454,14 +486,18 @@
         "priceLabel": "Price:",
         "quantityLabel": "Quantity (-1 for unlimited):",
         "newLocation": "New Location",
-        "newMerchant": "New Merchant"
+        "newMerchant": "New Merchant",
+        "nameLabel": "Name:",
+        "namePlaceholder": "Enter name",
+        "nameRequired": "Enter a name",
+        "nameDuplicate": "Name \"{name}\" already exists at this level"
       }
     },
     "stack": {
       "increased": "Stack \"{name}\" increased: {from} → {to}",
       "filledToMax": "Stack \"{name}\" filled to max: {from} → {to}",
       "additionalCreated": "Additional stacks \"{name}\" created: {count}",
-      "abilityExists": "Character already has ability \"{name}\""
+      "duplicateExists": "Character already has \"{name}\""
     },
     "tree": {
       "readItemDataError": "Failed to read item data",
@@ -470,9 +506,17 @@
     "import": {
       "title": "Import Items",
       "jsonData": "JSON Data",
+      "aiTools": "AI Tools",
       "schemaForAi": "Schema for AI",
       "copyForAi": "Copy for AI",
       "placeholder": "Or paste JSON array of items here...",
+      "typesForSchema": "Types in schema",
+      "types": {
+        "consumable": "Consumables",
+        "ability": "Abilities",
+        "spell": "Spells",
+        "equipment": "Equipment"
+      },
       "skipImages": "Skip images",
       "error": "Error:",
       "copyFailed": "Failed to copy to clipboard",

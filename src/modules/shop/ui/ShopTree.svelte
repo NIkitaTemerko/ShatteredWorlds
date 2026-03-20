@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { t } from "../../../shared/i18n";
+  import { t, localize } from "../../../shared/i18n";
   import type { TreeNode } from "../../../shared/ui/tree";
   import { TreeWithSearch } from "../../../shared/ui/tree";
   import {
@@ -137,27 +137,9 @@
     }
   }
 
-  function getNodeCount(): number {
-    return flatItems.length;
-  }
+  const pluralRules = new Intl.PluralRules("ru");
 
-  function getPluralForm(count: number): string {
-    const lastDigit = count % 10;
-    const lastTwoDigits = count % 100;
-
-    if (lastTwoDigits >= 11 && lastTwoDigits <= 14) {
-      return "нод";
-    }
-    if (lastDigit === 1) {
-      return "нода";
-    }
-    if (lastDigit >= 2 && lastDigit <= 4) {
-      return "ноды";
-    }
-    return "нод";
-  }
-
-  function handleDrop(node: TreeNode, itemData: any) {
+  async function handleDrop(node: TreeNode, itemData: any) {
     console.log("handleDrop called with:", { node, itemData });
 
     // Проверяем что это Foundry Item
@@ -181,7 +163,7 @@
     }
 
     // Диалог для ввода цены и количества
-    new Dialog({
+    const result = (await foundry.appv1.api.Dialog.wait({
       title: t("shop.dialogs.addItemTitle"),
       content: `
         <form>
@@ -198,21 +180,13 @@
       buttons: {
         add: {
           label: t("shop.dialogs.add"),
-          callback: (html: JQuery) => {
-            // html это jQuery объект, используем jQuery методы
-            const priceInput = html.find('[name="price"]')[0] as HTMLInputElement;
-            const quantityInput = html.find('[name="quantity"]')[0] as HTMLInputElement;
-
-            const price = Number.parseInt(priceInput?.value || "10");
-            const quantity = Number.parseInt(quantityInput?.value || "-1");
-
-            if (shopNode.type === "merchant") {
-              addMerchantItem(shopNode.id, itemData.uuid, price, quantity);
-            } else if (shopNode.type === "location") {
-              addItemToLocation(shopNode.id, itemData.uuid, price, quantity);
-            }
-
-            refreshTree();
+          callback: (html: JQuery<HTMLElement>) => {
+            const form = html[0].querySelector("form") as HTMLFormElement;
+            const formData = new FormData(form);
+            return {
+              price: Number.parseInt(formData.get("price") as string) || 10,
+              quantity: Number.parseInt(formData.get("quantity") as string) || -1,
+            };
           },
         },
         cancel: {
@@ -220,7 +194,16 @@
         },
       },
       default: "add",
-    }).render(true);
+    })) as { price: number; quantity: number } | null;
+
+    if (result) {
+      if (shopNode.type === "merchant") {
+        addMerchantItem(shopNode.id, itemData.uuid, result.price, result.quantity);
+      } else if (shopNode.type === "location") {
+        addItemToLocation(shopNode.id, itemData.uuid, result.price, result.quantity);
+      }
+      refreshTree();
+    }
   }
 </script>
 
@@ -238,9 +221,6 @@
       isDynamicTree={true}
       onStateChange={handleStateChange}
     />
-    <div class="node-count-bar">
-      <span class="node-count">{getNodeCount()} {getPluralForm(getNodeCount())}</span>
-    </div>
   </div>
 </div>
 
@@ -257,21 +237,5 @@
     display: flex;
     flex-direction: column;
     min-height: 0;
-  }
-
-  .node-count-bar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0.5rem;
-    background: rgba(139, 92, 246, 0.15);
-    border-radius: 4px;
-    margin-bottom: 0.5rem;
-  }
-
-  .node-count {
-    font-size: 13px;
-    color: #1a1a1a;
-    font-weight: 600;
   }
 </style>

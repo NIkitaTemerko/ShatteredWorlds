@@ -104,7 +104,11 @@ const parsePath = (path: CharacterStatPath): ParsedPath => {
   };
 };
 
-const tryApplyToTotalField = (system: any, parsed: ParsedPath, bonus: number): boolean => {
+const tryApplyToTotalField = (
+  system: ShwActorSystem,
+  parsed: ParsedPath,
+  bonus: number,
+): boolean => {
   if (!parsed.attributeKey) return false;
   if (!parsed.isAttributeValue && !parsed.isEditableStat) return false;
 

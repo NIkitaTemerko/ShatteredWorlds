@@ -1,15 +1,21 @@
 import { getSpellImage, ItemFactory } from '../../../documents/Item/ItemFactory';
 import type { ShwItem } from '../../../documents/Item/ShwItem';
-import type { SpellCategory, SpellKind } from '../../../documents/Item/types/SpellDataTypes';
+import type {
+  SpellCategory,
+  SpellKind,
+  SpellSystem,
+} from '../../../documents/Item/types/SpellDataTypes';
 
 export const getUpdateSpell = (item: ShwItem) =>
-  async function updateSpell(path: string, value: any, e?: Event) {
+  async function updateSpell(path: string, value: unknown, e?: Event) {
     e?.stopPropagation();
+
+    if (!item.isSpell()) return;
 
     // Handle category change - recreate spell with new category and update icon
     if (path === 'category') {
       const category = value as SpellCategory;
-      const system = item.system as any;
+      const system = item.system as SpellSystem;
 
       const spell = ItemFactory.createSpell(category, system.spellKind || 'attack', {
         name: item.name,
@@ -28,7 +34,7 @@ export const getUpdateSpell = (item: ShwItem) =>
 
     // Handle kind change - recreate spell with new kind
     if (path === 'spellKind') {
-      const system = item.system as any;
+      const system = item.system as SpellSystem;
 
       const spell = ItemFactory.createSpell(system.category, value as SpellKind, {
         name: item.name,

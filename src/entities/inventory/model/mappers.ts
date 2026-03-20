@@ -3,22 +3,14 @@ import type { ConsumableType } from '../../../documents/Item/types/ConsumableDat
 import type { ItemType } from '../../../documents/Item/types/ItemDataInterface';
 import type { I18nKey } from '../../../shared/i18n';
 import { t } from '../../../shared/i18n';
+import { RARITY_COLORS } from '../../../shared/model/constants';
 import type { FlatItem } from '../../../shared/ui/tree';
-
-// Цвета редкости для визуального различия
-const rarityColors: Record<string, string> = {
-  common: '#9CA3AF',
-  uncommon: '#10B981',
-  rare: '#3B82F6',
-  legendary: '#F97316',
-};
 
 // Ключи локализации для типов предметов
 const itemTypeKeys: Record<ItemType, I18nKey> = {
   consumable: 'inventory.categories.consumable',
   ability: 'inventory.categories.ability',
   weapon: 'inventory.categories.weapon',
-  armor: 'inventory.categories.armor',
   equipment: 'inventory.categories.equipment',
   treasure: 'inventory.categories.treasure',
   spell: 'tabs.spells',
@@ -65,8 +57,11 @@ export function mapInventoryToFlatItems(items: ShwItem[]): FlatItem[] {
         id: (item.id ?? item._id) || '',
         label,
         path,
-        color: rarityColors[rarity],
-        badge: { color: rarityColors[rarity] ?? rarityColors.common, label: rarity },
+        color: RARITY_COLORS[rarity]?.dark,
+        badge: {
+          color: RARITY_COLORS[rarity]?.dark ?? RARITY_COLORS.common.dark,
+          label: rarity,
+        },
         data: item,
       };
     });

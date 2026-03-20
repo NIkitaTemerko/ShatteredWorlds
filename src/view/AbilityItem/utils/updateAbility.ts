@@ -7,23 +7,24 @@ import type {
 } from '../../../documents/Item/types/AbilityDataTypes';
 
 export const getUpdateAbility = (item: ShwItem) =>
-  async function updateAbility(path: string, value: any, e?: Event) {
+  async function updateAbility(path: string, value: unknown, e?: Event) {
     e?.stopPropagation();
+
+    if (!item.isAbility()) return;
 
     // Handle category change - recreate ability with new type
     if (path === 'category') {
       const category = value as AbilityCategory;
-      const defaultKind: any = category === 'active' ? 'attack' : 'stat-bonus';
 
       const ability =
         category === 'active'
-          ? ItemFactory.createAbility('active', defaultKind, {
+          ? ItemFactory.createAbility('active', 'attack', {
               name: item.name,
               description: item.system.description,
               weight: item.system.weight,
               rarity: item.system.rarity,
             })
-          : ItemFactory.createAbility('passive', defaultKind, {
+          : ItemFactory.createAbility('passive', 'stat-bonus', {
               name: item.name,
               description: item.system.description,
               weight: item.system.weight,
@@ -41,7 +42,7 @@ export const getUpdateAbility = (item: ShwItem) =>
 
     // Handle kind change - recreate ability with new kind
     if (path === 'kind') {
-      const system = item.system as any;
+      const system = item.system;
 
       const ability =
         system.category === 'active'

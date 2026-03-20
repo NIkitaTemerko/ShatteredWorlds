@@ -1,6 +1,6 @@
 import { getFoundryIconsCached } from '../../../shared/data/foundryIconsLoader';
 
-// Категории иконок по типам предметов
+/** Категории иконок по типам предметов */
 const ICON_CATEGORIES: Record<string, string[]> = {
   potion: ['icons/consumables/potions/'],
   bomb: ['icons/weapons/thrown/bomb'],
@@ -9,11 +9,10 @@ const ICON_CATEGORIES: Record<string, string[]> = {
   poison: ['icons/consumables/potions/', 'icons/consumables/poison/'],
   ability: ['icons/skills/'],
   spell: ['icons/magic/'],
+  equipment: ['icons/equipment/'],
 };
 
-/**
- * Фильтрует иконки по типу предмета
- */
+/** Фильтрует иконки Foundry по типу предмета */
 export function getIconsForType(type: string, consumableType?: string): string[] {
   const category = consumableType || type;
   const prefixes = ICON_CATEGORIES[category] || [];

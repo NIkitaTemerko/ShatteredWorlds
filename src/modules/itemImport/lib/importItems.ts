@@ -1,5 +1,5 @@
 import type { ShwItem } from '../../../documents/Item/ShwItem';
-import type { ImportReport, ImportResult, ItemCore } from './types';
+import type { ImportReport, ImportResult, ItemCore } from '../model';
 
 /** Импортирует items в Foundry */
 export async function importItemCores(

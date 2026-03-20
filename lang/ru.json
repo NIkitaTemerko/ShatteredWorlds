@@ -502,9 +502,17 @@
     "import": {
       "title": "Импорт предметов",
       "jsonData": "JSON Данные",
+      "aiTools": "Инструменты ИИ",
       "schemaForAi": "Схема для ИИ",
       "copyForAi": "Скопировать для ИИ",
       "placeholder": "Или вставьте JSON массив предметов здесь...",
+      "typesForSchema": "Типы в схеме",
+      "types": {
+        "consumable": "Расходники",
+        "ability": "Способности",
+        "spell": "Заклинания",
+        "equipment": "Снаряжение"
+      },
       "skipImages": "Пропустить изображения",
       "error": "Ошибка:",
       "copyFailed": "Не удалось скопировать в буфер обмена",

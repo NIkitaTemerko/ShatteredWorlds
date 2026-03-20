@@ -502,9 +502,17 @@
     "import": {
       "title": "Import Items",
       "jsonData": "JSON Data",
+      "aiTools": "AI Tools",
       "schemaForAi": "Schema for AI",
       "copyForAi": "Copy for AI",
       "placeholder": "Or paste JSON array of items here...",
+      "typesForSchema": "Types in schema",
+      "types": {
+        "consumable": "Consumables",
+        "ability": "Abilities",
+        "spell": "Spells",
+        "equipment": "Equipment"
+      },
       "skipImages": "Skip images",
       "error": "Error:",
       "copyFailed": "Failed to copy to clipboard",

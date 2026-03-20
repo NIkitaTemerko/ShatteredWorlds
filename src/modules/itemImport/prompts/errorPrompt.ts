@@ -1,5 +1,5 @@
-import { getIconsForType } from './iconCategories';
-import { getJsonSchemaForTypes } from './schemas';
+import { getIconsForType } from '../lib';
+import { getJsonSchemaForTypes } from '../model/schemas';
 
 /**
  * Генерирует промпт с ошибками для исправления ИИ.

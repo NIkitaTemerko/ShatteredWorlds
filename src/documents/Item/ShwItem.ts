@@ -2,16 +2,18 @@ import {
   getAbilityImage,
   getConsumableImage,
   getEquipmentImage,
+  getResourceImage,
   getSpellImage,
   ItemFactory,
 } from './ItemFactory';
 import type { AbilitySystem } from './types/AbilityDataTypes';
 import type { ConsumableData } from './types/ConsumableDataTypes';
 import type { EquipmentSystem } from './types/EquipmentDataTypes';
+import type { ResourceData } from './types/ResourceDataTypes';
 import type { SpellSystem } from './types/SpellDataTypes';
 
 // Flattened: system IS the item data directly (no nested structure)
-type ShwItemSystem = ConsumableData | AbilitySystem | SpellSystem | EquipmentSystem;
+type ShwItemSystem = ConsumableData | AbilitySystem | SpellSystem | EquipmentSystem | ResourceData;
 
 export class ShwItem extends Item {
   // @ts-expect-error — Foundry тип слишком узкий
@@ -40,6 +42,10 @@ export class ShwItem extends Item {
 
   isEquipment(): this is { system: EquipmentSystem } {
     return this.type === 'equipment';
+  }
+
+  isResource(): this is { system: ResourceData } {
+    return this.type === 'resource';
   }
 
   private prepareConsumable() {
@@ -88,6 +94,18 @@ export class ShwItem extends Item {
     }
     if (this.isEquipment() && (!this.img || this.img === 'icons/svg/item-bag.svg')) {
       this.img = getEquipmentImage(this.system.slot);
+    }
+  }
+
+  private prepareResource() {
+    if (this.isResource() && !this.system.kind) {
+      const item = ItemFactory.createResource('raw', 'ore', {
+        name: this.name,
+      });
+      Object.assign(this.system, item);
+    }
+    if (this.isResource() && (!this.img || this.img === 'icons/svg/item-bag.svg')) {
+      this.img = getResourceImage(this.system.category);
     }
   }
 
@@ -145,6 +163,8 @@ export class ShwItem extends Item {
       this.prepareSpell();
     } else if (this.type === 'equipment') {
       this.prepareEquipment();
+    } else if (this.type === 'resource') {
+      this.prepareResource();
     }
   }
 

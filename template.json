@@ -3,6 +3,6 @@
     "types": ["npc", "character"]
   },
   "Item": {
-    "types": ["consumable", "ability", "spell", "equipment"]
+    "types": ["consumable", "ability", "spell", "equipment", "resource"]
   }
 }

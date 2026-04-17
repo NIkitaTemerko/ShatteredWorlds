@@ -5,7 +5,7 @@ import type { ItemDataLike } from '../../model/types/itemHelpers';
 
 /** Проверяет, стекируется ли предмет данного типа */
 export function isStackable(itemData: ItemDataLike): boolean {
-  return itemData.type === 'consumable';
+  return itemData.type === 'consumable' || itemData.type === 'resource';
 }
 
 /**
@@ -37,7 +37,7 @@ export function findExistingStack(actor: ShwActor, itemData: ItemDataLike): ShwI
 
     if (existingKey === identityKey) {
       // Для стекируемых: приоритет у незаполненных
-      if (item.isConsumable()) {
+      if (item.isConsumable() || item.isResource()) {
         const currentQty = item.system.quantity || 0;
         const stackLimit = item.system.stackLimit || Number.POSITIVE_INFINITY;
 
@@ -75,7 +75,7 @@ export function isInOverflowCreation(): boolean {
  * Выполняет обновления асинхронно, возвращает контроль сразу.
  */
 export function incrementStack(existingItem: ShwItem, incomingData: ItemDataLike): void {
-  if (!existingItem.isConsumable()) return;
+  if (!existingItem.isConsumable() && !existingItem.isResource()) return;
 
   const currentQuantity = existingItem.system.quantity || 0;
   const incomingQuantity = incomingData.system?.quantity || 1;

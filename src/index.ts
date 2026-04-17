@@ -1,6 +1,7 @@
 import { ShwActor } from './documents/Actor/ShwActor';
 import { ShwItem } from './documents/Item/ShwItem';
 import { ShwTokenDocument } from './documents/ShwTokenDocument.js';
+import { initSettingsHooks, registerSettings, ShwSettingsApp } from './modules/settings';
 import { ShopManagerApp } from './modules/shop';
 import { ensureFolderStructure, getTargetFolderId, handleAddItem } from './shared/helpers/Item';
 import { AbilityItemApp } from './view/AbilityItem/ItemApp';
@@ -8,6 +9,7 @@ import { CharacterApp } from './view/BaseCharacter/CharacterApp.js';
 import { ConsumableItemApp } from './view/ConsumableItem/ItemApp';
 import { EquipmentItemApp } from './view/EquipmentItem/ItemApp';
 import { NpcApp } from './view/NpcCharacter/NpcApp';
+import { ResourceItemApp } from './view/ResourceItem/ItemApp';
 import { SpellItemApp } from './view/SpellItem/ItemApp';
 import './main.css';
 
@@ -28,6 +30,9 @@ Hooks.once('init', () => {
     formula: '1d20 + @initiative',
     decimals: 0,
   };
+
+  registerSettings(ShwSettingsApp);
+  initSettingsHooks();
 
   // Создаём структуру папок при старте мира
   Hooks.once('ready', async () => {
@@ -94,6 +99,10 @@ Hooks.once('setup', () => {
   });
   foundry.documents.collections.Items.registerSheet('shw', EquipmentItemApp, {
     types: ['equipment'],
+    makeDefault: true,
+  });
+  foundry.documents.collections.Items.registerSheet('shw', ResourceItemApp, {
+    types: ['resource'],
     makeDefault: true,
   });
 });

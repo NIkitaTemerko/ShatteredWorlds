@@ -7,6 +7,7 @@ import type {
 import type { ConsumableData, ConsumableType } from './types/ConsumableDataTypes';
 import type { EquipmentSlot, EquipmentSystem } from './types/EquipmentDataTypes';
 import type { BaseItemData } from './types/ItemDataInterface';
+import type { ResourceCategory, ResourceData } from './types/ResourceDataTypes';
 import type { SpellCategory, SpellKind, SpellSystem } from './types/SpellDataTypes';
 
 /**
@@ -75,6 +76,21 @@ const EQUIPMENT_SLOT_IMAGES: Record<EquipmentSlot, string> = {
 
 export function getEquipmentImage(slot: EquipmentSlot): string {
   return EQUIPMENT_SLOT_IMAGES[slot];
+}
+
+/**
+ * Дефолтные иконки для категорий ресурсов
+ */
+const RESOURCE_CATEGORY_IMAGES: Record<ResourceCategory, string> = {
+  raw: 'icons/commodities/stone/ore-pile-grey.webp',
+  refined: 'icons/commodities/metal/ingot-steel.webp',
+  magical: 'icons/commodities/gems/gem-faceted-rough-purple.webp',
+  organic: 'icons/commodities/bones/bones-stack-grey.webp',
+  special: 'icons/commodities/stone/stone-nugget-gold.webp',
+};
+
+export function getResourceImage(category: ResourceCategory): string {
+  return RESOURCE_CATEGORY_IMAGES[category];
 }
 
 // biome-ignore lint/complexity/noStaticOnlyClass: смысла 0
@@ -317,6 +333,30 @@ export class ItemFactory {
       armorClass: 0,
       statBonuses: null,
       linkedItemIds: [],
+    };
+  }
+
+  static createResource(
+    category: ResourceCategory,
+    resourceType: string,
+    baseData: Partial<BaseItemData>,
+  ): ResourceData {
+    const base = {
+      name: '',
+      description: '',
+      weight: 0,
+      rarity: 'common' as const,
+      price: 0,
+      quantity: 1,
+      stackLimit: 99,
+      ...baseData,
+    };
+
+    return {
+      ...base,
+      kind: 'resource' as const,
+      category,
+      resourceType,
     };
   }
 }

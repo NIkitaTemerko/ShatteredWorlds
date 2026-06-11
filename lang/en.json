@@ -584,6 +584,17 @@
         "resin": "Resin"
       }
     },
+    "migration": {
+      "data": {
+        "title": "Data Update",
+        "intro": "This world contains outdated data. The system will update it to the current format.",
+        "actors": "Actors ({count})",
+        "embeddedItems": "Embedded items ({count})",
+        "worldItems": "World items ({count})",
+        "andMore": "and {count} more…",
+        "success": "Data update complete."
+      }
+    },
     "settings": {
       "menu": {
         "name": "System Settings",

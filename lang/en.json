@@ -329,7 +329,8 @@
         "ability": "Abilities",
         "weapon": "Weapons",
         "equipment": "Equipment",
-        "treasure": "Treasure"
+        "treasure": "Treasure",
+        "resource": "Resources"
       },
       "consumableTypes": {
         "potion": "Potions",
@@ -515,7 +516,8 @@
         "consumable": "Consumables",
         "ability": "Abilities",
         "spell": "Spells",
-        "equipment": "Equipment"
+        "equipment": "Equipment",
+        "resource": "Resources"
       },
       "skipImages": "Skip images",
       "error": "Error:",
@@ -545,6 +547,75 @@
       "parseError": "Parse error",
       "importSuccess": "Import: {created} created, {updated} updated",
       "importWarning": "Import completed with {errors} errors"
+    },
+    "resource": {
+      "header": {
+        "namePlaceholder": "Resource Name",
+        "categoryLabel": "Category:",
+        "typeLabel": "Resource Type",
+        "typePlaceholder": "Select or enter type..."
+      },
+      "category": {
+        "raw": "Raw Materials",
+        "refined": "Refined Materials",
+        "magical": "Magical Components",
+        "organic": "Organic Materials",
+        "special": "Special Materials"
+      },
+      "type": {
+        "ore": "Ore",
+        "wood": "Wood",
+        "stone": "Stone",
+        "fuel": "Fuel",
+        "herb": "Herbs",
+        "cloth": "Cloth",
+        "gem": "Gems",
+        "ingot": "Ingots",
+        "leather": "Leather",
+        "glass": "Glass",
+        "essence": "Essence",
+        "reagent": "Reagents",
+        "bone": "Bones",
+        "scale": "Scales",
+        "feather": "Feathers",
+        "blood": "Blood",
+        "sand": "Sand",
+        "clay": "Clay",
+        "resin": "Resin"
+      }
+    },
+    "settings": {
+      "menu": {
+        "name": "System Settings",
+        "label": "Open Settings",
+        "hint": "Configure resource types, categories, and other system settings."
+      },
+      "resources": {
+        "title": "Resource Categories",
+        "addCategory": "Add Category",
+        "addType": "Add Type",
+        "hint": "Each category groups resource types. Expand a category to manage its types.",
+        "hintIcons": "Icons are",
+        "hintPaste": "You can paste the tag directly.",
+        "newCategory": "New Category",
+        "newType": "New Resource",
+        "noTypes": "No resource types",
+        "orphanTitle": "Uncategorized",
+        "deleteCategory": "Delete Category",
+        "deleteType": "Delete Type",
+        "expand": "Expand",
+        "collapse": "Collapse",
+        "cannotDelete": "Cannot delete category — it has resource types",
+        "placeholderKey": "Key",
+        "placeholderName": "Name",
+        "placeholderIcon": "fa-solid fa-gem",
+        "save": "Save",
+        "saving": "Saving...",
+        "reset": "Reset",
+        "unsaved": "Unsaved changes",
+        "saved": "Resource settings saved",
+        "saveError": "Error saving settings"
+      }
     }
   }
 }

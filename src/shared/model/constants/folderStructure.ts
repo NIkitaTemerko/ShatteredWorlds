@@ -55,4 +55,15 @@ export const FOLDER_STRUCTURE: Record<string, FolderDefinition> = {
       arcane: 'SHW.spell.category.arcane',
     },
   },
+  resource: {
+    rootKey: 'SHW.inventory.categories.resource',
+    subtypeField: 'category',
+    subfolders: {
+      raw: 'SHW.resource.category.raw',
+      refined: 'SHW.resource.category.refined',
+      magical: 'SHW.resource.category.magical',
+      organic: 'SHW.resource.category.organic',
+      special: 'SHW.resource.category.special',
+    },
+  },
 };

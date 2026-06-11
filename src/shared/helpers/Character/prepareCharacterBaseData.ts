@@ -6,10 +6,13 @@ import {
   UTIL_KEYS,
 } from '../../model/constants/actorKeys';
 import { CHAR_DEFAULTS } from '../../model/constants/characterDefaults';
+import { migrateLegacyStatKeys } from '../migrateLegacyStatKeys';
 
 const createEmptyAttr = () => ({ value: 0, extra: 0, charBonus: 0, saveBonus: 0 });
 
 export function prepareCharacterBaseData(sys: ShwActorSystem) {
+  migrateLegacyStatKeys(sys);
+
   sys.health ??= {} as ShwActorSystem['health'];
   sys.health.max ??= 10;
   sys.health.value ??= 10;

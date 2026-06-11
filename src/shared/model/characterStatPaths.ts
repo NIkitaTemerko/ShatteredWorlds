@@ -46,9 +46,9 @@ export interface CharacterStatOption {
 const ATTRIBUTE_KEYS: AttributeKey[] = [
   'fortune',
   'force',
-  'perception',
-  'psyDefence',
-  'diplomacy',
+  'finesse',
+  'will',
+  'presence',
 ];
 
 type AttributeFieldConfig = {

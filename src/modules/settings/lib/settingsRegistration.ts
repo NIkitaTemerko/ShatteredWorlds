@@ -1,6 +1,8 @@
 import {
+  CURRENT_DATA_MIGRATION_VERSION,
   DEFAULT_RESOURCE_CATEGORIES,
   DEFAULT_RESOURCE_TYPES,
+  SETTING_DATA_MIGRATION_VERSION,
   SETTING_RESOURCE_CATEGORIES,
   SETTING_RESOURCE_TYPES,
   SETTINGS_NAMESPACE,
@@ -33,5 +35,13 @@ export function registerSettings(
     config: false,
     type: Array,
     default: DEFAULT_RESOURCE_TYPES,
+  });
+
+  game.settings?.register(SETTINGS_NAMESPACE, SETTING_DATA_MIGRATION_VERSION, {
+    name: 'Data Migration Version',
+    scope: 'world',
+    config: false,
+    type: Number,
+    default: 0,
   });
 }

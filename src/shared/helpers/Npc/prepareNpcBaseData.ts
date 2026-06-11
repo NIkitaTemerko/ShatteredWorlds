@@ -1,6 +1,7 @@
 import type { ShwNpcSystem } from '../../../documents/Actor/types/ShwActorSystem';
 import { ADDITIONAL_KEYS, STAT_KEYS, UTIL_KEYS } from '../../model/constants/actorKeys';
 import { NPC_DEFAULTS, NPC_HELPER_KEYS } from '../../model/constants/npcDefaults';
+import { migrateLegacyStatKeys } from '../migrateLegacyStatKeys';
 
 /** Фабрика для создания пустого NPC-атрибута (каждый вызов — новый объект) */
 const createEmptyNpcAttr = () => ({
@@ -13,6 +14,8 @@ const createEmptyNpcAttr = () => ({
 });
 
 export function prepareNpcBaseData(sys: ShwNpcSystem) {
+  migrateLegacyStatKeys(sys);
+
   sys.health ??= {} as ShwNpcSystem['health'];
   sys.health.max ??= 10;
   sys.health.value ??= 10;

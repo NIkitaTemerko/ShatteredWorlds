@@ -13,9 +13,9 @@ export const EDITABLE_STATS = new Set([
 export const STAT_NAME_KEYS = {
   fortune: 'attributes.fortune',
   force: 'attributes.force',
-  perception: 'attributes.perception',
-  psyDefence: 'attributes.psyDefence',
-  diplomacy: 'attributes.diplomacy',
+  finesse: 'attributes.finesse',
+  will: 'attributes.will',
+  presence: 'attributes.presence',
   natural: 'attributes.natural',
 } as const;
 
@@ -50,9 +50,9 @@ export const CHAR_DEFAULTS = {
     totalSpeed: 0,
     totalFortune: 0,
     totalForce: 0,
-    totalPerception: 0,
-    totalPsyDefence: 0,
-    totalDiplomacy: 0,
+    totalFinesse: 0,
+    totalWill: 0,
+    totalPresence: 0,
     totalActions: 0,
     totalBonusActions: 0,
     totalReactions: 0,

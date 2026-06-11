@@ -4,9 +4,9 @@ import type { ShwActorSystem } from '../../../documents/Actor/types/ShwActorSyst
 export const STAT_KEYS: (keyof ShwActorSystem['attributes'])[] = [
   'fortune',
   'force',
-  'perception',
-  'psyDefence',
-  'diplomacy',
+  'finesse',
+  'will',
+  'presence',
 ] as const;
 
 /** Ключи утилитарных характеристик */
@@ -33,17 +33,11 @@ export const HELPER_KEYS: (keyof ShwActorSystem['helpers'])[] = [
   'totalSpeed',
   'totalFortune',
   'totalForce',
-  'totalPerception',
-  'totalPsyDefence',
-  'totalDiplomacy',
+  'totalFinesse',
+  'totalWill',
+  'totalPresence',
   'totalActions',
   'totalBonusActions',
   'totalReactions',
   'totalInitiative',
 ] as const;
-
-/** Порог атрибута для получения бонуса импульса */
-export const ATTR_RIM = 15;
-
-/** Порог атрибута для получения бонуса дальности */
-export const ATTR_MAX_RIM = 25;

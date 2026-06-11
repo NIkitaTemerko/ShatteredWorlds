@@ -13,9 +13,9 @@ interface HealthFields {
 interface Attributes<T> {
   fortune: T;
   force: T;
-  perception: T;
-  psyDefence: T;
-  diplomacy: T;
+  finesse: T;
+  will: T;
+  presence: T;
 }
 
 interface AdditionalAttributes {
@@ -46,9 +46,9 @@ interface CharacterHelpers extends BaseHelpers {
   // Total значения атрибутов (value + бонусы от предметов)
   totalFortune: number;
   totalForce: number;
-  totalPerception: number;
-  totalPsyDefence: number;
-  totalDiplomacy: number;
+  totalFinesse: number;
+  totalWill: number;
+  totalPresence: number;
   // Total значения только для editable additionalAttributes
   totalActions: number;
   totalBonusActions: number;

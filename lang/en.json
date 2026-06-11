@@ -4,9 +4,9 @@
       "natural": "Natural",
       "fortune": "Fortune",
       "force": "Force",
-      "perception": "Perception",
-      "psyDefence": "Psy Defense",
-      "diplomacy": "Diplomacy"
+      "finesse": "Finesse",
+      "will": "Will",
+      "presence": "Presence"
     },
     "tabs": {
       "stats": "Statistics",
@@ -62,10 +62,10 @@
       },
       "saveType": {
         "force": "force",
-        "perception": "perception",
-        "psyDefence": "psy defense",
+        "finesse": "finesse",
+        "will": "will",
         "fortune": "fortune",
-        "diplomacy": "diplomacy"
+        "presence": "presence"
       },
       "applicationType": {
         "injury": "injury",

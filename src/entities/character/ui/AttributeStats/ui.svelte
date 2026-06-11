@@ -35,9 +35,9 @@
   const ATTRIBUTE_KEYS = [
     { key: "fortune" as const, labelKey: "attributes.fortune" },
     { key: "force" as const, labelKey: "attributes.force" },
-    { key: "perception" as const, labelKey: "attributes.perception" },
-    { key: "psyDefence" as const, labelKey: "attributes.psyDefence" },
-    { key: "diplomacy" as const, labelKey: "attributes.diplomacy" },
+    { key: "finesse" as const, labelKey: "attributes.finesse" },
+    { key: "will" as const, labelKey: "attributes.will" },
+    { key: "presence" as const, labelKey: "attributes.presence" },
   ] as const;
 
   const columns = $derived<ColumnData[]>(

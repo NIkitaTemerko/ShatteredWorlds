@@ -4,9 +4,9 @@
       "natural": "Натуральный",
       "fortune": "Фортуна",
       "force": "Напор",
-      "perception": "Восприятие",
-      "psyDefence": "Пси‑защита",
-      "diplomacy": "Дипломатия"
+      "finesse": "Сноровка",
+      "will": "Воля",
+      "presence": "Присутствие"
     },
     "tabs": {
       "stats": "Статистика",
@@ -62,10 +62,10 @@
       },
       "saveType": {
         "force": "напор",
-        "perception": "восприятие",
-        "psyDefence": "псизащита",
+        "finesse": "сноровка",
+        "will": "воля",
         "fortune": "фортуна",
-        "diplomacy": "дипломатия"
+        "presence": "присутствие"
       },
       "applicationType": {
         "injury": "рана",

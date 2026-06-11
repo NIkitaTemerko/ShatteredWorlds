@@ -15,7 +15,7 @@ export type CharacterTab =
 export type RollMode = 'adv' | 'normal' | 'dis';
 
 /** Roll type for different attributes */
-export type RollType = 'natural' | 'fortune' | 'force' | 'perception' | 'psyDefence' | 'diplomacy';
+export type RollType = 'natural' | 'fortune' | 'force' | 'finesse' | 'will' | 'presence';
 
 /** Character helpers type */
 export type CharacterHelpers = ShwActorSystem['helpers'];
@@ -57,9 +57,9 @@ export interface AttributeColumn {
 export const ATTRIBUTE_COLORS: Record<AttributeKey, AttributeColors> = {
   fortune: { dark: '#f08c00', light: '#ffd580', hover: '#ffae40' },
   force: { dark: '#d7263d', light: '#ff9aa5', hover: '#eb607f' },
-  perception: { dark: '#198754', light: '#80d9b3', hover: '#4db083' },
-  psyDefence: { dark: '#8e44ad', light: '#c39bd3', hover: '#a86fc0' },
-  diplomacy: { dark: '#6c757d', light: '#dee2e6', hover: '#a5acb2' },
+  finesse: { dark: '#198754', light: '#80d9b3', hover: '#4db083' },
+  will: { dark: '#8e44ad', light: '#c39bd3', hover: '#a86fc0' },
+  presence: { dark: '#6c757d', light: '#dee2e6', hover: '#a5acb2' },
 };
 
 /** Constants for roll types (labels are i18n keys) */
@@ -71,9 +71,9 @@ export const ROLL_TYPE_CONFIGS: RollTypeConfig[] = [
   },
   { id: 'fortune', label: 'attributes.fortune', colors: ATTRIBUTE_COLORS.fortune },
   { id: 'force', label: 'attributes.force', colors: ATTRIBUTE_COLORS.force },
-  { id: 'perception', label: 'attributes.perception', colors: ATTRIBUTE_COLORS.perception },
-  { id: 'psyDefence', label: 'attributes.psyDefence', colors: ATTRIBUTE_COLORS.psyDefence },
-  { id: 'diplomacy', label: 'attributes.diplomacy', colors: ATTRIBUTE_COLORS.diplomacy },
+  { id: 'finesse', label: 'attributes.finesse', colors: ATTRIBUTE_COLORS.finesse },
+  { id: 'will', label: 'attributes.will', colors: ATTRIBUTE_COLORS.will },
+  { id: 'presence', label: 'attributes.presence', colors: ATTRIBUTE_COLORS.presence },
 ];
 
 /** Tab configurations (labels are i18n keys) */

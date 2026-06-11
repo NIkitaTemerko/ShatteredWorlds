@@ -40,10 +40,10 @@ export const DAMAGE_TYPES: SelectOption[] = [
 
 export const SAVE_TYPES: SelectOption[] = [
   { value: 'force', label: 'consumable.saveType.force' },
-  { value: 'perception', label: 'consumable.saveType.perception' },
-  { value: 'psyDefence', label: 'consumable.saveType.psyDefence' },
+  { value: 'finesse', label: 'consumable.saveType.finesse' },
+  { value: 'will', label: 'consumable.saveType.will' },
   { value: 'fortune', label: 'consumable.saveType.fortune' },
-  { value: 'diplomacy', label: 'consumable.saveType.diplomacy' },
+  { value: 'presence', label: 'consumable.saveType.presence' },
 ];
 
 export const APPLICATION_TYPES: SelectOption[] = [

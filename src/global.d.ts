@@ -38,5 +38,6 @@ declare global {
   interface SettingConfig {
     'shattered-worlds.resourceCategories': ResourceCategorySetting[];
     'shattered-worlds.resourceTypes': ResourceTypeSetting[];
+    'shattered-worlds.dataMigrationVersion': number;
   }
 }

@@ -1,8 +1,8 @@
 <script lang="ts">
   import type { ShwItem } from "../../../documents/Item/ShwItem";
-  import type { ResourceCategory, ResourceData } from "../../../documents/Item/types/ResourceDataTypes";
+  import type { ResourceData } from "../../../documents/Item/types/ResourceDataTypes";
   import { t } from "../../../shared/i18n";
-  import { AutocompleteInput, Input, SelectInput } from "../../../shared/ui";
+  import { Input, SelectInput } from "../../../shared/ui";
   import { RARITY_TYPES, type RarityType } from "../../../entities/consumable";
   import { StatsCard } from "../../../entities/consumable/ui/StatsCard";
   import { getCategoryColor, getTypeOptions } from "../../../entities/resource";
@@ -110,18 +110,18 @@
     </div>
   </StatsCard>
 
-  <!-- Тип ресурса (автокомплит) -->
+  <!-- Тип ресурса -->
   <StatsCard columns={1}>
     <div class="stat-col" style="--dark: {categoryColors.dark}; --light: {categoryColors.light}">
       <div class="stat-header">{t("resource.header.typeLabel")}</div>
       <div class="stat-body">
-        <AutocompleteInput
+        <SelectInput
           value={system.resourceType}
-          options={getTypeOptions()}
-          placeholder={t("resource.header.typePlaceholder")}
+          options={getTypeOptions(system.category, system.resourceType)}
           variant="underline"
           fullWidth
-          onchange={(val) => updateResource("resourceType", val)}
+          onchange={(e) =>
+            updateResource("resourceType", (e.currentTarget as HTMLSelectElement).value)}
         />
       </div>
     </div>

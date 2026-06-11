@@ -1,6 +1,20 @@
 import { getResourceImage, ItemFactory } from '../../../documents/Item/ItemFactory';
 import type { ShwItem } from '../../../documents/Item/ShwItem';
-import type { ResourceCategory } from '../../../documents/Item/types/ResourceDataTypes';
+import type { ResourceCategory, ResourceData } from '../../../documents/Item/types/ResourceDataTypes';
+import { getTypeOptions } from '../../../entities/resource';
+
+function resourceBaseData(item: ShwItem) {
+  const sys = item.system as ResourceData;
+  return {
+    name: item.name,
+    description: sys.description ?? '',
+    weight: sys.weight ?? 0,
+    rarity: sys.rarity ?? 'common',
+    price: sys.price ?? 0,
+    quantity: sys.quantity ?? 1,
+    stackLimit: sys.stackLimit ?? 99,
+  };
+}
 
 export const getUpdateResource = (item: ShwItem) =>
   async function updateResource(path: string, value: unknown, e?: Event) {
@@ -8,23 +22,29 @@ export const getUpdateResource = (item: ShwItem) =>
 
     if (!item.isResource()) return;
 
+    const sys = item.system as ResourceData;
+
     if (path === 'category') {
-      const resource = ItemFactory.createResource(
-        value as ResourceCategory,
-        item.system.resourceType,
-        { name: item.name },
-      );
-      const img = getResourceImage(value as ResourceCategory);
+      const category = value as ResourceCategory;
+      const resourceType = getTypeOptions(category)[0]?.value ?? 'ore';
 
       await item.update({
-        system: resource,
-        img: img,
+        system: ItemFactory.createResource(category, resourceType, resourceBaseData(item)),
+        img: getResourceImage(category),
       });
       return;
     }
 
-    await item.update({
-      system: item.system,
-      [`system.${path}`]: value,
-    });
+    if (path === 'resourceType') {
+      await item.update({
+        system: ItemFactory.createResource(
+          sys.category ?? 'raw',
+          value as string,
+          resourceBaseData(item),
+        ),
+      });
+      return;
+    }
+
+    await item.update({ [`system.${path}`]: value });
   };

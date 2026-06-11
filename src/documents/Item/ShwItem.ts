@@ -98,13 +98,19 @@ export class ShwItem extends Item {
   }
 
   private prepareResource() {
-    if (this.isResource() && !this.system.kind) {
-      const item = ItemFactory.createResource('raw', 'ore', {
-        name: this.name,
-      });
-      Object.assign(this.system, item);
+    if (!this.isResource()) return;
+
+    if (!this.system.kind) {
+      Object.assign(
+        this.system,
+        ItemFactory.createResource('raw', 'ore', { name: this.name }),
+      );
+    } else {
+      if (!this.system.category) this.system.category = 'raw';
+      if (!this.system.resourceType) this.system.resourceType = 'ore';
     }
-    if (this.isResource() && (!this.img || this.img === 'icons/svg/item-bag.svg')) {
+
+    if (!this.img || this.img === 'icons/svg/item-bag.svg') {
       this.img = getResourceImage(this.system.category);
     }
   }

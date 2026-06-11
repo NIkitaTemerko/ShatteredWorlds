@@ -1,6 +1,8 @@
 import { ShwActor } from './documents/Actor/ShwActor';
+import { isResourceDefaultImage, ItemFactory } from './documents/Item/ItemFactory';
 import { ShwItem } from './documents/Item/ShwItem';
 import { ShwTokenDocument } from './documents/ShwTokenDocument.js';
+import { getCategoryColor, getTypeIcon } from './entities/resource';
 import { initSettingsHooks, registerSettings, ShwSettingsApp } from './modules/settings';
 import { ShopManagerApp } from './modules/shop';
 import { ensureFolderStructure, getTargetFolderId, handleAddItem } from './shared/helpers/Item';
@@ -37,6 +39,42 @@ Hooks.once('init', () => {
   // Создаём структуру папок при старте мира
   Hooks.once('ready', async () => {
     await ensureFolderStructure();
+  });
+
+  // Заменяем дефолтные img ресурсов на FA-иконки в сайдбаре предметов
+  // biome-ignore lint/suspicious/noExplicitAny: Foundry hook API не типизирован
+  Hooks.on('renderItemDirectory', (_app: any, element: HTMLElement) => {
+    // biome-ignore lint/suspicious/noExplicitAny: Foundry game.items не типизирован
+    const allItems = (game as any).items as Collection<ShwItem> | undefined;
+    if (!allItems) return;
+
+    for (const li of element.querySelectorAll<HTMLElement>('[data-entry-id]')) {
+      const item = allItems.get(li.dataset.entryId ?? '');
+      if (!item?.isResource() || !isResourceDefaultImage(item.img)) continue;
+
+      const imgEl = li.querySelector('img');
+      if (!imgEl) continue;
+
+      const { light, dark } = getCategoryColor(item.system.category);
+      // getBoundingClientRect даёт CSS-размеры до загрузки img; offsetHeight возвращает 0 для незагруженных
+      const size = imgEl.getBoundingClientRect().height || imgEl.offsetHeight || 36;
+
+      const wrapper = document.createElement('span');
+      wrapper.style.cssText = `display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;flex-grow:0;min-width:${size}px;width:${size}px;height:${size}px;box-sizing:border-box;overflow:hidden;background:${light};border:2px solid ${dark};border-radius:4px;color:${dark};font-size:${Math.round(size * 0.45)}px`;
+      wrapper.appendChild(
+        Object.assign(document.createElement('i'), {
+          className: getTypeIcon(item.system.resourceType),
+        }),
+      );
+      imgEl.replaceWith(wrapper);
+    }
+  });
+
+  // При обновлении ресурса перерисовываем сайдбар, чтобы иконка обновилась сразу
+  Hooks.on('updateItem', (item: ShwItem) => {
+    if (!item.isResource() || !isResourceDefaultImage(item.img)) return;
+    // biome-ignore lint/suspicious/noExplicitAny: Foundry ui.items не типизирован
+    (ui as any).items?.render();
   });
 
   // Добавляем кнопки магазина и импорта в навигацию
@@ -127,6 +165,12 @@ Hooks.on('preCreateToken', (tokenDocument: any, tokenData: any) => {
  */
 Hooks.on('preCreateItem', (item: any, data: any, options: any) => {
   const createdItem = item as ShwItem;
+
+  if (createdItem.type === 'resource' && !createdItem._source?.system?.kind) {
+    createdItem.updateSource({
+      system: ItemFactory.createResource('raw', 'ore', { name: createdItem.name }),
+    });
+  }
 
   // Автоназначение папки для глобальных предметов (не owned)
   if (!createdItem.parent) {

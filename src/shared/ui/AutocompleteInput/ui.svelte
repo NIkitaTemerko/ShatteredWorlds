@@ -27,7 +27,6 @@
 
   let inputValue = $state("");
   let isOpen = $state(false);
-  let filteredOptions = $state<SelectOption[]>([]);
   let inputEl: HTMLInputElement | undefined = $state();
 
   /** Возвращает отображаемый текст для значения */
@@ -42,26 +41,22 @@
     inputValue = getDisplayText(value);
   });
 
-  function updateFiltered() {
+  /** Реактивно фильтрует опции по inputValue и options (обновляется при смене категории) */
+  const filteredOptions = $derived.by(() => {
     const query = inputValue.toLowerCase().trim();
-    if (!query) {
-      filteredOptions = options;
-      return;
-    }
-    filteredOptions = options.filter((o) => {
+    if (!query) return options;
+    return options.filter((o) => {
       const label = t(o.label as I18nKey).toLowerCase();
       return label.includes(query) || o.value.toLowerCase().includes(query);
     });
-  }
+  });
 
   function handleInput() {
     isOpen = true;
-    updateFiltered();
   }
 
   function handleFocus() {
     isOpen = true;
-    updateFiltered();
   }
 
   function handleBlur() {
@@ -205,6 +200,7 @@
     padding: 0;
     list-style: none;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    overflow-x: hidden;
   }
 
   .autocomplete-option {
@@ -217,6 +213,10 @@
     font-size: var(--font-size-14, 14px);
     color: #111;
     transition: background 0.1s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
   }
 
   .autocomplete-option:hover {

@@ -10,12 +10,17 @@ export function getCategoryOptions(): SelectOption<ResourceCategory>[] {
   }));
 }
 
-/** Типы ресурсов для AutocompleteInput — берутся из настроек мира */
-export function getTypeOptions(): SelectOption[] {
-  return getResourceTypes().map((t) => ({
-    value: t.type,
-    label: t.label,
-  }));
+/** Типы ресурсов для SelectInput — фильтруются по категории из настроек мира */
+export function getTypeOptions(category?: ResourceCategory, currentType?: string): SelectOption[] {
+  const options = getResourceTypes()
+    .filter((t) => !category || t.category === category)
+    .map((t) => ({ value: t.type, label: t.label }));
+
+  if (currentType && !options.some((o) => o.value === currentType)) {
+    return [{ value: currentType, label: currentType }, ...options];
+  }
+
+  return options;
 }
 
 /** Цвет категории (dark) из настроек. Светлый вычисляется автоматически. */

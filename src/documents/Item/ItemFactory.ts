@@ -93,6 +93,11 @@ export function getResourceImage(category: ResourceCategory): string {
   return RESOURCE_CATEGORY_IMAGES[category];
 }
 
+/** Проверяет, является ли img одним из дефолтных значений (не выбранным пользователем) */
+export function isResourceDefaultImage(img: string): boolean {
+  return Object.values(RESOURCE_CATEGORY_IMAGES).includes(img) || img === 'icons/svg/item-bag.svg';
+}
+
 // biome-ignore lint/complexity/noStaticOnlyClass: смысла 0
 export class ItemFactory {
   static createConsumable(type: ConsumableType, baseData: Partial<BaseItemData>): ConsumableData {

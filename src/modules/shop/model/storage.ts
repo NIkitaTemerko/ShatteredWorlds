@@ -1,10 +1,6 @@
 import { localize, t } from '../../../shared/i18n';
 import { SETTINGS_NAMESPACE } from '../../settings/model/constants';
-import {
-  SETTING_SHOP_DATABASE,
-  SHOP_DATABASE_VERSION,
-  SHOP_STORAGE_KEY,
-} from './constants';
+import { SETTING_SHOP_DATABASE, SHOP_DATABASE_VERSION } from './constants';
 import type { ShopDatabase, ShopNode } from './types';
 
 /**
@@ -58,37 +54,6 @@ export function saveShopDatabase(database: ShopDatabase): void {
     ui.notifications?.error(t('shop.notifications.saveError'));
   }
 }
-
-/**
- * Переносит данные магазина из LocalStorage в world settings (одноразово).
- * Вызывается при ready, только для GM.
- */
-export async function migrateShopDatabaseFromLocalStorage(): Promise<void> {
-  if (!game.user?.isGM) return;
-
-  const stored = localStorage.getItem(SHOP_STORAGE_KEY);
-  if (!stored) return;
-
-  const current = readShopDatabaseFromSettings();
-  if (current && current.nodes.length > 0) {
-    localStorage.removeItem(SHOP_STORAGE_KEY);
-    return;
-  }
-
-  try {
-    const parsed = JSON.parse(stored) as ShopDatabase;
-    if (!parsed.version || !Array.isArray(parsed.nodes)) {
-      return;
-    }
-
-    await game.settings?.set(SETTINGS_NAMESPACE, SETTING_SHOP_DATABASE, parsed);
-    localStorage.removeItem(SHOP_STORAGE_KEY);
-    console.log('Shattered Worlds: migrated shop database from localStorage to world settings.');
-  } catch (error) {
-    console.error('Failed to migrate shop database from localStorage:', error);
-  }
-}
-
 /**
  * Проверяет, существует ли нода с таким же именем среди сиблингов (тот же parentId)
  * Можно исключить ноду по ID (при переименовании)

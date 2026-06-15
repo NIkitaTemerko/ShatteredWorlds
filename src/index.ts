@@ -7,7 +7,6 @@ import { getCategoryColor, getTypeIcon } from './entities/resource';
 import { initSettingsHooks, registerSettings, ShwSettingsApp } from './modules/settings';
 import { ShopManagerApp } from './modules/shop';
 import { registerShopSettings } from './modules/shop/model/registerShopSettings';
-import { migrateShopDatabaseFromLocalStorage } from './modules/shop/model/storage';
 import { ensureFolderStructure, getTargetFolderId, handleAddItem } from './shared/helpers/Item';
 import { runWorldDataMigration } from './shared/helpers/runWorldDataMigration';
 import { AbilityItemApp } from './view/AbilityItem/ItemApp';
@@ -47,7 +46,6 @@ Hooks.once('init', () => {
 
   // Создаём структуру папок и мигрируем данные при старте мира
   Hooks.once('ready', async () => {
-    await migrateShopDatabaseFromLocalStorage();
     await runWorldDataMigration();
     await ensureFolderStructure();
   });

@@ -48,9 +48,7 @@
       const extra = n(attr.extra);
       const label = t(c.labelKey);
 
-      // Для character получаем total значение из helpers
-      const totalKey = `total${c.key.capitalize()}`;
-      const totalValue = !isNpc && totalKey in sys.helpers ? n((sys.helpers as any)[totalKey]) : undefined;
+      const totalValue = !isNpc && c.key in sys.totals ? n((sys.totals as any)[c.key]) : undefined;
 
       return {
         ...c,

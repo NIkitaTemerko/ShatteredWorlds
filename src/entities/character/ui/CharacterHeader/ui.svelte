@@ -9,6 +9,8 @@
   }
 
   let { actor }: Props = $props();
+
+  const isCharacter = $derived(actor.isCharacter());
 </script>
 
 <header class="sheet-header">
@@ -44,18 +46,24 @@
       <div class="speed-wrapper">
         <i class="fas fa-rabbit-fast speed-icon"></i>
         <h1>
-          <label>
-            <Input
-              variant="underline"
-              name="system.utility.speed"
-              type="number"
-              data-dtype="Number"
-              value={actor.system.utility.speed}
-              style="width:3rem;font-size:var(--font-size-20);padding:0.25rem 0.5rem;"
-            />
-          </label>
+          {#if isCharacter}
+            <span class="computed-speed">{actor.system.utility.speed}</span>
+          {:else}
+            <label>
+              <Input
+                variant="underline"
+                name="system.utility.speed"
+                type="number"
+                data-dtype="Number"
+                value={actor.system.utility.speed}
+                style="width:3rem;font-size:var(--font-size-20);padding:0.25rem 0.5rem;"
+              />
+            </label>
+          {/if}
         </h1>
-        <span class="total-speed">({actor.system.helpers.totalSpeed})</span>
+        {#if !isCharacter || actor.system.totals.speed !== actor.system.utility.speed}
+          <span class="total-speed">({actor.system.totals.speed})</span>
+        {/if}
       </div>
     </div>
 
@@ -87,7 +95,8 @@
     align-items: baseline;
   }
 
-  .total-speed {
+  .total-speed,
+  .computed-speed {
     font-size: 1.25rem;
   }
 

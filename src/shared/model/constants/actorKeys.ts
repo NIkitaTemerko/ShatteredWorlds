@@ -19,25 +19,31 @@ export const ADDITIONAL_KEYS: (keyof ShwActorSystem['additionalAttributes'])[] =
   'reactions',
   'impulse',
   'initiative',
-  'additionalCloseCombatDamage',
-  'additionalRangeDamage',
+  'barrier',
+  'psiDefense',
   'range',
   'damageReduction',
   'armorClass',
 ] as const;
 
-/** Ключи производных (total) полей в helpers */
-export const HELPER_KEYS: (keyof ShwActorSystem['helpers'])[] = [
-  'totalHealth',
-  'totalImpulse',
-  'totalSpeed',
-  'totalFortune',
-  'totalForce',
-  'totalFinesse',
-  'totalWill',
-  'totalPresence',
-  'totalActions',
-  'totalBonusActions',
-  'totalReactions',
-  'totalInitiative',
+/** Ключи производных полей в totals (character) */
+export const TOTAL_KEYS: (keyof ShwActorSystem['totals'])[] = [
+  'health',
+  'impulse',
+  'speed',
+  'fortune',
+  'force',
+  'finesse',
+  'will',
+  'presence',
+  'actions',
+  'bonusActions',
+  'reactions',
+  'initiative',
+  'barrier',
+  'psiDefense',
+  'damageReduction',
 ] as const;
+
+/** @deprecated Use TOTAL_KEYS */
+export const HELPER_KEYS = TOTAL_KEYS;

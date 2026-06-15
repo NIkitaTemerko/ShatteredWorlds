@@ -24,8 +24,8 @@ interface AdditionalAttributes {
   reactions: number;
   impulse: number;
   initiative: number;
-  additionalCloseCombatDamage: number;
-  additionalRangeDamage: number;
+  barrier: number;
+  psiDefense: number;
   range: number;
   damageReduction: number;
   armorClass: number;
@@ -36,24 +36,23 @@ interface UtilityFields {
   level: number;
 }
 
-interface BaseHelpers {
-  totalHealth: number;
-  totalImpulse: number;
-  totalSpeed: number;
-}
-
-interface CharacterHelpers extends BaseHelpers {
-  // Total значения атрибутов (value + бонусы от предметов)
-  totalFortune: number;
-  totalForce: number;
-  totalFinesse: number;
-  totalWill: number;
-  totalPresence: number;
-  // Total значения только для editable additionalAttributes
-  totalActions: number;
-  totalBonusActions: number;
-  totalReactions: number;
-  totalInitiative: number;
+/** Runtime-only aggregated totals (prepareDerivedData). */
+interface CharacterTotals {
+  fortune: number;
+  force: number;
+  finesse: number;
+  will: number;
+  presence: number;
+  actions: number;
+  bonusActions: number;
+  reactions: number;
+  impulse: number;
+  initiative: number;
+  barrier: number;
+  psiDefense: number;
+  damageReduction: number;
+  health: number;
+  speed: number;
 }
 
 interface NpcAttribute {
@@ -70,7 +69,7 @@ export interface ShwActorSystem {
   attributes: Attributes<AttributeFields>;
   additionalAttributes: AdditionalAttributes;
   utility: UtilityFields;
-  helpers: CharacterHelpers;
+  totals: CharacterTotals;
 }
 
 export interface ShwNpcSystem {
@@ -78,9 +77,20 @@ export interface ShwNpcSystem {
   attributes: Attributes<NpcAttribute>;
   additionalAttributes: AdditionalAttributes;
   utility: UtilityFields;
-  helpers: CharacterHelpers & {
-    totalDamageReduction: number;
-    totalArmorClass: number;
-    totalRange: number;
+  totals: CharacterTotals & {
+    armorClass: number;
+    range: number;
   };
 }
+
+/** Persisted actor system (schema); totals — runtime-only. */
+export type ShwActorSystemSource = Omit<ShwActorSystem, 'totals'>;
+export type ShwNpcSystemSource = Omit<ShwNpcSystem, 'totals'>;
+
+/** additionalAttributes keys that may exist on runtime totals */
+export type AdditionalAttributesTotalKey = Extract<
+  keyof AdditionalAttributes,
+  keyof CharacterTotals | keyof ShwNpcSystem['totals']
+>;
+
+export type { CharacterTotals, AdditionalAttributes, AttributeFields };

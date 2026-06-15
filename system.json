@@ -19,6 +19,12 @@
   "styles": [
     "dist/shattered-worlds.css"
   ],
+  "documentTypes": {
+    "Actor": {
+      "character": {},
+      "npc": {}
+    }
+  },
   "flags": {
     "hotReload": {
       "extensions": [

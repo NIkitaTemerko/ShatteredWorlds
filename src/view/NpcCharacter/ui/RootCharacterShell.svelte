@@ -24,7 +24,7 @@
 </section>
 <AdditionalStats
   stats={actor.system.additionalAttributes}
-  helpers={actor.system.helpers}
+  totals={actor.system.totals}
   editableKeys={NPC_EDITABLE_KEYS}
   onUpdate={handleAdditionalStatsUpdate}
 />

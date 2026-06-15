@@ -102,7 +102,7 @@ export abstract class SvelteActorSheet extends foundry.appv1.sheets.ActorSheet {
       const damageReduction =
         actor.type === 'character'
           ? (actor.system.additionalAttributes.damageReduction ?? 0)
-          : actor.system.helpers.totalDamageReduction;
+          : actor.system.totals.damageReduction;
 
       if (shield.hasClass('active')) {
         damage = Math.max(0, damage - defense);

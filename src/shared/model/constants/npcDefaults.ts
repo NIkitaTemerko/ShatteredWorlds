@@ -1,46 +1,41 @@
-import type { ShwActorSystem } from '../../../documents/Actor/types/ShwActorSystem';
+import type { ShwNpcSystem } from '../../../documents/Actor/types/ShwActorSystem';
 
-/** Ключи helpers, используемые для NPC */
-export const NPC_HELPER_KEYS = [
-  'totalImpulse',
-  'totalHealth',
-  'totalSpeed',
-  'totalDamageReduction',
-  'totalArmorClass',
-  'totalRange',
+/** Ключи totals, используемые для NPC */
+export const NPC_TOTAL_KEYS = [
+  'impulse',
+  'health',
+  'speed',
+  'damageReduction',
+  'armorClass',
+  'range',
 ] as const;
 
-/** Значения по-умолчанию для инициализации базовых данных NPC */
+/** Init persisted-полей NPC */
 export const NPC_DEFAULTS = {
   utility: {
-    actions: 2,
-    reactions: 0,
-    bonusActions: 1,
-    impulses: 0,
     speed: 20,
     level: 1,
-    initiative: 0,
   },
 
   additionalAttributes: {
-    actions: 2,
-    bonusActions: 1,
+    actions: 0,
+    bonusActions: 0,
     reactions: 0,
     impulse: 0,
     initiative: 0,
+    barrier: 0,
+    psiDefense: 0,
     range: 0,
     damageReduction: 0,
     armorClass: 0,
-    additionalCloseCombatDamage: 0,
-    additionalRangeDamage: 0,
-  } satisfies ShwActorSystem['additionalAttributes'],
+  } satisfies ShwNpcSystem['additionalAttributes'],
 
-  helpers: {
-    totalImpulse: 0,
-    totalHealth: 0,
-    totalSpeed: 0,
-    totalDamageReduction: 0,
-    totalArmorClass: 0,
-    totalRange: 0,
-  } satisfies Record<(typeof NPC_HELPER_KEYS)[number], number>,
+  totals: {
+    impulse: 0,
+    health: 0,
+    speed: 0,
+    damageReduction: 0,
+    armorClass: 0,
+    range: 0,
+  } satisfies Pick<ShwNpcSystem['totals'], (typeof NPC_TOTAL_KEYS)[number]>,
 } as const;

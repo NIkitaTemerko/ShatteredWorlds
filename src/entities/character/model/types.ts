@@ -17,11 +17,17 @@ export type RollMode = 'adv' | 'normal' | 'dis';
 /** Roll type for different attributes */
 export type RollType = 'natural' | 'fortune' | 'force' | 'finesse' | 'will' | 'presence';
 
-/** Character helpers type */
-export type CharacterHelpers = ShwActorSystem['helpers'];
+/** Character runtime totals */
+export type CharacterTotals = ShwActorSystem['totals'];
 
-/** NPC helpers type */
-export type NpcHelpers = ShwNpcSystem['helpers'];
+/** NPC runtime totals */
+export type NpcTotals = ShwNpcSystem['totals'];
+
+/** @deprecated Use CharacterTotals */
+export type CharacterHelpers = CharacterTotals;
+
+/** @deprecated Use NpcTotals */
+export type NpcHelpers = NpcTotals;
 
 /** Tab configuration */
 export interface TabConfig {
@@ -91,8 +97,8 @@ export const ADDITIONAL_ATTRIBUTE_ICONS: Record<keyof AdditionalAttributes, stri
   bonusActions: 'fas fa-plus-circle',
   reactions: 'fas fa-bolt',
   impulse: 'fas fa-forward',
-  additionalCloseCombatDamage: 'fas fa-sword',
-  additionalRangeDamage: 'fas fa-crosshairs',
+  barrier: 'fas fa-shield-virus',
+  psiDefense: 'fas fa-brain',
   range: 'fas fa-bullseye',
   initiative: 'fas fa-dice-six',
   damageReduction: 'fas fa-shield-alt',
@@ -105,8 +111,8 @@ export const ADDITIONAL_ATTRIBUTE_COLORS: Record<keyof AdditionalAttributes, str
   bonusActions: '#0d6efd',
   reactions: '#dc3545',
   impulse: '#fd7e14',
-  additionalCloseCombatDamage: '#dc3545',
-  additionalRangeDamage: '#fd7e14',
+  barrier: '#0dcaf0',
+  psiDefense: '#8e44ad',
   range: '#198754',
   initiative: '#6f42c1',
   damageReduction: '#6f42c1',

@@ -3,36 +3,29 @@ import type { I18nKey } from '../i18n';
 import { ADDITIONAL_ATTRIBUTE_LABELS } from './constants';
 import type { AttributeKey } from './types';
 
-/**
- * Типизированные пути к характеристикам персонажа
- * Генерируются автоматически на основе типа ShwActorSystem
- */
-
-// Базовые атрибуты
 type AttributeFields = 'value' | 'extra' | 'charBonus' | 'saveBonus';
 type AttributePath = `attributes.${AttributeKey}.${AttributeFields}`;
 
-// Дополнительные атрибуты
 type AdditionalAttributeKey = keyof ShwActorSystem['additionalAttributes'];
 type AdditionalAttributePath = `additionalAttributes.${AdditionalAttributeKey}`;
 
-// Здоровье
 type HealthPath = 'health.value' | 'health.max';
 
-// Утилиты
 type UtilityPath = 'utility.speed' | 'utility.level';
 
-// Хелперы
-type HelperKey = keyof ShwActorSystem['helpers'];
-type HelperPath = `helpers.${HelperKey}`;
+type TotalKey = keyof ShwActorSystem['totals'];
+type TotalPath = `totals.${TotalKey}`;
 
-// Итоговый тип всех путей
+/** @deprecated legacy paths migrated at load */
+type LegacyHelperPath = `helpers.total${Capitalize<TotalKey>}`;
+
 export type CharacterStatPath =
   | AttributePath
   | AdditionalAttributePath
   | HealthPath
-  | HelperPath
-  | UtilityPath;
+  | UtilityPath
+  | TotalPath
+  | LegacyHelperPath;
 
 export interface CharacterStatOption {
   value: CharacterStatPath;
@@ -40,9 +33,6 @@ export interface CharacterStatOption {
   attributeKey?: I18nKey;
 }
 
-/**
- * Конфигурация для генерации опций характеристик
- */
 const ATTRIBUTE_KEYS: AttributeKey[] = [
   'fortune',
   'force',
@@ -63,17 +53,11 @@ const ATTRIBUTE_FIELD_CONFIGS: AttributeFieldConfig[] = [
   { field: 'saveBonus', labelKey: 'ability.passiveDetails.statModifiers.attributeSaveBonus' },
 ];
 
-// Используем ключи из ADDITIONAL_ATTRIBUTE_LABELS чтобы не дублировать
 const ADDITIONAL_ATTRIBUTE_KEYS = Object.keys(
   ADDITIONAL_ATTRIBUTE_LABELS,
 ) as AdditionalAttributeKey[];
 
-/**
- * Список всех доступных характеристик для выбора
- * Использует существующие ключи локализации из SHW.*
- */
 export const CHARACTER_STAT_OPTIONS: CharacterStatOption[] = [
-  // Атрибуты с различными полями (value, extra, charBonus, saveBonus)
   ...ATTRIBUTE_KEYS.flatMap((attr) =>
     ATTRIBUTE_FIELD_CONFIGS.map(({ field, labelKey }) => ({
       value: `attributes.${attr}.${field}` as CharacterStatPath,
@@ -82,15 +66,11 @@ export const CHARACTER_STAT_OPTIONS: CharacterStatOption[] = [
     })),
   ),
 
-  // Дополнительные атрибуты
   ...ADDITIONAL_ATTRIBUTE_KEYS.map((attr) => ({
     value: `additionalAttributes.${attr}` as CharacterStatPath,
     labelKey: `additionalAttributes.${attr}` as I18nKey,
   })),
 
-  // Здоровье
-  { value: 'helpers.totalHealth', labelKey: 'character.health.current' as I18nKey },
-
-  // Скорость
-  { value: 'helpers.totalSpeed', labelKey: 'character.utility.speed' as I18nKey },
+  { value: 'totals.health', labelKey: 'character.health.current' as I18nKey },
+  { value: 'totals.speed', labelKey: 'character.utility.speed' as I18nKey },
 ];

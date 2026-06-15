@@ -1,43 +1,40 @@
 import type { ShwActor } from '../../../documents/Actor/ShwActor';
 import type { ShwActorSystem } from '../../../documents/Actor/types/ShwActorSystem';
-import type { PassiveAbilitySystem } from '../../../documents/Item/types/AbilityDataTypes';
+import type { StatModifierBlock } from '../../../documents/Item/types/AbilityDataTypes';
 import type { CharacterStatPath } from '../../model/characterStatPaths';
-import { EDITABLE_STATS } from '../../model/constants/characterDefaults';
+import { migrateLegacyStatPath } from '../migrateLegacyStatKeys';
 import type { ItemBonusResult, ModifierMode, ParsedPath, PathPart } from '../../model/types/characterBonuses';
 
 const applyModifier = (current: number, value: number, mode: ModifierMode): number => {
   switch (mode) {
     case 'add':
-    case 'mul': // TODO: реализовать мультипликативную логику отдельно
+    case 'mul':
       return current + value;
     case 'override':
       return Math.max(current, value);
   }
 };
 
-const hasStatBonuses = (system: PassiveAbilitySystem): boolean => {
+const hasStatBonuses = (system: unknown): system is { statBonuses: StatModifierBlock } => {
   if (typeof system !== 'object' || system === null) return false;
 
+  const statBonuses = (system as { statBonuses?: StatModifierBlock | null }).statBonuses;
   return (
-    system.statBonuses?.modifiers !== undefined &&
-    Array.isArray(system.statBonuses.modifiers) &&
-    system.statBonuses.modifiers.length > 0
+    statBonuses?.modifiers !== undefined &&
+    Array.isArray(statBonuses.modifiers) &&
+    statBonuses.modifiers.length > 0
   );
 };
 
-/**
- * Вычисляет все бонусы от предметов актёра (способности, снаряжение, расходники и т.д.)
- */
 export function calculateItemBonuses(actor: ShwActor<'character'>): ItemBonusResult {
   const bonuses = new Map<CharacterStatPath, number>();
 
   for (const item of actor.items) {
-    const itemSystem = item.system as PassiveAbilitySystem;
-
+    const itemSystem = item.system;
     if (!hasStatBonuses(itemSystem)) continue;
 
-    for (const modifier of itemSystem?.statBonuses?.modifiers ?? []) {
-      const stat = modifier.stat as CharacterStatPath;
+    for (const modifier of itemSystem.statBonuses.modifiers) {
+      const stat = migrateLegacyStatPath(modifier.stat) as CharacterStatPath;
       const currentBonus = bonuses.get(stat) ?? 0;
       const newBonus = applyModifier(currentBonus, modifier.value, modifier.mode);
 
@@ -48,46 +45,33 @@ export function calculateItemBonuses(actor: ShwActor<'character'>): ItemBonusRes
   return { bonuses };
 }
 
-const toTotalFieldName = (key: string): keyof ShwActorSystem['helpers'] =>
-  `total${key.capitalize()}` as keyof ShwActorSystem['helpers'];
+export function getItemBonus(bonuses: Map<CharacterStatPath, number>, path: string): number {
+  return bonuses.get(path as CharacterStatPath) ?? 0;
+}
 
-const hasTotalField = (
-  system: ShwActorSystem,
-  totalKey: keyof ShwActorSystem['helpers'],
-): boolean => totalKey in system.helpers && typeof system.helpers[totalKey] === 'number';
+export function sumItemBonuses(
+  bonuses: Map<CharacterStatPath, number>,
+  paths: readonly string[],
+): number {
+  let sum = 0;
+  for (const path of paths) {
+    sum += getItemBonus(bonuses, path);
+  }
+  return sum;
+}
 
 const parsePath = (path: CharacterStatPath): ParsedPath => {
   const parts = path.split('.') as PathPart[];
 
   const isAttributeValue = parts[0] === 'attributes' && parts.length === 3 && parts[2] === 'value';
-
-  const isEditableStat =
-    parts[0] === 'additionalAttributes' &&
-    parts.length === 2 &&
-    EDITABLE_STATS.has(parts[1] as typeof EDITABLE_STATS extends Set<infer T> ? T : never);
+  const isAttributeExtra = parts[0] === 'attributes' && parts.length === 3 && parts[2] === 'extra';
 
   return {
     parts,
     isAttributeValue,
-    isEditableStat,
-    attributeKey: isAttributeValue || isEditableStat ? parts[1] : undefined,
+    isEditableStat: false,
+    attributeKey: isAttributeValue || isAttributeExtra ? parts[1] : undefined,
   };
-};
-
-const tryApplyToTotalField = (
-  system: ShwActorSystem,
-  parsed: ParsedPath,
-  bonus: number,
-): boolean => {
-  if (!parsed.attributeKey) return false;
-  if (!parsed.isAttributeValue && !parsed.isEditableStat) return false;
-
-  const totalKey = toTotalFieldName(parsed.attributeKey);
-
-  if (!hasTotalField(system, totalKey)) return false;
-
-  system.helpers[totalKey] += bonus;
-  return true;
 };
 
 const applyToOriginalField = (system: ShwActorSystem, parts: PathPart[], bonus: number): void => {
@@ -106,17 +90,25 @@ const applyToOriginalField = (system: ShwActorSystem, parts: PathPart[], bonus: 
   }
 };
 
-/**
- * Применяет бонус к характеристике персонажа
- *
- * Для attributes.*.value и editable stats применяется к total-полю в helpers.
- * Для остальных путей — прибавляется к оригинальному полю.
- */
+/** Применяет бонусы к persisted-полям (manual / extra). Totals и attribute value — в derived. */
+export function applyManualItemBonuses(
+  system: ShwActorSystem,
+  bonuses: Map<CharacterStatPath, number>,
+): void {
+  for (const [path, bonus] of bonuses.entries()) {
+    if (path.startsWith('totals.')) continue;
+    if (path.startsWith('attributes.') && path.endsWith('.value')) continue;
+
+    const parsed = parsePath(path);
+    if (path.startsWith('additionalAttributes.') || path.match(/^attributes\.\w+\.extra$/)) {
+      applyToOriginalField(system, parsed.parts, bonus);
+    } else if (!parsed.isAttributeValue) {
+      applyToOriginalField(system, parsed.parts, bonus);
+    }
+  }
+}
+
+/** @deprecated Use applyManualItemBonuses + derived totals assignment */
 export function applyBonus(system: ShwActorSystem, path: CharacterStatPath, bonus: number): void {
-  const parsed = parsePath(path);
-
-  const appliedToTotal = tryApplyToTotalField(system, parsed, bonus);
-  if (appliedToTotal) return;
-
-  applyToOriginalField(system, parsed.parts, bonus);
+  applyManualItemBonuses(system, new Map([[path, bonus]]));
 }

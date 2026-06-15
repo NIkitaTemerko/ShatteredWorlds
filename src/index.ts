@@ -1,5 +1,6 @@
+import { CharacterDataModel, NpcDataModel } from './documents/Actor/data';
 import { ShwActor } from './documents/Actor/ShwActor';
-import { isResourceDefaultImage, ItemFactory } from './documents/Item/ItemFactory';
+import { ItemFactory, isResourceDefaultImage } from './documents/Item/ItemFactory';
 import { ShwItem } from './documents/Item/ShwItem';
 import { ShwTokenDocument } from './documents/ShwTokenDocument.js';
 import { getCategoryColor, getTypeIcon } from './entities/resource';
@@ -27,6 +28,10 @@ globalWithLimits.MIN_WINDOW_WIDTH = 200;
 
 Hooks.once('init', () => {
   CONFIG.Actor.documentClass = ShwActor;
+  CONFIG.Actor.dataModels = {
+    character: CharacterDataModel,
+    npc: NpcDataModel,
+  };
   CONFIG.Item.documentClass = ShwItem;
   CONFIG.Token.documentClass = ShwTokenDocument;
   CONFIG.Combat.initiative = {

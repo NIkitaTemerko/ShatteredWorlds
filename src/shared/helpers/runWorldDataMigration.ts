@@ -187,7 +187,9 @@ async function confirmMigration(plan: MigrationPlan): Promise<boolean> {
 
 async function applyMigration(payload: MigrationPayload): Promise<void> {
   if (payload.actorUpdates.length > 0) {
-    await Actor.updateDocuments(payload.actorUpdates);
+    await Actor.updateDocuments(
+      payload.actorUpdates as unknown as Parameters<typeof Actor.updateDocuments>[0],
+    );
   }
 
   for (const { actorId, items } of payload.embeddedUpdates) {

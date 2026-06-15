@@ -1,9 +1,4 @@
-import {
-  characterRoll,
-  prepareCharacterBaseData,
-  prepareCharacterDerivedData,
-} from '../../shared/helpers/Character';
-import { prepareNpcBaseData, prepareNpcDerivedData } from '../../shared/helpers/Npc';
+import { characterRoll } from '../../shared/helpers/Character';
 import type { ShwItem } from '../Item/ShwItem';
 import type { ShwActorSystem, ShwNpcSystem } from './types/ShwActorSystem';
 
@@ -15,7 +10,6 @@ type SystemByKind = {
 };
 
 export class ShwActor<K extends keyof SystemByKind = ActorKind> extends Actor {
-  // @ts-expect-error - Override Foundry's base type system
   declare type: K;
   // @ts-expect-error - Override Foundry's base system type
   declare system: SystemByKind[K];
@@ -31,22 +25,6 @@ export class ShwActor<K extends keyof SystemByKind = ActorKind> extends Actor {
   }
   isNpc(): this is ShwActor<'npc'> {
     return this.type === 'npc';
-  }
-
-  prepareBaseData(): void {
-    if (this.isCharacter()) {
-      prepareCharacterBaseData(this.system);
-    } else if (this.isNpc()) {
-      prepareNpcBaseData(this.system);
-    }
-  }
-
-  prepareDerivedData(): void {
-    if (this.isCharacter()) {
-      prepareCharacterDerivedData(this.system, this);
-    } else if (this.isNpc()) {
-      prepareNpcDerivedData(this.system);
-    }
   }
 
   async roll(
@@ -75,7 +53,7 @@ export class ShwActor<K extends keyof SystemByKind = ActorKind> extends Actor {
 
     // гарантируем, что initiative — число
     const init = Number(
-      this.system?.helpers?.totalInitiative ?? this.system?.additionalAttributes?.initiative ?? 0,
+      this.system?.totals?.initiative ?? this.system?.additionalAttributes?.initiative ?? 0,
     );
     // одновременно кладём дублирующее короткое поле,
     // чтобы формула '1d20 + @initiative' тоже работала

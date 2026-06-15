@@ -1,5 +1,8 @@
+/** Ключ world setting для базы данных магазина */
+export const SETTING_SHOP_DATABASE = 'shopDatabase';
+
 /**
- * Ключ для хранения данных магазина в LocalStorage
+ * Устаревший ключ LocalStorage (используется только для одноразовой миграции)
  */
 export const SHOP_STORAGE_KEY = 'shattered-worlds.shop-database';
 

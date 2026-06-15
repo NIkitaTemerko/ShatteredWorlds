@@ -280,6 +280,7 @@
     },
     "character": {
       "nameLabel": "Name:",
+      "levelLabel": "Limit",
       "applyDamage": "Apply Damage",
       "considerArmor": "Consider Armor",
       "ignoreArmor": "Ignore Armor",

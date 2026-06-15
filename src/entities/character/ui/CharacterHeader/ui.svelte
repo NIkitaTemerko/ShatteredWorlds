@@ -34,7 +34,7 @@
       </h1>
       <h1 class="level">
         <label class="level">
-          LVL<Input
+          {t("character.levelLabel")}<Input
             variant="underline"
             name="system.utility.level"
             type="number"

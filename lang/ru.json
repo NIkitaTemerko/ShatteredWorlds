@@ -280,6 +280,7 @@
     },
     "character": {
       "nameLabel": "Имя:",
+      "levelLabel": "Предел",
       "applyDamage": "Нанести урон",
       "considerArmor": "Учитывать защиту",
       "ignoreArmor": "Игнорировать броню",

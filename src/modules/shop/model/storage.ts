@@ -1,5 +1,10 @@
 import { localize, t } from '../../../shared/i18n';
-import { SHOP_DATABASE_VERSION, SHOP_STORAGE_KEY } from './constants';
+import { SETTINGS_NAMESPACE } from '../../settings/model/constants';
+import {
+  SETTING_SHOP_DATABASE,
+  SHOP_DATABASE_VERSION,
+  SHOP_STORAGE_KEY,
+} from './constants';
 import type { ShopDatabase, ShopNode } from './types';
 
 /**
@@ -12,19 +17,22 @@ function createEmptyDatabase(): ShopDatabase {
   };
 }
 
+function readShopDatabaseFromSettings(): ShopDatabase | undefined {
+  return game.settings?.get(SETTINGS_NAMESPACE, SETTING_SHOP_DATABASE) as
+    | ShopDatabase
+    | undefined;
+}
+
 /**
- * Загружает базу данных магазина из LocalStorage
+ * Загружает базу данных магазина из world settings
  */
 export function loadShopDatabase(): ShopDatabase {
   try {
-    const stored = localStorage.getItem(SHOP_STORAGE_KEY);
-    if (!stored) {
+    const parsed = readShopDatabaseFromSettings();
+    if (!parsed) {
       return createEmptyDatabase();
     }
 
-    const parsed = JSON.parse(stored) as ShopDatabase;
-
-    // Валидация версии
     if (parsed.version !== SHOP_DATABASE_VERSION) {
       console.warn(
         `Shop database version mismatch: ${parsed.version} vs ${SHOP_DATABASE_VERSION}. Creating new database.`,
@@ -32,7 +40,6 @@ export function loadShopDatabase(): ShopDatabase {
       return createEmptyDatabase();
     }
 
-    // Восстанавливаем Set из массива если нужно
     return parsed;
   } catch (error) {
     console.error('Failed to load shop database:', error);
@@ -41,14 +48,44 @@ export function loadShopDatabase(): ShopDatabase {
 }
 
 /**
- * Сохраняет базу данных магазина в LocalStorage
+ * Сохраняет базу данных магазина в world settings
  */
 export function saveShopDatabase(database: ShopDatabase): void {
   try {
-    localStorage.setItem(SHOP_STORAGE_KEY, JSON.stringify(database));
+    void game.settings?.set(SETTINGS_NAMESPACE, SETTING_SHOP_DATABASE, database);
   } catch (error) {
     console.error('Failed to save shop database:', error);
     ui.notifications?.error(t('shop.notifications.saveError'));
+  }
+}
+
+/**
+ * Переносит данные магазина из LocalStorage в world settings (одноразово).
+ * Вызывается при ready, только для GM.
+ */
+export async function migrateShopDatabaseFromLocalStorage(): Promise<void> {
+  if (!game.user?.isGM) return;
+
+  const stored = localStorage.getItem(SHOP_STORAGE_KEY);
+  if (!stored) return;
+
+  const current = readShopDatabaseFromSettings();
+  if (current && current.nodes.length > 0) {
+    localStorage.removeItem(SHOP_STORAGE_KEY);
+    return;
+  }
+
+  try {
+    const parsed = JSON.parse(stored) as ShopDatabase;
+    if (!parsed.version || !Array.isArray(parsed.nodes)) {
+      return;
+    }
+
+    await game.settings?.set(SETTINGS_NAMESPACE, SETTING_SHOP_DATABASE, parsed);
+    localStorage.removeItem(SHOP_STORAGE_KEY);
+    console.log('Shattered Worlds: migrated shop database from localStorage to world settings.');
+  } catch (error) {
+    console.error('Failed to migrate shop database from localStorage:', error);
   }
 }
 

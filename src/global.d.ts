@@ -4,6 +4,7 @@ import type { CharacterDataModel, NpcDataModel } from './documents/Actor/data';
 import type { ShwItem } from './documents/Item/ShwItem';
 import type { ShwTokenDocument } from './documents/ShwTokenDocument';
 import type { ResourceCategorySetting, ResourceTypeSetting } from './modules/settings/model/types';
+import type { ShopDatabase } from './modules/shop/model/types';
 
 /**
  * Аугментация типов Foundry VTT для системы Shattered Worlds.
@@ -44,5 +45,6 @@ declare global {
     'shattered-worlds.resourceCategories': ResourceCategorySetting[];
     'shattered-worlds.resourceTypes': ResourceTypeSetting[];
     'shattered-worlds.dataMigrationVersion': number;
+    'shattered-worlds.shopDatabase': ShopDatabase;
   }
 }

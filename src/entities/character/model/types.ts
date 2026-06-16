@@ -15,13 +15,19 @@ export type CharacterTab =
 export type RollMode = 'adv' | 'normal' | 'dis';
 
 /** Roll type for different attributes */
-export type RollType = 'natural' | 'fortune' | 'force' | 'perception' | 'psyDefence' | 'diplomacy';
+export type RollType = 'natural' | 'fortune' | 'force' | 'finesse' | 'will' | 'presence';
 
-/** Character helpers type */
-export type CharacterHelpers = ShwActorSystem['helpers'];
+/** Character runtime totals */
+export type CharacterTotals = ShwActorSystem['totals'];
 
-/** NPC helpers type */
-export type NpcHelpers = ShwNpcSystem['helpers'];
+/** NPC runtime totals */
+export type NpcTotals = ShwNpcSystem['totals'];
+
+/** @deprecated Use CharacterTotals */
+export type CharacterHelpers = CharacterTotals;
+
+/** @deprecated Use NpcTotals */
+export type NpcHelpers = NpcTotals;
 
 /** Tab configuration */
 export interface TabConfig {
@@ -57,9 +63,9 @@ export interface AttributeColumn {
 export const ATTRIBUTE_COLORS: Record<AttributeKey, AttributeColors> = {
   fortune: { dark: '#f08c00', light: '#ffd580', hover: '#ffae40' },
   force: { dark: '#d7263d', light: '#ff9aa5', hover: '#eb607f' },
-  perception: { dark: '#198754', light: '#80d9b3', hover: '#4db083' },
-  psyDefence: { dark: '#8e44ad', light: '#c39bd3', hover: '#a86fc0' },
-  diplomacy: { dark: '#6c757d', light: '#dee2e6', hover: '#a5acb2' },
+  finesse: { dark: '#198754', light: '#80d9b3', hover: '#4db083' },
+  will: { dark: '#8e44ad', light: '#c39bd3', hover: '#a86fc0' },
+  presence: { dark: '#6c757d', light: '#dee2e6', hover: '#a5acb2' },
 };
 
 /** Constants for roll types (labels are i18n keys) */
@@ -71,9 +77,9 @@ export const ROLL_TYPE_CONFIGS: RollTypeConfig[] = [
   },
   { id: 'fortune', label: 'attributes.fortune', colors: ATTRIBUTE_COLORS.fortune },
   { id: 'force', label: 'attributes.force', colors: ATTRIBUTE_COLORS.force },
-  { id: 'perception', label: 'attributes.perception', colors: ATTRIBUTE_COLORS.perception },
-  { id: 'psyDefence', label: 'attributes.psyDefence', colors: ATTRIBUTE_COLORS.psyDefence },
-  { id: 'diplomacy', label: 'attributes.diplomacy', colors: ATTRIBUTE_COLORS.diplomacy },
+  { id: 'finesse', label: 'attributes.finesse', colors: ATTRIBUTE_COLORS.finesse },
+  { id: 'will', label: 'attributes.will', colors: ATTRIBUTE_COLORS.will },
+  { id: 'presence', label: 'attributes.presence', colors: ATTRIBUTE_COLORS.presence },
 ];
 
 /** Tab configurations (labels are i18n keys) */
@@ -91,8 +97,8 @@ export const ADDITIONAL_ATTRIBUTE_ICONS: Record<keyof AdditionalAttributes, stri
   bonusActions: 'fas fa-plus-circle',
   reactions: 'fas fa-bolt',
   impulse: 'fas fa-forward',
-  additionalCloseCombatDamage: 'fas fa-sword',
-  additionalRangeDamage: 'fas fa-crosshairs',
+  barrier: 'fas fa-shield-virus',
+  psiDefense: 'fas fa-brain',
   range: 'fas fa-bullseye',
   initiative: 'fas fa-dice-six',
   damageReduction: 'fas fa-shield-alt',
@@ -105,8 +111,8 @@ export const ADDITIONAL_ATTRIBUTE_COLORS: Record<keyof AdditionalAttributes, str
   bonusActions: '#0d6efd',
   reactions: '#dc3545',
   impulse: '#fd7e14',
-  additionalCloseCombatDamage: '#dc3545',
-  additionalRangeDamage: '#fd7e14',
+  barrier: '#0dcaf0',
+  psiDefense: '#8e44ad',
   range: '#198754',
   initiative: '#6f42c1',
   damageReduction: '#6f42c1',

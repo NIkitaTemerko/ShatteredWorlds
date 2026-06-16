@@ -24,10 +24,10 @@ export const damageTypes = [
 
 export const saveTypes = [
   { value: 'force', label: 'сила' },
-  { value: 'perception', label: 'восприятие' },
-  { value: 'psyDefence', label: 'психозащита' },
+  { value: 'finesse', label: 'сноровка' },
+  { value: 'will', label: 'воля' },
   { value: 'fortune', label: 'удача' },
-  { value: 'diplomacy', label: 'дипломатия' },
+  { value: 'presence', label: 'присутствие' },
 ];
 
 export const typeColors = {

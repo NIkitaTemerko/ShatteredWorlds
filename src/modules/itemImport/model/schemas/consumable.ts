@@ -1,5 +1,11 @@
 import { z } from 'zod';
+import { migrateLegacyAbilityKey } from '../../../../shared/helpers/migrateLegacyStatKeys';
 import { rarity } from './common';
+
+const abilityTypeSchema = z.preprocess(
+  (value) => (typeof value === 'string' ? migrateLegacyAbilityKey(value) : value),
+  z.enum(['fortune', 'force', 'finesse', 'will', 'presence']),
+);
 
 // Базовые поля для всех консьюмаблов
 const BaseConsumableFields = {
@@ -49,7 +55,7 @@ export const BombSystemSchema = z.object({
   }),
   radius: z.number().min(1, 'Радиус бомбы должен быть >= 1'),
   save: z.object({
-    type: z.enum(['force', 'perception', 'psyDefence', 'fortune', 'diplomacy']),
+    type: abilityTypeSchema,
     dc: z.number(),
   }),
 });
@@ -63,7 +69,7 @@ export const ScrollSystemSchema = z.object({
     school: z.string(),
   }),
   requirements: z.object({
-    ability: z.enum(['fortune', 'force', 'perception', 'psyDefence', 'diplomacy']),
+    ability: abilityTypeSchema,
     dc: z.number(),
   }),
 });
@@ -95,7 +101,7 @@ export const PoisonSystemSchema = z.object({
     duration: z.number(),
   }),
   save: z.object({
-    type: z.enum(['force', 'perception', 'psyDefence', 'fortune', 'diplomacy']),
+    type: abilityTypeSchema,
     dc: z.number(),
   }),
   application: z.enum(['contact', 'injury', 'ingested', 'inhaled']),

@@ -4,9 +4,9 @@ import type { ShwActorSystem } from '../../../documents/Actor/types/ShwActorSyst
 export const STAT_KEYS: (keyof ShwActorSystem['attributes'])[] = [
   'fortune',
   'force',
-  'perception',
-  'psyDefence',
-  'diplomacy',
+  'finesse',
+  'will',
+  'presence',
 ] as const;
 
 /** Ключи утилитарных характеристик */
@@ -19,31 +19,31 @@ export const ADDITIONAL_KEYS: (keyof ShwActorSystem['additionalAttributes'])[] =
   'reactions',
   'impulse',
   'initiative',
-  'additionalCloseCombatDamage',
-  'additionalRangeDamage',
+  'barrier',
+  'psiDefense',
   'range',
   'damageReduction',
   'armorClass',
 ] as const;
 
-/** Ключи производных (total) полей в helpers */
-export const HELPER_KEYS: (keyof ShwActorSystem['helpers'])[] = [
-  'totalHealth',
-  'totalImpulse',
-  'totalSpeed',
-  'totalFortune',
-  'totalForce',
-  'totalPerception',
-  'totalPsyDefence',
-  'totalDiplomacy',
-  'totalActions',
-  'totalBonusActions',
-  'totalReactions',
-  'totalInitiative',
+/** Ключи производных полей в totals (character) */
+export const TOTAL_KEYS: (keyof ShwActorSystem['totals'])[] = [
+  'health',
+  'impulse',
+  'speed',
+  'fortune',
+  'force',
+  'finesse',
+  'will',
+  'presence',
+  'actions',
+  'bonusActions',
+  'reactions',
+  'initiative',
+  'barrier',
+  'psiDefense',
+  'damageReduction',
 ] as const;
 
-/** Порог атрибута для получения бонуса импульса */
-export const ATTR_RIM = 15;
-
-/** Порог атрибута для получения бонуса дальности */
-export const ATTR_MAX_RIM = 25;
+/** @deprecated Use TOTAL_KEYS */
+export const HELPER_KEYS = TOTAL_KEYS;

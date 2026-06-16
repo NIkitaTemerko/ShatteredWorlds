@@ -143,7 +143,7 @@ export class ItemFactory {
           },
           radius: 5,
           save: {
-            type: 'perception',
+            type: 'finesse',
             dc: 13,
           },
         };
@@ -184,7 +184,7 @@ export class ItemFactory {
             duration: 3,
           },
           save: {
-            type: 'psyDefence',
+            type: 'will',
             dc: 13,
           },
           application: 'injury',

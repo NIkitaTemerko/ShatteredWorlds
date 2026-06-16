@@ -11,6 +11,7 @@
   } from "../../../entities/character";
   import { TabNavigation } from "../../../features/navigation";
   import { RollPanel } from "../../../features/roll";
+  import { CHARACTER_EDITABLE_KEYS } from "../../../shared/model/constants/characterEditableKeys";
   import type { AdditionalAttributes } from "../../../shared/model/types";
 
   interface Props {
@@ -41,7 +42,8 @@
   </section>
   <AdditionalStats
     stats={actor.system.additionalAttributes}
-    helpers={actor.system.helpers}
+    totals={actor.system.totals}
+    editableKeys={CHARACTER_EDITABLE_KEYS}
     onUpdate={handleAdditionalStatsUpdate}
   />
 {:else if activeTab === "inventory"}

@@ -3,19 +3,19 @@
   import { ADDITIONAL_ATTRIBUTE_LABELS } from "../../../../shared/model/constants";
   import type { AdditionalAttributes } from "../../../../shared/model/types";
   import { Input } from "../../../../shared/ui/Input";
-  import type { CharacterHelpers, NpcHelpers } from "../../model";
+  import type { CharacterTotals, NpcTotals } from "../../model";
   import { ADDITIONAL_ATTRIBUTE_COLORS, ADDITIONAL_ATTRIBUTE_ICONS } from "../../model";
 
   interface Props {
     stats: AdditionalAttributes;
-    helpers: CharacterHelpers | NpcHelpers;
+    totals: CharacterTotals | NpcTotals;
     editableKeys?: Set<keyof AdditionalAttributes>;
     onUpdate: (key: keyof AdditionalAttributes, value: number) => void;
   }
 
   let {
     stats,
-    helpers,
+    totals,
     editableKeys = new Set<keyof AdditionalAttributes>([
       "actions",
       "bonusActions",
@@ -25,8 +25,6 @@
     ]),
     onUpdate,
   }: Props = $props();
-
-  console.log(helpers);
 
   const isEditable = (k: keyof AdditionalAttributes) => editableKeys.has(k);
 
@@ -41,26 +39,24 @@
   const readonlyEntries = $derived(allEntries.filter(([k]) => !isEditable(k)));
   const orderedEntries = $derived([...editableEntries, ...readonlyEntries]);
 
-  const hasHelper = (key: keyof AdditionalAttributes): boolean => {
-    // Проверяем наличие totalKey в helpers для любого editable поля
-    if (!isEditable(key)) {
-      return false;
+  const getTotalValue = (key: keyof AdditionalAttributes): number | undefined => {
+    if (key === "armorClass" || key === "range") {
+      if (!("armorClass" in totals)) return undefined;
+      return totals[key];
     }
-    const totalKey = `total${key.capitalize()}`;
-    return totalKey in helpers;
+
+    const totalValue = totals[key];
+    return typeof totalValue === "number" && !Number.isNaN(totalValue) ? totalValue : undefined;
   };
 
-  const getHelperValue = (key: keyof AdditionalAttributes, baseValue: number): number | undefined => {
-    // Получаем total значение из helpers
-    const totalKey = `total${key.capitalize()}`;
-    if (totalKey in helpers) {
-      const totalValue = (helpers as any)[totalKey];
-      // Показываем только если отличается от базового
-      if (typeof totalValue === "number" && totalValue !== baseValue) {
-        return totalValue;
-      }
-    }
-    return undefined;
+  const getDisplayValue = (key: keyof AdditionalAttributes, manualValue: number): number => {
+    return getTotalValue(key) ?? manualValue;
+  };
+
+  const getTotalHint = (key: keyof AdditionalAttributes, manualValue: number): number | undefined => {
+    const totalValue = getTotalValue(key);
+    if (totalValue === undefined || totalValue === manualValue) return undefined;
+    return totalValue;
   };
 </script>
 
@@ -79,14 +75,12 @@
           {value}
           onchange={(e) => handleChange(key, e)}
         />
-        {#if hasHelper(key)}
-          {@const helperValue = getHelperValue(key, value)}
-          {#if helperValue !== undefined}
-            <span>({helperValue})</span>
-          {/if}
+        {@const totalHint = getTotalHint(key, value)}
+        {#if totalHint !== undefined}
+          <span>({totalHint})</span>
         {/if}
       {:else}
-        <span class="value">{value}</span>
+        <span class="value">{getDisplayValue(key, value)}</span>
       {/if}
     </div>
   {/each}

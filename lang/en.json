@@ -4,9 +4,9 @@
       "natural": "Natural",
       "fortune": "Fortune",
       "force": "Force",
-      "perception": "Perception",
-      "psyDefence": "Psy Defense",
-      "diplomacy": "Diplomacy"
+      "finesse": "Finesse",
+      "will": "Will",
+      "presence": "Presence"
     },
     "tabs": {
       "stats": "Statistics",
@@ -20,8 +20,8 @@
       "bonusActions": "Bonus Actions",
       "reactions": "Reactions",
       "impulse": "Impulse",
-      "additionalCloseCombatDamage": "Melee Damage",
-      "additionalRangeDamage": "Range Damage",
+      "barrier": "Barrier",
+      "psiDefense": "Psi-Defense",
       "range": "Range",
       "initiative": "Initiative",
       "damageReduction": "Damage Reduction",
@@ -62,10 +62,10 @@
       },
       "saveType": {
         "force": "force",
-        "perception": "perception",
-        "psyDefence": "psy defense",
+        "finesse": "finesse",
+        "will": "will",
         "fortune": "fortune",
-        "diplomacy": "diplomacy"
+        "presence": "presence"
       },
       "applicationType": {
         "injury": "injury",
@@ -280,6 +280,7 @@
     },
     "character": {
       "nameLabel": "Name:",
+      "levelLabel": "Limit",
       "applyDamage": "Apply Damage",
       "considerArmor": "Consider Armor",
       "ignoreArmor": "Ignore Armor",
@@ -582,6 +583,17 @@
         "sand": "Sand",
         "clay": "Clay",
         "resin": "Resin"
+      }
+    },
+    "migration": {
+      "data": {
+        "title": "Data Update",
+        "intro": "This world contains outdated data. The system will update it to the current format.",
+        "actors": "Actors ({count})",
+        "embeddedItems": "Embedded items ({count})",
+        "worldItems": "World items ({count})",
+        "andMore": "and {count} more…",
+        "success": "Data update complete."
       }
     },
     "settings": {

@@ -1,11 +1,10 @@
 import '@league-of-foundry-developers/foundry-vtt-types';
 import type { ShwActor } from './documents/Actor/ShwActor';
+import type { CharacterDataModel, NpcDataModel } from './documents/Actor/data';
 import type { ShwItem } from './documents/Item/ShwItem';
 import type { ShwTokenDocument } from './documents/ShwTokenDocument';
-import type {
-  ResourceCategorySetting,
-  ResourceTypeSetting,
-} from './modules/settings/model/types';
+import type { ResourceCategorySetting, ResourceTypeSetting } from './modules/settings/model/types';
+import type { ShopDatabase } from './modules/shop/model/types';
 
 /**
  * Аугментация типов Foundry VTT для системы Shattered Worlds.
@@ -34,9 +33,18 @@ declare global {
     TokenDocument: typeof ShwTokenDocument;
   }
 
+  interface DataModelConfig {
+    Actor: {
+      character: typeof CharacterDataModel;
+      npc: typeof NpcDataModel;
+    };
+  }
+
   // Регистрация world settings системы — расширяем тип, чтобы namespace "shattered-worlds" был валидным
   interface SettingConfig {
     'shattered-worlds.resourceCategories': ResourceCategorySetting[];
     'shattered-worlds.resourceTypes': ResourceTypeSetting[];
+    'shattered-worlds.dataMigrationVersion': number;
+    'shattered-worlds.shopDatabase': ShopDatabase;
   }
 }

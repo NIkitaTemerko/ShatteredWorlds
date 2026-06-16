@@ -35,9 +35,9 @@
   const ATTRIBUTE_KEYS = [
     { key: "fortune" as const, labelKey: "attributes.fortune" },
     { key: "force" as const, labelKey: "attributes.force" },
-    { key: "perception" as const, labelKey: "attributes.perception" },
-    { key: "psyDefence" as const, labelKey: "attributes.psyDefence" },
-    { key: "diplomacy" as const, labelKey: "attributes.diplomacy" },
+    { key: "finesse" as const, labelKey: "attributes.finesse" },
+    { key: "will" as const, labelKey: "attributes.will" },
+    { key: "presence" as const, labelKey: "attributes.presence" },
   ] as const;
 
   const columns = $derived<ColumnData[]>(
@@ -48,9 +48,7 @@
       const extra = n(attr.extra);
       const label = t(c.labelKey);
 
-      // Для character получаем total значение из helpers
-      const totalKey = `total${c.key.capitalize()}`;
-      const totalValue = !isNpc && totalKey in sys.helpers ? n((sys.helpers as any)[totalKey]) : undefined;
+      const totalValue = !isNpc && c.key in sys.totals ? n((sys.totals as any)[c.key]) : undefined;
 
       return {
         ...c,

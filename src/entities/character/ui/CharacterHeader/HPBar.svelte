@@ -10,6 +10,8 @@
 
   let { actor }: Props = $props();
 
+  const isCharacter = $derived(actor.isCharacter());
+
   // 0 = true damage (skull), 1 = no armor (shield off), 2 = full defense (shield on)
   let damageMode = $state(2);
   let damageValue = $state(0);
@@ -29,8 +31,8 @@
     } else {
       // Apply damage reduction for modes 1 and 2
       const damageReduction =
-        "totalDamageReduction" in actor.system.helpers
-          ? actor.system.helpers.totalDamageReduction
+        "damageReduction" in actor.system.totals
+          ? actor.system.totals.damageReduction
           : actor.system.additionalAttributes.damageReduction || 0;
 
       actualDamage = Math.max(0, damageValue - damageReduction);
@@ -38,8 +40,8 @@
       // Apply armor only in mode 2 (full defense)
       if (damageMode === 2) {
         const armorClass =
-          "totalArmorClass" in actor.system.helpers
-            ? actor.system.helpers.totalArmorClass
+          "armorClass" in actor.system.totals
+            ? actor.system.totals.armorClass
             : actor.system.additionalAttributes.armorClass || 0;
         actualDamage = Math.max(0, actualDamage - armorClass);
       }
@@ -67,7 +69,7 @@
 </script>
 
 <div class="hp-wrapper">
-  <progress class="hp-bar" value={actor.system.health.value} max={actor.system.helpers.totalHealth}></progress>
+  <progress class="hp-bar" value={actor.system.health.value} max={actor.system.totals.health}></progress>
   <span class="hp-label">
     <label>
       <Input
@@ -76,26 +78,32 @@
         type="number"
         data-dtype="Number"
         min="0"
-        max={actor.system.helpers.totalHealth}
+        max={actor.system.totals.health}
         oninput={clampHealthValue}
         value={actor.system.health.value}
         style="min-width:2.5rem;max-width:5rem;text:right;"
       />
     </label>
     /
-    <label>
-      <Input
-        variant="underline"
-        name="system.health.max"
-        type="number"
-        data-dtype="Number"
-        min="0"
-        oninput={clampHealthMax}
-        value={actor.system.health.max}
-        style="min-width:2.5rem;max-width:5rem;text-align:right;"
-      />
-    </label>
-    <span>({actor.system.helpers.totalHealth})</span>
+    {#if isCharacter}
+      <span>{actor.system.health.max}</span>
+    {:else}
+      <label>
+        <Input
+          variant="underline"
+          name="system.health.max"
+          type="number"
+          data-dtype="Number"
+          min="0"
+          oninput={clampHealthMax}
+          value={actor.system.health.max}
+          style="min-width:2.5rem;max-width:5rem;text-align:right;"
+        />
+      </label>
+    {/if}
+    {#if !isCharacter || actor.system.totals.health !== actor.system.health.max}
+      <span>({actor.system.totals.health})</span>
+    {/if}
   </span>
   <div class="hp-damage-wrapper">
     <ActionIcon

@@ -4,9 +4,9 @@
       "natural": "Натуральный",
       "fortune": "Фортуна",
       "force": "Напор",
-      "perception": "Восприятие",
-      "psyDefence": "Пси‑защита",
-      "diplomacy": "Дипломатия"
+      "finesse": "Сноровка",
+      "will": "Воля",
+      "presence": "Присутствие"
     },
     "tabs": {
       "stats": "Статистика",
@@ -20,9 +20,9 @@
       "bonusActions": "Бонусные действия",
       "reactions": "Реакции",
       "impulse": "Импульс",
-      "additionalCloseCombatDamage": "Урон вблизи",
-      "additionalRangeDamage": "Урон на расстоянии",
-      "range": "Дальность",
+      "barrier": "Барьер",
+      "psiDefense": "Пси-защита",
+      "range": "Бонусная дальность",
       "initiative": "Инициатива",
       "damageReduction": "Поглощение урона",
       "armorClass": "Защита"
@@ -62,10 +62,10 @@
       },
       "saveType": {
         "force": "напор",
-        "perception": "восприятие",
-        "psyDefence": "псизащита",
+        "finesse": "сноровка",
+        "will": "воля",
         "fortune": "фортуна",
-        "diplomacy": "дипломатия"
+        "presence": "присутствие"
       },
       "applicationType": {
         "injury": "рана",
@@ -280,6 +280,7 @@
     },
     "character": {
       "nameLabel": "Имя:",
+      "levelLabel": "Предел",
       "applyDamage": "Нанести урон",
       "considerArmor": "Учитывать защиту",
       "ignoreArmor": "Игнорировать броню",
@@ -582,6 +583,17 @@
         "sand": "Песок",
         "clay": "Глина",
         "resin": "Смола"
+      }
+    },
+    "migration": {
+      "data": {
+        "title": "Обновление данных",
+        "intro": "В мире найдены устаревшие данные. Система обновит их до актуального формата.",
+        "actors": "Актёры ({count})",
+        "embeddedItems": "Вложенные предметы ({count})",
+        "worldItems": "Предметы мира ({count})",
+        "andMore": "и ещё {count}…",
+        "success": "Обновление данных завершено."
       }
     },
     "settings": {

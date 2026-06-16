@@ -1,2 +1,2 @@
-export * from './mappers';
+export * from '../lib/mappers';
 export * from './types';

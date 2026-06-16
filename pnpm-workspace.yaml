@@ -6,3 +6,5 @@ allowBuilds:
 
 ignoredBuiltDependencies:
   - esbuild
+
+blockExoticSubdeps: false

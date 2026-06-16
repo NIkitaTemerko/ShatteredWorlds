@@ -27,7 +27,7 @@ export const EXAMPLES_BY_TYPE: Record<ShwItemType, string> = {
     "description": "Глиняная сфера, начинённая алхимическим огнём. При ударе о поверхность воспламеняется, разбрызгивая горящую смесь в радиусе нескольких метров. Излюбленное оружие горных разбойников.",
     "damage": { "amount": 50, "type": "fire" },
     "radius": 3,
-    "save": { "type": "perception", "dc": 14 }
+    "save": { "type": "finesse", "dc": 14 }
   }
 }
 \`\`\`
@@ -42,7 +42,7 @@ export const EXAMPLES_BY_TYPE: Record<ShwItemType, string> = {
     "consumableType": "scroll",
     "description": "Пергамент из драконьей кожи, испещрённый пылающими рунами. При активации руны вырываются с поверхности и формируют разрушительную сферу пламени. Одноразовый — после прочтения рассыпается в пепел.",
     "spell": { "name": "Fireball", "level": 3, "school": "evocation" },
-    "requirements": { "ability": "perception", "dc": 13 }
+    "requirements": { "ability": "finesse", "dc": 13 }
   }
 }
 \`\`\`

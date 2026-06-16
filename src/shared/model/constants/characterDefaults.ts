@@ -13,49 +13,74 @@ export const EDITABLE_STATS = new Set([
 export const STAT_NAME_KEYS = {
   fortune: 'attributes.fortune',
   force: 'attributes.force',
-  perception: 'attributes.perception',
-  psyDefence: 'attributes.psyDefence',
-  diplomacy: 'attributes.diplomacy',
+  finesse: 'attributes.finesse',
+  will: 'attributes.will',
+  presence: 'attributes.presence',
   natural: 'attributes.natural',
 } as const;
 
-/** Значения по-умолчанию для инициализации базовых данных персонажа */
+/** Игровая база combat-статов — только derived, не в JSON. */
+export const ADDITIONAL_STAT_BASE = {
+  actions: 2,
+  bonusActions: 1,
+  reactions: 1,
+  impulse: 0,
+  initiative: 0,
+  barrier: 0,
+  psiDefense: 0,
+  damageReduction: 0,
+} as const;
+
+export type AdditionalStatBaseKey = keyof typeof ADDITIONAL_STAT_BASE;
+
+/** Ключи additionalAttributes, для которых применяется ADDITIONAL_STAT_BASE. */
+export const ADDITIONAL_STAT_KEYS = Object.keys(
+  ADDITIONAL_STAT_BASE,
+) as AdditionalStatBaseKey[];
+
+export function additionalTotal(
+  key: AdditionalStatBaseKey,
+  manual: number,
+  progressionBonus: number,
+): number {
+  return ADDITIONAL_STAT_BASE[key] + manual + progressionBonus;
+}
+
+/** Init persisted-полей (TypeDataModel schema initial). Ручной бонус по умолчанию 0. */
 export const CHAR_DEFAULTS = {
   utility: {
-    actions: 2,
-    reactions: 0,
-    bonusActions: 1,
-    impulses: 0,
     speed: 20,
     level: 1,
-    initiative: 0,
   },
 
   additionalAttributes: {
-    actions: 2,
-    bonusActions: 1,
+    actions: 0,
+    bonusActions: 0,
     reactions: 0,
     impulse: 0,
     initiative: 0,
+    barrier: 0,
+    psiDefense: 0,
     range: 0,
     damageReduction: 0,
     armorClass: 0,
-    additionalCloseCombatDamage: 0,
-    additionalRangeDamage: 0,
   } satisfies ShwActorSystem['additionalAttributes'],
 
-  helpers: {
-    totalHealth: 0,
-    totalImpulse: 0,
-    totalSpeed: 0,
-    totalFortune: 0,
-    totalForce: 0,
-    totalPerception: 0,
-    totalPsyDefence: 0,
-    totalDiplomacy: 0,
-    totalActions: 0,
-    totalBonusActions: 0,
-    totalReactions: 0,
-    totalInitiative: 0,
-  },
+  totals: {
+    fortune: 0,
+    force: 0,
+    finesse: 0,
+    will: 0,
+    presence: 0,
+    actions: 0,
+    bonusActions: 0,
+    reactions: 0,
+    impulse: 0,
+    initiative: 0,
+    barrier: 0,
+    psiDefense: 0,
+    damageReduction: 0,
+    health: 0,
+    speed: 0,
+  } satisfies ShwActorSystem['totals'],
 } as const;

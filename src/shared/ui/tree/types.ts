@@ -30,3 +30,8 @@ export interface TreeState {
   selectedId?: string;
   highlightedId?: string;
 }
+
+export interface ContextMenuArgs {
+  node: TreeNode;
+  close: () => void;
+}

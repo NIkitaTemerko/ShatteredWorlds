@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { t } from "../../../shared/i18n";
-  import ActionIcon from "../ActionIcon/ui.svelte";
-  import { PopupMenu, closeActivePopup } from "../PopupMenu";
-  import type { PopupMenuItem } from "../PopupMenu";
-  import TreeNodeViewSelf from "./TreeNodeView.svelte";
-  import type { TreeNode } from "./types";
+  import type { Snippet } from 'svelte';
+  import { t } from '../../../shared/i18n';
+  import { AnchoredPopup, closeActivePopup } from '../AnchoredPopup';
+  import ActionIcon from '../ActionIcon/ui.svelte';
+  import TreeNodeViewSelf from './TreeNodeView.svelte';
+  import type { ContextMenuArgs, TreeNode } from './types';
 
   interface Props {
     node: TreeNode;
@@ -17,7 +17,7 @@
     onDelete?: (node: TreeNode, e: Event) => void;
     onEdit?: (node: TreeNode, e: Event) => void;
     onDrop?: (node: TreeNode, itemData: any) => void;
-    getMenuItems?: (node: TreeNode) => PopupMenuItem[];
+    contextMenu?: Snippet<[ContextMenuArgs]>;
     isDynamicTree?: boolean;
     expandedIds: Set<string>;
     selectedId?: string;
@@ -35,7 +35,7 @@
     onDelete,
     onEdit,
     onDrop,
-    getMenuItems,
+    contextMenu,
     isDynamicTree = false,
     expandedIds,
     selectedId,
@@ -50,11 +50,7 @@
   const indent = level * 16;
   const isLeaf = !hasChildren;
 
-  // Показываем бургер-меню если есть коллбэк для формирования пунктов
-  const showBurgerMenu = $derived(!!getMenuItems);
-
-  // Пункты меню — формируются снаружи через getMenuItems
-  const menuItems: PopupMenuItem[] = $derived(getMenuItems ? getMenuItems(node) : []);
+  const showBurgerMenu = $derived(!!contextMenu);
 
   function handleClick() {
     if (hasChildren) {
@@ -64,7 +60,7 @@
   }
 
   function handleKeyDown(e: KeyboardEvent) {
-    if (e.key === "Enter" || e.key === " ") {
+    if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       handleClick();
     }
@@ -80,7 +76,6 @@
     onEdit?.(node, e);
   }
 
-  // Бургер-меню: переключение
   function toggleMenu(e: Event) {
     e.stopPropagation();
     if (!menuOpen) {
@@ -102,12 +97,10 @@
 
   function handleDragLeave(e: DragEvent) {
     e.stopPropagation();
-    // Проверяем что курсор действительно покинул элемент, а не переместился на дочерний
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     const x = e.clientX;
     const y = e.clientY;
 
-    // Если курсор все еще внутри границ элемента, игнорируем
     if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
       return;
     }
@@ -123,28 +116,27 @@
     if (!onDrop) return;
 
     try {
-      // Foundry использует несколько форматов данных
       let itemData;
 
-      const jsonData = e.dataTransfer?.getData("application/json");
+      const jsonData = e.dataTransfer?.getData('application/json');
       if (jsonData) {
         itemData = JSON.parse(jsonData);
       } else {
-        const textData = e.dataTransfer?.getData("text/plain");
+        const textData = e.dataTransfer?.getData('text/plain');
         if (textData) {
           itemData = JSON.parse(textData);
         }
       }
 
       if (!itemData) {
-        ui.notifications?.warn(t("tree.readItemDataError"));
+        ui.notifications?.warn(t('tree.readItemDataError'));
         return;
       }
 
       onDrop(node, itemData);
     } catch (error) {
-      console.error("Failed to handle drop:", error);
-      ui.notifications?.error(t("tree.dropError"));
+      console.error('Failed to handle drop:', error);
+      ui.notifications?.error(t('tree.dropError'));
     }
   }
 </script>
@@ -177,7 +169,7 @@
     {/if}
 
     {#if node.icon}
-      {#if node.icon.startsWith("fas ") || node.icon.startsWith("far ") || node.icon.startsWith("fab ")}
+      {#if node.icon.startsWith('fas ') || node.icon.startsWith('far ') || node.icon.startsWith('fab ')}
         <i class="{node.icon} tree-icon-font"></i>
       {:else}
         <img src={node.icon} alt="" class="tree-icon-img" />
@@ -199,15 +191,27 @@
     {/if}
 
     <div class="tree-actions">
-      {#if showBurgerMenu && isLeaf}
-        <div class="burger-menu-container" data-popup-menu-id={node.id} bind:this={menuBtnEl}>
+      {#if showBurgerMenu && isLeaf && contextMenu}
+        <div class="burger-menu-container" data-popup-id={node.id} bind:this={menuBtnEl}>
           <ActionIcon onclick={toggleMenu} aria-label="Menu" title="Menu" variant="ghost" size="sm" class="menu-action">
             {#snippet icon()}
               <i class="fas fa-bars"></i>
             {/snippet}
           </ActionIcon>
         </div>
-        <PopupMenu open={menuOpen} anchorEl={menuBtnEl} items={menuItems} onClose={closeMenu} menuId={node.id} />
+        <AnchoredPopup
+          open={menuOpen}
+          anchorEl={menuBtnEl}
+          onClose={closeMenu}
+          popupId={node.id}
+          triggerMode="hover"
+          role="menu"
+          panelClass="anchored-popup-panel--bare"
+        >
+          {#snippet children()}
+            {@render contextMenu({ node, close: closeMenu })}
+          {/snippet}
+        </AnchoredPopup>
       {:else if onEdit && (isDynamicTree || isLeaf)}
         <ActionIcon
           onclick={handleEditClick}
@@ -226,8 +230,8 @@
       {#if onDelete && (isDynamicTree || isLeaf)}
         <ActionIcon
           onclick={handleDeleteClick}
-          aria-label={t("inventory.deleteItem")}
-          title={t("inventory.deleteItem")}
+          aria-label={t('inventory.deleteItem')}
+          title={t('inventory.deleteItem')}
           variant="ghost"
           size="sm"
           class="delete-action"
@@ -254,7 +258,7 @@
           {onDelete}
           {onEdit}
           {onDrop}
-          {getMenuItems}
+          {contextMenu}
           {isDynamicTree}
           {expandedIds}
           {selectedId}
@@ -422,7 +426,6 @@
     color: #dc2626;
   }
 
-  /* Бургер-меню */
   .burger-menu-container {
     position: relative;
   }
@@ -430,5 +433,13 @@
   .tree-children {
     display: flex;
     flex-direction: column;
+  }
+
+  :global(.anchored-popup-panel--bare) {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    min-width: 0;
+    padding: 0;
   }
 </style>

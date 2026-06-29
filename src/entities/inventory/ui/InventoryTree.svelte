@@ -2,8 +2,9 @@
   import { onDestroy, onMount } from "svelte";
   import type { ShwItem } from "../../../documents/Item/ShwItem";
   import { t } from "../../../shared/i18n";
-  import type { PopupMenuItem } from "../../../shared/ui/PopupMenu";
-  import type { TreeNode } from "../../../shared/ui/tree";
+  import type { PopupMenuItem } from "./PopupMenu";
+  import { PopupMenuDropdown } from "./PopupMenu";
+  import type { TreeNode, ContextMenuArgs } from "../../../shared/ui/tree";
   import { TreeWithSearch } from "../../../shared/ui/tree";
   import { getInventoryTreeState, updateInventoryTreeState } from "../model/inventoryTreeState";
   import { mapInventoryToFlatItems } from "../lib/mappers";
@@ -162,6 +163,10 @@
   }
 </script>
 
+{#snippet inventoryContextMenu({ node }: ContextMenuArgs)}
+  <PopupMenuDropdown items={getMenuItems(node)} />
+{/snippet}
+
 <div class="inventory-tree">
   <div class="search-wrapper">
     <TreeWithSearch
@@ -172,8 +177,8 @@
       onSelect={handleSelect}
       onEdit={handleEdit}
       onDelete={handleDelete}
-      getMenuItems={onDuplicateItem || onQuantityChange ? getMenuItems : undefined}
       onStateChange={handleStateChange}
+      contextMenu={onDuplicateItem || onQuantityChange ? inventoryContextMenu : undefined}
     />
     <div class="item-count-bar">
       <span class="item-count">{itemCount} {getPluralForm(itemCount)}</span>

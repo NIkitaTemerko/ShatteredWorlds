@@ -289,6 +289,16 @@
       "attributeBonus": "Attribute Bonus",
       "additionalAttribute": "Add. {attribute}",
       "saveThrow": "Save {attribute}",
+      "statInfo": "Stat details",
+      "statMenu": "Stat menu",
+      "statTotal": "Total",
+      "statSources": {
+        "base": "Base",
+        "growth": "Growth bonus",
+        "equipment": "Equipment",
+        "abilities": "Abilities",
+        "extra": "Extra"
+      },
       "health": {
         "current": "Health",
         "max": "Max Health",

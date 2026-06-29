@@ -289,6 +289,16 @@
       "attributeBonus": "Бонус характеристики",
       "additionalAttribute": "Доп. {attribute}",
       "saveThrow": "СБ‑{attribute}",
+      "statInfo": "Подробнее о стате",
+      "statMenu": "Меню стата",
+      "statTotal": "Итого",
+      "statSources": {
+        "base": "База",
+        "growth": "Бонус роста",
+        "equipment": "Экипировка",
+        "abilities": "Способности",
+        "extra": "Доп"
+      },
       "health": {
         "current": "Здоровье",
         "max": "Макс. здоровье",

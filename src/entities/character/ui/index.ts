@@ -1,4 +1,5 @@
 export { default as AdditionalStats } from './AdditionalStats';
+export { default as LegacyAdditionalStats } from './AdditionalStats/LegacyAdditionalStats.svelte';
 export { default as AttributeStats } from './AttributeStats';
 export { default as CharacterAbilities } from './CharacterAbilities/CharacterAbilities.svelte';
 export { default as CharacterHeader } from './CharacterHeader';

@@ -33,6 +33,28 @@ interface AdditionalAttributes {
   armorClass: number;
 }
 
+/** MVP-источники additional-статов, порядок = порядок строк в попапе */
+export type StatSourceKey = 'base' | 'growth' | 'equipment' | 'abilities' | 'extra';
+
+export interface StatSourceValues {
+  base: number;
+  growth: number;
+  equipment: number;
+  abilities: number;
+  extra: number;
+}
+
+/** Runtime-only: разбивка additional-статов по источникам */
+export type AdditionalStatSources = Record<keyof AdditionalAttributes, StatSourceValues>;
+
+export const STAT_SOURCE_KEYS: StatSourceKey[] = [
+  'base',
+  'growth',
+  'equipment',
+  'abilities',
+  'extra',
+];
+
 interface UtilityFields {
   speed: number;
   level: number;
@@ -57,6 +79,8 @@ interface CharacterTotals {
   /** Runtime: значение 1 коэффициента здоровья (10% от max HP). */
   healthCoefficient: number;
   speed: number;
+  range: number;
+  armorClass: number;
 }
 
 interface NpcAttribute {
@@ -75,6 +99,8 @@ export interface ShwActorSystem {
   additionalAttributes: AdditionalAttributes;
   utility: UtilityFields;
   totals: CharacterTotals;
+  /** Runtime-only: разбивка additional-статов */
+  additionalStatSources: AdditionalStatSources;
 }
 
 export interface ShwNpcSystem {
@@ -82,14 +108,11 @@ export interface ShwNpcSystem {
   attributes: Attributes<NpcAttribute>;
   additionalAttributes: AdditionalAttributes;
   utility: UtilityFields;
-  totals: CharacterTotals & {
-    armorClass: number;
-    range: number;
-  };
+  totals: CharacterTotals;
 }
 
-/** Persisted actor system (schema); totals — runtime-only. */
-export type ShwActorSystemSource = Omit<ShwActorSystem, 'totals'>;
+/** Persisted actor system (schema); totals и additionalStatSources — runtime-only. */
+export type ShwActorSystemSource = Omit<ShwActorSystem, 'totals' | 'additionalStatSources'>;
 export type ShwNpcSystemSource = Omit<ShwNpcSystem, 'totals'>;
 
 /** additionalAttributes keys that may exist on runtime totals */

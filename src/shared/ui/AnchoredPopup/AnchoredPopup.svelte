@@ -1,20 +1,31 @@
 <script lang="ts" module>
-  import { closeActivePopup, setActiveMenuClose } from "./closeActivePopup";
+  import { closeActivePopup, setActivePopupClose } from './closeActivePopup';
 </script>
 
 <script lang="ts">
-  import type { PopupMenuItem } from "./types";
-  import PopupMenuDropdown from "./PopupMenuDropdown.svelte";
+  import type { Snippet } from 'svelte';
 
   interface Props {
     open: boolean;
     anchorEl: HTMLElement | undefined;
-    items: PopupMenuItem[];
     onClose: () => void;
-    menuId?: string;
+    popupId?: string;
+    triggerMode?: 'click' | 'hover';
+    children: Snippet;
+    role?: string;
+    panelClass?: string;
   }
 
-  let { open, anchorEl, items, onClose, menuId = "popup" }: Props = $props();
+  let {
+    open,
+    anchorEl,
+    onClose,
+    popupId = 'popup',
+    triggerMode = 'click',
+    children,
+    role = 'dialog',
+    panelClass = '',
+  }: Props = $props();
 
   let top = $state(0);
   let left = $state(0);
@@ -28,6 +39,7 @@
   }
 
   function handleMouseLeave() {
+    if (triggerMode !== 'hover') return;
     cancelLeaveTimer();
     leaveTimer = setTimeout(() => {
       onClose();
@@ -38,8 +50,6 @@
     cancelLeaveTimer();
   }
 
-  // Svelte action: телепортирует DOM-узел в document.body.
-  // Компонент остаётся в дереве Svelte → полная реактивность пропсов.
   function portal(node: HTMLElement) {
     document.body.appendChild(node);
     return {
@@ -52,43 +62,41 @@
   $effect(() => {
     if (!open) return;
 
-    // Singleton: закрываем предыдущий попап
     closeActivePopup();
-    setActiveMenuClose(onClose);
+    setActivePopupClose(onClose);
 
-    // Позиция относительно якоря
     if (anchorEl) {
       const rect = anchorEl.getBoundingClientRect();
       top = rect.bottom + 2;
       left = rect.left + rect.width / 2;
 
-      // Якорь тоже участвует в hover-зоне попапа
-      anchorEl.addEventListener("mouseenter", handleMouseEnter);
-      anchorEl.addEventListener("mouseleave", handleMouseLeave);
+      if (triggerMode === 'hover') {
+        anchorEl.addEventListener('mouseenter', handleMouseEnter);
+        anchorEl.addEventListener('mouseleave', handleMouseLeave);
+      }
     }
 
-    // Закрытие по клику вне меню
-    const currentMenuId = menuId;
+    const currentPopupId = popupId;
     const handleDocClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      if (!target.closest(`[data-popup-menu-id="${currentMenuId}"]`)) {
+      if (!target.closest(`[data-popup-id="${currentPopupId}"]`)) {
         onClose();
       }
     };
 
     const timeoutId = setTimeout(() => {
-      document.addEventListener("click", handleDocClick);
+      document.addEventListener('click', handleDocClick);
     }, 0);
 
     return () => {
       clearTimeout(timeoutId);
       cancelLeaveTimer();
-      document.removeEventListener("click", handleDocClick);
-      if (anchorEl) {
-        anchorEl.removeEventListener("mouseenter", handleMouseEnter);
-        anchorEl.removeEventListener("mouseleave", handleMouseLeave);
+      document.removeEventListener('click', handleDocClick);
+      if (anchorEl && triggerMode === 'hover') {
+        anchorEl.removeEventListener('mouseenter', handleMouseEnter);
+        anchorEl.removeEventListener('mouseleave', handleMouseLeave);
       }
-      setActiveMenuClose(null);
+      setActivePopupClose(null);
     };
   });
 </script>
@@ -96,13 +104,25 @@
 {#if open}
   <div
     use:portal
-    data-popup-menu-id={menuId}
-    role="menu"
+    data-popup-id={popupId}
+    {role}
     tabindex="-1"
     style="position: fixed; top: {top}px; left: {left}px; transform: translateX(-50%); z-index: 999999; pointer-events: auto;"
     onmouseleave={handleMouseLeave}
     onmouseenter={handleMouseEnter}
   >
-    <PopupMenuDropdown {items} />
+    <div class="anchored-popup-panel {panelClass}">
+      {@render children()}
+    </div>
   </div>
 {/if}
+
+<style>
+  .anchored-popup-panel {
+    min-width: 180px;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+</style>

@@ -1,15 +1,20 @@
 import type { ShwActor } from '../../../documents/Actor/ShwActor';
-import type { ShwActorSystem } from '../../../documents/Actor/types/ShwActorSystem';
+import type {
+  AdditionalAttributes,
+  ShwActorSystem,
+  StatSourceValues,
+} from '../../../documents/Actor/types/ShwActorSystem';
 import type { CharacterStatPath } from '../../model/characterStatPaths';
 import { STAT_KEYS } from '../../model/constants/actorKeys';
 import {
-  ADDITIONAL_STAT_KEYS,
+  ADDITIONAL_STAT_BASE,
+  ALL_ADDITIONAL_KEYS,
   type AdditionalStatBaseKey,
-  additionalTotal,
 } from '../../model/constants/characterDefaults';
 import {
   applyComputedResourceFields,
   calculateAttributeProgressionBonuses,
+  type AttributeProgressionBonuses,
 } from './attributeProgression';
 import {
   applyManualItemBonuses,
@@ -17,6 +22,11 @@ import {
   getItemBonus,
   sumItemBonuses,
 } from './calculateItemBonuses';
+import {
+  collectStatBonusesBySource,
+  sumBonusForAdditionalStat,
+  sumStatSources,
+} from './collectStatBonusesBySource';
 import {
   attributeCoefficientValue,
   healthCoefficientValue,
@@ -30,12 +40,43 @@ function ensureTotals(
   }
 }
 
-function progressionBonusFor(
-  key: Exclude<AdditionalStatBaseKey, 'damageReduction'>,
-  progression: ReturnType<typeof calculateAttributeProgressionBonuses>,
+function ensureAdditionalStatSources(
+  sys: ShwActorSystem,
+): asserts sys is ShwActorSystem & { additionalStatSources: ShwActorSystem['additionalStatSources'] } {
+  if (!sys.additionalStatSources) {
+    sys.additionalStatSources = {} as ShwActorSystem['additionalStatSources'];
+  }
+}
+
+function getGrowthBonus(
+  key: keyof AdditionalAttributes,
+  progression: AttributeProgressionBonuses,
 ): number {
-  if (key === 'actions') return 0;
-  return progression[key];
+  switch (key) {
+    case 'impulse':
+      return progression.impulse;
+    case 'reactions':
+      return progression.reactions;
+    case 'bonusActions':
+      return progression.bonusActions;
+    case 'initiative':
+      return progression.initiative;
+    case 'barrier':
+      return progression.barrier;
+    case 'psiDefense':
+      return progression.psiDefense;
+    case 'damageReduction':
+      return progression.absorption;
+    default:
+      return 0;
+  }
+}
+
+function getBaseBonus(key: keyof AdditionalAttributes): number {
+  if (key in ADDITIONAL_STAT_BASE) {
+    return ADDITIONAL_STAT_BASE[key as AdditionalStatBaseKey];
+  }
+  return 0;
 }
 
 function attributeItemBonus(bonuses: Map<CharacterStatPath, number>, key: string): number {
@@ -51,26 +92,39 @@ function syncAttributeTotals(
   }
 }
 
+function syncAdditionalStatSources(
+  sys: ShwActorSystem,
+  progression: AttributeProgressionBonuses,
+  itemBonuses: ReturnType<typeof collectStatBonusesBySource>,
+): void {
+  ensureAdditionalStatSources(sys);
+
+  for (const key of ALL_ADDITIONAL_KEYS) {
+    const sources: StatSourceValues = {
+      base: getBaseBonus(key),
+      growth: getGrowthBonus(key, progression),
+      equipment: sumBonusForAdditionalStat(itemBonuses.equipment, key),
+      abilities: sumBonusForAdditionalStat(itemBonuses.abilities, key),
+      extra: sys.additionalAttributes[key],
+    };
+
+    sys.additionalStatSources[key] = sources;
+    sys.totals[key] = sumStatSources(sources);
+  }
+}
+
 function syncResourceTotals(
   sys: ShwActorSystem,
-  progression: ReturnType<typeof calculateAttributeProgressionBonuses>,
+  progression: AttributeProgressionBonuses,
   totalsDirectBonuses: Map<CharacterStatPath, number>,
+  itemBonuses: ReturnType<typeof collectStatBonusesBySource>,
 ): void {
-  const add = sys.additionalAttributes;
-
   applyComputedResourceFields(sys, progression);
 
   sys.health.max += sumItemBonuses(totalsDirectBonuses, ['health.max', 'totals.health']);
   sys.utility.speed += sumItemBonuses(totalsDirectBonuses, ['utility.speed', 'totals.speed']);
 
-  for (const key of ADDITIONAL_STAT_KEYS) {
-    const directBonus = getItemBonus(totalsDirectBonuses, `totals.${key}`);
-    const progressionBonus =
-      key === 'damageReduction'
-        ? progression.absorption
-        : progressionBonusFor(key, progression);
-    sys.totals[key] = additionalTotal(key, add[key], progressionBonus) + directBonus;
-  }
+  syncAdditionalStatSources(sys, progression, itemBonuses);
 
   sys.totals.health = sys.health.max;
   sys.totals.speed = sys.utility.speed;
@@ -103,12 +157,13 @@ export function prepareCharacterDerivedData(sys: ShwActorSystem, actor: ShwActor
     sys.attributes[k].extra = 0;
   }
 
+  const itemBonusesBySource = collectStatBonusesBySource(actor);
   const { bonuses } = calculateItemBonuses(actor);
   applyManualItemBonuses(sys, bonuses);
 
   const progression = calculateAttributeProgressionBonuses(sys.attributes);
 
   syncAttributeTotals(sys, bonuses);
-  syncResourceTotals(sys, progression, bonuses);
+  syncResourceTotals(sys, progression, bonuses, itemBonusesBySource);
   updateAttributeBonuses(sys.totals, sys.attributes, bonuses);
 }

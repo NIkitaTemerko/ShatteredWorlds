@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { ShwActor } from "../../../documents/Actor/ShwActor";
-  import { AdditionalStats, AttributeStats, CharacterHeader } from "../../../entities/character";
+  import { LegacyAdditionalStats, AttributeStats, CharacterHeader } from "../../../entities/character";
   import { RollPanel } from "../../../features/roll";
   import type { AdditionalAttributes } from "../../../shared/model/types";
   import { NPC_EDITABLE_KEYS } from "../constants/npcConstants";
@@ -22,7 +22,7 @@
   <AttributeStats {actor} isNpc={true} />
   <RollPanel {actor} />
 </section>
-<AdditionalStats
+<LegacyAdditionalStats
   stats={actor.system.additionalAttributes}
   totals={actor.system.totals}
   editableKeys={NPC_EDITABLE_KEYS}

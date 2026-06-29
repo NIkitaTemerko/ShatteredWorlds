@@ -237,7 +237,8 @@
           "attributeValue": "{attribute}",
           "attributeExtra": "{attribute} (Extra)",
           "attributeCharBonus": "{attribute} (Bonus)",
-          "attributeSaveBonus": "{attribute} (Save)"
+          "attributeSaveBonus": "{attribute} (Save)",
+          "attributeCoefficient": "{attribute} (Coefficient)"
         },
         "aura": "Aura Settings",
         "auraRadius": "Aura Radius",
@@ -290,7 +291,8 @@
       "saveThrow": "Save {attribute}",
       "health": {
         "current": "Health",
-        "max": "Max Health"
+        "max": "Max Health",
+        "coefficient": "Health Coefficient"
       },
       "utility": {
         "speed": "Speed",

@@ -17,6 +17,10 @@ import {
   getItemBonus,
   sumItemBonuses,
 } from './calculateItemBonuses';
+import {
+  attributeCoefficientValue,
+  healthCoefficientValue,
+} from './coefficients';
 
 function ensureTotals(
   sys: ShwActorSystem,
@@ -60,25 +64,19 @@ function syncResourceTotals(
   sys.utility.speed += sumItemBonuses(totalsDirectBonuses, ['utility.speed', 'totals.speed']);
 
   for (const key of ADDITIONAL_STAT_KEYS) {
-    if (key === 'damageReduction') continue;
     const directBonus = getItemBonus(totalsDirectBonuses, `totals.${key}`);
-    sys.totals[key] =
-      additionalTotal(key, add[key], progressionBonusFor(key, progression)) + directBonus;
+    const progressionBonus =
+      key === 'damageReduction'
+        ? progression.absorption
+        : progressionBonusFor(key, progression);
+    sys.totals[key] = additionalTotal(key, add[key], progressionBonus) + directBonus;
   }
 
   sys.totals.health = sys.health.max;
   sys.totals.speed = sys.utility.speed;
-}
-
-function syncWillDependentTotals(
-  sys: ShwActorSystem,
-  totalsDirectBonuses: Map<CharacterStatPath, number>,
-): void {
-  const willAbsorption = sys.utility.level >= 5 ? sys.totals.will : 0;
-  const directBonus = getItemBonus(totalsDirectBonuses, 'totals.damageReduction');
-  sys.totals.damageReduction =
-    additionalTotal('damageReduction', sys.additionalAttributes.damageReduction, willAbsorption) +
-    directBonus;
+  sys.totals.healthCoefficient =
+    healthCoefficientValue(sys.totals.health) +
+    getItemBonus(totalsDirectBonuses, 'totals.healthCoefficient');
 }
 
 function updateAttributeBonuses(
@@ -88,9 +86,13 @@ function updateAttributeBonuses(
 ): void {
   for (const k of STAT_KEYS) {
     const a = attributes[k];
+    const attributeTotal = totals[k] + a.extra;
     const fromTotal = Math.floor(totals[k] / 5);
     a.charBonus = fromTotal + getItemBonus(bonuses, `attributes.${k}.charBonus`);
     a.saveBonus = fromTotal + getItemBonus(bonuses, `attributes.${k}.saveBonus`);
+    a.coefficient =
+      attributeCoefficientValue(attributeTotal) +
+      getItemBonus(bonuses, `attributes.${k}.coefficient`);
   }
 }
 
@@ -108,6 +110,5 @@ export function prepareCharacterDerivedData(sys: ShwActorSystem, actor: ShwActor
 
   syncAttributeTotals(sys, bonuses);
   syncResourceTotals(sys, progression, bonuses);
-  syncWillDependentTotals(sys, bonuses);
   updateAttributeBonuses(sys.totals, sys.attributes, bonuses);
 }

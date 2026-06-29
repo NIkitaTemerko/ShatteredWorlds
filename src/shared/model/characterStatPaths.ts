@@ -3,7 +3,7 @@ import type { I18nKey } from '../i18n';
 import { ADDITIONAL_ATTRIBUTE_LABELS } from './constants';
 import type { AttributeKey } from './types';
 
-type AttributeFields = 'value' | 'extra' | 'charBonus' | 'saveBonus';
+type AttributeFields = 'value' | 'extra' | 'charBonus' | 'saveBonus' | 'coefficient';
 type AttributePath = `attributes.${AttributeKey}.${AttributeFields}`;
 
 type AdditionalAttributeKey = keyof ShwActorSystem['additionalAttributes'];
@@ -51,6 +51,7 @@ const ATTRIBUTE_FIELD_CONFIGS: AttributeFieldConfig[] = [
   { field: 'extra', labelKey: 'ability.passiveDetails.statModifiers.attributeExtra' },
   { field: 'charBonus', labelKey: 'ability.passiveDetails.statModifiers.attributeCharBonus' },
   { field: 'saveBonus', labelKey: 'ability.passiveDetails.statModifiers.attributeSaveBonus' },
+  { field: 'coefficient', labelKey: 'ability.passiveDetails.statModifiers.attributeCoefficient' },
 ];
 
 const ADDITIONAL_ATTRIBUTE_KEYS = Object.keys(
@@ -72,5 +73,6 @@ export const CHARACTER_STAT_OPTIONS: CharacterStatOption[] = [
   })),
 
   { value: 'totals.health', labelKey: 'character.health.current' as I18nKey },
+  { value: 'totals.healthCoefficient', labelKey: 'character.health.coefficient' as I18nKey },
   { value: 'totals.speed', labelKey: 'character.utility.speed' as I18nKey },
 ];

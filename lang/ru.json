@@ -237,7 +237,8 @@
           "attributeValue": "{attribute}",
           "attributeExtra": "{attribute} (Экстра)",
           "attributeCharBonus": "{attribute} (Бонус)",
-          "attributeSaveBonus": "{attribute} (Спасбросок)"
+          "attributeSaveBonus": "{attribute} (Спасбросок)",
+          "attributeCoefficient": "{attribute} (Коэффициент)"
         },
         "aura": "Настройки ауры",
         "auraRadius": "Радиус ауры",
@@ -290,7 +291,8 @@
       "saveThrow": "СБ‑{attribute}",
       "health": {
         "current": "Здоровье",
-        "max": "Макс. здоровье"
+        "max": "Макс. здоровье",
+        "coefficient": "Коэффициент здоровья"
       },
       "utility": {
         "speed": "Скорость",

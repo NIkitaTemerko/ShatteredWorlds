@@ -3,6 +3,8 @@ interface AttributeFields {
   extra: number;
   charBonus: number;
   saveBonus: number;
+  /** Runtime: значение 1 коэффициента от итоговой характеристики (25%). */
+  coefficient: number;
 }
 
 interface HealthFields {
@@ -52,6 +54,8 @@ interface CharacterTotals {
   psiDefense: number;
   damageReduction: number;
   health: number;
+  /** Runtime: значение 1 коэффициента здоровья (10% от max HP). */
+  healthCoefficient: number;
   speed: number;
 }
 
@@ -62,6 +66,7 @@ interface NpcAttribute {
   charBonus: number;
   saveBonusBase: number;
   saveBonus: number;
+  coefficient: number;
 }
 
 export interface ShwActorSystem {

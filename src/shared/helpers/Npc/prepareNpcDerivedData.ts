@@ -1,6 +1,10 @@
 import type { ShwNpcSystem } from '../../../documents/Actor/types/ShwActorSystem';
 import { STAT_KEYS } from '../../model/constants/actorKeys';
 import { NPC_DEFAULTS } from '../../model/constants/npcDefaults';
+import {
+  attributeCoefficientValue,
+  healthCoefficientValue,
+} from '../Character/coefficients';
 
 function ensureTotals(
   sys: ShwNpcSystem,
@@ -32,6 +36,7 @@ export function prepareNpcDerivedData(sys: ShwNpcSystem) {
 
   sys.totals.impulse = add.impulse;
   sys.totals.health = sys.health.max;
+  sys.totals.healthCoefficient = healthCoefficientValue(sys.health.max);
   sys.totals.speed = sys.utility.speed;
   sys.totals.damageReduction = add.damageReduction;
   sys.totals.armorClass = add.armorClass;
@@ -52,5 +57,6 @@ export function prepareNpcDerivedData(sys: ShwNpcSystem) {
     const a = attrs[k];
     a.charBonus = (a.charBonusBase ?? 0) + Math.floor(a.value / 5);
     a.saveBonus = (a.saveBonusBase ?? 0) + Math.floor(a.value / 5);
+    a.coefficient = attributeCoefficientValue(a.value + a.extra);
   }
 }

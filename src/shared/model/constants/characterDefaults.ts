@@ -81,6 +81,7 @@ export const CHAR_DEFAULTS = {
     psiDefense: 0,
     damageReduction: 0,
     health: 0,
+    healthCoefficient: 0,
     speed: 0,
   } satisfies ShwActorSystem['totals'],
 } as const;

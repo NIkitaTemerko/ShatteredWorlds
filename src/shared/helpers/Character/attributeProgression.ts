@@ -1,5 +1,6 @@
 import type { ShwActorSystem } from '../../../documents/Actor/types/ShwActorSystem';
 import { CHAR_DEFAULTS } from '../../model/constants/characterDefaults';
+import { scaleAttributeCoefficients } from './coefficients';
 
 type ThresholdEntry = readonly [threshold: number, value: number];
 
@@ -30,6 +31,14 @@ const WILL_PSI_DEFENSE_TABLE: ThresholdEntry[] = [
   [25, 35],
 ];
 
+/** Поглощение от вех Воли: 15 → +5, 20 → +10, 25 → +20. */
+const WILL_ABSORPTION_TABLE: ThresholdEntry[] = [
+  [0, 0],
+  [15, 5],
+  [20, 10],
+  [25, 20],
+];
+
 const HEALTH_BASE = 10;
 
 export interface AttributeProgressionBonuses {
@@ -39,6 +48,7 @@ export interface AttributeProgressionBonuses {
   initiative: number;
   barrier: number;
   psiDefense: number;
+  absorption: number;
   speedBonus: number;
   healthMax: number;
 }
@@ -86,8 +96,9 @@ export function calculateAttributeProgressionBonuses(
     reactions: finesse >= 15 ? 1 : 0,
     bonusActions: will >= 20 ? 1 : 0,
     initiative: lookupThresholdTable(finesse, FINESSE_INITIATIVE_TABLE),
-    barrier: Math.floor(fortune / 2),
+    barrier: scaleAttributeCoefficients(2, fortune),
     psiDefense: lookupThresholdTable(will, WILL_PSI_DEFENSE_TABLE),
+    absorption: lookupThresholdTable(will, WILL_ABSORPTION_TABLE),
     speedBonus: lookupThresholdTable(finesse, FINESSE_STEPS_TABLE),
     healthMax: HEALTH_BASE + calculateHealthBonus(attributes),
   };

@@ -2,8 +2,9 @@
   import { onDestroy, onMount } from "svelte";
   import type { ShwItem } from "../../../documents/Item/ShwItem";
   import { t } from "../../../shared/i18n";
-  import type { PopupMenuItem } from "../../../shared/ui/PopupMenu";
-  import type { TreeNode } from "../../../shared/ui/tree";
+  import type { PopupMenuItem } from "./PopupMenu";
+  import { PopupMenuDropdown } from "./PopupMenu";
+  import type { TreeNode, ContextMenuArgs } from "../../../shared/ui/tree";
   import { TreeWithSearch } from "../../../shared/ui/tree";
   import { getInventoryTreeState, updateInventoryTreeState } from "../model/inventoryTreeState";
   import { mapInventoryToFlatItems } from "../lib/mappers";
@@ -16,9 +17,10 @@
     onDeleteItem?: (item: ShwItem) => void;
     onDuplicateItem?: (item: ShwItem) => void;
     onQuantityChange?: (item: ShwItem, newQuantity: number) => void;
+    onEquipItem?: (item: ShwItem) => void;
   }
 
-  let { actorId, items, itemCount, onSelectItem, onDeleteItem, onDuplicateItem, onQuantityChange }: Props = $props();
+  let { actorId, items, itemCount, onSelectItem, onDeleteItem, onDuplicateItem, onQuantityChange, onEquipItem }: Props = $props();
 
   const treeState = $derived(getInventoryTreeState(actorId));
 
@@ -105,6 +107,18 @@
       });
     }
 
+    if (onEquipItem && (liveItem ?? item).type === "equipment") {
+      menuItems.push({
+        type: "action",
+        label: t("inventory.menu.equip"),
+        icon: "fas fa-shield-halved",
+        onClick: (e: Event) => {
+          e.stopPropagation();
+          onEquipItem!(item);
+        },
+      });
+    }
+
     if (onDeleteItem) {
       menuItems.push({
         type: "action",
@@ -162,6 +176,10 @@
   }
 </script>
 
+{#snippet inventoryContextMenu({ node }: ContextMenuArgs)}
+  <PopupMenuDropdown items={getMenuItems(node)} />
+{/snippet}
+
 <div class="inventory-tree">
   <div class="search-wrapper">
     <TreeWithSearch
@@ -172,8 +190,8 @@
       onSelect={handleSelect}
       onEdit={handleEdit}
       onDelete={handleDelete}
-      getMenuItems={onDuplicateItem || onQuantityChange ? getMenuItems : undefined}
       onStateChange={handleStateChange}
+      contextMenu={onDuplicateItem || onQuantityChange || onEquipItem ? inventoryContextMenu : undefined}
     />
     <div class="item-count-bar">
       <span class="item-count">{itemCount} {getPluralForm(itemCount)}</span>

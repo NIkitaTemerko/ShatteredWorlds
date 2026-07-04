@@ -2,6 +2,8 @@
   import type { ShwActor } from "../../../../documents/Actor/ShwActor";
   import type { ShwItem } from "../../../../documents/Item/ShwItem";
   import { AbilityTree } from "../../../../entities/ability";
+  import { getCharacterAbilityPool } from "../../../../shared/helpers/Character/getCharacterAbilityPool";
+  import { t } from "../../../../shared/i18n";
 
   interface Props {
     actor: ShwActor<"character">;
@@ -9,14 +11,24 @@
 
   let { actor }: Props = $props();
 
-  const abilities = $derived(Array.from(actor.items).filter((item: ShwItem) => item.type === "ability"));
+  const abilities = $derived(getCharacterAbilityPool(actor));
   const abilityCount = $derived(abilities.length);
+
+  function isActorOwnedAbility(item: ShwItem): boolean {
+    const id = item.id ?? item._id;
+    return id ? actor.items.has(id) : false;
+  }
 
   function handleSelectAbility(item: ShwItem) {
     item.sheet?.render(true);
   }
 
   async function handleDeleteAbility(item: ShwItem) {
+    if (!isActorOwnedAbility(item)) {
+      ui.notifications?.info(t("characterEquipment.linkedAbilityDeleteHint"));
+      return;
+    }
+
     const confirmed = await Dialog.confirm({
       title: game.i18n?.localize("SHW.abilities.deleteConfirmTitle") ?? "Delete Ability",
       content: `<p>${game.i18n?.format("SHW.abilities.deleteConfirmContent", { name: item.name }) ?? `Delete ${item.name}?`}</p>`,

@@ -164,6 +164,17 @@
         "deleted": "Item deleted"
       }
     },
+    "characterEquipment": {
+      "linkedAbilityDeleteHint": "This ability is linked to equipment. Remove the link on the equipment sheet.",
+      "menu": {
+        "unequip": "Unequip"
+      },
+      "itemPlurals": {
+        "one": "item",
+        "few": "items",
+        "many": "items"
+      }
+    },
     "ability": {
       "header": {
         "namePlaceholder": "Ability Name",
@@ -237,7 +248,8 @@
           "attributeValue": "{attribute}",
           "attributeExtra": "{attribute} (Extra)",
           "attributeCharBonus": "{attribute} (Bonus)",
-          "attributeSaveBonus": "{attribute} (Save)"
+          "attributeSaveBonus": "{attribute} (Save)",
+          "attributeCoefficient": "{attribute} (Coefficient)"
         },
         "aura": "Aura Settings",
         "auraRadius": "Aura Radius",
@@ -288,9 +300,20 @@
       "attributeBonus": "Attribute Bonus",
       "additionalAttribute": "Add. {attribute}",
       "saveThrow": "Save {attribute}",
+      "statInfo": "Stat details",
+      "statMenu": "Stat menu",
+      "statTotal": "Total",
+      "statSources": {
+        "base": "Base",
+        "growth": "Growth bonus",
+        "equipment": "Equipment",
+        "abilities": "Abilities",
+        "extra": "Extra"
+      },
       "health": {
         "current": "Health",
-        "max": "Max Health"
+        "max": "Max Health",
+        "coefficient": "Health Coefficient"
       },
       "utility": {
         "speed": "Speed",
@@ -344,6 +367,7 @@
         "edit": "Edit",
         "duplicate": "Duplicate",
         "quantity": "Qty",
+        "equip": "Equip",
         "delete": "Delete"
       }
     },

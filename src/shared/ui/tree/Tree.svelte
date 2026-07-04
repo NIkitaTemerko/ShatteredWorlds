@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { PopupMenuItem } from "../PopupMenu";
-  import TreeNodeView from "./TreeNodeView.svelte";
-  import type { TreeNode, TreeState } from "./types";
+  import type { Snippet } from 'svelte';
+  import TreeNodeView from './TreeNodeView.svelte';
+  import type { ContextMenuArgs, TreeNode } from './types';
 
   interface Props {
     nodes: TreeNode[];
@@ -12,7 +12,7 @@
     onDelete?: (node: TreeNode, e: Event) => void;
     onEdit?: (node: TreeNode, e: Event) => void;
     onDrop?: (node: TreeNode, itemData: any) => void;
-    getMenuItems?: (node: TreeNode) => PopupMenuItem[];
+    contextMenu?: Snippet<[ContextMenuArgs]>;
     isDynamicTree?: boolean;
   }
 
@@ -25,7 +25,7 @@
     onDelete,
     onEdit,
     onDrop,
-    getMenuItems,
+    contextMenu,
     isDynamicTree = false,
   }: Props = $props();
 
@@ -70,7 +70,7 @@
       {onDelete}
       {onEdit}
       {onDrop}
-      {getMenuItems}
+      {contextMenu}
       {isDynamicTree}
       {expandedIds}
       {selectedId}

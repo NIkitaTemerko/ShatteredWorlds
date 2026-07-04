@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { PopupMenuItem } from "./types";
-  import MenuAction from "./MenuAction.svelte";
-  import MenuQuantity from "./MenuQuantity.svelte";
+  import type { PopupMenuItem } from './types';
+  import MenuAction from './MenuAction.svelte';
+  import MenuQuantity from './MenuQuantity.svelte';
 
   interface Props {
     items: PopupMenuItem[];
@@ -12,9 +12,9 @@
 
 <div class="popup-menu-dropdown">
   {#each items as item (item.label)}
-    {#if item.type === "action"}
+    {#if item.type === 'action'}
       <MenuAction {item} />
-    {:else if item.type === "quantity"}
+    {:else if item.type === 'quantity'}
       <MenuQuantity {item} />
     {/if}
   {/each}

@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { t } from "../../../shared/i18n";
-  import { Input } from "../Input";
-  import type { PopupMenuItem } from "../PopupMenu";
-  import Tree from "./Tree.svelte";
-  import { buildTreeFromFlatList, collectAllNodes, filterTree, findNodePath } from "./treeUtils";
-  import type { FlatItem, TreeNode } from "./types";
+  import type { Snippet } from 'svelte';
+  import { t } from '../../../shared/i18n';
+  import { Input } from '../Input';
+  import Tree from './Tree.svelte';
+  import { buildTreeFromFlatList, collectAllNodes, filterTree, findNodePath } from './treeUtils';
+  import type { ContextMenuArgs, FlatItem, TreeNode } from './types';
 
   interface TreeStateUpdate {
     searchQuery: string;
@@ -21,21 +21,21 @@
     onDelete?: (node: TreeNode, e: Event) => void;
     onEdit?: (node: TreeNode, e: Event) => void;
     onDrop?: (node: TreeNode, itemData: any) => void;
-    getMenuItems?: (node: TreeNode) => PopupMenuItem[];
+    contextMenu?: Snippet<[ContextMenuArgs]>;
     isDynamicTree?: boolean;
     onStateChange?: (state: TreeStateUpdate) => void;
   }
 
   let {
     items,
-    initialSearchQuery = "",
+    initialSearchQuery = '',
     initialExpandedIds,
     initialSelectedId,
     onSelect,
     onDelete,
     onEdit,
     onDrop,
-    getMenuItems,
+    contextMenu,
     isDynamicTree = false,
     onStateChange,
   }: Props = $props();
@@ -180,7 +180,7 @@
       {onDelete}
       {onEdit}
       {onDrop}
-      {getMenuItems}
+      {contextMenu}
       {isDynamicTree}
     />
   </div>

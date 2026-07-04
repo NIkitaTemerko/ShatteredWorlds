@@ -1,10 +1,16 @@
 /**
  * Типы для импорта item cores
  */
-export type ShwItemType = 'consumable' | 'ability' | 'spell' | 'equipment';
+export type ShwItemType = 'consumable' | 'ability' | 'spell' | 'equipment' | 'resource';
 
 /** Все доступные типы предметов для импорта */
-export const IMPORT_ITEM_TYPES: ShwItemType[] = ['consumable', 'ability', 'spell', 'equipment'];
+export const IMPORT_ITEM_TYPES: ShwItemType[] = [
+  'consumable',
+  'ability',
+  'spell',
+  'equipment',
+  'resource',
+];
 
 export interface ItemCore {
   baseId: string;

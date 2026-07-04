@@ -19,6 +19,7 @@ const typeSchemaKey = {
   ability: 'AbilityItemSchema',
   spell: 'SpellItemSchema',
   equipment: 'EquipmentItemSchema',
+  resource: 'ResourceItemSchema',
 } as const;
 
 /**

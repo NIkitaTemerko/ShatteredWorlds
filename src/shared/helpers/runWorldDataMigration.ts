@@ -12,6 +12,10 @@ import {
   migrateActorSystem,
   migrateItemSystem,
 } from './migrateLegacyStatKeys';
+import {
+  migrateNpcAdditionalAttributesToExtras,
+  npcAdditionalAttributesNeedMigration,
+} from './Npc/migrateNpcAdditionalAttributes';
 
 const LIST_PREVIEW_LIMIT = 8;
 
@@ -41,7 +45,7 @@ function getStoredSystem(document: { _source?: { system?: unknown } }): Record<s
   return foundry.utils.deepClone((system ?? {}) as Record<string, unknown>);
 }
 
-function collectMigrationPlan(): { plan: MigrationPlan; payload: MigrationPayload } {
+function collectMigrationPlan(appliedVersion: number): { plan: MigrationPlan; payload: MigrationPayload } {
   const plan: MigrationPlan = {
     actors: [],
     embeddedItems: [],
@@ -57,8 +61,17 @@ function collectMigrationPlan(): { plan: MigrationPlan; payload: MigrationPayloa
     if (!actor.id) continue;
 
     const actorSystem = getStoredSystem(actor);
-    if (actorSystemNeedsMigration(actorSystem)) {
+    const before = JSON.stringify(actorSystem);
+
+    if (appliedVersion < 2 && actorSystemNeedsMigration(actorSystem)) {
       migrateActorSystem(actorSystem);
+    }
+
+    if (appliedVersion < 3 && actor.type === 'npc' && npcAdditionalAttributesNeedMigration(actorSystem)) {
+      migrateNpcAdditionalAttributesToExtras(actorSystem);
+    }
+
+    if (JSON.stringify(actorSystem) !== before) {
       plan.actors.push({ id: actor.id, name: actor.name });
       payload.actorUpdates.push({ _id: actor.id, system: actorSystem });
     }
@@ -210,7 +223,7 @@ export async function runWorldDataMigration(): Promise<void> {
   const appliedVersion = game.settings?.get(SETTINGS_NAMESPACE, SETTING_DATA_MIGRATION_VERSION) ?? 0;
   if (appliedVersion >= CURRENT_DATA_MIGRATION_VERSION) return;
 
-  const { plan, payload } = collectMigrationPlan();
+  const { plan, payload } = collectMigrationPlan(appliedVersion);
 
   if (hasMigrationTargets(plan)) {
     const confirmed = await confirmMigration(plan);

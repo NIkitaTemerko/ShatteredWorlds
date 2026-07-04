@@ -94,7 +94,7 @@ export const EXAMPLES_BY_TYPE: Record<ShwItemType, string> = {
 }
 \`\`\`
 
-### Ability — Passive
+### Ability — Passive (triggered)
 \`\`\`json
 {
   "baseId": "ability-danger-sense",
@@ -104,6 +104,25 @@ export const EXAMPLES_BY_TYPE: Record<ShwItemType, string> = {
     "category": "passive",
     "passiveKind": "triggered",
     "description": "Обострённое шестое чувство, выработанное выживанием в подземельях. За мгновение до удара тело инстинктивно уклоняется, предчувствуя угрозу. Даёт преимущество на спасброски от ловушек и засад."
+  }
+}
+\`\`\`
+
+### Ability — Passive (stat-bonus)
+\`\`\`json
+{
+  "baseId": "ability-fortune-boost",
+  "type": "ability",
+  "name": "Везение удачи",
+  "system": {
+    "category": "passive",
+    "passiveKind": "stat-bonus",
+    "description": "Тонкая аура удачи окружает носителя, словно фортуна сама благоволит ему в решающие моменты.",
+    "statBonuses": {
+      "modifiers": [
+        { "stat": "attributes.fortune.value", "mode": "add", "value": 1 }
+      ]
+    }
   }
 }
 \`\`\``,
@@ -154,6 +173,21 @@ export const EXAMPLES_BY_TYPE: Record<ShwItemType, string> = {
         { "stat": "attributes.fortune.value", "mode": "add", "value": 2 }
       ]
     }
+  }
+}
+\`\`\``,
+
+  resource: `### Resource
+\`\`\`json
+{
+  "baseId": "resource-ore-iron",
+  "type": "resource",
+  "name": "Железная руда",
+  "system": {
+    "category": "raw",
+    "resourceType": "ore",
+    "description": "Грубые куски железной руды, добытые в шахтах Северных хребтов. Основной материал для кузнечного дела — из неё выковывают оружие и доспехи стражи.",
+    "price": 5
   }
 }
 \`\`\``,

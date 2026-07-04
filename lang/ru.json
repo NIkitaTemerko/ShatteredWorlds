@@ -164,6 +164,17 @@
         "deleted": "Предмет удалён"
       }
     },
+    "characterEquipment": {
+      "linkedAbilityDeleteHint": "Эта способность привязана к экипировке. Удалите привязку на листе предмета.",
+      "menu": {
+        "unequip": "Снять"
+      },
+      "itemPlurals": {
+        "one": "предмет",
+        "few": "предмета",
+        "many": "предметов"
+      }
+    },
     "ability": {
       "header": {
         "namePlaceholder": "Название способности",
@@ -237,7 +248,8 @@
           "attributeValue": "{attribute}",
           "attributeExtra": "{attribute} (Экстра)",
           "attributeCharBonus": "{attribute} (Бонус)",
-          "attributeSaveBonus": "{attribute} (Спасбросок)"
+          "attributeSaveBonus": "{attribute} (Спасбросок)",
+          "attributeCoefficient": "{attribute} (Коэффициент)"
         },
         "aura": "Настройки ауры",
         "auraRadius": "Радиус ауры",
@@ -288,9 +300,20 @@
       "attributeBonus": "Бонус характеристики",
       "additionalAttribute": "Доп. {attribute}",
       "saveThrow": "СБ‑{attribute}",
+      "statInfo": "Подробнее о стате",
+      "statMenu": "Меню стата",
+      "statTotal": "Итого",
+      "statSources": {
+        "base": "База",
+        "growth": "Бонус роста",
+        "equipment": "Экипировка",
+        "abilities": "Способности",
+        "extra": "Доп"
+      },
       "health": {
         "current": "Здоровье",
-        "max": "Макс. здоровье"
+        "max": "Макс. здоровье",
+        "coefficient": "Коэффициент здоровья"
       },
       "utility": {
         "speed": "Скорость",
@@ -344,6 +367,7 @@
         "edit": "Редактировать",
         "duplicate": "Дублировать",
         "quantity": "Кол-во",
+        "equip": "Надеть",
         "delete": "Удалить"
       }
     },

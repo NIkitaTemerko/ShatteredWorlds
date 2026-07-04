@@ -1,4 +1,5 @@
 import type { ShwActorSystem } from '../../../documents/Actor/types/ShwActorSystem';
+import { ADDITIONAL_ATTRIBUTE_LABELS } from './attributes';
 
 /** Набор статов, которые редактируются через additionalAttributes */
 export const EDITABLE_STATS = new Set([
@@ -32,6 +33,11 @@ export const ADDITIONAL_STAT_BASE = {
 } as const;
 
 export type AdditionalStatBaseKey = keyof typeof ADDITIONAL_STAT_BASE;
+
+/** Все ключи additionalAttributes (для breakdown / totals). */
+export const ALL_ADDITIONAL_KEYS = Object.keys(
+  ADDITIONAL_ATTRIBUTE_LABELS,
+) as (keyof ShwActorSystem['additionalAttributes'])[];
 
 /** Ключи additionalAttributes, для которых применяется ADDITIONAL_STAT_BASE. */
 export const ADDITIONAL_STAT_KEYS = Object.keys(
@@ -81,6 +87,9 @@ export const CHAR_DEFAULTS = {
     psiDefense: 0,
     damageReduction: 0,
     health: 0,
+    healthCoefficient: 0,
     speed: 0,
+    range: 0,
+    armorClass: 0,
   } satisfies ShwActorSystem['totals'],
 } as const;

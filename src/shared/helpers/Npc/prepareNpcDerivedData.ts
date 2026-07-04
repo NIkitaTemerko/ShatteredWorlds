@@ -1,6 +1,24 @@
-import type { ShwNpcSystem } from '../../../documents/Actor/types/ShwActorSystem';
+import type {
+  ShwActorSystem,
+  ShwNpcSystem,
+  StatSourceValues,
+} from '../../../documents/Actor/types/ShwActorSystem';
 import { STAT_KEYS } from '../../model/constants/actorKeys';
+import { ALL_ADDITIONAL_KEYS } from '../../model/constants/characterDefaults';
 import { NPC_DEFAULTS } from '../../model/constants/npcDefaults';
+import {
+  attributeCoefficientValue,
+  healthCoefficientValue,
+} from '../Character/coefficients';
+import {
+  calculateAttributeProgressionBonuses,
+  type AttributeProgressionBonuses,
+} from '../Character/attributeProgression';
+import { sumStatSources } from '../Character/collectStatBonusesBySource';
+import {
+  getNpcAdditionalStatBaseBonus,
+  getNpcAdditionalStatGrowthBonus,
+} from './npcAdditionalStatBonuses';
 
 function ensureTotals(
   sys: ShwNpcSystem,
@@ -24,33 +42,56 @@ function ensureTotals(
   }
 }
 
+function ensureAdditionalStatSources(
+  sys: ShwNpcSystem,
+): asserts sys is ShwNpcSystem & { additionalStatSources: ShwNpcSystem['additionalStatSources'] } {
+  if (!sys.additionalStatSources) {
+    sys.additionalStatSources = {} as ShwNpcSystem['additionalStatSources'];
+  }
+}
+
+function syncAdditionalStatSources(
+  sys: ShwNpcSystem,
+  progression: AttributeProgressionBonuses,
+): void {
+  ensureAdditionalStatSources(sys);
+
+  for (const key of ALL_ADDITIONAL_KEYS) {
+    const sources: StatSourceValues = {
+      base: getNpcAdditionalStatBaseBonus(key),
+      growth: getNpcAdditionalStatGrowthBonus(key, progression),
+      equipment: 0,
+      abilities: 0,
+      extra: sys.additionalAttributes[key],
+    };
+
+    sys.additionalStatSources[key] = sources;
+    sys.totals[key] = sumStatSources(sources);
+  }
+}
+
 export function prepareNpcDerivedData(sys: ShwNpcSystem) {
   ensureTotals(sys);
 
   const attrs = sys.attributes;
-  const add = sys.additionalAttributes;
+  const progression = calculateAttributeProgressionBonuses(
+    attrs as ShwActorSystem['attributes'],
+  );
 
-  sys.totals.impulse = add.impulse;
   sys.totals.health = sys.health.max;
+  sys.totals.healthCoefficient = healthCoefficientValue(sys.health.max);
   sys.totals.speed = sys.utility.speed;
-  sys.totals.damageReduction = add.damageReduction;
-  sys.totals.armorClass = add.armorClass;
-  sys.totals.range = add.range;
 
   for (const k of STAT_KEYS) {
     sys.totals[k] = attrs[k].value;
   }
 
-  sys.totals.actions = add.actions;
-  sys.totals.bonusActions = add.bonusActions;
-  sys.totals.reactions = add.reactions;
-  sys.totals.initiative = add.initiative;
-  sys.totals.barrier = add.barrier;
-  sys.totals.psiDefense = add.psiDefense;
+  syncAdditionalStatSources(sys, progression);
 
   for (const k of STAT_KEYS) {
     const a = attrs[k];
     a.charBonus = (a.charBonusBase ?? 0) + Math.floor(a.value / 5);
     a.saveBonus = (a.saveBonusBase ?? 0) + Math.floor(a.value / 5);
+    a.coefficient = attributeCoefficientValue(a.value + a.extra);
   }
 }

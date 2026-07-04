@@ -164,6 +164,17 @@
         "deleted": "Предмет удалён"
       }
     },
+    "characterEquipment": {
+      "linkedAbilityDeleteHint": "Эта способность привязана к экипировке. Удалите привязку на листе предмета.",
+      "menu": {
+        "unequip": "Снять"
+      },
+      "itemPlurals": {
+        "one": "предмет",
+        "few": "предмета",
+        "many": "предметов"
+      }
+    },
     "ability": {
       "header": {
         "namePlaceholder": "Название способности",
@@ -356,6 +367,7 @@
         "edit": "Редактировать",
         "duplicate": "Дублировать",
         "quantity": "Кол-во",
+        "equip": "Надеть",
         "delete": "Удалить"
       }
     },

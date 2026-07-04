@@ -1,10 +1,8 @@
 import type { ShwActor } from '../../../documents/Actor/ShwActor';
 import type { ShwItem } from '../../../documents/Item/ShwItem';
+import { isItemEquipped } from './equipmentState';
 
-/**
- * Возвращает надетую экипировку актора.
- * TODO: заменить на фильтр по worn-слотам, когда механизм «надето» будет реализован.
- */
-export function getEquippedItems(_actor: ShwActor<'character'>): ShwItem[] {
-  return [];
+/** Предметы экипировки на акторе с флагом equipped. */
+export function getEquippedItems(actor: ShwActor<'character'>): ShwItem[] {
+  return Array.from(actor.items).filter((item) => item.type === 'equipment' && isItemEquipped(item));
 }

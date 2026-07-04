@@ -338,6 +338,7 @@ export class ItemFactory {
       armorClass: 0,
       statBonuses: null,
       linkedItemIds: [],
+      equipped: false,
     };
   }
 

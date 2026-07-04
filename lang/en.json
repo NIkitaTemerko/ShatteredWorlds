@@ -164,6 +164,17 @@
         "deleted": "Item deleted"
       }
     },
+    "characterEquipment": {
+      "linkedAbilityDeleteHint": "This ability is linked to equipment. Remove the link on the equipment sheet.",
+      "menu": {
+        "unequip": "Unequip"
+      },
+      "itemPlurals": {
+        "one": "item",
+        "few": "items",
+        "many": "items"
+      }
+    },
     "ability": {
       "header": {
         "namePlaceholder": "Ability Name",
@@ -356,6 +367,7 @@
         "edit": "Edit",
         "duplicate": "Duplicate",
         "quantity": "Qty",
+        "equip": "Equip",
         "delete": "Delete"
       }
     },

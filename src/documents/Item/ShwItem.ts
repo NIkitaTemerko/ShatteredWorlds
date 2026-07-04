@@ -95,6 +95,9 @@ export class ShwItem extends Item {
     if (this.isEquipment() && (!this.img || this.img === 'icons/svg/item-bag.svg')) {
       this.img = getEquipmentImage(this.system.slot);
     }
+    if (this.isEquipment() && this.system.equipped === undefined) {
+      this.system.equipped = false;
+    }
   }
 
   private prepareResource() {

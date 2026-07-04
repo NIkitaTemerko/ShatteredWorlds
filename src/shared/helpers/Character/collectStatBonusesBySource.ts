@@ -4,6 +4,7 @@ import type { StatModifierBlock } from '../../../documents/Item/types/AbilityDat
 import type { CharacterStatPath } from '../../model/characterStatPaths';
 import type { ModifierMode } from '../../model/types/characterBonuses';
 import { migrateLegacyStatPath } from '../migrateLegacyStatKeys';
+import { getCharacterAbilityPool } from './getCharacterAbilityPool';
 import { getEquippedItems } from './getEquippedItems';
 
 export interface ItemSourcedBonuses {
@@ -58,9 +59,7 @@ function collectEquipmentBonuses(actor: ShwActor<'character'>): Map<CharacterSta
 function collectAbilityBonuses(actor: ShwActor<'character'>): Map<CharacterStatPath, number> {
   const bonuses = new Map<CharacterStatPath, number>();
 
-  for (const item of actor.items) {
-    if (item.type !== 'ability') continue;
-
+  for (const item of getCharacterAbilityPool(actor)) {
     const system = item.system as AbilitySystem;
     if (system.category !== 'passive') continue;
 

@@ -19,4 +19,6 @@ export interface EquipmentSystem extends BaseItemData, PricedItem {
   armorClass: number;
   statBonuses: StatModifierBlock | null;
   linkedItemIds: string[];
+  /** Надет ли предмет (отображается на вкладке «Экипировка»). */
+  equipped: boolean;
 }

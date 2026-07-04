@@ -2,6 +2,7 @@
   import type { ShwActor } from "../../../../documents/Actor/ShwActor";
   import type { ShwItem } from "../../../../documents/Item/ShwItem";
   import { localize, t } from "../../../../shared/i18n";
+  import { equipItem, isItemEquipped } from "../../../../shared/helpers/Character/equipmentState";
   import { InventoryTree } from "../../../inventory";
   import { collectionToInventoryItems } from "../../../inventory/lib/mappers";
 
@@ -12,7 +13,9 @@
   let { actor }: Props = $props();
 
   const inventoryItems = $derived(
-    collectionToInventoryItems(actor.items).filter((item) => item.type !== "ability" && item.type !== "spell"),
+    collectionToInventoryItems(actor.items).filter(
+      (item) => item.type !== "ability" && item.type !== "spell" && !isItemEquipped(item),
+    ),
   );
 
   function handleSelectItem(item: ShwItem) {
@@ -39,6 +42,10 @@
   async function handleQuantityChange(item: ShwItem, newQuantity: number) {
     await item.update({ "system.quantity": newQuantity });
   }
+
+  async function handleEquipItem(item: ShwItem) {
+    await equipItem(item);
+  }
 </script>
 
 <div class="character-inventory">
@@ -51,6 +58,7 @@
       onDeleteItem={handleDeleteItem}
       onDuplicateItem={handleDuplicateItem}
       onQuantityChange={handleQuantityChange}
+      onEquipItem={handleEquipItem}
     />
   {/if}
 </div>

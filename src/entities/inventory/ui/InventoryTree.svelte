@@ -17,9 +17,10 @@
     onDeleteItem?: (item: ShwItem) => void;
     onDuplicateItem?: (item: ShwItem) => void;
     onQuantityChange?: (item: ShwItem, newQuantity: number) => void;
+    onEquipItem?: (item: ShwItem) => void;
   }
 
-  let { actorId, items, itemCount, onSelectItem, onDeleteItem, onDuplicateItem, onQuantityChange }: Props = $props();
+  let { actorId, items, itemCount, onSelectItem, onDeleteItem, onDuplicateItem, onQuantityChange, onEquipItem }: Props = $props();
 
   const treeState = $derived(getInventoryTreeState(actorId));
 
@@ -106,6 +107,18 @@
       });
     }
 
+    if (onEquipItem && (liveItem ?? item).type === "equipment") {
+      menuItems.push({
+        type: "action",
+        label: t("inventory.menu.equip"),
+        icon: "fas fa-shield-halved",
+        onClick: (e: Event) => {
+          e.stopPropagation();
+          onEquipItem!(item);
+        },
+      });
+    }
+
     if (onDeleteItem) {
       menuItems.push({
         type: "action",
@@ -178,7 +191,7 @@
       onEdit={handleEdit}
       onDelete={handleDelete}
       onStateChange={handleStateChange}
-      contextMenu={onDuplicateItem || onQuantityChange ? inventoryContextMenu : undefined}
+      contextMenu={onDuplicateItem || onQuantityChange || onEquipItem ? inventoryContextMenu : undefined}
     />
     <div class="item-count-bar">
       <span class="item-count">{itemCount} {getPluralForm(itemCount)}</span>

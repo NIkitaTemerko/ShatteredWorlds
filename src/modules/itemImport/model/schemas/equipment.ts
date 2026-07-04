@@ -23,4 +23,5 @@ export const EquipmentSystemSchema = z.object({
   armorClass: z.number().default(0),
   statBonuses: StatModifierBlockSchema.nullable().default(null),
   linkedItemIds: z.array(z.string()).default([]),
+  equipped: z.boolean().default(false),
 });

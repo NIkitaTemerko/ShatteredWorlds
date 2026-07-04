@@ -5,6 +5,7 @@
     AdditionalStats,
     AttributeStats,
     CharacterAbilities,
+    CharacterEquipment,
     CharacterHeader,
     CharacterInventory,
     CharacterSpells,
@@ -46,6 +47,8 @@
   <CharacterSpells {actor} />
 {:else if activeTab === "abilities"}
   <CharacterAbilities {actor} />
+{:else if activeTab === "equipment"}
+  <CharacterEquipment {actor} />
 {:else}
   <div>test</div>
 {/if}

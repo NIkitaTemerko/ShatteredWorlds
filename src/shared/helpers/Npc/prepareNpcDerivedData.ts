@@ -1,15 +1,10 @@
 import type {
-  AdditionalAttributes,
   ShwActorSystem,
   ShwNpcSystem,
   StatSourceValues,
 } from '../../../documents/Actor/types/ShwActorSystem';
 import { STAT_KEYS } from '../../model/constants/actorKeys';
-import {
-  ADDITIONAL_STAT_BASE,
-  ALL_ADDITIONAL_KEYS,
-  type AdditionalStatBaseKey,
-} from '../../model/constants/characterDefaults';
+import { ALL_ADDITIONAL_KEYS } from '../../model/constants/characterDefaults';
 import { NPC_DEFAULTS } from '../../model/constants/npcDefaults';
 import {
   attributeCoefficientValue,
@@ -20,6 +15,10 @@ import {
   type AttributeProgressionBonuses,
 } from '../Character/attributeProgression';
 import { sumStatSources } from '../Character/collectStatBonusesBySource';
+import {
+  getNpcAdditionalStatBaseBonus,
+  getNpcAdditionalStatGrowthBonus,
+} from './npcAdditionalStatBonuses';
 
 function ensureTotals(
   sys: ShwNpcSystem,
@@ -51,37 +50,6 @@ function ensureAdditionalStatSources(
   }
 }
 
-function getBaseBonus(key: keyof AdditionalAttributes): number {
-  if (key in ADDITIONAL_STAT_BASE) {
-    return ADDITIONAL_STAT_BASE[key as AdditionalStatBaseKey];
-  }
-  return 0;
-}
-
-function getGrowthBonus(
-  key: keyof AdditionalAttributes,
-  progression: AttributeProgressionBonuses,
-): number {
-  switch (key) {
-    case 'impulse':
-      return progression.impulse;
-    case 'reactions':
-      return progression.reactions;
-    case 'bonusActions':
-      return progression.bonusActions;
-    case 'initiative':
-      return progression.initiative;
-    case 'barrier':
-      return progression.barrier;
-    case 'psiDefense':
-      return progression.psiDefense;
-    case 'damageReduction':
-      return progression.absorption;
-    default:
-      return 0;
-  }
-}
-
 function syncAdditionalStatSources(
   sys: ShwNpcSystem,
   progression: AttributeProgressionBonuses,
@@ -90,8 +58,8 @@ function syncAdditionalStatSources(
 
   for (const key of ALL_ADDITIONAL_KEYS) {
     const sources: StatSourceValues = {
-      base: getBaseBonus(key),
-      growth: getGrowthBonus(key, progression),
+      base: getNpcAdditionalStatBaseBonus(key),
+      growth: getNpcAdditionalStatGrowthBonus(key, progression),
       equipment: 0,
       abilities: 0,
       extra: sys.additionalAttributes[key],

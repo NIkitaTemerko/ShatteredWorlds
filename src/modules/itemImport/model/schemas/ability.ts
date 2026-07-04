@@ -1,5 +1,17 @@
 import { z } from 'zod';
-import { RangeSchema, rarity, TargetingSchema } from './common';
+import {
+  AbilityEffectSchema,
+  AttackRollSchema,
+  AuraDefinitionSchema,
+  CooldownSchema,
+  RangeSchema,
+  ResourceCostSchema,
+  rarity,
+  SavingThrowSchema,
+  StatModifierBlockSchema,
+  TargetingSchema,
+  TriggerDefinitionSchema,
+} from './common';
 
 export const ActiveAbilitySystemSchema = z.object({
   category: z.literal('active'),
@@ -22,13 +34,13 @@ export const ActiveAbilitySystemSchema = z.object({
   castTime: z.number().optional(),
   range: RangeSchema,
   targeting: TargetingSchema,
-  cooldown: z.unknown().nullable().default(null),
-  resourceCosts: z.array(z.unknown()).default([]),
+  cooldown: CooldownSchema.nullable().default(null),
+  resourceCosts: z.array(ResourceCostSchema).default([]),
   maxRank: z.number().default(1),
   currentRank: z.number().default(1),
-  attackRoll: z.unknown().nullable().optional(),
-  savingThrow: z.unknown().nullable().optional(),
-  effects: z.array(z.unknown()).default([]),
+  attackRoll: AttackRollSchema.nullable().optional(),
+  savingThrow: SavingThrowSchema.nullable().optional(),
+  effects: z.array(AbilityEffectSchema).default([]),
   channeled: z.boolean().optional(),
   togglable: z.boolean().optional(),
   usesPerRest: z.number().nullable().optional(),
@@ -44,13 +56,13 @@ export const PassiveAbilitySystemSchema = z.object({
   rarity,
   passiveKind: z.enum(['stat-bonus', 'aura', 'triggered', 'mechanic']),
   mode: z.enum(['always-on', 'toggle', 'triggered']).default('always-on'),
-  cooldown: z.unknown().nullable().default(null),
-  resourceCosts: z.array(z.unknown()).default([]),
+  cooldown: CooldownSchema.nullable().default(null),
+  resourceCosts: z.array(ResourceCostSchema).default([]),
   maxRank: z.number().default(1),
   currentRank: z.number().default(1),
-  statBonuses: z.unknown().nullable().optional(),
-  aura: z.unknown().nullable().optional(),
-  triggers: z.array(z.unknown()).nullable().optional(),
+  statBonuses: StatModifierBlockSchema.nullable().optional(),
+  aura: AuraDefinitionSchema.nullable().optional(),
+  triggers: z.array(TriggerDefinitionSchema).nullable().optional(),
 });
 
 export const AbilitySystemSchema = z.discriminatedUnion('category', [

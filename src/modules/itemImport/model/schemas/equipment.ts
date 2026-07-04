@@ -1,20 +1,5 @@
 import { z } from 'zod';
-import { rarity } from './common';
-
-const StatModifierSchema = z.object({
-  stat: z.string(),
-  mode: z.enum(['add', 'mul', 'override']).default('add'),
-  value: z.number().default(0),
-  scaling: z.unknown().nullable().default(null),
-  condition: z.string().optional(),
-});
-
-const StatModifierBlockSchema = z
-  .object({
-    modifiers: z.array(StatModifierSchema).default([]),
-  })
-  .nullable()
-  .default(null);
+import { rarity, StatModifierBlockSchema } from './common';
 
 export const EquipmentSystemSchema = z.object({
   kind: z.literal('equipment').default('equipment'),
@@ -36,6 +21,6 @@ export const EquipmentSystemSchema = z.object({
     'ring',
   ]),
   armorClass: z.number().default(0),
-  statBonuses: StatModifierBlockSchema,
+  statBonuses: StatModifierBlockSchema.nullable().default(null),
   linkedItemIds: z.array(z.string()).default([]),
 });

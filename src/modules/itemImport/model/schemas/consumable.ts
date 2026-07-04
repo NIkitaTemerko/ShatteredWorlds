@@ -1,17 +1,11 @@
 import { z } from 'zod';
-import { migrateLegacyAbilityKey } from '../../../../shared/helpers/migrateLegacyStatKeys';
-import { rarity } from './common';
-
-const abilityTypeSchema = z.preprocess(
-  (value) => (typeof value === 'string' ? migrateLegacyAbilityKey(value) : value),
-  z.enum(['fortune', 'force', 'finesse', 'will', 'presence']),
-);
+import { abilityTypeSchema, rarity } from './common';
 
 // Базовые поля для всех консьюмаблов
 const BaseConsumableFields = {
   name: z.string().default(''),
   quantity: z.number().default(1),
-  stackLimit: z.number().default(99),
+  stackLimit: z.number().default(1),
   price: z.number().default(0),
   description: z.string().default(''),
   weight: z.number().default(0),
@@ -40,7 +34,7 @@ export const PotionSystemSchema = z.object({
         type: z.enum(['heal', 'buff', 'cure']),
         amount: z.number(),
         duration: z.number(),
-        attribute: z.string().optional(),
+        attribute: abilityTypeSchema.optional(),
       }),
     )
     .min(1, 'Зелье должно иметь хотя бы один эффект'),

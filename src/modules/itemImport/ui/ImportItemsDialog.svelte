@@ -24,16 +24,10 @@
   let isProcessing = $state(false);
   let errorMessage = $state("");
   let copySuccess = $state("");
-  let selectedTypes = $state<Set<ShwItemType>>(new Set(IMPORT_ITEM_TYPES));
+  let selectedType = $state<ShwItemType>(IMPORT_ITEM_TYPES[0]);
 
-  function toggleType(type: ShwItemType) {
-    const next = new Set(selectedTypes);
-    if (next.has(type)) {
-      if (next.size > 1) next.delete(type);
-    } else {
-      next.add(type);
-    }
-    selectedTypes = next;
+  function selectType(type: ShwItemType) {
+    selectedType = type;
   }
 
   function handleFileSelect(e: Event) {
@@ -58,7 +52,7 @@
   }
 
   function handleCopySchema() {
-    copyToClipboard(generateSchemaPrompt(selectedTypes), t("import.schemaCopied"));
+    copyToClipboard(generateSchemaPrompt(new Set([selectedType])), t("import.schemaCopied"));
   }
 
   function handleCopyIcons() {
@@ -127,7 +121,7 @@
         <span class="type-selector-label">{t("import.typesForSchema")}</span>
         <div class="type-chips">
           {#each IMPORT_ITEM_TYPES as type}
-            <button class="type-chip" class:active={selectedTypes.has(type)} onclick={() => toggleType(type)}>
+            <button class="type-chip" class:active={selectedType === type} onclick={() => selectType(type)}>
               {t(`import.types.${type}`)}
             </button>
           {/each}

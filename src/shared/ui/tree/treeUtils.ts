@@ -26,6 +26,8 @@ export function buildTreeFromFlatList(items: FlatItem[]): TreeNode[] {
           color: item.color,
           icon: item.icon,
           badge: item.badge,
+          deleteDisabled: item.deleteDisabled,
+          deleteDisabledTitle: item.deleteDisabledTitle,
           data: item.data,
           isLeaf: true,
         };

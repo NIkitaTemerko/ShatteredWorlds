@@ -1,7 +1,7 @@
 import type { ShwItem } from '../../../documents/Item/ShwItem';
 import type { AbilityCategory } from '../../../documents/Item/types/AbilityDataTypes';
 import type { I18nKey } from '../../../shared/i18n';
-import { t } from '../../../shared/i18n';
+import { localize, t } from '../../../shared/i18n';
 import type { FlatItem } from '../../../shared/ui/tree';
 import { ABILITY_CATEGORY_COLORS } from './constants';
 
@@ -15,7 +15,12 @@ const abilityCategoryKeys: Record<AbilityCategory, I18nKey> = {
  * Maps ability items to flat tree structure with hierarchical paths
  * Path structure: [Category (Active/Passive), AbilityName]
  */
-export function mapAbilitiesToFlatItems(items: ShwItem[]): FlatItem[] {
+export function mapAbilitiesToFlatItems(
+  items: ShwItem[],
+  options?: {
+    equipmentLinkedSourceNames?: Map<string, string[]>;
+  },
+): FlatItem[] {
   // Filter only ability items
   const abilityItems = items.filter((item) => item.type === 'ability');
 
@@ -25,11 +30,21 @@ export function mapAbilitiesToFlatItems(items: ShwItem[]): FlatItem[] {
 
     const path: string[] = [t(abilityCategoryKeys[category]), item.name];
 
+    const id = (item.id ?? item._id) || '';
+    const equipmentNames = options?.equipmentLinkedSourceNames?.get(id);
+    const isEquipmentLinked = equipmentNames !== undefined && equipmentNames.length > 0;
+
     return {
-      id: (item.id ?? item._id) || '',
+      id,
       label: item.name,
       path,
       color: ABILITY_CATEGORY_COLORS[category],
+      deleteDisabled: isEquipmentLinked,
+      deleteDisabledTitle: isEquipmentLinked
+        ? localize('abilities.equipmentLinkedDeleteTooltip', {
+            equipment: equipmentNames.join(', '),
+          })
+        : undefined,
       data: item,
     };
   });

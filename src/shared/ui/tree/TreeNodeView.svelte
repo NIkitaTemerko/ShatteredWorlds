@@ -3,6 +3,7 @@
   import { t } from '../../../shared/i18n';
   import { AnchoredPopup, closeActivePopup } from '../AnchoredPopup';
   import ActionIcon from '../ActionIcon/ui.svelte';
+  import { HoverTooltip } from '../HoverTooltip';
   import TreeNodeViewSelf from './TreeNodeView.svelte';
   import type { ContextMenuArgs, TreeNode } from './types';
 
@@ -68,6 +69,7 @@
 
   function handleDeleteClick(e: Event) {
     e.stopPropagation();
+    if (node.deleteDisabled) return;
     onDelete?.(node, e);
   }
 
@@ -228,18 +230,43 @@
       {/if}
 
       {#if onDelete && (isDynamicTree || isLeaf)}
-        <ActionIcon
-          onclick={handleDeleteClick}
-          aria-label={t('inventory.deleteItem')}
-          title={t('inventory.deleteItem')}
-          variant="ghost"
-          size="sm"
-          class="delete-action"
-        >
-          {#snippet icon()}
-            <i class="fas fa-trash"></i>
-          {/snippet}
-        </ActionIcon>
+        {@const deleteDisabled = node.deleteDisabled === true}
+        {@const deleteTitle = deleteDisabled
+          ? (node.deleteDisabledTitle ?? t('inventory.deleteItem'))
+          : t('inventory.deleteItem')}
+        {#if deleteDisabled}
+          <HoverTooltip label={deleteTitle} popupId="delete-tooltip-{node.id}">
+            {#snippet children()}
+              <span class="delete-action-wrapper delete-action-wrapper--disabled">
+                <ActionIcon
+                  onclick={handleDeleteClick}
+                  aria-label={deleteTitle}
+                  disabled={true}
+                  variant="ghost"
+                  size="sm"
+                  class="delete-action"
+                >
+                  {#snippet icon()}
+                    <i class="fas fa-trash"></i>
+                  {/snippet}
+                </ActionIcon>
+              </span>
+            {/snippet}
+          </HoverTooltip>
+        {:else}
+          <ActionIcon
+            onclick={handleDeleteClick}
+            aria-label={deleteTitle}
+            title={deleteTitle}
+            variant="ghost"
+            size="sm"
+            class="delete-action"
+          >
+            {#snippet icon()}
+              <i class="fas fa-trash"></i>
+            {/snippet}
+          </ActionIcon>
+        {/if}
       {/if}
     </div>
   </div>
@@ -424,6 +451,18 @@
 
   .tree-node-content :global(.delete-action:hover) {
     color: #dc2626;
+  }
+
+  .delete-action-wrapper {
+    display: inline-flex;
+  }
+
+  .delete-action-wrapper--disabled {
+    cursor: not-allowed;
+  }
+
+  .delete-action-wrapper--disabled :global(.delete-action:hover) {
+    color: #64748b;
   }
 
   .burger-menu-container {

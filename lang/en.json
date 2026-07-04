@@ -377,6 +377,7 @@
       "deleteConfirmTitle": "Delete Ability",
       "deleteConfirmContent": "Are you sure you want to delete <strong>{name}</strong>?",
       "deleteAbility": "Delete ability",
+      "equipmentLinkedDeleteTooltip": "Ability from equipment ({equipment}). To remove it, unequip the item.",
       "clearSearch": "Clear search",
       "abilityPlurals": {
         "one": "ability",

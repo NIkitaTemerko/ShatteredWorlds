@@ -377,6 +377,7 @@
       "deleteConfirmTitle": "Удалить способность",
       "deleteConfirmContent": "Вы уверены, что хотите удалить <strong>{name}</strong>?",
       "deleteAbility": "Удалить способность",
+      "equipmentLinkedDeleteTooltip": "Способность от экипировки ({equipment}). Чтобы убрать её, снимите предмет.",
       "clearSearch": "Очистить поиск",
       "abilityPlurals": {
         "one": "способность",

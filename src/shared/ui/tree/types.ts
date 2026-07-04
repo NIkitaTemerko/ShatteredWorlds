@@ -11,6 +11,8 @@ export interface FlatItem {
   icon?: string; // Optional icon path or class
   categoryIcons?: string[]; // Icons for each level of the path (for categories)
   badge?: TreeBadge; // Optional badge indicator (e.g. rarity)
+  deleteDisabled?: boolean;
+  deleteDisabledTitle?: string;
   data?: unknown; // Original item data
 }
 
@@ -20,6 +22,8 @@ export interface TreeNode {
   color?: string;
   icon?: string; // Optional icon path or class
   badge?: TreeBadge; // Optional badge indicator
+  deleteDisabled?: boolean;
+  deleteDisabledTitle?: string;
   children?: TreeNode[];
   data?: unknown; // Original item data
   isLeaf?: boolean; // True for actual items, false for category nodes

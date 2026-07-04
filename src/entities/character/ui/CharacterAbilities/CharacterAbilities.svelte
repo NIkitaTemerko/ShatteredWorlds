@@ -3,7 +3,7 @@
   import type { ShwItem } from "../../../../documents/Item/ShwItem";
   import { AbilityTree } from "../../../../entities/ability";
   import { getCharacterAbilityPool } from "../../../../shared/helpers/Character/getCharacterAbilityPool";
-  import { t } from "../../../../shared/i18n";
+  import { getEquipmentLinkedAbilitySources } from "../../../../shared/helpers/Character/getEquipmentLinkedAbilities";
 
   interface Props {
     actor: ShwActor<"character">;
@@ -13,10 +13,11 @@
 
   const abilities = $derived(getCharacterAbilityPool(actor));
   const abilityCount = $derived(abilities.length);
+  const equipmentLinkedSourceNames = $derived(getEquipmentLinkedAbilitySources(actor));
 
-  function isActorOwnedAbility(item: ShwItem): boolean {
+  function isEquipmentLinkedAbility(item: ShwItem): boolean {
     const id = item.id ?? item._id;
-    return id ? actor.items.has(id) : false;
+    return id ? equipmentLinkedSourceNames.has(id) : false;
   }
 
   function handleSelectAbility(item: ShwItem) {
@@ -24,10 +25,7 @@
   }
 
   async function handleDeleteAbility(item: ShwItem) {
-    if (!isActorOwnedAbility(item)) {
-      ui.notifications?.info(t("characterEquipment.linkedAbilityDeleteHint"));
-      return;
-    }
+    if (isEquipmentLinkedAbility(item)) return;
 
     const confirmed = await Dialog.confirm({
       title: game.i18n?.localize("SHW.abilities.deleteConfirmTitle") ?? "Delete Ability",
@@ -45,6 +43,7 @@
     actorId={actor.id ?? actor._id ?? ""}
     items={abilities}
     {abilityCount}
+    {equipmentLinkedSourceNames}
     onSelectAbility={handleSelectAbility}
     onDeleteAbility={handleDeleteAbility}
   />

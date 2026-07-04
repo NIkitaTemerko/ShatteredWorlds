@@ -4,7 +4,7 @@ export const SETTINGS_NAMESPACE = 'shattered-worlds';
 export const SETTING_RESOURCE_CATEGORIES = 'resourceCategories';
 export const SETTING_RESOURCE_TYPES = 'resourceTypes';
 export const SETTING_DATA_MIGRATION_VERSION = 'dataMigrationVersion';
-export const CURRENT_DATA_MIGRATION_VERSION = 3;
+export const CURRENT_DATA_MIGRATION_VERSION = 4;
 
 /** Дефолтные категории ресурсов */
 export const DEFAULT_RESOURCE_CATEGORIES: ResourceCategorySetting[] = [

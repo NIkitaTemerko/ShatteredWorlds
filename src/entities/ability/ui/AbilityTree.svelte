@@ -10,15 +10,27 @@
     actorId: string;
     items: ShwItem[];
     abilityCount: number;
+    equipmentLinkedSourceNames?: Map<string, string[]>;
     onSelectAbility?: (item: ShwItem) => void;
     onDeleteAbility?: (item: ShwItem) => void;
   }
 
-  let { actorId, items, abilityCount, onSelectAbility, onDeleteAbility }: Props = $props();
+  let {
+    actorId,
+    items,
+    abilityCount,
+    equipmentLinkedSourceNames,
+    onSelectAbility,
+    onDeleteAbility,
+  }: Props = $props();
 
   const treeState = $derived(getAbilityTreeState(actorId));
 
-  const flatItems = $derived(mapAbilitiesToFlatItems(items));
+  const flatItems = $derived(
+    mapAbilitiesToFlatItems(items, {
+      equipmentLinkedSourceNames,
+    }),
+  );
 
   function handleStateChange(state: { searchQuery: string; expandedIds: Set<string>; selectedId?: string }) {
     updateAbilityTreeState(actorId, state);

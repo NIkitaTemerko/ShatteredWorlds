@@ -13,8 +13,10 @@ import {
   migrateItemSystem,
 } from './migrateLegacyStatKeys';
 import {
+  fixNpcNegativeAdditionalExtras,
   migrateNpcAdditionalAttributesToExtras,
   npcAdditionalAttributesNeedMigration,
+  npcNegativeAdditionalExtrasNeedFix,
 } from './Npc/migrateNpcAdditionalAttributes';
 
 const LIST_PREVIEW_LIMIT = 8;
@@ -69,6 +71,10 @@ function collectMigrationPlan(appliedVersion: number): { plan: MigrationPlan; pa
 
     if (appliedVersion < 3 && actor.type === 'npc' && npcAdditionalAttributesNeedMigration(actorSystem)) {
       migrateNpcAdditionalAttributesToExtras(actorSystem);
+    }
+
+    if (appliedVersion < 4 && actor.type === 'npc' && npcNegativeAdditionalExtrasNeedFix(actorSystem)) {
+      fixNpcNegativeAdditionalExtras(actorSystem);
     }
 
     if (JSON.stringify(actorSystem) !== before) {

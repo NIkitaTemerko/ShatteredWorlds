@@ -1,9 +1,8 @@
 <script lang="ts">
   import type { ShwActor } from "../../../documents/Actor/ShwActor";
-  import { LegacyAdditionalStats, AttributeStats, CharacterHeader } from "../../../entities/character";
+  import { AdditionalStats, AttributeStats, CharacterHeader } from "../../../entities/character";
   import { RollPanel } from "../../../features/roll";
   import type { AdditionalAttributes } from "../../../shared/model/types";
-  import { NPC_EDITABLE_KEYS } from "../constants/npcConstants";
 
   interface Props {
     actor: ShwActor<"npc">;
@@ -22,9 +21,4 @@
   <AttributeStats {actor} isNpc={true} />
   <RollPanel {actor} />
 </section>
-<LegacyAdditionalStats
-  stats={actor.system.additionalAttributes}
-  totals={actor.system.totals}
-  editableKeys={NPC_EDITABLE_KEYS}
-  onUpdate={handleAdditionalStatsUpdate}
-/>
+<AdditionalStats {actor} onUpdate={handleAdditionalStatsUpdate} />

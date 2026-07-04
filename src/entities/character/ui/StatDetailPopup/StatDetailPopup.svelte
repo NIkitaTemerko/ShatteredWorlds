@@ -11,6 +11,7 @@
     statKey: keyof AdditionalAttributes;
     sources: StatSourceValues;
     total: number;
+    variant?: 'character' | 'npc';
     onClose: () => void;
     onExtraChange: (value: number) => void;
   }
@@ -22,6 +23,7 @@
     statKey,
     sources,
     total,
+    variant = 'character',
     onClose,
     onExtraChange,
   }: Props = $props();
@@ -29,6 +31,6 @@
 
 <AnchoredPopup {open} {anchorEl} {onClose} {popupId} triggerMode="click">
   {#snippet children()}
-    <StatDetailContent {statKey} {sources} {total} {onExtraChange} />
+    <StatDetailContent {statKey} {sources} {total} {variant} {onExtraChange} />
   {/snippet}
 </AnchoredPopup>

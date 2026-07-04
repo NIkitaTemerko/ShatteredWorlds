@@ -55,6 +55,9 @@ export const STAT_SOURCE_KEYS: StatSourceKey[] = [
   'extra',
 ];
 
+/** Упрощённая разбивка additional-статов для NPC */
+export const NPC_STAT_SOURCE_KEYS: StatSourceKey[] = ['base', 'growth', 'extra'];
+
 interface UtilityFields {
   speed: number;
   level: number;
@@ -109,11 +112,13 @@ export interface ShwNpcSystem {
   additionalAttributes: AdditionalAttributes;
   utility: UtilityFields;
   totals: CharacterTotals;
+  /** Runtime-only: разбивка additional-статов */
+  additionalStatSources: AdditionalStatSources;
 }
 
 /** Persisted actor system (schema); totals и additionalStatSources — runtime-only. */
 export type ShwActorSystemSource = Omit<ShwActorSystem, 'totals' | 'additionalStatSources'>;
-export type ShwNpcSystemSource = Omit<ShwNpcSystem, 'totals'>;
+export type ShwNpcSystemSource = Omit<ShwNpcSystem, 'totals' | 'additionalStatSources'>;
 
 /** additionalAttributes keys that may exist on runtime totals */
 export type AdditionalAttributesTotalKey = Extract<

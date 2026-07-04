@@ -5,13 +5,14 @@
   import StatTile from './StatTile.svelte';
 
   interface Props {
-    actor: ShwActor<'character'>;
+    actor: ShwActor<'character'> | ShwActor<'npc'>;
     onUpdate: (key: keyof AdditionalAttributes, value: number) => void;
   }
 
   let { actor, onUpdate }: Props = $props();
 
   const sys = $derived(actor.system);
+  const variant = $derived(actor.type === 'npc' ? 'npc' : 'character');
 
   let openStatKey = $state<keyof AdditionalAttributes | null>(null);
 
@@ -31,6 +32,7 @@
       statKey={key}
       total={sys.totals[key] ?? 0}
       sources={sys.additionalStatSources?.[key]}
+      {variant}
       isOpen={openStatKey === key}
       onToggle={toggleInfo}
       onClose={closePopup}

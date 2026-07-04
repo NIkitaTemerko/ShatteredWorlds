@@ -1,6 +1,9 @@
 <script lang="ts">
   import type { AdditionalAttributes, StatSourceKey } from '../../../../documents/Actor/types/ShwActorSystem';
-  import { STAT_SOURCE_KEYS } from '../../../../documents/Actor/types/ShwActorSystem';
+  import {
+    NPC_STAT_SOURCE_KEYS,
+    STAT_SOURCE_KEYS,
+  } from '../../../../documents/Actor/types/ShwActorSystem';
   import { t } from '../../../../shared/i18n';
   import type { I18nKey } from '../../../../shared/i18n';
   import { ADDITIONAL_ATTRIBUTE_LABELS } from '../../../../shared/model/constants';
@@ -10,10 +13,11 @@
     statKey: keyof AdditionalAttributes;
     sources: StatSourceValues;
     total: number;
+    variant?: 'character' | 'npc';
     onExtraChange: (value: number) => void;
   }
 
-  let { statKey, sources, total, onExtraChange }: Props = $props();
+  let { statKey, sources, total, variant = 'character', onExtraChange }: Props = $props();
 
   let localExtra = $state(sources.extra);
 
@@ -22,6 +26,9 @@
   });
 
   const labelKey = ADDITIONAL_ATTRIBUTE_LABELS[statKey];
+  const visibleSourceKeys = $derived(
+    variant === 'npc' ? NPC_STAT_SOURCE_KEYS : STAT_SOURCE_KEYS,
+  );
 
   const sourceLabelKeys: Record<StatSourceKey, I18nKey> = {
     base: 'character.statSources.base',
@@ -65,7 +72,7 @@
   </header>
 
   <div class="stat-detail-rows">
-    {#each STAT_SOURCE_KEYS as sourceKey (sourceKey)}
+    {#each visibleSourceKeys as sourceKey (sourceKey)}
       {#if sourceKey === 'extra'}
         <div class="stat-detail-row stat-detail-row--extra">
           <span class="stat-detail-label">{t(sourceLabelKeys[sourceKey])}</span>

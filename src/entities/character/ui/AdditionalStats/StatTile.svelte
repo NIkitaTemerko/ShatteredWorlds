@@ -12,13 +12,23 @@
     statKey: keyof AdditionalAttributes;
     total: number;
     sources: StatSourceValues | undefined;
+    variant?: 'character' | 'npc';
     isOpen: boolean;
     onToggle: (key: keyof AdditionalAttributes, e: Event) => void;
     onClose: () => void;
     onExtraChange: (key: keyof AdditionalAttributes, value: number) => void;
   }
 
-  let { statKey, total, sources, isOpen, onToggle, onClose, onExtraChange }: Props = $props();
+  let {
+    statKey,
+    total,
+    sources,
+    variant = 'character',
+    isOpen,
+    onToggle,
+    onClose,
+    onExtraChange,
+  }: Props = $props();
 
   let infoAnchorEl = $state<HTMLElement | undefined>();
 
@@ -56,6 +66,7 @@
       statKey={statKey}
       {sources}
       {total}
+      {variant}
       onClose={onClose}
       onExtraChange={(value) => onExtraChange(statKey, value)}
     />

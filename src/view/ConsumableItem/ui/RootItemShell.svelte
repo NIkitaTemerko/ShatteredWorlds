@@ -17,14 +17,16 @@
 
   let { item }: Props = $props();
 
-  if (!item.isConsumable()) throw new Error("Item is not a consumable");
-  const system = $derived(item.system);
+  const system = $derived.by(() => {
+    if (!item.isConsumable()) throw new Error("Item is not a consumable");
+    return item.system;
+  });
 
   /**
    * Унифицированный метод, который гарантирует, что мы не «съедим» соседние поля,
    * передавая в обновление сам объект consumable и патч‑путь одновременно.
    */
-  const updateConsumable = getUpdateConsumable(item);
+  const updateConsumable = $derived(getUpdateConsumable(item));
 </script>
 
 <!-- ======================== МАКЕТ ======================== -->

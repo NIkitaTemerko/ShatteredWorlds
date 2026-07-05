@@ -17,15 +17,17 @@
     onExtraChange: (value: number) => void;
   }
 
+  import { untrack } from 'svelte';
+
   let { statKey, sources, total, variant = 'character', onExtraChange }: Props = $props();
 
-  let localExtra = $state(sources.extra);
+  let localExtra = $state(untrack(() => sources.extra));
 
   $effect(() => {
     localExtra = sources.extra;
   });
 
-  const labelKey = ADDITIONAL_ATTRIBUTE_LABELS[statKey];
+  const labelKey = $derived(ADDITIONAL_ATTRIBUTE_LABELS[statKey]);
   const visibleSourceKeys = $derived(
     variant === 'npc' ? NPC_STAT_SOURCE_KEYS : STAT_SOURCE_KEYS,
   );

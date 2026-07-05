@@ -1,6 +1,6 @@
 <script lang="ts" generics="TDoc extends { id: string | null }">
   import type { Component } from "svelte";
-  import { onDestroy, onMount } from "svelte";
+  import { onDestroy, onMount, untrack } from "svelte";
 
   interface Props {
     getDocument: () => TDoc;
@@ -11,7 +11,7 @@
 
   let { getDocument, Shell, hooks, propName = "actor" }: Props = $props();
 
-  let docData = $state({ doc: getDocument(), version: 0 });
+  let docData = $state(untrack(() => ({ doc: getDocument(), version: 0 })));
 
   function handleUpdate(doc: any) {
     const currentDoc = getDocument();

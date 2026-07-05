@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
+  import { untrack } from 'svelte';
   import TreeNodeView from './TreeNodeView.svelte';
   import type { ContextMenuArgs, TreeNode } from './types';
 
@@ -29,7 +30,9 @@
     isDynamicTree = false,
   }: Props = $props();
 
-  let expandedIds = $state(initialExpandedIds ? new Set(initialExpandedIds) : new Set<string>());
+  let expandedIds = $state(
+    untrack(() => (initialExpandedIds ? new Set(initialExpandedIds) : new Set<string>())),
+  );
 
   function handleToggle(nodeId: string) {
     if (expandedIds.has(nodeId)) {

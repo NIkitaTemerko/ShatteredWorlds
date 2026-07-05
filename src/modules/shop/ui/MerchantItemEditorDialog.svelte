@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { untrack } from "svelte";
   import type { ShwItem } from "../../../documents/Item/ShwItem";
   import { t } from "../../../shared/i18n";
   import { Input } from "../../../shared/ui";
@@ -15,8 +16,8 @@
 
   let { merchantId, merchantName, item, onSave, onCancel }: Props = $props();
 
-  let price = $state(item.price);
-  let quantity = $state(item.quantity);
+  let price = $state(untrack(() => item.price));
+  let quantity = $state(untrack(() => item.quantity));
 
   const colors = SHOP_NODE_COLORS.merchant;
 

@@ -11,7 +11,7 @@
 
   let { item }: Props = $props();
 
-  const updateConsumable = getUpdateConsumable(item);
+  const updateConsumable = $derived(getUpdateConsumable(item));
 
   function handleUsesValueChange(value: number) {
     updateConsumable("uses.value", value);

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { untrack } from "svelte";
   import type { MenuQuantityItem } from "./types";
 
   interface Props {
@@ -8,7 +9,7 @@
   let { item }: Props = $props();
 
   // Локальное состояние для мгновенного отклика UI
-  let localValue = $state(item.value);
+  let localValue = $state(untrack(() => item.value));
 
   const minValue = $derived(item.min ?? 1);
 

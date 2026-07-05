@@ -47,9 +47,9 @@
   let menuOpen = $state(false);
   let menuBtnEl: HTMLElement | undefined = $state();
 
-  const hasChildren = node.children && node.children.length > 0;
-  const indent = level * 16;
-  const isLeaf = !hasChildren;
+  const hasChildren = $derived(Boolean(node.children?.length));
+  const indent = $derived(level * 16);
+  const isLeaf = $derived(!hasChildren);
 
   const showBurgerMenu = $derived(!!contextMenu);
 

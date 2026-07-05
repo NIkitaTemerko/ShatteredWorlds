@@ -13,7 +13,7 @@
 
   let { item }: Props = $props();
 
-  const updateSpell = getUpdateSpell(item);
+  const updateSpell = $derived(getUpdateSpell(item));
 
   function handleCategoryChange(category: SpellCategory, event?: Event) {
     updateSpell("category", category, event);

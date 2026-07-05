@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
+  import { untrack } from 'svelte';
   import { t } from '../../../shared/i18n';
   import { Input } from '../Input';
   import Tree from './Tree.svelte';
@@ -40,8 +41,8 @@
     onStateChange,
   }: Props = $props();
 
-  let searchQuery = $state(initialSearchQuery);
-  let selectedId = $state<string | undefined>(initialSelectedId);
+  let searchQuery = $state(untrack(() => initialSearchQuery));
+  let selectedId = $state<string | undefined>(untrack(() => initialSelectedId));
   let highlightedId = $state<string | undefined>(undefined);
   let showAutocomplete = $state(false);
   let treeRef: Tree | undefined = $state();

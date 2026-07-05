@@ -13,7 +13,7 @@
 
   let { item }: Props = $props();
 
-  const updateResource = getUpdateResource(item);
+  const updateResource = $derived(getUpdateResource(item));
 
   const img = $derived(item.img);
   const system = $derived(item.system as ResourceData);

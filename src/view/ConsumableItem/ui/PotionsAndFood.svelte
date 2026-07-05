@@ -11,10 +11,12 @@
 
   let { item }: Props = $props();
 
-  if (!item.isConsumable()) throw new Error("Item is not a consumable");
-  const system = $derived(item.system);
+  const system = $derived.by(() => {
+    if (!item.isConsumable()) throw new Error("Item is not a consumable");
+    return item.system;
+  });
 
-  const updateConsumable = getUpdateConsumable(item);
+  const updateConsumable = $derived(getUpdateConsumable(item));
   const consEffects = $derived((system as any)?.effects ?? []);
 
   function addEffect() {

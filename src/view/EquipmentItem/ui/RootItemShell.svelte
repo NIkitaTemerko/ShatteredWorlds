@@ -15,7 +15,7 @@
   let { item }: Props = $props();
 
   const system = $derived(item.system as EquipmentSystem);
-  const updateEquipment = getUpdateEquipment(item);
+  const updateEquipment = $derived(getUpdateEquipment(item));
 </script>
 
 <div class="equipment-card">

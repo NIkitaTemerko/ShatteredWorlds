@@ -12,10 +12,12 @@
 
   let { item }: Props = $props();
 
-  const updateConsumable = getUpdateConsumable(item);
+  const updateConsumable = $derived(getUpdateConsumable(item));
 
-  if (!item.isConsumable()) throw new Error("Item is not a consumable");
-  const system = $derived(item.system);
+  const system = $derived.by(() => {
+    if (!item.isConsumable()) throw new Error("Item is not a consumable");
+    return item.system;
+  });
 
   function handleRarityChange(event: Event) {
     const value = (event.currentTarget as HTMLSelectElement).value as RarityType;

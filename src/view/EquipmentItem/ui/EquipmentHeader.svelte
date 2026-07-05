@@ -12,7 +12,7 @@
 
   let { item }: Props = $props();
 
-  const updateEquipment = getUpdateEquipment(item);
+  const updateEquipment = $derived(getUpdateEquipment(item));
 
   const img = $derived(item.img);
   const system = $derived(item.system as EquipmentSystem);

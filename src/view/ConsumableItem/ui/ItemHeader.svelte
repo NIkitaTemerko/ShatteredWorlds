@@ -11,11 +11,13 @@
 
   let { item }: Props = $props();
 
-  if (!item.isConsumable()) throw new Error("Item is not a consumable");
-  const system = $derived(item.system);
+  const system = $derived.by(() => {
+    if (!item.isConsumable()) throw new Error("Item is not a consumable");
+    return item.system;
+  });
   const img = $derived(item.img);
 
-  const updateConsumable = getUpdateConsumable(item);
+  const updateConsumable = $derived(getUpdateConsumable(item));
 
   function handleTypeChange(event: Event) {
     const value = (event.currentTarget as HTMLSelectElement).value as ConsumableType;

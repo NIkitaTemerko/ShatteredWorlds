@@ -16,10 +16,11 @@
 
   let { item }: Props = $props();
 
-  if (!item.isResource()) throw new Error("Item is not a resource");
-
-  const system = $derived(item.system as ResourceData);
-  const updateResource = getUpdateResource(item);
+  const system = $derived.by(() => {
+    if (!item.isResource()) throw new Error("Item is not a resource");
+    return item.system as ResourceData;
+  });
+  const updateResource = $derived(getUpdateResource(item));
   const categoryColors = $derived(getCategoryColor(system.category));
   const currentRarityColors = $derived(RARITY_COLORS[system.rarity]);
 </script>

@@ -13,7 +13,7 @@
 
   let { item }: Props = $props();
 
-  const updateEquipment = getUpdateEquipment(item);
+  const updateEquipment = $derived(getUpdateEquipment(item));
 
   const system = $derived(item.system as EquipmentSystem);
   const currentRarityColors = $derived(RARITY_COLORS[system.rarity]);

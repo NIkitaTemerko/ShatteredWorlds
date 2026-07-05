@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { untrack } from "svelte";
   import { Input, SelectInput } from "../../../shared/ui";
   import { localize, t } from "../../../shared/i18n";
   import type { ShopNode, LocationNode, MerchantNode } from "../model/types";
@@ -13,9 +14,9 @@
 
   let { node, onSave, onCancel }: Props = $props();
 
-  let name = $state(node.name);
-  let description = $state("description" in node ? node.description || "" : "");
-  let parentId = $state(node.parentId || "");
+  let name = $state(untrack(() => node.name));
+  let description = $state(untrack(() => ("description" in node ? node.description || "" : "")));
+  let parentId = $state(untrack(() => node.parentId || ""));
 
   const colors = $derived(SHOP_NODE_COLORS[node.type]);
 

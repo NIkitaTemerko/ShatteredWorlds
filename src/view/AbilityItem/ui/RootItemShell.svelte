@@ -18,7 +18,7 @@
 
   let { item }: Props = $props();
 
-  const updateAbility = getUpdateAbility(item);
+  const updateAbility = $derived(getUpdateAbility(item));
 
   function handleCategoryChange(category: AbilityCategory, event?: Event) {
     updateAbility("category", category, event);

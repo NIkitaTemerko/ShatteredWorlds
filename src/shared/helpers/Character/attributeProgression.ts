@@ -1,6 +1,7 @@
 import type { ShwActorSystem } from '../../../documents/Actor/types/ShwActorSystem';
 import { CHAR_DEFAULTS } from '../../model/constants/characterDefaults';
-import { scaleAttributeCoefficients } from './coefficients';
+
+const FORTUNE_BARRIER_COEFFICIENTS = 2;
 
 type ThresholdEntry = readonly [threshold: number, value: number];
 
@@ -39,8 +40,6 @@ const WILL_ABSORPTION_TABLE: ThresholdEntry[] = [
   [25, 20],
 ];
 
-const HEALTH_BASE = 10;
-
 export interface AttributeProgressionBonuses {
   impulse: number;
   reactions: number;
@@ -50,7 +49,6 @@ export interface AttributeProgressionBonuses {
   psiDefense: number;
   absorption: number;
   speedBonus: number;
-  healthMax: number;
 }
 
 function lookupThresholdTable(attributeValue: number, table: readonly ThresholdEntry[]): number {
@@ -72,23 +70,12 @@ function getAttributeValue(
   return attributes[key].value;
 }
 
-function calculateHealthBonus(attributes: ShwActorSystem['attributes']): number {
-  return (
-    Math.floor(getAttributeValue(attributes, 'force') / 10) * 15 +
-    Math.floor(getAttributeValue(attributes, 'will') / 10) * 10 +
-    Math.floor(getAttributeValue(attributes, 'presence') / 10) * 10 +
-    Math.floor(getAttributeValue(attributes, 'fortune') / 10) * 5 +
-    Math.floor(getAttributeValue(attributes, 'finesse') / 10) * 5
-  );
-}
-
 /** Бонусы производных ресурсов от базовых характеристик (не перезаписывают ручные значения). */
 export function calculateAttributeProgressionBonuses(
   attributes: ShwActorSystem['attributes'],
 ): AttributeProgressionBonuses {
   const force = getAttributeValue(attributes, 'force');
   const finesse = getAttributeValue(attributes, 'finesse');
-  const fortune = getAttributeValue(attributes, 'fortune');
   const will = getAttributeValue(attributes, 'will');
 
   return {
@@ -96,19 +83,17 @@ export function calculateAttributeProgressionBonuses(
     reactions: finesse >= 15 ? 1 : 0,
     bonusActions: will >= 20 ? 1 : 0,
     initiative: lookupThresholdTable(finesse, FINESSE_INITIATIVE_TABLE),
-    barrier: scaleAttributeCoefficients(2, fortune),
+    barrier: FORTUNE_BARRIER_COEFFICIENTS * attributes.fortune.coefficient,
     psiDefense: lookupThresholdTable(will, WILL_PSI_DEFENSE_TABLE),
     absorption: lookupThresholdTable(will, WILL_ABSORPTION_TABLE),
     speedBonus: lookupThresholdTable(finesse, FINESSE_STEPS_TABLE),
-    healthMax: HEALTH_BASE + calculateHealthBonus(attributes),
   };
 }
 
-/** Применяет только полностью вычисляемые поля (скорость, макс. HP). */
+/** Применяет только полностью вычисляемые поля (скорость). */
 export function applyComputedResourceFields(
   sys: ShwActorSystem,
   bonuses: AttributeProgressionBonuses,
 ): void {
   sys.utility.speed = CHAR_DEFAULTS.utility.speed + bonuses.speedBonus;
-  sys.health.max = bonuses.healthMax;
 }

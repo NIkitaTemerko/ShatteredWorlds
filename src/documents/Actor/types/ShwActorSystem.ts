@@ -10,6 +10,8 @@ interface AttributeFields {
 interface HealthFields {
   value: number;
   max: number;
+  /** Ручной доп. бонус HP (персонаж). */
+  extra: number;
 }
 
 interface Attributes<T> {
@@ -46,6 +48,22 @@ export interface StatSourceValues {
 
 /** Runtime-only: разбивка additional-статов по источникам */
 export type AdditionalStatSources = Record<keyof AdditionalAttributes, StatSourceValues>;
+
+export type HealthStatSourceKey = 'base' | 'equipment' | 'abilities' | 'extra';
+
+export interface HealthStatSources {
+  base: number;
+  equipment: number;
+  abilities: number;
+  extra: number;
+}
+
+export const HEALTH_STAT_SOURCE_KEYS: HealthStatSourceKey[] = [
+  'base',
+  'equipment',
+  'abilities',
+  'extra',
+];
 
 export const STAT_SOURCE_KEYS: StatSourceKey[] = [
   'base',
@@ -104,6 +122,8 @@ export interface ShwActorSystem {
   totals: CharacterTotals;
   /** Runtime-only: разбивка additional-статов */
   additionalStatSources: AdditionalStatSources;
+  /** Runtime-only: разбивка макс. HP */
+  healthStatSources: HealthStatSources;
 }
 
 export interface ShwNpcSystem {
@@ -114,11 +134,19 @@ export interface ShwNpcSystem {
   totals: CharacterTotals;
   /** Runtime-only: разбивка additional-статов */
   additionalStatSources: AdditionalStatSources;
+  /** Runtime-only: разбивка макс. HP */
+  healthStatSources: HealthStatSources;
 }
 
 /** Persisted actor system (schema); totals и additionalStatSources — runtime-only. */
-export type ShwActorSystemSource = Omit<ShwActorSystem, 'totals' | 'additionalStatSources'>;
-export type ShwNpcSystemSource = Omit<ShwNpcSystem, 'totals' | 'additionalStatSources'>;
+export type ShwActorSystemSource = Omit<
+  ShwActorSystem,
+  'totals' | 'additionalStatSources' | 'healthStatSources'
+>;
+export type ShwNpcSystemSource = Omit<
+  ShwNpcSystem,
+  'totals' | 'additionalStatSources' | 'healthStatSources'
+>;
 
 /** additionalAttributes keys that may exist on runtime totals */
 export type AdditionalAttributesTotalKey = Extract<

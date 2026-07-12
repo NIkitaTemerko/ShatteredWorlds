@@ -74,9 +74,6 @@ export function prepareNpcDerivedData(sys: ShwNpcSystem) {
   ensureTotals(sys);
 
   const attrs = sys.attributes;
-  const progression = calculateAttributeProgressionBonuses(
-    attrs as ShwActorSystem['attributes'],
-  );
 
   sys.totals.health = sys.health.max;
   sys.totals.healthCoefficient = healthCoefficientValue(sys.health.max);
@@ -86,12 +83,13 @@ export function prepareNpcDerivedData(sys: ShwNpcSystem) {
     sys.totals[k] = attrs[k].value;
   }
 
-  syncAdditionalStatSources(sys, progression);
-
   for (const k of STAT_KEYS) {
     const a = attrs[k];
     a.charBonus = (a.charBonusBase ?? 0) + Math.floor(a.value / 5);
     a.saveBonus = (a.saveBonusBase ?? 0) + Math.floor(a.value / 5);
     a.coefficient = attributeCoefficientValue(a.value + a.extra);
   }
+
+  const progression = calculateAttributeProgressionBonuses(attrs as ShwActorSystem['attributes']);
+  syncAdditionalStatSources(sys, progression);
 }

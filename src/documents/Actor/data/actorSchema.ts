@@ -28,8 +28,9 @@ export const npcAttributeSchema = () =>
 
 export const healthSchema = () =>
   new fields.SchemaField({
-    value: intField(10),
-    max: intField(10),
+    value: intField(20),
+    max: intField(20),
+    extra: intField(0),
   });
 
 export const utilitySchema = () =>

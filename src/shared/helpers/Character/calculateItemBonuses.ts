@@ -65,6 +65,7 @@ export function applyManualItemBonuses(
   for (const [path, bonus] of bonuses.entries()) {
     if (path.startsWith('totals.')) continue;
     if (path.startsWith('additionalAttributes.')) continue;
+    if (path.startsWith('health.')) continue;
     if (path.startsWith('attributes.') && path.endsWith('.value')) continue;
 
     const parsed = parsePath(path);

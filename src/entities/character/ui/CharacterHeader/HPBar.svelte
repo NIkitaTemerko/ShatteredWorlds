@@ -2,7 +2,9 @@
   import type { ShwActor } from "../../../../documents/Actor/ShwActor";
   import { t } from "../../../../shared/i18n";
   import { ActionIcon } from "../../../../shared/ui/ActionIcon";
+  import { AnchoredPopup, closeActivePopup } from "../../../../shared/ui/AnchoredPopup";
   import Input from "../../../../shared/ui/Input/ui.svelte";
+  import { HealthDetailContent } from "../StatDetailPopup";
 
   interface Props {
     actor: ShwActor<"character"> | ShwActor<"npc">;
@@ -11,10 +13,24 @@
   let { actor }: Props = $props();
 
   const isCharacter = $derived(actor.isCharacter());
+  const maxHealth = $derived(actor.system.totals.health);
+  const healthSources = $derived(actor.system.healthStatSources);
+
+  let hpInputText = $state("");
+
+  const hpInputSize = $derived(
+    Math.max(1, (hpInputText || String(actor.system.health.value) || "0").length, String(maxHealth).length),
+  );
+
+  $effect(() => {
+    hpInputText = String(actor.system.health.value);
+  });
 
   // 0 = true damage (skull), 1 = no armor (shield off), 2 = full defense (shield on)
   let damageMode = $state(2);
   let damageValue = $state(0);
+  let healthPopupOpen = $state(false);
+  let maxHpAnchorEl = $state<HTMLElement | undefined>();
 
   function toggleDefense() {
     damageMode = (damageMode + 1) % 3;
@@ -60,33 +76,79 @@
     target.value = String(Math.min(Math.max(value, min), max));
   }
 
+  function handleHealthValueInput(e: Event) {
+    const target = e.currentTarget as HTMLInputElement;
+    hpInputText = target.value;
+    clampHealthValue(e);
+  }
+
   function clampHealthMax(e: Event) {
     const target = e.currentTarget as HTMLInputElement;
     const value = Number(target.value);
     const min = Number(target.min);
     target.value = String(Math.max(value, min));
   }
+
+  function toggleHealthPopup(e: Event) {
+    e.stopPropagation();
+    if (!healthPopupOpen) {
+      closeActivePopup();
+    }
+    healthPopupOpen = !healthPopupOpen;
+  }
+
+  function closeHealthPopup() {
+    healthPopupOpen = false;
+  }
+
+  function handleExtraChange(value: number) {
+    actor.update({ "system.health.extra": value });
+  }
 </script>
 
 <div class="hp-wrapper">
-  <progress class="hp-bar" value={actor.system.health.value} max={actor.system.totals.health}></progress>
+  <progress class="hp-bar" value={actor.system.health.value} max={maxHealth}></progress>
   <span class="hp-label">
-    <label>
-      <Input
-        variant="underline"
-        name="system.health.value"
-        type="number"
-        data-dtype="Number"
-        min="0"
-        max={actor.system.totals.health}
-        oninput={clampHealthValue}
-        value={actor.system.health.value}
-        style="min-width:2.5rem;max-width:5rem;text:right;"
-      />
-    </label>
-    /
+    <input
+      class="hp-current-input"
+      name="system.health.value"
+      type="number"
+      data-dtype="Number"
+      min="0"
+      max={maxHealth}
+      size={hpInputSize}
+      oninput={handleHealthValueInput}
+      value={actor.system.health.value}
+    />
+    <span class="hp-separator">/</span>
     {#if isCharacter}
-      <span>{actor.system.health.max}</span>
+      <button
+        type="button"
+        class="max-hp-trigger"
+        data-popup-id="health-max"
+        bind:this={maxHpAnchorEl}
+        onclick={toggleHealthPopup}
+        title={t("character.statMenu")}
+      >
+        {maxHealth}
+      </button>
+      {#if healthPopupOpen && healthSources}
+        <AnchoredPopup
+          open={true}
+          anchorEl={maxHpAnchorEl}
+          onClose={closeHealthPopup}
+          popupId="health-max"
+          triggerMode="click"
+        >
+          {#snippet children()}
+            <HealthDetailContent
+              sources={healthSources}
+              total={maxHealth}
+              onExtraChange={handleExtraChange}
+            />
+          {/snippet}
+        </AnchoredPopup>
+      {/if}
     {:else}
       <label>
         <Input
@@ -100,9 +162,9 @@
           style="min-width:2.5rem;max-width:5rem;text-align:right;"
         />
       </label>
-    {/if}
-    {#if !isCharacter || actor.system.totals.health !== actor.system.health.max}
-      <span>({actor.system.totals.health})</span>
+      {#if maxHealth !== actor.system.health.max}
+        <span>({maxHealth})</span>
+      {/if}
     {/if}
   </span>
   <div class="hp-damage-wrapper">
@@ -175,8 +237,84 @@
     font-size: var(--font-size-14);
     flex-shrink: 0;
     white-space: nowrap;
-    display: flex;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .hp-separator {
+    margin: 0 0.25rem;
+    line-height: 1;
+    user-select: none;
+  }
+
+  .hp-current-input {
+    field-sizing: content;
+    width: auto;
+    min-width: fit-content;
+    margin: 0 0.15rem 0 0;
+    padding: 0.1rem 0.35rem;
+    border: none;
+    border-bottom: 1px solid var(--color-border-light-2, rgba(0, 0, 0, 0.2));
+    border-radius: 0;
+    background: transparent;
+    font: inherit;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    color: inherit;
+    text-align: right;
+    outline: none;
+    appearance: textfield;
+    transition: border-color 0.15s ease;
+    vertical-align: baseline;
+  }
+
+  .hp-current-input:hover {
+    border-bottom-color: var(--color-border-dark, rgba(0, 0, 0, 0.4));
+  }
+
+  .hp-current-input:focus {
+    border-bottom-color: var(--color-primary, #0066cc);
+    box-shadow: none;
+  }
+
+  .hp-current-input::-webkit-inner-spin-button,
+  .hp-current-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .max-hp-trigger {
+    display: inline-flex;
     align-items: center;
+    justify-content: center;
+    padding: 0.1rem 0.35rem;
+    margin: 0;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    vertical-align: baseline;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+  }
+
+  .max-hp-trigger:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  .max-hp-trigger:active {
+    background: rgba(0, 0, 0, 0.08);
+  }
+
+  .max-hp-trigger:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.3);
   }
 
   .hp-damage-wrapper {

@@ -1,5 +1,6 @@
 import type { AdditionalAttributes, ShwActorSystem } from '../../../documents/Actor/types/ShwActorSystem';
 import { ALL_ADDITIONAL_KEYS } from '../../model/constants/characterDefaults';
+import { attributeCoefficientValue } from '../Character/coefficients';
 import { calculateAttributeProgressionBonuses } from '../Character/attributeProgression';
 import type { AttributeProgressionBonuses } from '../Character/attributeProgression';
 import {
@@ -34,9 +35,10 @@ export function migrateNpcAdditionalAttributesToExtras(
   const attributes = system.attributes;
   if (!additional || !attributes) return false;
 
-  const progression = calculateAttributeProgressionBonuses(
-    attributes as ShwActorSystem['attributes'],
-  );
+  const attrs = attributes as ShwActorSystem['attributes'];
+  const { fortune } = attrs;
+  fortune.coefficient = attributeCoefficientValue(fortune.value + fortune.extra);
+  const progression = calculateAttributeProgressionBonuses(attrs);
 
   let changed = false;
 
@@ -62,9 +64,10 @@ export function npcAdditionalAttributesNeedMigration(
   const attributes = system.attributes;
   if (!additional || !attributes) return false;
 
-  const progression = calculateAttributeProgressionBonuses(
-    attributes as ShwActorSystem['attributes'],
-  );
+  const attrs = attributes as ShwActorSystem['attributes'];
+  const { fortune } = attrs;
+  fortune.coefficient = attributeCoefficientValue(fortune.value + fortune.extra);
+  const progression = calculateAttributeProgressionBonuses(attrs);
 
   for (const key of ALL_ADDITIONAL_KEYS) {
     const stored = additional[key];

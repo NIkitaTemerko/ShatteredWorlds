@@ -98,6 +98,22 @@ export function sumBonusForAdditionalStat(
   );
 }
 
+export function sumBonusForHealth(bonuses: Map<CharacterStatPath, number>): number {
+  return (
+    (bonuses.get('health.max' as CharacterStatPath) ?? 0) +
+    (bonuses.get('totals.health' as CharacterStatPath) ?? 0)
+  );
+}
+
+export function sumHealthStatSources(sources: {
+  base: number;
+  equipment: number;
+  abilities: number;
+  extra: number;
+}): number {
+  return sources.base + sources.equipment + sources.abilities + sources.extra;
+}
+
 export function sumStatSources(sources: {
   base: number;
   growth: number;

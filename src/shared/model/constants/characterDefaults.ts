@@ -20,6 +20,9 @@ export const STAT_NAME_KEYS = {
   natural: 'attributes.natural',
 } as const;
 
+/** Базовое макс. HP персонажа — только derived, не в JSON. */
+export const HEALTH_BASE = 20;
+
 /** Игровая база combat-статов — только derived, не в JSON. */
 export const ADDITIONAL_STAT_BASE = {
   actions: 2,

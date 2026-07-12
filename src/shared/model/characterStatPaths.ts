@@ -9,7 +9,7 @@ type AttributePath = `attributes.${AttributeKey}.${AttributeFields}`;
 type AdditionalAttributeKey = keyof ShwActorSystem['additionalAttributes'];
 type AdditionalAttributePath = `additionalAttributes.${AdditionalAttributeKey}`;
 
-type HealthPath = 'health.value' | 'health.max';
+type HealthPath = 'health.value' | 'health.max' | 'health.extra';
 
 type UtilityPath = 'utility.speed' | 'utility.level';
 

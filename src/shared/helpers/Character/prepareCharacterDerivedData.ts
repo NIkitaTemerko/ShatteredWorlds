@@ -1,6 +1,7 @@
 import type { ShwActor } from '../../../documents/Actor/ShwActor';
 import type {
   AdditionalAttributes,
+  HealthStatSources,
   ShwActorSystem,
   StatSourceValues,
 } from '../../../documents/Actor/types/ShwActorSystem';
@@ -9,6 +10,7 @@ import { STAT_KEYS } from '../../model/constants/actorKeys';
 import {
   ADDITIONAL_STAT_BASE,
   ALL_ADDITIONAL_KEYS,
+  HEALTH_BASE,
   type AdditionalStatBaseKey,
 } from '../../model/constants/characterDefaults';
 import {
@@ -25,6 +27,8 @@ import {
 import {
   collectStatBonusesBySource,
   sumBonusForAdditionalStat,
+  sumBonusForHealth,
+  sumHealthStatSources,
   sumStatSources,
 } from './collectStatBonusesBySource';
 import {
@@ -92,6 +96,31 @@ function syncAttributeTotals(
   }
 }
 
+function ensureHealthStatSources(
+  sys: ShwActorSystem,
+): asserts sys is ShwActorSystem & { healthStatSources: ShwActorSystem['healthStatSources'] } {
+  if (!sys.healthStatSources) {
+    sys.healthStatSources = {} as ShwActorSystem['healthStatSources'];
+  }
+}
+
+function syncHealthStatSources(
+  sys: ShwActorSystem,
+  itemBonuses: ReturnType<typeof collectStatBonusesBySource>,
+): void {
+  ensureHealthStatSources(sys);
+
+  const sources: HealthStatSources = {
+    base: HEALTH_BASE,
+    equipment: sumBonusForHealth(itemBonuses.equipment),
+    abilities: sumBonusForHealth(itemBonuses.abilities),
+    extra: sys.health.extra,
+  };
+
+  sys.healthStatSources = sources;
+  sys.totals.health = sumHealthStatSources(sources);
+}
+
 function syncAdditionalStatSources(
   sys: ShwActorSystem,
   progression: AttributeProgressionBonuses,
@@ -121,12 +150,11 @@ function syncResourceTotals(
 ): void {
   applyComputedResourceFields(sys, progression);
 
-  sys.health.max += sumItemBonuses(totalsDirectBonuses, ['health.max', 'totals.health']);
   sys.utility.speed += sumItemBonuses(totalsDirectBonuses, ['utility.speed', 'totals.speed']);
 
   syncAdditionalStatSources(sys, progression, itemBonuses);
+  syncHealthStatSources(sys, itemBonuses);
 
-  sys.totals.health = sys.health.max;
   sys.totals.speed = sys.utility.speed;
   sys.totals.healthCoefficient =
     healthCoefficientValue(sys.totals.health) +
@@ -141,11 +169,13 @@ function updateAttributeBonuses(
   for (const k of STAT_KEYS) {
     const a = attributes[k];
     const attributeTotal = totals[k] + a.extra;
+    const coefficientTotal =
+      k === 'fortune' ? a.extra + totals[k] - a.value : attributeTotal;
     const fromTotal = Math.floor(totals[k] / 5);
     a.charBonus = fromTotal + getItemBonus(bonuses, `attributes.${k}.charBonus`);
     a.saveBonus = fromTotal + getItemBonus(bonuses, `attributes.${k}.saveBonus`);
     a.coefficient =
-      attributeCoefficientValue(attributeTotal) +
+      attributeCoefficientValue(coefficientTotal) +
       getItemBonus(bonuses, `attributes.${k}.coefficient`);
   }
 }
@@ -161,9 +191,9 @@ export function prepareCharacterDerivedData(sys: ShwActorSystem, actor: ShwActor
   const { bonuses } = calculateItemBonuses(actor);
   applyManualItemBonuses(sys, bonuses);
 
-  const progression = calculateAttributeProgressionBonuses(sys.attributes);
-
   syncAttributeTotals(sys, bonuses);
-  syncResourceTotals(sys, progression, bonuses, itemBonusesBySource);
   updateAttributeBonuses(sys.totals, sys.attributes, bonuses);
+
+  const progression = calculateAttributeProgressionBonuses(sys.attributes);
+  syncResourceTotals(sys, progression, bonuses, itemBonusesBySource);
 }

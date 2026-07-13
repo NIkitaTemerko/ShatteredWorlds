@@ -43,6 +43,7 @@ export const barrierSchema = () =>
 export const utilitySchema = () =>
   new fields.SchemaField({
     speed: intField(CHAR_DEFAULTS.utility.speed),
+    speedExtra: intField(CHAR_DEFAULTS.utility.speedExtra),
     level: intField(CHAR_DEFAULTS.utility.level),
   });
 
@@ -82,5 +83,6 @@ export const npcAttributesSchema = () =>
 export const npcUtilitySchema = () =>
   new fields.SchemaField({
     speed: intField(NPC_DEFAULTS.utility.speed),
+    speedExtra: intField(NPC_DEFAULTS.utility.speedExtra),
     level: intField(NPC_DEFAULTS.utility.level),
   });

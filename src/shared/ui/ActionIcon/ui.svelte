@@ -51,6 +51,12 @@
     flex-shrink: 0;
   }
 
+  /* Foundry: body.game .app button > i { margin-right: 3px; } */
+  :global(body.game .app button.action-icon > i),
+  :global(body.game .app button.action-icon > svg) {
+    margin: 0;
+  }
+
   /* Size variants */
   .action-icon.size-sm {
     width: 24px;

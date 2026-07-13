@@ -14,6 +14,7 @@ export const NPC_TOTAL_KEYS = [
 export const NPC_DEFAULTS = {
   utility: {
     speed: 20,
+    speedExtra: 0,
     level: 1,
   },
 

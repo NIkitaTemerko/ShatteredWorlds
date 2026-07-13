@@ -136,6 +136,8 @@ export const ATTRIBUTE_ROLL_SOURCE_KEYS: (keyof AttributeRollSources)[] = [
 
 interface UtilityFields {
   speed: number;
+  /** Ручной доп. бонус скорости (персонаж). */
+  speedExtra: number;
   level: number;
 }
 
@@ -184,6 +186,8 @@ export interface ShwActorSystem {
   additionalStatSources: AdditionalStatSources;
   /** Runtime-only: разбивка макс. HP */
   healthStatSources: HealthStatSources;
+  /** Runtime-only: разбивка скорости */
+  speedStatSources: StatSourceValues;
   /** Runtime-only: разбивка основных атрибутов */
   attributeStatSources: AttributeStatSources;
 }
@@ -199,6 +203,8 @@ export interface ShwNpcSystem {
   additionalStatSources: AdditionalStatSources;
   /** Runtime-only: разбивка макс. HP */
   healthStatSources: HealthStatSources;
+  /** Runtime-only: разбивка скорости */
+  speedStatSources: StatSourceValues;
   /** Runtime-only: разбивка основных атрибутов */
   attributeStatSources: AttributeStatSources;
 }
@@ -206,11 +212,11 @@ export interface ShwNpcSystem {
 /** Persisted actor system (schema); totals и additionalStatSources — runtime-only. */
 export type ShwActorSystemSource = Omit<
   ShwActorSystem,
-  'totals' | 'additionalStatSources' | 'healthStatSources' | 'attributeStatSources'
+  'totals' | 'additionalStatSources' | 'healthStatSources' | 'speedStatSources' | 'attributeStatSources'
 >;
 export type ShwNpcSystemSource = Omit<
   ShwNpcSystem,
-  'totals' | 'additionalStatSources' | 'healthStatSources' | 'attributeStatSources'
+  'totals' | 'additionalStatSources' | 'healthStatSources' | 'speedStatSources' | 'attributeStatSources'
 >;
 
 /** additionalAttributes keys that may exist on runtime totals */

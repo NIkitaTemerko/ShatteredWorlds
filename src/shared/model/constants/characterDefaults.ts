@@ -23,6 +23,9 @@ export const STAT_NAME_KEYS = {
 /** Базовое макс. HP персонажа — только derived, не в JSON. */
 export const HEALTH_BASE = 20;
 
+/** Базовая скорость персонажа — только derived, не в JSON. */
+export const SPEED_BASE = 20;
+
 /** Игровая база combat-статов — только derived, не в JSON. */
 export const ADDITIONAL_STAT_BASE = {
   actions: 2,
@@ -60,6 +63,7 @@ export function additionalTotal(
 export const CHAR_DEFAULTS = {
   utility: {
     speed: 20,
+    speedExtra: 0,
     level: 1,
   },
 

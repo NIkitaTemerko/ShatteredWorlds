@@ -11,10 +11,10 @@ import {
   ADDITIONAL_STAT_BASE,
   ALL_ADDITIONAL_KEYS,
   HEALTH_BASE,
+  SPEED_BASE,
   type AdditionalStatBaseKey,
 } from '../../model/constants/characterDefaults';
 import {
-  applyComputedResourceFields,
   calculateAttributeProgressionBonuses,
   type AttributeProgressionBonuses,
 } from './attributeProgression';
@@ -150,20 +150,47 @@ function syncAdditionalStatSources(
   }
 }
 
+const SPEED_ITEM_PATHS = ['utility.speed', 'totals.speed'] as const;
+
+function ensureSpeedStatSources(
+  sys: ShwActorSystem,
+): asserts sys is ShwActorSystem & { speedStatSources: ShwActorSystem['speedStatSources'] } {
+  if (!sys.speedStatSources) {
+    sys.speedStatSources = {} as ShwActorSystem['speedStatSources'];
+  }
+}
+
+function syncSpeedStatSources(
+  sys: ShwActorSystem,
+  progression: AttributeProgressionBonuses,
+  itemBonuses: ReturnType<typeof collectStatBonusesBySource>,
+): void {
+  ensureSpeedStatSources(sys);
+
+  const sources: StatSourceValues = {
+    base: SPEED_BASE,
+    growth: progression.speedBonus,
+    equipment: sumItemBonuses(itemBonuses.equipment, SPEED_ITEM_PATHS),
+    abilities: sumItemBonuses(itemBonuses.abilities, SPEED_ITEM_PATHS),
+    extra: sys.utility.speedExtra,
+  };
+
+  sys.speedStatSources = sources;
+  sys.utility.speed = sumStatSources(sources);
+  sys.totals.speed = sys.utility.speed;
+}
+
 function syncResourceTotals(
   sys: ShwActorSystem,
   progression: AttributeProgressionBonuses,
   totalsDirectBonuses: Map<CharacterStatPath, number>,
   itemBonuses: ReturnType<typeof collectStatBonusesBySource>,
 ): void {
-  applyComputedResourceFields(sys, progression);
-
-  sys.utility.speed += sumItemBonuses(totalsDirectBonuses, ['utility.speed', 'totals.speed']);
+  syncSpeedStatSources(sys, progression, itemBonuses);
 
   syncAdditionalStatSources(sys, progression, itemBonuses);
   syncHealthStatSources(sys, itemBonuses);
 
-  sys.totals.speed = sys.utility.speed;
   sys.totals.healthCoefficient =
     healthCoefficientValue(sys.totals.health) +
     getItemBonus(totalsDirectBonuses, 'totals.healthCoefficient');

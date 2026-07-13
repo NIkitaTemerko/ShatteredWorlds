@@ -6,13 +6,21 @@ import type {
 } from '../../model/damage/types';
 import { resolveDefenseDetailed } from './resolveDefense';
 
+export interface DamageSequenceOptions {
+  /** Разовый ручной барьер — поглощает урон, но не сохраняется на акторе. */
+  oneTimeBarrier?: number;
+}
+
 export function applyDamageSequence(
   entries: DamageEntry[],
   state: ActorCombatState,
+  options: DamageSequenceOptions = {},
 ): DamageSequenceResult {
   let currentBarrier = state.barrier;
+  let oneTimeBarrier = Math.max(0, options.oneTimeBarrier ?? 0);
   let currentHealth = state.health;
   let barrierLost = 0;
+  let oneTimeBarrierLost = 0;
   let healthLost = 0;
   const breakdown: DamageSequenceResult['entries'] = [];
 
@@ -28,6 +36,7 @@ export function applyDamageSequence(
         raw: 0,
         barrierBefore,
         barrierAbsorbed: 0,
+        oneTimeBarrierAbsorbed: 0,
         overflow: 0,
         defenseSteps: [],
         hpDamage: 0,
@@ -37,10 +46,16 @@ export function applyDamageSequence(
       return;
     }
 
-    const barrierHit = Math.min(currentBarrier, raw);
+    const totalBarrierPool = currentBarrier + oneTimeBarrier;
+    const barrierHit = Math.min(totalBarrierPool, raw);
+    const fromOneTime = Math.min(oneTimeBarrier, barrierHit);
+    const fromBarrier = barrierHit - fromOneTime;
     const overflow = raw - barrierHit;
-    currentBarrier -= barrierHit;
-    barrierLost += barrierHit;
+
+    oneTimeBarrier -= fromOneTime;
+    currentBarrier -= fromBarrier;
+    barrierLost += fromBarrier;
+    oneTimeBarrierLost += fromOneTime;
 
     const defense =
       overflow > 0
@@ -56,7 +71,8 @@ export function applyDamageSequence(
       order: index + 1,
       raw,
       barrierBefore,
-      barrierAbsorbed: barrierHit,
+      barrierAbsorbed: fromBarrier,
+      oneTimeBarrierAbsorbed: fromOneTime,
       overflow,
       defenseSteps: defense.steps,
       hpDamage: defense.hpDamage,
@@ -67,6 +83,7 @@ export function applyDamageSequence(
 
   return {
     barrierLost,
+    oneTimeBarrierLost,
     healthLost,
     finalBarrier: currentBarrier,
     finalHealth: currentHealth,
@@ -78,6 +95,7 @@ export function applyDamageSequence(
 export function previewDamageSequence(
   entries: DamageEntry[],
   state: ActorCombatState,
+  options: DamageSequenceOptions = {},
 ): DamageSequenceResult {
-  return applyDamageSequence(entries, state);
+  return applyDamageSequence(entries, state, options);
 }

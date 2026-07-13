@@ -68,6 +68,7 @@ export interface DamageEntryBreakdown {
   raw: number;
   barrierBefore: number;
   barrierAbsorbed: number;
+  oneTimeBarrierAbsorbed: number;
   overflow: number;
   defenseSteps: DefenseStepBreakdown[];
   hpDamage: number;
@@ -77,6 +78,7 @@ export interface DamageEntryBreakdown {
 
 export interface DamageSequenceResult {
   barrierLost: number;
+  oneTimeBarrierLost: number;
   healthLost: number;
   finalBarrier: number;
   finalHealth: number;

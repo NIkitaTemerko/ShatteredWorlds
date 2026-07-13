@@ -7,6 +7,7 @@
   import { localize, t } from "../../../../shared/i18n";
   import { getDamageTypeDefinition, damageTypeHitsArmor } from "../../../../shared/model/damage/damageTypeConfig";
   import type { CombatDamageType, DamageEntry } from "../../../../shared/model/damage/types";
+  import { StatDetailAdjustableValue } from "../StatDetailPopup";
   import DamagePreviewLog from "./DamagePreviewLog.svelte";
   import DamageRowsList from "./DamageRowsList.svelte";
   import { type DamageRow } from "./DamageRowItem.svelte";
@@ -40,6 +41,7 @@
   }
 
   let rows = $state<DamageRow[]>([createRow()]);
+  let oneTimeBarrier = $state(0);
   let isDraggingRows = $state(false);
   let frozenPreviewEntries = $state<DamageEntry[]>([]);
 
@@ -77,14 +79,26 @@
   const previewEntries = $derived(
     isDraggingRows ? frozenPreviewEntries : rowsToPreviewEntries(rows),
   );
-  const previewResult = $derived(previewDamageSequence(previewEntries, combatState));
-  const previewSummary = $derived(
-    localize("character.damage.preview", {
-      barrier: String(previewResult.barrierLost),
-      health: String(previewResult.healthLost),
-    }),
+  const previewResult = $derived(
+    previewDamageSequence(previewEntries, combatState, { oneTimeBarrier }),
   );
-  const canApply = $derived(previewResult.barrierLost > 0 || previewResult.healthLost > 0);
+  const previewSummary = $derived(
+    previewResult.oneTimeBarrierLost > 0
+      ? localize("character.damage.previewWithOneTimeBarrier", {
+          barrier: String(previewResult.barrierLost),
+          oneTimeBarrier: String(previewResult.oneTimeBarrierLost),
+          health: String(previewResult.healthLost),
+        })
+      : localize("character.damage.preview", {
+          barrier: String(previewResult.barrierLost),
+          health: String(previewResult.healthLost),
+        }),
+  );
+  const canApply = $derived(
+    previewResult.barrierLost > 0 ||
+      previewResult.oneTimeBarrierLost > 0 ||
+      previewResult.healthLost > 0,
+  );
   const previewMaxHeight = $derived(
     Math.round(PREVIEW_MIN_HEIGHT + summaryPaneRatio * (PREVIEW_MAX_HEIGHT - PREVIEW_MIN_HEIGHT)),
   );
@@ -150,6 +164,7 @@
     });
 
     rows = [createRow()];
+    oneTimeBarrier = 0;
     onApplied?.();
   }
 </script>
@@ -170,6 +185,16 @@
   </div>
 
   <div class="damage-popup-footer">
+    <div class="one-time-barrier-row">
+      <span class="one-time-barrier-label">{t("character.damage.oneTimeBarrier")}</span>
+      <StatDetailAdjustableValue
+        value={oneTimeBarrier}
+        onChange={(value) => {
+          oneTimeBarrier = Math.max(0, value);
+        }}
+      />
+    </div>
+
     <button type="button" class="add-entry-btn" onclick={addRow}>
       {t("character.damage.addEntry")}
     </button>
@@ -255,6 +280,23 @@
     display: flex;
     flex-direction: column;
     gap: 0.35rem;
+  }
+
+  .one-time-barrier-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.35rem 0.45rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    font-size: 13px;
+    color: #374151;
+  }
+
+  .one-time-barrier-label {
+    font-weight: 600;
+    line-height: 1.2;
   }
 
   .preview-toggle {

@@ -68,6 +68,14 @@
       {#if entry.raw <= 0}
         <p class="damage-log-line damage-log-line--muted">{t("character.damage.log.noDamage")}</p>
       {:else}
+        {#if entry.oneTimeBarrierAbsorbed > 0}
+          <p class="damage-log-line">
+            {localize("character.damage.log.oneTimeBarrier", {
+              amount: String(entry.oneTimeBarrierAbsorbed),
+            })}
+          </p>
+        {/if}
+
         {#if entry.barrierAbsorbed > 0}
           <p class="damage-log-line">
             {localize("character.damage.log.barrier", { amount: String(entry.barrierAbsorbed) })}

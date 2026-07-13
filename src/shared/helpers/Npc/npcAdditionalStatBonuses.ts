@@ -34,8 +34,6 @@ export function getNpcAdditionalStatGrowthBonus(
       return progression.psiDefense;
     case 'damageReduction':
       return progression.absorption;
-    case 'massCategory':
-      return progression.massCategory;
     default:
       return 0;
   }

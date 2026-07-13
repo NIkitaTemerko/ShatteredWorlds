@@ -2,10 +2,10 @@
   import {
     attributeCoefficientValue,
     scaleAttributeCoefficients,
-  } from '../../../../shared/helpers/Character/coefficients';
-  import { t } from '../../../../shared/i18n';
-  import { ActionIcon } from '../../../../shared/ui/ActionIcon';
-  import StatDetailAdjustableValue from './StatDetailAdjustableValue.svelte';
+  } from "../../../../shared/helpers/Character/coefficients";
+  import { t } from "../../../../shared/i18n";
+  import { ActionIcon } from "../../../../shared/ui/ActionIcon";
+  import StatDetailAdjustableValue from "./StatDetailAdjustableValue.svelte";
 
   interface Props {
     statTotal: number;
@@ -32,29 +32,29 @@
   }
 </script>
 
-<div class="coefficient-panel">
+<div class="coefficient-panel" role="region" onpointerdown={(e) => e.stopPropagation()}>
   <div class="coefficient-panel-header">
-    <div class="coefficient-panel-title">{t('character.coefficient.calculation')}</div>
+    <div class="coefficient-panel-title">{t("character.coefficient.calculation")}</div>
   </div>
 
   <div class="stat-detail-row">
-    <span class="stat-detail-label">{t('character.coefficient.unit')}</span>
+    <span class="stat-detail-label">{t("character.coefficient.unit")}</span>
     <span class="stat-detail-value">{unitCoefficient}</span>
   </div>
 
   <div class="stat-detail-row">
-    <span class="stat-detail-label">{t('character.coefficient.count')}</span>
+    <span class="stat-detail-label">{t("character.coefficient.count")}</span>
     <StatDetailAdjustableValue value={count} onChange={handleCountChange} />
   </div>
 
   <div class="stat-detail-row stat-detail-row--final">
-    <span class="stat-detail-label">{t('character.coefficient.final')}</span>
+    <span class="stat-detail-label">{t("character.coefficient.final")}</span>
     <div class="final-value-controls">
       <span class="stat-detail-value">{scaledValue}</span>
       <ActionIcon
         onclick={copyToClipboard}
-        title={t('character.coefficient.copy')}
-        aria-label={t('character.coefficient.copy')}
+        title={t("character.coefficient.copy")}
+        aria-label={t("character.coefficient.copy")}
         variant="ghost"
         size="sm"
         class="copy-action"

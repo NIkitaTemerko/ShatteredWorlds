@@ -74,8 +74,6 @@ function getGrowthBonus(
       return progression.psiDefense;
     case 'damageReduction':
       return progression.absorption;
-    case 'massCategory':
-      return progression.massCategory;
     default:
       return 0;
   }
@@ -285,7 +283,11 @@ export function prepareCharacterDerivedData(sys: ShwActorSystem, actor: ShwActor
     ? sumAttributeExtraSources(sys.attributeStatSources.fortune.extra)
     : sys.attributes.fortune.extra;
 
-  const progression = calculateAttributeProgressionBonuses(sys.attributes, sys.totals, fortuneExtra);
+  const progression = calculateAttributeProgressionBonuses(
+    sys.attributes,
+    sys.totals,
+    fortuneExtra,
+  );
   syncResourceTotals(sys, progression, bonuses, itemBonusesBySource);
   syncBarrierValue(sys);
 }

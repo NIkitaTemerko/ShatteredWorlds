@@ -29,6 +29,7 @@
 
   let top = $state(0);
   let left = $state(0);
+  let popupEl = $state<HTMLElement | null>(null);
   let leaveTimer: ReturnType<typeof setTimeout> | null = null;
 
   function cancelLeaveTimer() {
@@ -60,6 +61,12 @@
   }
 
   function isEventInsidePopup(event: Event, currentPopupId: string): boolean {
+    const target = event.target;
+    if (target instanceof Node) {
+      if (popupEl?.contains(target)) return true;
+      if (anchorEl?.contains(target)) return true;
+    }
+
     const path = event.composedPath();
     if (anchorEl && path.includes(anchorEl)) return true;
     return path.some(
@@ -110,6 +117,7 @@
 
 {#if open}
   <div
+    bind:this={popupEl}
     use:portal
     data-popup-id={popupId}
     {role}

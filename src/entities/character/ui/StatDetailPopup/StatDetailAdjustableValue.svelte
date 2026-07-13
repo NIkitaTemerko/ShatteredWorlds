@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { untrack } from 'svelte';
+  import { untrack } from "svelte";
 
   interface Props {
     value: number;
@@ -42,7 +42,7 @@
   }
 </script>
 
-<div class="extra-controls">
+<div role="region" class="extra-controls" onpointerdown={(e) => e.stopPropagation()}>
   <button type="button" class="extra-btn" onclick={decrement}>−</button>
   <input
     type="number"

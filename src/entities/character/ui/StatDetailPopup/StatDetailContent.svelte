@@ -75,7 +75,8 @@
   }
 </script>
 
-<div class="stat-detail-content">
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<div class="stat-detail-content" onpointerdown={(e) => e.stopPropagation()}>
   <header class="stat-detail-header">
     <h3 class="stat-detail-title">{t(labelKey)}</h3>
   </header>

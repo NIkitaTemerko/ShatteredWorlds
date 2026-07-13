@@ -40,7 +40,7 @@
       "initiative": "Инициатива",
       "damageReduction": "Поглощение урона",
       "armorClass": "Защита",
-      "massCategory": "Массовая категория"
+      "massCategory": "Категория массы"
     },
     "consumable": {
       "activationType": {
@@ -311,7 +311,17 @@
         "growth": "Бонус роста",
         "equipment": "Экипировка",
         "abilities": "Способности",
-        "extra": "Доп"
+        "extra": "Доп",
+        "fromAttribute": "База (от стата)"
+      },
+      "coefficient": {
+        "unit": "Коэффициент",
+        "count": "Кол-во",
+        "copy": "Копировать",
+        "final": "Конечный коэффициент",
+        "calculation": "Расчёт коэффициента",
+        "info": "Коэффициент составляет 25% от дополнительной характеристики",
+        "formula": "Итог доп. {total} ÷ 4 = {result}"
       },
       "barrier": {
         "current": "Текущий барьер",

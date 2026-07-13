@@ -67,11 +67,10 @@ export function applyManualItemBonuses(
     if (path.startsWith('additionalAttributes.')) continue;
     if (path.startsWith('health.')) continue;
     if (path.startsWith('attributes.') && path.endsWith('.value')) continue;
+    if (path.match(/^attributes\.\w+\.extra$/)) continue;
 
     const parsed = parsePath(path);
-    if (path.match(/^attributes\.\w+\.extra$/)) {
-      applyToOriginalField(system, parsed.parts, bonus);
-    } else if (!parsed.isAttributeValue) {
+    if (!parsed.isAttributeValue) {
       applyToOriginalField(system, parsed.parts, bonus);
     }
   }

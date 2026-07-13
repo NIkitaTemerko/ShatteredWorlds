@@ -74,6 +74,48 @@ function syncAdditionalStatSources(
   }
 }
 
+function ensureAttributeStatSources(
+  sys: ShwNpcSystem,
+): asserts sys is ShwNpcSystem & { attributeStatSources: ShwNpcSystem['attributeStatSources'] } {
+  if (!sys.attributeStatSources) {
+    sys.attributeStatSources = {} as ShwNpcSystem['attributeStatSources'];
+  }
+}
+
+function syncAttributeStatSources(sys: ShwNpcSystem): void {
+  ensureAttributeStatSources(sys);
+
+  for (const k of STAT_KEYS) {
+    const attr = sys.attributes[k];
+    const rollBase = Math.floor(attr.value / 5);
+
+    sys.attributeStatSources[k] = {
+      value: {
+        base: attr.value,
+        equipment: 0,
+        abilities: 0,
+      },
+      extra: {
+        equipment: 0,
+        abilities: 0,
+        extra: attr.extra,
+      },
+      charBonus: {
+        base: rollBase,
+        equipment: 0,
+        abilities: 0,
+        extra: attr.charBonusBase ?? 0,
+      },
+      saveBonus: {
+        base: rollBase,
+        equipment: 0,
+        abilities: 0,
+        extra: attr.saveBonusBase ?? 0,
+      },
+    };
+  }
+}
+
 export function prepareNpcDerivedData(sys: ShwNpcSystem) {
   ensureTotals(sys);
 
@@ -91,10 +133,15 @@ export function prepareNpcDerivedData(sys: ShwNpcSystem) {
     const a = attrs[k];
     a.charBonus = (a.charBonusBase ?? 0) + Math.floor(a.value / 5);
     a.saveBonus = (a.saveBonusBase ?? 0) + Math.floor(a.value / 5);
-    a.coefficient = attributeCoefficientValue(a.value + a.extra);
+    a.coefficient = attributeCoefficientValue(a.extra);
   }
 
-  const progression = calculateAttributeProgressionBonuses(attrs as ShwActorSystem['attributes']);
+  const progression = calculateAttributeProgressionBonuses(
+    attrs as ShwActorSystem['attributes'],
+    sys.totals,
+    attrs.fortune.extra,
+  );
   syncAdditionalStatSources(sys, progression);
+  syncAttributeStatSources(sys);
   syncBarrierValue(sys);
 }

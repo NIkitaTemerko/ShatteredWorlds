@@ -18,7 +18,7 @@
 <CharacterHeader {actor} />
 
 <section>
-  <AttributeStats {actor} isNpc={true} />
+  <AttributeStats {actor} />
   <RollPanel {actor} />
 </section>
 <AdditionalStats {actor} onUpdate={handleAdditionalStatsUpdate} />

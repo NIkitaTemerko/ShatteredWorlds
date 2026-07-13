@@ -1,7 +1,6 @@
 import type { ShwActorSystem } from '../../../documents/Actor/types/ShwActorSystem';
 import { CHAR_DEFAULTS } from '../../model/constants/characterDefaults';
-
-const FORTUNE_BARRIER_COEFFICIENTS = 2;
+import { fortuneBarrierFromExtra } from './coefficients';
 
 type ThresholdEntry = readonly [threshold: number, value: number];
 
@@ -71,23 +70,28 @@ function getAttributeValue(
   return attributes[key].value;
 }
 
-/** Бонусы производных ресурсов от базовых характеристик (не перезаписывают ручные значения). */
+type ProgressionAttributeTotals = Pick<ShwActorSystem['totals'], 'force' | 'finesse' | 'will'>;
+
+/** Бонусы производных ресурсов от итоговых значений характеристик (не перезаписывают ручные значения). */
 export function calculateAttributeProgressionBonuses(
   attributes: ShwActorSystem['attributes'],
+  totals?: ProgressionAttributeTotals,
+  fortuneExtraTotal?: number,
 ): AttributeProgressionBonuses {
-  const force = getAttributeValue(attributes, 'force');
-  const finesse = getAttributeValue(attributes, 'finesse');
-  const will = getAttributeValue(attributes, 'will');
+  const force = totals?.force ?? getAttributeValue(attributes, 'force');
+  const finesse = totals?.finesse ?? getAttributeValue(attributes, 'finesse');
+  const will = totals?.will ?? getAttributeValue(attributes, 'will');
 
   return {
     impulse: force >= 20 ? 1 : 0,
     reactions: finesse >= 15 ? 1 : 0,
     bonusActions: will >= 20 ? 1 : 0,
     initiative: lookupThresholdTable(finesse, FINESSE_INITIATIVE_TABLE),
-    barrier: FORTUNE_BARRIER_COEFFICIENTS * attributes.fortune.coefficient,
+    barrier: fortuneBarrierFromExtra(fortuneExtraTotal ?? attributes.fortune.extra),
     psiDefense: lookupThresholdTable(will, WILL_PSI_DEFENSE_TABLE),
     absorption: lookupThresholdTable(will, WILL_ABSORPTION_TABLE),
     speedBonus: lookupThresholdTable(finesse, FINESSE_STEPS_TABLE),
+    /** Категория массы от вех Сноровки: 25 → −1. */
     massCategory: finesse >= 25 ? -1 : 0,
   };
 }

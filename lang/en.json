@@ -311,7 +311,17 @@
         "growth": "Growth bonus",
         "equipment": "Equipment",
         "abilities": "Abilities",
-        "extra": "Extra"
+        "extra": "Extra",
+        "fromAttribute": "Base (from attribute)"
+      },
+      "coefficient": {
+        "unit": "Coefficient",
+        "count": "Count",
+        "copy": "Copy",
+        "final": "Final coefficient",
+        "calculation": "Coefficient calculation",
+        "info": "The coefficient is 25% of the additional attribute",
+        "formula": "Extra total {total} ÷ 4 = {result}"
       },
       "barrier": {
         "current": "Current barrier",

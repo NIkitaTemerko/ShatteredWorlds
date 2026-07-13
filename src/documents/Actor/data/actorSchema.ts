@@ -12,6 +12,8 @@ export const characterAttributeSchema = () =>
     extra: intField(0),
     charBonus: intField(0),
     saveBonus: intField(0),
+    charBonusBase: intField(0),
+    saveBonusBase: intField(0),
     coefficient: intField(0),
   });
 

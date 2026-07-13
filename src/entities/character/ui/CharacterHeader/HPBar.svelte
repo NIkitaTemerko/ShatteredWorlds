@@ -42,7 +42,7 @@
 
   let healthPopupOpen = $state(false);
   let damagePopupOpen = $state(false);
-  let maxHpAnchorEl = $state<HTMLElement | undefined>();
+  let healthAnchorEl = $state<HTMLElement | undefined>();
   let damageAnchorEl = $state<HTMLElement | undefined>();
 
   function clampHealthValue(e: Event) {
@@ -75,11 +75,12 @@
     damagePopupOpen = false;
   }
 
-  function openDamagePopup(e: Event) {
+  function toggleDamagePopup(e: Event) {
     e.stopPropagation();
-    if (damagePopupOpen) return;
-    closeActivePopup();
-    damagePopupOpen = true;
+    if (!damagePopupOpen) {
+      closeActivePopup();
+    }
+    damagePopupOpen = !damagePopupOpen;
     healthPopupOpen = false;
   }
 
@@ -126,37 +127,7 @@
     />
     <span class="hp-separator">/</span>
     {#if isCharacter}
-      <button
-        type="button"
-        class="max-hp-trigger"
-        data-popup-id="health-max"
-        bind:this={maxHpAnchorEl}
-        onclick={toggleHealthPopup}
-        title={t("character.statMenu")}
-      >
-        {maxHealth}
-      </button>
-      {#if healthPopupOpen && healthSources}
-        <AnchoredPopup
-          open={true}
-          anchorEl={maxHpAnchorEl}
-          onClose={closeHealthPopup}
-          popupId="health-max"
-          triggerMode="click"
-        >
-          {#snippet children()}
-            <HealthDetailContent
-              sources={healthSources}
-              total={maxHealth}
-              barrierValue={currentBarrier}
-              barrierSources={barrierSources}
-              barrierTotal={maxBarrier}
-              onExtraChange={handleExtraChange}
-              onBarrierExtraChange={handleBarrierExtraChange}
-            />
-          {/snippet}
-        </AnchoredPopup>
-      {/if}
+      <span class="hp-max">{maxHealth}</span>
     {:else}
       <label>
         <input
@@ -180,12 +151,48 @@
     {/if}
   </span>
 
-  <div class="hp-damage-wrapper">
+  <div class="hp-actions">
+    {#if isCharacter}
+      <span bind:this={healthAnchorEl}>
+        <ActionIcon
+          title={t("character.health.max")}
+          aria-label={t("character.health.max")}
+          onclick={toggleHealthPopup}
+          onkeydown={(e) => e.key === "Enter" && toggleHealthPopup(e)}
+        >
+          {#snippet icon()}
+            <i class="fas fa-heart health-icon" aria-hidden="true"></i>
+          {/snippet}
+        </ActionIcon>
+      </span>
+      {#if healthPopupOpen && healthSources}
+        <AnchoredPopup
+          open={true}
+          anchorEl={healthAnchorEl}
+          onClose={closeHealthPopup}
+          popupId="health-max"
+          triggerMode="click"
+        >
+          {#snippet children()}
+            <HealthDetailContent
+              sources={healthSources}
+              total={maxHealth}
+              barrierValue={currentBarrier}
+              barrierSources={barrierSources}
+              barrierTotal={maxBarrier}
+              onExtraChange={handleExtraChange}
+              onBarrierExtraChange={handleBarrierExtraChange}
+            />
+          {/snippet}
+        </AnchoredPopup>
+      {/if}
+    {/if}
+
     <span bind:this={damageAnchorEl}>
       <ActionIcon
         title={t("character.applyDamage")}
-        onclick={openDamagePopup}
-        onkeydown={(e) => e.key === "Enter" && openDamagePopup(e)}
+        onclick={toggleDamagePopup}
+        onkeydown={(e) => e.key === "Enter" && toggleDamagePopup(e)}
       >
         {#snippet icon()}
           <i class="fas fa-sword damage-icon"></i>
@@ -314,42 +321,28 @@
     margin: 0;
   }
 
-  .max-hp-trigger {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+  .hp-max {
     padding: 0.1rem 0.35rem;
-    margin: 0;
-    border: none;
-    border-radius: 4px;
-    background: transparent;
-    color: inherit;
-    font: inherit;
     font-variant-numeric: tabular-nums;
     line-height: 1;
-    vertical-align: baseline;
-    cursor: pointer;
-    transition: background-color 0.15s ease;
   }
 
-  .max-hp-trigger:hover {
-    background: rgba(0, 0, 0, 0.05);
-  }
-
-  .max-hp-trigger:active {
-    background: rgba(0, 0, 0, 0.08);
-  }
-
-  .max-hp-trigger:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.3);
-  }
-
-  .hp-damage-wrapper {
+  .hp-actions {
     display: flex;
     align-items: center;
     gap: 0.25rem;
     margin-left: 0.5rem;
+  }
+
+  .health-icon {
+    cursor: pointer;
+    font-size: var(--font-size-18);
+    line-height: 1;
+    color: #d7263d;
+  }
+
+  .health-icon:hover {
+    color: #b01e32;
   }
 
   .damage-icon {

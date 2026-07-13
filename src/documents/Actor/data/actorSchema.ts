@@ -33,6 +33,11 @@ export const healthSchema = () =>
     extra: intField(0),
   });
 
+export const barrierSchema = () =>
+  new fields.SchemaField({
+    value: intField(0),
+  });
+
 export const utilitySchema = () =>
   new fields.SchemaField({
     speed: intField(CHAR_DEFAULTS.utility.speed),
@@ -51,6 +56,7 @@ export const additionalAttributesSchema = () =>
     range: intField(CHAR_DEFAULTS.additionalAttributes.range),
     damageReduction: intField(CHAR_DEFAULTS.additionalAttributes.damageReduction),
     armorClass: intField(CHAR_DEFAULTS.additionalAttributes.armorClass),
+    massCategory: intField(CHAR_DEFAULTS.additionalAttributes.massCategory),
   });
 
 export const characterAttributesSchema = () =>

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { combatDamageTypeSchema, itemDamageTypeSchema } from '../../../../shared/model/damage/zodSchema';
 import { abilityTypeSchema, rarity } from './common';
 
 // Базовые поля для всех консьюмаблов
@@ -45,7 +46,7 @@ export const BombSystemSchema = z.object({
   consumableType: z.literal('bomb'),
   damage: z.object({
     amount: z.number(),
-    type: z.enum(['fire', 'acid', 'cold', 'lightning', 'poison', 'physical', 'force']),
+    type: itemDamageTypeSchema,
   }),
   radius: z.number().min(1, 'Радиус бомбы должен быть >= 1'),
   save: z.object({

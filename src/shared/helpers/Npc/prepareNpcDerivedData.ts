@@ -15,6 +15,7 @@ import {
   type AttributeProgressionBonuses,
 } from '../Character/attributeProgression';
 import { sumStatSources } from '../Character/collectStatBonusesBySource';
+import { syncBarrierValue } from '../Character/syncBarrierValue';
 import {
   getNpcAdditionalStatBaseBonus,
   getNpcAdditionalStatGrowthBonus,
@@ -67,6 +68,9 @@ function syncAdditionalStatSources(
 
     sys.additionalStatSources[key] = sources;
     sys.totals[key] = sumStatSources(sources);
+    if (key === 'massCategory') {
+      sys.totals.massCategory = Math.max(1, sys.totals.massCategory);
+    }
   }
 }
 
@@ -92,4 +96,5 @@ export function prepareNpcDerivedData(sys: ShwNpcSystem) {
 
   const progression = calculateAttributeProgressionBonuses(attrs as ShwActorSystem['attributes']);
   syncAdditionalStatSources(sys, progression);
+  syncBarrierValue(sys);
 }

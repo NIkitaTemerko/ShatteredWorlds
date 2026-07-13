@@ -13,4 +13,5 @@ export const ADDITIONAL_ATTRIBUTE_LABELS: Record<keyof AdditionalAttributes, I18
   initiative: 'additionalAttributes.initiative',
   damageReduction: 'additionalAttributes.damageReduction',
   armorClass: 'additionalAttributes.armorClass',
+  massCategory: 'additionalAttributes.massCategory',
 };

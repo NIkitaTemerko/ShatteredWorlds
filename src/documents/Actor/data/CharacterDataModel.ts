@@ -5,6 +5,7 @@ import type { ShwActor } from '../ShwActor';
 import type { ShwActorSystem } from '../types/ShwActorSystem';
 import {
   additionalAttributesSchema,
+  barrierSchema,
   characterAttributesSchema,
   healthSchema,
   utilitySchema,
@@ -15,6 +16,7 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel<any, ShwA
   static defineSchema() {
     return {
       health: healthSchema(),
+      barrier: barrierSchema(),
       attributes: characterAttributesSchema(),
       additionalAttributes: additionalAttributesSchema(),
       utility: utilitySchema(),

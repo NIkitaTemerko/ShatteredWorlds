@@ -28,6 +28,7 @@ export const NPC_DEFAULTS = {
     range: 0,
     damageReduction: 0,
     armorClass: 0,
+    massCategory: 0,
   } satisfies ShwNpcSystem['additionalAttributes'],
 
   totals: {

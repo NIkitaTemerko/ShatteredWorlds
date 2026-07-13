@@ -49,6 +49,7 @@ export interface AttributeProgressionBonuses {
   psiDefense: number;
   absorption: number;
   speedBonus: number;
+  massCategory: number;
 }
 
 function lookupThresholdTable(attributeValue: number, table: readonly ThresholdEntry[]): number {
@@ -87,6 +88,7 @@ export function calculateAttributeProgressionBonuses(
     psiDefense: lookupThresholdTable(will, WILL_PSI_DEFENSE_TABLE),
     absorption: lookupThresholdTable(will, WILL_ABSORPTION_TABLE),
     speedBonus: lookupThresholdTable(finesse, FINESSE_STEPS_TABLE),
+    massCategory: finesse >= 25 ? -1 : 0,
   };
 }
 

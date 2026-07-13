@@ -3,8 +3,8 @@
   import { t } from "../../../../shared/i18n";
   import { ActionIcon } from "../../../../shared/ui/ActionIcon";
   import { AnchoredPopup, closeActivePopup } from "../../../../shared/ui/AnchoredPopup";
-  import Input from "../../../../shared/ui/Input/ui.svelte";
   import { HealthDetailContent } from "../StatDetailPopup";
+  import DamagePopupContent from "./DamagePopupContent.svelte";
 
   interface Props {
     actor: ShwActor<"character"> | ShwActor<"npc">;
@@ -14,59 +14,36 @@
 
   const isCharacter = $derived(actor.isCharacter());
   const maxHealth = $derived(actor.system.totals.health);
+  const maxBarrier = $derived(actor.system.totals.barrier);
+  const currentHealth = $derived(actor.system.health.value);
+  const currentBarrier = $derived(actor.system.barrier?.value ?? 0);
   const healthSources = $derived(actor.system.healthStatSources);
+  const barrierSources = $derived(actor.system.additionalStatSources?.barrier);
+
+  const totalMax = $derived(Math.max(1, maxHealth + maxBarrier));
+  const hpSegmentPercent = $derived((maxHealth / totalMax) * 100);
+  const barrierSegmentPercent = $derived((maxBarrier / totalMax) * 100);
+  const hpFillPercent = $derived(maxHealth > 0 ? (currentHealth / maxHealth) * 100 : 0);
+  const barrierFillPercent = $derived(maxBarrier > 0 ? (currentBarrier / maxBarrier) * 100 : 0);
 
   let hpInputText = $state("");
 
   const hpInputSize = $derived(
-    Math.max(1, (hpInputText || String(actor.system.health.value) || "0").length, String(maxHealth).length),
+    Math.max(
+      1,
+      (hpInputText || String(currentHealth) || "0").length,
+      String(maxHealth).length,
+    ),
   );
 
   $effect(() => {
-    hpInputText = String(actor.system.health.value);
+    hpInputText = String(currentHealth);
   });
 
-  // 0 = true damage (skull), 1 = no armor (shield off), 2 = full defense (shield on)
-  let damageMode = $state(2);
-  let damageValue = $state(0);
   let healthPopupOpen = $state(false);
+  let damagePopupOpen = $state(false);
   let maxHpAnchorEl = $state<HTMLElement | undefined>();
-
-  function toggleDefense() {
-    damageMode = (damageMode + 1) % 3;
-  }
-
-  function applyDamage() {
-    if (damageValue <= 0) return;
-
-    let actualDamage = damageValue;
-
-    // True damage - ignores everything
-    if (damageMode === 0) {
-      actualDamage = damageValue;
-    } else {
-      // Apply damage reduction for modes 1 and 2
-      const damageReduction =
-        "damageReduction" in actor.system.totals
-          ? actor.system.totals.damageReduction
-          : actor.system.additionalAttributes.damageReduction || 0;
-
-      actualDamage = Math.max(0, damageValue - damageReduction);
-
-      // Apply armor only in mode 2 (full defense)
-      if (damageMode === 2) {
-        const armorClass =
-          "armorClass" in actor.system.totals
-            ? actor.system.totals.armorClass
-            : actor.system.additionalAttributes.armorClass || 0;
-        actualDamage = Math.max(0, actualDamage - armorClass);
-      }
-    }
-
-    const newHealth = Math.max(0, actor.system.health.value - actualDamage);
-    actor.update({ "system.health.value": newHealth });
-    damageValue = 0;
-  }
+  let damageAnchorEl = $state<HTMLElement | undefined>();
 
   function clampHealthValue(e: Event) {
     const target = e.currentTarget as HTMLInputElement;
@@ -95,19 +72,46 @@
       closeActivePopup();
     }
     healthPopupOpen = !healthPopupOpen;
+    damagePopupOpen = false;
+  }
+
+  function openDamagePopup(e: Event) {
+    e.stopPropagation();
+    if (damagePopupOpen) return;
+    closeActivePopup();
+    damagePopupOpen = true;
+    healthPopupOpen = false;
   }
 
   function closeHealthPopup() {
     healthPopupOpen = false;
   }
 
+  function closeDamagePopup() {
+    damagePopupOpen = false;
+  }
+
   function handleExtraChange(value: number) {
     actor.update({ "system.health.extra": value });
+  }
+
+  function handleBarrierExtraChange(value: number) {
+    actor.update({ "system.additionalAttributes.barrier": value });
   }
 </script>
 
 <div class="hp-wrapper">
-  <progress class="hp-bar" value={actor.system.health.value} max={maxHealth}></progress>
+  <div class="hp-bar-track" aria-label={t("character.health.current")}>
+    <div class="hp-segment" style={`width: ${hpSegmentPercent}%`}>
+      <div class="hp-fill" style={`width: ${hpFillPercent}%`}></div>
+    </div>
+    {#if maxBarrier > 0}
+      <div class="barrier-segment" style={`width: ${barrierSegmentPercent}%`}>
+        <div class="barrier-fill" style={`width: ${barrierFillPercent}%`}></div>
+      </div>
+    {/if}
+  </div>
+
   <span class="hp-label">
     <input
       class="hp-current-input"
@@ -118,7 +122,7 @@
       max={maxHealth}
       size={hpInputSize}
       oninput={handleHealthValueInput}
-      value={actor.system.health.value}
+      value={currentHealth}
     />
     <span class="hp-separator">/</span>
     {#if isCharacter}
@@ -144,64 +148,63 @@
             <HealthDetailContent
               sources={healthSources}
               total={maxHealth}
+              barrierValue={currentBarrier}
+              barrierSources={barrierSources}
+              barrierTotal={maxBarrier}
               onExtraChange={handleExtraChange}
+              onBarrierExtraChange={handleBarrierExtraChange}
             />
           {/snippet}
         </AnchoredPopup>
       {/if}
     {:else}
       <label>
-        <Input
-          variant="underline"
+        <input
+          class="hp-current-input"
           name="system.health.max"
           type="number"
           data-dtype="Number"
           min="0"
           oninput={clampHealthMax}
           value={actor.system.health.max}
-          style="min-width:2.5rem;max-width:5rem;text-align:right;"
         />
       </label>
       {#if maxHealth !== actor.system.health.max}
         <span>({maxHealth})</span>
       {/if}
     {/if}
+    {#if maxBarrier > 0}
+      <span class="barrier-indicator" title={t("character.barrier.current")}>
+        ({currentBarrier})
+      </span>
+    {/if}
   </span>
+
   <div class="hp-damage-wrapper">
-    <ActionIcon
-      title={t("character.applyDamage")}
-      onclick={applyDamage}
-      onkeydown={(e) => e.key === "Enter" && applyDamage()}
-    >
-      {#snippet icon()}
-        <i class="fas fa-sword damage-icon"></i>
-      {/snippet}
-    </ActionIcon>
-    <Input
-      variant="underline"
-      bind:value={damageValue}
-      onkeydown={(e) => e.key === "Enter" && applyDamage()}
-      type="number"
-      min={0}
-      style="width:3rem;"
-    />
-    <ActionIcon
-      title={damageMode === 2
-        ? t("character.considerArmor")
-        : damageMode === 1
-          ? t("character.ignoreArmor")
-          : t("character.trueDamage")}
-      onclick={toggleDefense}
-      onkeydown={(e) => e.key === "Enter" && toggleDefense()}
-    >
-      {#snippet icon()}
-        {#if damageMode === 0}
-          <i class="fas fa-skull skull-icon"></i>
-        {:else}
-          <i class="fas fa-shield-alt shield-icon" class:active={damageMode === 2}></i>
-        {/if}
-      {/snippet}
-    </ActionIcon>
+    <span bind:this={damageAnchorEl}>
+      <ActionIcon
+        title={t("character.applyDamage")}
+        onclick={openDamagePopup}
+        onkeydown={(e) => e.key === "Enter" && openDamagePopup(e)}
+      >
+        {#snippet icon()}
+          <i class="fas fa-sword damage-icon"></i>
+        {/snippet}
+      </ActionIcon>
+    </span>
+    {#if damagePopupOpen}
+      <AnchoredPopup
+        open={true}
+        anchorEl={damageAnchorEl}
+        onClose={closeDamagePopup}
+        popupId="damage-popup"
+        triggerMode="click"
+      >
+        {#snippet children()}
+          <DamagePopupContent {actor} onApplied={closeDamagePopup} />
+        {/snippet}
+      </AnchoredPopup>
+    {/if}
   </div>
 </div>
 
@@ -212,25 +215,44 @@
     gap: 0.5rem;
   }
 
-  .hp-bar {
+  .hp-bar-track {
+    display: flex;
     flex-grow: 1;
     width: 200px;
     height: 20px;
-    appearance: none;
     border: 1px solid var(--color-border-light-2);
+    overflow: hidden;
     background: #ff9aa5;
   }
 
-  .hp-bar::-webkit-progress-bar {
+  .hp-segment,
+  .barrier-segment {
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hp-segment {
     background: #ff9aa5;
   }
 
-  .hp-bar::-webkit-progress-value {
+  .barrier-segment {
+    background: rgba(13, 202, 240, 0.25);
+    border-left: 1px solid rgba(0, 0, 0, 0.12);
+  }
+
+  .hp-fill,
+  .barrier-fill {
+    height: 100%;
+    transition: width 0.15s ease;
+  }
+
+  .hp-fill {
     background: #d7263d;
   }
 
-  .hp-bar::-moz-progress-bar {
-    background: #d7263d;
+  .barrier-fill {
+    background: #0dcaf0;
   }
 
   .hp-label {
@@ -242,6 +264,12 @@
     gap: 0;
     line-height: 1;
     font-variant-numeric: tabular-nums;
+  }
+
+  .barrier-indicator {
+    margin-left: 0.25rem;
+    color: #0a8ea8;
+    font-size: var(--font-size-13);
   }
 
   .hp-separator {
@@ -332,40 +360,6 @@
   }
 
   .damage-icon:hover {
-    color: #d7263d;
-  }
-
-  .shield-icon {
-    position: relative;
-    cursor: pointer;
-    font-size: var(--font-size-18);
-    line-height: 1;
-  }
-
-  .shield-icon:not(.active) {
-    color: grey;
-  }
-
-  .shield-icon:not(.active):after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 150%;
-    height: 3px;
-    background-color: #d7263d;
-    transform: translate(-50%, -50%) rotate(-45deg);
-    border-radius: 2px;
-  }
-
-  .shield-icon.active {
-    color: cadetblue;
-  }
-
-  .skull-icon {
-    cursor: pointer;
-    font-size: var(--font-size-18);
-    line-height: 1;
     color: #d7263d;
   }
 </style>

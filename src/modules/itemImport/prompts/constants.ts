@@ -25,7 +25,7 @@ export const EXAMPLES_BY_TYPE: Record<ShwItemType, string> = {
   "system": {
     "consumableType": "bomb",
     "description": "Глиняная сфера, начинённая алхимическим огнём. При ударе о поверхность воспламеняется, разбрызгивая горящую смесь в радиусе нескольких метров. Излюбленное оружие горных разбойников.",
-    "damage": { "amount": 50, "type": "fire" },
+    "damage": { "amount": 50, "type": "elemental" },
     "radius": 3,
     "save": { "type": "finesse", "dc": 14 }
   }

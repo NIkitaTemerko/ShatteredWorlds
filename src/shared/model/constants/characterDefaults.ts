@@ -33,6 +33,7 @@ export const ADDITIONAL_STAT_BASE = {
   barrier: 0,
   psiDefense: 0,
   damageReduction: 0,
+  massCategory: 2,
 } as const;
 
 export type AdditionalStatBaseKey = keyof typeof ADDITIONAL_STAT_BASE;
@@ -73,6 +74,7 @@ export const CHAR_DEFAULTS = {
     range: 0,
     damageReduction: 0,
     armorClass: 0,
+    massCategory: 0,
   } satisfies ShwActorSystem['additionalAttributes'],
 
   totals: {
@@ -94,5 +96,6 @@ export const CHAR_DEFAULTS = {
     speed: 0,
     range: 0,
     armorClass: 0,
+    massCategory: 0,
   } satisfies ShwActorSystem['totals'],
 } as const;

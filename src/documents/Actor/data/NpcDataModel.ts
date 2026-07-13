@@ -5,6 +5,7 @@ import type { ShwActor } from '../ShwActor';
 import type { ShwNpcSystem } from '../types/ShwActorSystem';
 import {
   additionalAttributesSchema,
+  barrierSchema,
   healthSchema,
   npcAttributesSchema,
   npcUtilitySchema,
@@ -15,6 +16,7 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel<any, ShwActor<'
   static defineSchema() {
     return {
       health: healthSchema(),
+      barrier: barrierSchema(),
       attributes: npcAttributesSchema(),
       additionalAttributes: additionalAttributesSchema(),
       utility: npcUtilitySchema(),

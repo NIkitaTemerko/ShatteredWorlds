@@ -59,6 +59,15 @@
     };
   }
 
+  function isEventInsidePopup(event: Event, currentPopupId: string): boolean {
+    const path = event.composedPath();
+    if (anchorEl && path.includes(anchorEl)) return true;
+    return path.some(
+      (node) =>
+        node instanceof Element && node.getAttribute('data-popup-id') === currentPopupId,
+    );
+  }
+
   $effect(() => {
     if (!open) return;
 
@@ -77,21 +86,19 @@
     }
 
     const currentPopupId = popupId;
-    const handleDocClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (!target.closest(`[data-popup-id="${currentPopupId}"]`)) {
-        onClose();
-      }
+    const handleDocPointerDown = (e: PointerEvent) => {
+      if (isEventInsidePopup(e, currentPopupId)) return;
+      onClose();
     };
 
     const timeoutId = setTimeout(() => {
-      document.addEventListener('click', handleDocClick);
+      document.addEventListener('pointerdown', handleDocPointerDown, true);
     }, 0);
 
     return () => {
       clearTimeout(timeoutId);
       cancelLeaveTimer();
-      document.removeEventListener('click', handleDocClick);
+      document.removeEventListener('pointerdown', handleDocPointerDown, true);
       if (anchorEl && triggerMode === 'hover') {
         anchorEl.removeEventListener('mouseenter', handleMouseEnter);
         anchorEl.removeEventListener('mouseleave', handleMouseLeave);
@@ -108,6 +115,7 @@
     {role}
     tabindex="-1"
     style="position: fixed; top: {top}px; left: {left}px; transform: translateX(-50%); z-index: 999999; pointer-events: auto;"
+    onpointerdown={(e) => e.stopPropagation()}
     onmouseleave={handleMouseLeave}
     onmouseenter={handleMouseEnter}
   >

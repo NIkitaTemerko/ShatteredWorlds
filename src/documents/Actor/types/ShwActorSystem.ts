@@ -14,6 +14,11 @@ interface HealthFields {
   extra: number;
 }
 
+interface BarrierFields {
+  /** Текущий барьер (persisted). */
+  value: number;
+}
+
 interface Attributes<T> {
   fortune: T;
   force: T;
@@ -33,6 +38,7 @@ interface AdditionalAttributes {
   range: number;
   damageReduction: number;
   armorClass: number;
+  massCategory: number;
 }
 
 /** MVP-источники additional-статов, порядок = порядок строк в попапе */
@@ -102,6 +108,7 @@ interface CharacterTotals {
   speed: number;
   range: number;
   armorClass: number;
+  massCategory: number;
 }
 
 interface NpcAttribute {
@@ -116,6 +123,7 @@ interface NpcAttribute {
 
 export interface ShwActorSystem {
   health: HealthFields;
+  barrier: BarrierFields;
   attributes: Attributes<AttributeFields>;
   additionalAttributes: AdditionalAttributes;
   utility: UtilityFields;
@@ -128,6 +136,7 @@ export interface ShwActorSystem {
 
 export interface ShwNpcSystem {
   health: HealthFields;
+  barrier: BarrierFields;
   attributes: Attributes<NpcAttribute>;
   additionalAttributes: AdditionalAttributes;
   utility: UtilityFields;
@@ -154,4 +163,4 @@ export type AdditionalAttributesTotalKey = Extract<
   keyof CharacterTotals | keyof ShwNpcSystem['totals']
 >;
 
-export type { CharacterTotals, AdditionalAttributes, AttributeFields };
+export type { BarrierFields, CharacterTotals, AdditionalAttributes, AttributeFields };

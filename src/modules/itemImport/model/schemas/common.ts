@@ -4,6 +4,7 @@ import {
   migrateLegacyStatPath,
 } from '../../../../shared/helpers/migrateLegacyStatKeys';
 import { CHARACTER_STAT_OPTIONS } from '../../../../shared/model/characterStatPaths';
+import { combatDamageTypeSchema } from '../../../../shared/model/damage/zodSchema';
 
 const VALID_STAT_PATHS = CHARACTER_STAT_OPTIONS.map((option) => option.value);
 
@@ -65,7 +66,7 @@ export const StatModifierBlockSchema = z.object({
 
 export const DamageEffectSchema = z.object({
   formula: z.string(),
-  damageType: z.string(),
+  damageType: combatDamageTypeSchema,
   scaling: ScalingFormulaSchema.nullable().optional(),
 });
 

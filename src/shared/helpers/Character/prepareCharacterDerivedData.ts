@@ -35,6 +35,7 @@ import {
   attributeCoefficientValue,
   healthCoefficientValue,
 } from './coefficients';
+import { clampMassCategoryTotal, syncBarrierValue } from './syncBarrierValue';
 
 function ensureTotals(
   sys: ShwActorSystem,
@@ -71,6 +72,8 @@ function getGrowthBonus(
       return progression.psiDefense;
     case 'damageReduction':
       return progression.absorption;
+    case 'massCategory':
+      return progression.massCategory;
     default:
       return 0;
   }
@@ -139,6 +142,9 @@ function syncAdditionalStatSources(
 
     sys.additionalStatSources[key] = sources;
     sys.totals[key] = sumStatSources(sources);
+    if (key === 'massCategory') {
+      sys.totals.massCategory = Math.max(1, sys.totals.massCategory);
+    }
   }
 }
 
@@ -196,4 +202,5 @@ export function prepareCharacterDerivedData(sys: ShwActorSystem, actor: ShwActor
 
   const progression = calculateAttributeProgressionBonuses(sys.attributes);
   syncResourceTotals(sys, progression, bonuses, itemBonusesBySource);
+  syncBarrierValue(sys);
 }

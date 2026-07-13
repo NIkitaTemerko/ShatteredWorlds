@@ -87,16 +87,17 @@
         <div class="stat-detail-row stat-detail-row--extra">
           <span class="stat-detail-label">{t(sourceLabelKeys[sourceKey])}</span>
           {#if editableExtra}
-            <div class="extra-controls">
-              <button type="button" class="extra-btn" onclick={decrement}>−</button>
+            <div class="extra-controls" onpointerdown={(e) => e.stopPropagation()}>
+              <button type="button" class="extra-btn" onpointerdown={(e) => e.stopPropagation()} onclick={decrement}>−</button>
               <input
                 type="number"
                 class="extra-input"
                 value={localExtra}
                 oninput={handleExtraInput}
+                onpointerdown={(e) => e.stopPropagation()}
                 onclick={(e) => e.stopPropagation()}
               />
-              <button type="button" class="extra-btn" onclick={increment}>+</button>
+              <button type="button" class="extra-btn" onpointerdown={(e) => e.stopPropagation()} onclick={increment}>+</button>
             </div>
           {:else}
             <span class="stat-detail-value">{sources.extra}</span>

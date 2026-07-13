@@ -3,7 +3,6 @@
   import { AnchoredPopup } from '../../../../shared/ui/AnchoredPopup';
   import type { StatSourceValues } from '../../../../documents/Actor/types/ShwActorSystem';
   import { ADDITIONAL_ATTRIBUTE_LABELS } from '../../../../shared/model/constants';
-  import { EDITABLE_STATS } from '../../../../shared/model/constants/characterDefaults';
   import StatDetailContent from './StatDetailContent.svelte';
 
   interface Props {
@@ -38,7 +37,6 @@
       {sources}
       {total}
       {variant}
-      editableExtra={(EDITABLE_STATS as Set<keyof AdditionalAttributes>).has(statKey)}
       {onExtraChange}
     />
   {/snippet}

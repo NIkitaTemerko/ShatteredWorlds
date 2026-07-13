@@ -1,6 +1,5 @@
 import type { ActivationType, ConsumableType, PerType, RarityType, SelectOption } from './types';
-
-// Note: labels are i18n keys - translate with $_() in components
+import { ITEM_DAMAGE_TYPE_OPTIONS } from '../../../shared/model/damage/constants';
 export const ACTIVATION_TYPES: SelectOption<ActivationType>[] = [
   { value: 'action', label: 'consumable.activationType.action' },
   { value: 'bonus', label: 'consumable.activationType.bonus' },
@@ -28,15 +27,11 @@ export const CONSUMABLE_TYPES: SelectOption<ConsumableType>[] = [
   { value: 'poison', label: 'consumable.consumableType.poison' },
 ];
 
-export const DAMAGE_TYPES: SelectOption[] = [
-  { value: 'fire', label: 'consumable.damageType.fire' },
-  { value: 'cold', label: 'consumable.damageType.cold' },
-  { value: 'lightning', label: 'consumable.damageType.lightning' },
-  { value: 'acid', label: 'consumable.damageType.acid' },
-  { value: 'poison', label: 'consumable.damageType.poison' },
-  { value: 'physical', label: 'consumable.damageType.physical' },
-  { value: 'force', label: 'consumable.damageType.force' },
-];
+/** @deprecated use ITEM_DAMAGE_TYPE_OPTIONS from shared/model/damage */
+export const DAMAGE_TYPES: SelectOption[] = ITEM_DAMAGE_TYPE_OPTIONS.map((o) => ({
+  value: o.value,
+  label: o.labelKey,
+}));
 
 export const SAVE_TYPES: SelectOption[] = [
   { value: 'force', label: 'consumable.saveType.force' },

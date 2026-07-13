@@ -6,6 +6,12 @@ import {
   getSpellImage,
   ItemFactory,
 } from './ItemFactory';
+import {
+  migrateAbilityEffectDamageTypes,
+  migrateItemDamageType,
+} from '../../shared/model/damage/legacyMigration';
+import { localize, t } from '../../shared/i18n';
+import type { I18nKey } from '../../shared/i18n';
 import type { AbilitySystem } from './types/AbilityDataTypes';
 import type { ConsumableData } from './types/ConsumableDataTypes';
 import type { EquipmentSystem } from './types/EquipmentDataTypes';
@@ -26,6 +32,12 @@ export class ShwItem extends Item {
     data?: object,
     operation?: Partial<Omit<foundry.abstract.types.DatabaseUpdateOperation, 'updates'>>,
   ) => Promise<this | undefined>;
+
+  static override migrateData(source: Record<string, unknown>) {
+    migrateItemDamageType(source);
+    migrateAbilityEffectDamageTypes(source);
+    return super.migrateData(source);
+  }
 
   // Type guards
   isConsumable(): this is { system: ConsumableData } {
@@ -159,7 +171,11 @@ export class ShwItem extends Item {
     if (bomb.consumableType !== 'bomb') return;
 
     console.log(
-      `Взрыв наносит ${bomb.damage.amount} урона ${bomb.damage.type} типа в радиусе ${bomb.radius} футов`,
+      localize('character.damage.bombExplosion', {
+        amount: String(bomb.damage.amount),
+        type: t(`damage.types.${bomb.damage.type}` as I18nKey),
+        radius: String(bomb.radius),
+      }),
     );
   }
 

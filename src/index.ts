@@ -8,6 +8,7 @@ import { initSettingsHooks, registerSettings, ShwSettingsApp } from './modules/s
 import { ShopManagerApp } from './modules/shop';
 import { registerShopSettings } from './modules/shop/model/registerShopSettings';
 import { ensureFolderStructure, getTargetFolderId, handleAddItem } from './shared/helpers/Item';
+import { handleCombatTurnChangeBarrierRestore, restoreBarrierForCombatant } from './shared/helpers/Character/restoreBarrierOnCombatTurn';
 import { runWorldDataMigration } from './shared/helpers/runWorldDataMigration';
 import { AbilityItemApp } from './view/AbilityItem/ItemApp';
 import { CharacterApp } from './view/BaseCharacter/CharacterApp.js';
@@ -84,6 +85,20 @@ Hooks.once('init', () => {
     if (!item.isResource() || !isResourceDefaultImage(item.img)) return;
     // biome-ignore lint/suspicious/noExplicitAny: Foundry ui.items не типизирован
     (ui as any).items?.render();
+  });
+
+  // Восстановление барьера после смены хода (после обновления Combat в БД)
+  // biome-ignore lint/suspicious/noExplicitAny: Foundry combatTurnChange API не типизирован
+  Hooks.on('combatTurnChange', (combat: any, prior: any, current: any) => {
+    if (!game.user?.isGM) return;
+    void handleCombatTurnChangeBarrierRestore(combat, prior, current);
+  });
+
+  // biome-ignore lint/suspicious/noExplicitAny: Foundry combatStart API не типизирован
+  Hooks.on('combatStart', (combat: any) => {
+    if (!game.user?.isGM) return;
+    const combatant = combat.combatant ?? combat.turns?.[combat.turn ?? 0];
+    if (combatant) void restoreBarrierForCombatant(combatant);
   });
 
   // Добавляем кнопки магазина и импорта в навигацию

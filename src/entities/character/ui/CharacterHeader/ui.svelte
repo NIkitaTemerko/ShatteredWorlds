@@ -1,7 +1,10 @@
 <script lang="ts">
   import type { ShwActor } from "../../../../documents/Actor/ShwActor";
   import { t } from "../../../../shared/i18n";
+  import { ActionIcon } from "../../../../shared/ui/ActionIcon";
+  import { AnchoredPopup, closeActivePopup } from "../../../../shared/ui/AnchoredPopup";
   import Input from "../../../../shared/ui/Input/ui.svelte";
+  import { StatDetailContent } from "../StatDetailPopup";
   import HPBar from "./HPBar.svelte";
 
   interface Props {
@@ -11,6 +14,38 @@
   let { actor }: Props = $props();
 
   const isCharacter = $derived(actor.isCharacter());
+  const variant = $derived(isCharacter ? "character" : "npc");
+  const speedSources = $derived(actor.system.speedStatSources);
+  const speedTotal = $derived(actor.system.totals.speed);
+
+  let speedPopupOpen = $state(false);
+  let speedAnchorEl = $state<HTMLElement | undefined>();
+
+  function toggleSpeedPopup(e: Event) {
+    e.stopPropagation();
+    if (!speedPopupOpen) {
+      closeActivePopup();
+    }
+    speedPopupOpen = !speedPopupOpen;
+  }
+
+  function closeSpeedPopup() {
+    speedPopupOpen = false;
+  }
+
+  function handleSpeedExtraChange(value: number) {
+    if (isCharacter) {
+      actor.update({ "system.utility.speedExtra": value });
+      return;
+    }
+
+    const sources = actor.system.speedStatSources;
+    if (!sources) return;
+    actor.update({
+      "system.utility.speedExtra": value,
+      "system.utility.speed": sources.base + sources.growth + value,
+    });
+  }
 </script>
 
 <header class="sheet-header">
@@ -44,7 +79,20 @@
         </label>
       </h1>
       <div class="speed-wrapper">
-        <i class="fas fa-rabbit-fast speed-icon"></i>
+        <span class="speed-icon-anchor" data-popup-id="speed" bind:this={speedAnchorEl}>
+          <ActionIcon
+            title={t("character.utility.speed")}
+            aria-label={t("character.utility.speed")}
+            variant="ghost"
+            class="speed-action"
+            onclick={toggleSpeedPopup}
+            onkeydown={(e) => e.key === "Enter" && toggleSpeedPopup(e)}
+          >
+            {#snippet icon()}
+              <i class="fas fa-rabbit-fast" aria-hidden="true"></i>
+            {/snippet}
+          </ActionIcon>
+        </span>
         <h1>
           {#if isCharacter}
             <span class="computed-speed">{actor.system.utility.speed}</span>
@@ -63,6 +111,25 @@
         </h1>
         {#if !isCharacter || actor.system.totals.speed !== actor.system.utility.speed}
           <span class="total-speed">({actor.system.totals.speed})</span>
+        {/if}
+        {#if speedPopupOpen && speedSources}
+          <AnchoredPopup
+            open={true}
+            anchorEl={speedAnchorEl}
+            onClose={closeSpeedPopup}
+            popupId="speed"
+            triggerMode="click"
+          >
+            {#snippet children()}
+              <StatDetailContent
+                titleKey="character.utility.speed"
+                sources={speedSources}
+                total={speedTotal}
+                {variant}
+                onExtraChange={handleSpeedExtraChange}
+              />
+            {/snippet}
+          </AnchoredPopup>
         {/if}
       </div>
     </div>
@@ -135,11 +202,24 @@
   .speed-wrapper {
     margin-left: auto;
     display: flex;
-    align-items: baseline;
+    align-items: center;
     gap: 0.5rem;
   }
 
-  .speed-icon {
+  .speed-icon-anchor {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    margin-right: 0.15rem;
+  }
+
+  .speed-wrapper :global(.speed-action.action-icon) {
+    width: auto;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    height: auto;
     font-size: var(--font-size-20);
+    padding: 0.3rem 0.4rem;
+    box-sizing: border-box;
   }
 </style>

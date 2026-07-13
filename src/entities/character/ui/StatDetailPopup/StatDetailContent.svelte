@@ -1,25 +1,32 @@
 <script lang="ts">
-  import type { AdditionalAttributes, StatSourceKey } from '../../../../documents/Actor/types/ShwActorSystem';
+  import type { StatSourceKey } from '../../../../documents/Actor/types/ShwActorSystem';
   import {
     NPC_STAT_SOURCE_KEYS,
     STAT_SOURCE_KEYS,
   } from '../../../../documents/Actor/types/ShwActorSystem';
   import { t } from '../../../../shared/i18n';
   import type { I18nKey } from '../../../../shared/i18n';
-  import { ADDITIONAL_ATTRIBUTE_LABELS } from '../../../../shared/model/constants';
   import type { StatSourceValues } from '../../../../documents/Actor/types/ShwActorSystem';
 
   interface Props {
-    statKey: keyof AdditionalAttributes;
+    titleKey: I18nKey;
     sources: StatSourceValues;
     total: number;
     variant?: 'character' | 'npc';
+    editableExtra?: boolean;
     onExtraChange: (value: number) => void;
   }
 
   import { untrack } from 'svelte';
 
-  let { statKey, sources, total, variant = 'character', onExtraChange }: Props = $props();
+  let {
+    titleKey,
+    sources,
+    total,
+    variant = 'character',
+    editableExtra = true,
+    onExtraChange,
+  }: Props = $props();
 
   let localExtra = $state(untrack(() => sources.extra));
 
@@ -27,7 +34,7 @@
     localExtra = sources.extra;
   });
 
-  const labelKey = $derived(ADDITIONAL_ATTRIBUTE_LABELS[statKey]);
+  const labelKey = $derived(titleKey);
   const visibleSourceKeys = $derived(
     variant === 'npc' ? NPC_STAT_SOURCE_KEYS : STAT_SOURCE_KEYS,
   );
@@ -78,17 +85,21 @@
       {#if sourceKey === 'extra'}
         <div class="stat-detail-row stat-detail-row--extra">
           <span class="stat-detail-label">{t(sourceLabelKeys[sourceKey])}</span>
-          <div class="extra-controls">
-            <button type="button" class="extra-btn" onclick={decrement}>−</button>
-            <input
-              type="number"
-              class="extra-input"
-              value={localExtra}
-              oninput={handleExtraInput}
-              onclick={(e) => e.stopPropagation()}
-            />
-            <button type="button" class="extra-btn" onclick={increment}>+</button>
-          </div>
+          {#if editableExtra}
+            <div class="extra-controls">
+              <button type="button" class="extra-btn" onclick={decrement}>−</button>
+              <input
+                type="number"
+                class="extra-input"
+                value={localExtra}
+                oninput={handleExtraInput}
+                onclick={(e) => e.stopPropagation()}
+              />
+              <button type="button" class="extra-btn" onclick={increment}>+</button>
+            </div>
+          {:else}
+            <span class="stat-detail-value">{sources.extra}</span>
+          {/if}
         </div>
       {:else}
         <div class="stat-detail-row">

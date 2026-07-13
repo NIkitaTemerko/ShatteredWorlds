@@ -23,6 +23,9 @@ export const STAT_NAME_KEYS = {
 /** Базовое макс. HP персонажа — только derived, не в JSON. */
 export const HEALTH_BASE = 20;
 
+/** Базовая скорость персонажа — только derived, не в JSON. */
+export const SPEED_BASE = 20;
+
 /** Игровая база combat-статов — только derived, не в JSON. */
 export const ADDITIONAL_STAT_BASE = {
   actions: 2,
@@ -33,6 +36,7 @@ export const ADDITIONAL_STAT_BASE = {
   barrier: 0,
   psiDefense: 0,
   damageReduction: 0,
+  massCategory: 2,
 } as const;
 
 export type AdditionalStatBaseKey = keyof typeof ADDITIONAL_STAT_BASE;
@@ -59,6 +63,7 @@ export function additionalTotal(
 export const CHAR_DEFAULTS = {
   utility: {
     speed: 20,
+    speedExtra: 0,
     level: 1,
   },
 
@@ -73,6 +78,7 @@ export const CHAR_DEFAULTS = {
     range: 0,
     damageReduction: 0,
     armorClass: 0,
+    massCategory: 0,
   } satisfies ShwActorSystem['additionalAttributes'],
 
   totals: {
@@ -94,5 +100,6 @@ export const CHAR_DEFAULTS = {
     speed: 0,
     range: 0,
     armorClass: 0,
+    massCategory: 0,
   } satisfies ShwActorSystem['totals'],
 } as const;

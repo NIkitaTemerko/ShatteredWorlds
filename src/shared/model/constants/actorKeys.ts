@@ -24,6 +24,7 @@ export const ADDITIONAL_KEYS: (keyof ShwActorSystem['additionalAttributes'])[] =
   'range',
   'damageReduction',
   'armorClass',
+  'massCategory',
 ] as const;
 
 /** Ключи производных полей в totals (character) */
@@ -43,6 +44,7 @@ export const TOTAL_KEYS: (keyof ShwActorSystem['totals'])[] = [
   'barrier',
   'psiDefense',
   'damageReduction',
+  'massCategory',
 ] as const;
 
 /** @deprecated Use TOTAL_KEYS */

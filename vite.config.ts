@@ -1,4 +1,5 @@
 /* eslint-env node */
+import { defineConfig } from 'vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { postcssConfig } from './postcssConfig';
@@ -15,7 +16,7 @@ const s_PACKAGE_ID = `systems/${moduleJSON.id}`;
 // by shortening 'template-svelte-esm'.
 const s_SVELTE_HASH_ID = 'sw';
 
-export default ({ mode }) => {
+export default defineConfig(({ mode }) => {
   // Автоматически определяем настройки по режиму
   const isProduction = mode === 'production';
   const s_COMPRESS = isProduction;
@@ -27,11 +28,11 @@ export default ({ mode }) => {
   const compilerOptions =
     mode === 'production'
       ? {
-          cssHash: ({ hash, css }) => `svelte-${s_SVELTE_HASH_ID}-${hash(css)}`,
+          cssHash: ({ hash, css }: { css: string; hash: (input: string) => string }) =>
+            `svelte-${s_SVELTE_HASH_ID}-${hash(css)}`,
         }
       : {};
 
-  /** @type {import('vite').UserConfig} */
   return {
     root: 'src/', // Source location / esbuild root.
     base: `/${s_PACKAGE_ID}/dist`, // Base module path that 30001 / served dev directory.
@@ -122,4 +123,4 @@ export default ({ mode }) => {
         : []),
     ],
   };
-};
+});

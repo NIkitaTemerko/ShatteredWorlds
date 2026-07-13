@@ -139,7 +139,7 @@ export class ItemFactory {
           consumableType: 'bomb',
           damage: {
             amount: 50,
-            type: 'fire',
+            type: 'elemental',
           },
           radius: 5,
           save: {

@@ -103,6 +103,7 @@ export const ADDITIONAL_ATTRIBUTE_ICONS: Record<keyof AdditionalAttributes, stri
   initiative: 'fas fa-dice-six',
   damageReduction: 'fas fa-shield-alt',
   armorClass: 'fas fa-shield',
+  massCategory: 'fas fa-weight-hanging',
 };
 
 /** Icon colors for additional attributes */
@@ -117,4 +118,5 @@ export const ADDITIONAL_ATTRIBUTE_COLORS: Record<keyof AdditionalAttributes, str
   initiative: '#6f42c1',
   damageReduction: '#6f42c1',
   armorClass: '#6c757d',
+  massCategory: '#795548',
 };

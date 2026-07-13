@@ -3,7 +3,9 @@ interface AttributeFields {
   extra: number;
   charBonus: number;
   saveBonus: number;
-  /** Runtime: значение 1 коэффициента от итоговой характеристики (25%). */
+  charBonusBase: number;
+  saveBonusBase: number;
+  /** Runtime: значение 1 коэффициента от итогового доп. стата (25%). */
   coefficient: number;
 }
 
@@ -12,6 +14,11 @@ interface HealthFields {
   max: number;
   /** Ручной доп. бонус HP (персонаж). */
   extra: number;
+}
+
+interface BarrierFields {
+  /** Текущий барьер (persisted). */
+  value: number;
 }
 
 interface Attributes<T> {
@@ -33,6 +40,7 @@ interface AdditionalAttributes {
   range: number;
   damageReduction: number;
   armorClass: number;
+  massCategory: number;
 }
 
 /** MVP-источники additional-статов, порядок = порядок строк в попапе */
@@ -76,8 +84,60 @@ export const STAT_SOURCE_KEYS: StatSourceKey[] = [
 /** Упрощённая разбивка additional-статов для NPC */
 export const NPC_STAT_SOURCE_KEYS: StatSourceKey[] = ['base', 'growth', 'extra'];
 
+export type AttributeKey = keyof Attributes<unknown>;
+
+export interface AttributeValueSources {
+  base: number;
+  equipment: number;
+  abilities: number;
+}
+
+export interface AttributeExtraSources {
+  equipment: number;
+  abilities: number;
+  extra: number;
+}
+
+export interface AttributeRollSources {
+  base: number;
+  equipment: number;
+  abilities: number;
+  extra: number;
+}
+
+export interface AttributeStatSourceBreakdown {
+  value: AttributeValueSources;
+  extra: AttributeExtraSources;
+  charBonus: AttributeRollSources;
+  saveBonus: AttributeRollSources;
+}
+
+/** Runtime-only: разбивка основных атрибутов по источникам */
+export type AttributeStatSources = Record<AttributeKey, AttributeStatSourceBreakdown>;
+
+export const ATTRIBUTE_VALUE_SOURCE_KEYS: (keyof AttributeValueSources)[] = [
+  'base',
+  'equipment',
+  'abilities',
+];
+
+export const ATTRIBUTE_EXTRA_SOURCE_KEYS: (keyof AttributeExtraSources)[] = [
+  'equipment',
+  'abilities',
+  'extra',
+];
+
+export const ATTRIBUTE_ROLL_SOURCE_KEYS: (keyof AttributeRollSources)[] = [
+  'base',
+  'equipment',
+  'abilities',
+  'extra',
+];
+
 interface UtilityFields {
   speed: number;
+  /** Ручной доп. бонус скорости (персонаж). */
+  speedExtra: number;
   level: number;
 }
 
@@ -102,6 +162,7 @@ interface CharacterTotals {
   speed: number;
   range: number;
   armorClass: number;
+  massCategory: number;
 }
 
 interface NpcAttribute {
@@ -116,6 +177,7 @@ interface NpcAttribute {
 
 export interface ShwActorSystem {
   health: HealthFields;
+  barrier: BarrierFields;
   attributes: Attributes<AttributeFields>;
   additionalAttributes: AdditionalAttributes;
   utility: UtilityFields;
@@ -124,10 +186,15 @@ export interface ShwActorSystem {
   additionalStatSources: AdditionalStatSources;
   /** Runtime-only: разбивка макс. HP */
   healthStatSources: HealthStatSources;
+  /** Runtime-only: разбивка скорости */
+  speedStatSources: StatSourceValues;
+  /** Runtime-only: разбивка основных атрибутов */
+  attributeStatSources: AttributeStatSources;
 }
 
 export interface ShwNpcSystem {
   health: HealthFields;
+  barrier: BarrierFields;
   attributes: Attributes<NpcAttribute>;
   additionalAttributes: AdditionalAttributes;
   utility: UtilityFields;
@@ -136,16 +203,20 @@ export interface ShwNpcSystem {
   additionalStatSources: AdditionalStatSources;
   /** Runtime-only: разбивка макс. HP */
   healthStatSources: HealthStatSources;
+  /** Runtime-only: разбивка скорости */
+  speedStatSources: StatSourceValues;
+  /** Runtime-only: разбивка основных атрибутов */
+  attributeStatSources: AttributeStatSources;
 }
 
 /** Persisted actor system (schema); totals и additionalStatSources — runtime-only. */
 export type ShwActorSystemSource = Omit<
   ShwActorSystem,
-  'totals' | 'additionalStatSources' | 'healthStatSources'
+  'totals' | 'additionalStatSources' | 'healthStatSources' | 'speedStatSources' | 'attributeStatSources'
 >;
 export type ShwNpcSystemSource = Omit<
   ShwNpcSystem,
-  'totals' | 'additionalStatSources' | 'healthStatSources'
+  'totals' | 'additionalStatSources' | 'healthStatSources' | 'speedStatSources' | 'attributeStatSources'
 >;
 
 /** additionalAttributes keys that may exist on runtime totals */
@@ -154,4 +225,4 @@ export type AdditionalAttributesTotalKey = Extract<
   keyof CharacterTotals | keyof ShwNpcSystem['totals']
 >;
 
-export type { CharacterTotals, AdditionalAttributes, AttributeFields };
+export type { BarrierFields, CharacterTotals, AdditionalAttributes, AttributeFields };

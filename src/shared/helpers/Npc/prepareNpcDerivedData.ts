@@ -15,6 +15,7 @@ import {
   type AttributeProgressionBonuses,
 } from '../Character/attributeProgression';
 import { sumStatSources } from '../Character/collectStatBonusesBySource';
+import { syncBarrierValue } from '../Character/syncBarrierValue';
 import {
   getNpcAdditionalStatBaseBonus,
   getNpcAdditionalStatGrowthBonus,
@@ -67,7 +68,81 @@ function syncAdditionalStatSources(
 
     sys.additionalStatSources[key] = sources;
     sys.totals[key] = sumStatSources(sources);
+    if (key === 'massCategory') {
+      sys.totals.massCategory = Math.max(1, sys.totals.massCategory);
+    }
   }
+}
+
+function ensureAttributeStatSources(
+  sys: ShwNpcSystem,
+): asserts sys is ShwNpcSystem & { attributeStatSources: ShwNpcSystem['attributeStatSources'] } {
+  if (!sys.attributeStatSources) {
+    sys.attributeStatSources = {} as ShwNpcSystem['attributeStatSources'];
+  }
+}
+
+function syncAttributeStatSources(sys: ShwNpcSystem): void {
+  ensureAttributeStatSources(sys);
+
+  for (const k of STAT_KEYS) {
+    const attr = sys.attributes[k];
+    const rollBase = Math.floor(attr.value / 5);
+
+    sys.attributeStatSources[k] = {
+      value: {
+        base: attr.value,
+        equipment: 0,
+        abilities: 0,
+      },
+      extra: {
+        equipment: 0,
+        abilities: 0,
+        extra: attr.extra,
+      },
+      charBonus: {
+        base: rollBase,
+        equipment: 0,
+        abilities: 0,
+        extra: attr.charBonusBase ?? 0,
+      },
+      saveBonus: {
+        base: rollBase,
+        equipment: 0,
+        abilities: 0,
+        extra: attr.saveBonusBase ?? 0,
+      },
+    };
+  }
+}
+
+function ensureSpeedStatSources(
+  sys: ShwNpcSystem,
+): asserts sys is ShwNpcSystem & { speedStatSources: ShwNpcSystem['speedStatSources'] } {
+  if (!sys.speedStatSources) {
+    sys.speedStatSources = {} as ShwNpcSystem['speedStatSources'];
+  }
+}
+
+function syncSpeedStatSources(
+  sys: ShwNpcSystem,
+  progression: AttributeProgressionBonuses,
+): void {
+  ensureSpeedStatSources(sys);
+
+  const base = NPC_DEFAULTS.utility.speed;
+  const growth = progression.speedBonus;
+  const sources: StatSourceValues = {
+    base,
+    growth,
+    equipment: 0,
+    abilities: 0,
+    extra: sys.utility.speed - base - growth,
+  };
+
+  sys.utility.speedExtra = sources.extra;
+  sys.speedStatSources = sources;
+  sys.totals.speed = sumStatSources(sources);
 }
 
 export function prepareNpcDerivedData(sys: ShwNpcSystem) {
@@ -77,7 +152,6 @@ export function prepareNpcDerivedData(sys: ShwNpcSystem) {
 
   sys.totals.health = sys.health.max;
   sys.totals.healthCoefficient = healthCoefficientValue(sys.health.max);
-  sys.totals.speed = sys.utility.speed;
 
   for (const k of STAT_KEYS) {
     sys.totals[k] = attrs[k].value;
@@ -87,9 +161,16 @@ export function prepareNpcDerivedData(sys: ShwNpcSystem) {
     const a = attrs[k];
     a.charBonus = (a.charBonusBase ?? 0) + Math.floor(a.value / 5);
     a.saveBonus = (a.saveBonusBase ?? 0) + Math.floor(a.value / 5);
-    a.coefficient = attributeCoefficientValue(a.value + a.extra);
+    a.coefficient = attributeCoefficientValue(a.extra);
   }
 
-  const progression = calculateAttributeProgressionBonuses(attrs as ShwActorSystem['attributes']);
+  const progression = calculateAttributeProgressionBonuses(
+    attrs as ShwActorSystem['attributes'],
+    sys.totals,
+    attrs.fortune.extra,
+  );
   syncAdditionalStatSources(sys, progression);
+  syncSpeedStatSources(sys, progression);
+  syncAttributeStatSources(sys);
+  syncBarrierValue(sys);
 }

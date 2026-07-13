@@ -8,6 +8,20 @@
       "will": "Will",
       "presence": "Presence"
     },
+    "damage": {
+      "types": {
+        "physical": "physical",
+        "force": "force",
+        "elemental": "elemental",
+        "magical": "magical",
+        "mental": "mental",
+        "necrotic": "necrotic",
+        "radiant": "radiant",
+        "void": "void",
+        "soul": "soul",
+        "fall": "fall"
+      }
+    },
     "tabs": {
       "stats": "Statistics",
       "inventory": "Inventory",
@@ -25,7 +39,8 @@
       "range": "Range",
       "initiative": "Initiative",
       "damageReduction": "Damage Reduction",
-      "armorClass": "Armor Class"
+      "armorClass": "Armor Class",
+      "massCategory": "Mass Category"
     },
     "consumable": {
       "activationType": {
@@ -50,15 +65,6 @@
         "scroll": "scroll",
         "food": "food",
         "poison": "poison"
-      },
-      "damageType": {
-        "fire": "fire",
-        "cold": "cold",
-        "lightning": "lightning",
-        "acid": "acid",
-        "poison": "poison",
-        "physical": "physical",
-        "force": "force"
       },
       "saveType": {
         "force": "force",
@@ -294,9 +300,6 @@
       "nameLabel": "Name:",
       "levelLabel": "Limit",
       "applyDamage": "Apply Damage",
-      "considerArmor": "Consider Armor",
-      "ignoreArmor": "Ignore Armor",
-      "trueDamage": "True Damage",
       "attributeBonus": "Attribute Bonus",
       "additionalAttribute": "Add. {attribute}",
       "saveThrow": "Save {attribute}",
@@ -308,7 +311,50 @@
         "growth": "Growth bonus",
         "equipment": "Equipment",
         "abilities": "Abilities",
-        "extra": "Extra"
+        "extra": "Extra",
+        "fromAttribute": "Base (from attribute)"
+      },
+      "coefficient": {
+        "unit": "Coefficient",
+        "count": "Count",
+        "copy": "Copy",
+        "final": "Final coefficient",
+        "calculation": "Coefficient calculation",
+        "info": "The coefficient is 25% of the additional attribute",
+        "formula": "Extra total {total} ÷ 4 = {result}"
+      },
+      "barrier": {
+        "current": "Current barrier",
+        "max": "Max barrier"
+      },
+      "damage": {
+        "addEntry": "+ Add damage",
+        "apply": "Apply",
+        "preview": "Preview: −{barrier} barrier, −{health} HP",
+        "previewWithOneTimeBarrier": "Preview: −{oneTimeBarrier} temp barrier, −{barrier} barrier, −{health} HP",
+        "oneTimeBarrier": "One-time barrier",
+        "penetration": "armor penetration",
+        "cells": "cells",
+        "reorder": "Drag to reorder",
+        "removeEntry": "Remove",
+        "resizePanes": "Resize panes",
+        "bombExplosion": "Explosion deals {amount} {type} damage in a {radius}-foot radius",
+        "log": {
+          "entry": "#{order} · {type} — {raw} damage",
+          "noDamage": "no damage",
+          "barrier": "Barrier: −{amount}",
+          "oneTimeBarrier": "One-time barrier: −{amount}",
+          "barrierRemaining": "{remaining} remaining",
+          "overflow": "After barrier: {amount}",
+          "armor": "Armor: −{blocked} (AC {stat})",
+          "armorWithPen": "Armor: −{blocked} (AC {stat}, pen {pen} → eff. {effective})",
+          "armorFullPen": "Armor: fully penetrated (AC {stat}, pen {pen})",
+          "psiDefense": "Psi defense: −{blocked} ({stat})",
+          "damageReduction": "Damage reduction: −{blocked} ({stat})",
+          "hpDamage": "HP damage: −{amount}",
+          "afterState": "After: barrier {barrier}, HP {health}",
+          "finalState": "Total: barrier {barrier}, HP {health}"
+        }
       },
       "health": {
         "current": "Health",

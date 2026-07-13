@@ -1,4 +1,5 @@
 import type { BaseItemData } from './ItemDataInterface';
+import type { CombatDamageType } from '../../../shared/model/damage/types';
 
 // ============================================================================
 // Resource System
@@ -85,7 +86,7 @@ export interface StatModifierBlock {
 
 export interface DamageEffect {
   formula: string;
-  damageType: string;
+  damageType: CombatDamageType;
   scaling?: ScalingFormula | null;
 }
 

@@ -12,6 +12,8 @@ export const characterAttributeSchema = () =>
     extra: intField(0),
     charBonus: intField(0),
     saveBonus: intField(0),
+    charBonusBase: intField(0),
+    saveBonusBase: intField(0),
     coefficient: intField(0),
   });
 
@@ -33,9 +35,15 @@ export const healthSchema = () =>
     extra: intField(0),
   });
 
+export const barrierSchema = () =>
+  new fields.SchemaField({
+    value: intField(0),
+  });
+
 export const utilitySchema = () =>
   new fields.SchemaField({
     speed: intField(CHAR_DEFAULTS.utility.speed),
+    speedExtra: intField(CHAR_DEFAULTS.utility.speedExtra),
     level: intField(CHAR_DEFAULTS.utility.level),
   });
 
@@ -51,6 +59,7 @@ export const additionalAttributesSchema = () =>
     range: intField(CHAR_DEFAULTS.additionalAttributes.range),
     damageReduction: intField(CHAR_DEFAULTS.additionalAttributes.damageReduction),
     armorClass: intField(CHAR_DEFAULTS.additionalAttributes.armorClass),
+    massCategory: intField(CHAR_DEFAULTS.additionalAttributes.massCategory),
   });
 
 export const characterAttributesSchema = () =>
@@ -74,5 +83,6 @@ export const npcAttributesSchema = () =>
 export const npcUtilitySchema = () =>
   new fields.SchemaField({
     speed: intField(NPC_DEFAULTS.utility.speed),
+    speedExtra: intField(NPC_DEFAULTS.utility.speedExtra),
     level: intField(NPC_DEFAULTS.utility.level),
   });

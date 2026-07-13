@@ -12,15 +12,6 @@ export const rarityTypes = [
   { value: 'epic', label: 'эпическая' },
   { value: 'legendary', label: 'легендарная' },
 ];
-export const damageTypes = [
-  { value: 'fire', label: 'огонь' },
-  { value: 'cold', label: 'холод' },
-  { value: 'lightning', label: 'молния' },
-  { value: 'acid', label: 'кислота' },
-  { value: 'poison', label: 'яд' },
-  { value: 'physical', label: 'физический' },
-  { value: 'force', label: 'силовой' },
-];
 
 export const saveTypes = [
   { value: 'force', label: 'сила' },

@@ -1,4 +1,5 @@
 import type { BaseItemData, PricedItem, StackableItem } from './ItemDataInterface';
+import type { ItemDamageType } from '../../../shared/model/damage/types';
 
 export type ConsumableType = 'potion' | 'bomb' | 'scroll' | 'food' | 'poison';
 
@@ -31,7 +32,7 @@ export interface BombData extends BaseConsumableData {
   consumableType: 'bomb';
   damage: {
     amount: number;
-    type: 'fire' | 'acid' | 'cold' | 'lightning' | 'poison' | 'physical' | 'force';
+    type: ItemDamageType;
   };
   radius: number;
   save: {

@@ -31,6 +31,12 @@
 
 <AnchoredPopup {open} {anchorEl} {onClose} {popupId} triggerMode="click">
   {#snippet children()}
-    <StatDetailContent {statKey} {sources} {total} {variant} {onExtraChange} />
+    <StatDetailContent
+      titleKey={ADDITIONAL_ATTRIBUTE_LABELS[statKey]}
+      {sources}
+      {total}
+      {variant}
+      {onExtraChange}
+    />
   {/snippet}
 </AnchoredPopup>

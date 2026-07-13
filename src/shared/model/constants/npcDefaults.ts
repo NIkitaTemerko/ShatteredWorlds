@@ -14,6 +14,7 @@ export const NPC_TOTAL_KEYS = [
 export const NPC_DEFAULTS = {
   utility: {
     speed: 20,
+    speedExtra: 0,
     level: 1,
   },
 
@@ -28,6 +29,7 @@ export const NPC_DEFAULTS = {
     range: 0,
     damageReduction: 0,
     armorClass: 0,
+    massCategory: 0,
   } satisfies ShwNpcSystem['additionalAttributes'],
 
   totals: {

@@ -8,6 +8,20 @@
       "will": "Воля",
       "presence": "Присутствие"
     },
+    "damage": {
+      "types": {
+        "physical": "физический",
+        "force": "силовой",
+        "elemental": "стихийный",
+        "magical": "магический",
+        "mental": "ментальный",
+        "necrotic": "некротический",
+        "radiant": "светлый",
+        "void": "пустотный",
+        "soul": "душевный",
+        "fall": "падение"
+      }
+    },
     "tabs": {
       "stats": "Статистика",
       "inventory": "Инвентарь",
@@ -25,7 +39,8 @@
       "range": "Бонусная дальность",
       "initiative": "Инициатива",
       "damageReduction": "Поглощение урона",
-      "armorClass": "Защита"
+      "armorClass": "Защита",
+      "massCategory": "Категория массы"
     },
     "consumable": {
       "activationType": {
@@ -50,15 +65,6 @@
         "scroll": "свиток",
         "food": "еда",
         "poison": "яд"
-      },
-      "damageType": {
-        "fire": "огонь",
-        "cold": "холод",
-        "lightning": "молния",
-        "acid": "кислота",
-        "poison": "яд",
-        "physical": "физический",
-        "force": "силовой"
       },
       "saveType": {
         "force": "напор",
@@ -294,9 +300,6 @@
       "nameLabel": "Имя:",
       "levelLabel": "Предел",
       "applyDamage": "Нанести урон",
-      "considerArmor": "Учитывать защиту",
-      "ignoreArmor": "Игнорировать броню",
-      "trueDamage": "Чистый урон",
       "attributeBonus": "Бонус характеристики",
       "additionalAttribute": "Доп. {attribute}",
       "saveThrow": "СБ‑{attribute}",
@@ -308,7 +311,50 @@
         "growth": "Бонус роста",
         "equipment": "Экипировка",
         "abilities": "Способности",
-        "extra": "Доп"
+        "extra": "Доп",
+        "fromAttribute": "База (от стата)"
+      },
+      "coefficient": {
+        "unit": "Коэффициент",
+        "count": "Кол-во",
+        "copy": "Копировать",
+        "final": "Конечный коэффициент",
+        "calculation": "Расчёт коэффициента",
+        "info": "Коэффициент составляет 25% от дополнительной характеристики",
+        "formula": "Итог доп. {total} ÷ 4 = {result}"
+      },
+      "barrier": {
+        "current": "Текущий барьер",
+        "max": "Макс. барьер"
+      },
+      "damage": {
+        "addEntry": "+ Добавить урон",
+        "apply": "Применить",
+        "preview": "Предпросмотр: −{barrier} барьер, −{health} HP",
+        "previewWithOneTimeBarrier": "Предпросмотр: −{oneTimeBarrier} разовый барьер, −{barrier} барьер, −{health} HP",
+        "oneTimeBarrier": "Разовый барьер",
+        "penetration": "пробитие брони",
+        "cells": "клеток",
+        "reorder": "Перетащить для изменения порядка",
+        "removeEntry": "Удалить",
+        "resizePanes": "Изменить высоту панелей",
+        "bombExplosion": "Взрыв наносит {amount} урона типа {type} в радиусе {radius} футов",
+        "log": {
+          "entry": "#{order} · {type} — {raw} урона",
+          "noDamage": "нет урона",
+          "barrier": "Барьер: −{amount}",
+          "oneTimeBarrier": "Разовый барьер: −{amount}",
+          "barrierRemaining": "осталось {remaining}",
+          "overflow": "После барьера: {amount}",
+          "armor": "Броня: −{blocked} (КБ {stat})",
+          "armorWithPen": "Броня: −{blocked} (КБ {stat}, пробитие {pen} → эфф. {effective})",
+          "armorFullPen": "Броня: полностью пробита (КБ {stat}, пробитие {pen})",
+          "psiDefense": "Пси-защита: −{blocked} ({stat})",
+          "damageReduction": "Снижение урона: −{blocked} ({stat})",
+          "hpDamage": "Урон по HP: −{amount}",
+          "afterState": "После: барьер {barrier}, HP {health}",
+          "finalState": "Итого: барьер {barrier}, HP {health}"
+        }
       },
       "health": {
         "current": "Здоровье",

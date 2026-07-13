@@ -3,5 +3,6 @@
   "css.customData": [],
   "[css]": {
     "editor.suggest.insertMode": "replace"
-  }
+  },
+  "svelte.plugin.svelte.kit.enable": false
 }

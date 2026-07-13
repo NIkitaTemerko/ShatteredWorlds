@@ -37,7 +37,7 @@ export function migrateNpcAdditionalAttributesToExtras(
 
   const attrs = attributes as ShwActorSystem['attributes'];
   const { fortune } = attrs;
-  fortune.coefficient = attributeCoefficientValue(fortune.value + fortune.extra);
+  fortune.coefficient = attributeCoefficientValue(fortune.extra);
   const progression = calculateAttributeProgressionBonuses(attrs);
 
   let changed = false;
@@ -66,7 +66,7 @@ export function npcAdditionalAttributesNeedMigration(
 
   const attrs = attributes as ShwActorSystem['attributes'];
   const { fortune } = attrs;
-  fortune.coefficient = attributeCoefficientValue(fortune.value + fortune.extra);
+  fortune.coefficient = attributeCoefficientValue(fortune.extra);
   const progression = calculateAttributeProgressionBonuses(attrs);
 
   for (const key of ALL_ADDITIONAL_KEYS) {

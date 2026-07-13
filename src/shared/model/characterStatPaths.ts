@@ -11,6 +11,8 @@ type AdditionalAttributePath = `additionalAttributes.${AdditionalAttributeKey}`;
 
 type HealthPath = 'health.value' | 'health.max' | 'health.extra';
 
+type BarrierPath = 'barrier.value';
+
 type UtilityPath = 'utility.speed' | 'utility.level';
 
 type TotalKey = keyof ShwActorSystem['totals'];
@@ -23,6 +25,7 @@ export type CharacterStatPath =
   | AttributePath
   | AdditionalAttributePath
   | HealthPath
+  | BarrierPath
   | UtilityPath
   | TotalPath
   | LegacyHelperPath;
@@ -73,6 +76,7 @@ export const CHARACTER_STAT_OPTIONS: CharacterStatOption[] = [
   })),
 
   { value: 'totals.health', labelKey: 'character.health.current' as I18nKey },
+  { value: 'barrier.value', labelKey: 'character.barrier.current' as I18nKey },
   { value: 'totals.healthCoefficient', labelKey: 'character.health.coefficient' as I18nKey },
   { value: 'totals.speed', labelKey: 'character.utility.speed' as I18nKey },
 ];

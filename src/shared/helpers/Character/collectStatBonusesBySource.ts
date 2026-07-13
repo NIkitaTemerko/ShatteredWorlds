@@ -123,3 +123,42 @@ export function sumStatSources(sources: {
 }): number {
   return sources.base + sources.growth + sources.equipment + sources.abilities + sources.extra;
 }
+
+export type AttributeBonusField = 'value' | 'extra' | 'charBonus' | 'saveBonus' | 'coefficient';
+
+export function sumBonusForAttributeField(
+  bonuses: Map<CharacterStatPath, number>,
+  key: string,
+  field: AttributeBonusField,
+): number {
+  let sum = bonuses.get(`attributes.${key}.${field}` as CharacterStatPath) ?? 0;
+  if (field === 'value') {
+    sum += bonuses.get(`totals.${key}` as CharacterStatPath) ?? 0;
+  }
+  return sum;
+}
+
+export function sumAttributeValueSources(sources: {
+  base: number;
+  equipment: number;
+  abilities: number;
+}): number {
+  return sources.base + sources.equipment + sources.abilities;
+}
+
+export function sumAttributeExtraSources(sources: {
+  equipment: number;
+  abilities: number;
+  extra: number;
+}): number {
+  return sources.equipment + sources.abilities + sources.extra;
+}
+
+export function sumAttributeRollSources(sources: {
+  base: number;
+  equipment: number;
+  abilities: number;
+  extra: number;
+}): number {
+  return sources.base + sources.equipment + sources.abilities + sources.extra;
+}

@@ -1,157 +1,193 @@
 <script lang="ts">
-  import type { ShwActor } from "../../../../documents/Actor/ShwActor";
-  import { localize, t } from "../../../../shared/i18n";
-  import type { AttributeKey } from "../../../../shared/model/types";
-  import { Input } from "../../../../shared/ui/Input";
-  import { ATTRIBUTE_COLORS } from "../../model";
+  import type { ShwActor } from '../../../../documents/Actor/ShwActor';
+  import type { AttributeKey } from '../../../../documents/Actor/types/ShwActorSystem';
+  import {
+    sumAttributeExtraSources,
+    sumAttributeValueSources,
+  } from '../../../../shared/helpers/Character/collectStatBonusesBySource';
+  import { localize, t } from '../../../../shared/i18n';
+  import type { I18nKey } from '../../../../shared/i18n';
+  import { ATTRIBUTE_COLORS } from '../../model';
+  import {
+    AttributeBaseDetailContent,
+    AttributeExtraDetailContent,
+    AttributeRollDetailContent,
+  } from '../StatDetailPopup';
+  import AttributeStatCell from './AttributeStatCell.svelte';
 
   interface Props {
-    actor: ShwActor<"character" | "npc">;
-    isNpc?: boolean;
+    actor: ShwActor<'character' | 'npc'>;
   }
 
-  let { actor, isNpc = false }: Props = $props();
+  type AttributeSection = 'value' | 'extra' | 'charBonus' | 'saveBonus';
+
+  interface OpenCell {
+    key: AttributeKey;
+    section: AttributeSection;
+  }
+
+  let { actor }: Props = $props();
 
   const sys = $derived(actor.system);
   const n = (v: unknown, d = 0) => (typeof v === "number" && !Number.isNaN(v) ? v : d);
 
-  interface ColumnData {
-    key: AttributeKey;
-    label: string;
-    dark: string;
-    light: string;
-    hover: string;
-    base: number;
-    extra: number;
-    total: number;
-    totalValue?: number; // Total значение с бонусами от предметов
-    charBonus: number;
-    saveBonus: number;
-    charBonusBase?: number;
-    saveBonusBase?: number;
-    saveLabel: string;
-  }
-
   const ATTRIBUTE_KEYS = [
-    { key: "fortune" as const, labelKey: "attributes.fortune" },
-    { key: "force" as const, labelKey: "attributes.force" },
-    { key: "finesse" as const, labelKey: "attributes.finesse" },
-    { key: "will" as const, labelKey: "attributes.will" },
-    { key: "presence" as const, labelKey: "attributes.presence" },
+    { key: 'fortune' as const, labelKey: 'attributes.fortune' as I18nKey },
+    { key: 'force' as const, labelKey: 'attributes.force' as I18nKey },
+    { key: 'finesse' as const, labelKey: 'attributes.finesse' as I18nKey },
+    { key: 'will' as const, labelKey: 'attributes.will' as I18nKey },
+    { key: 'presence' as const, labelKey: 'attributes.presence' as I18nKey },
   ] as const;
 
-  const columns = $derived<ColumnData[]>(
-    ATTRIBUTE_KEYS.map((c) => {
-      const attr = (sys as any).attributes[c.key];
-      const colors = ATTRIBUTE_COLORS[c.key];
-      const base = n(attr.value);
-      const extra = n(attr.extra);
-      const label = t(c.labelKey);
+  let openCell = $state<OpenCell | null>(null);
 
-      const totalValue = !isNpc && c.key in sys.totals ? n((sys.totals as any)[c.key]) : undefined;
+  const columns = $derived(
+    ATTRIBUTE_KEYS.map((c) => {
+      const attr = sys.attributes[c.key];
+      const colors = ATTRIBUTE_COLORS[c.key];
+      const sources = sys.attributeStatSources?.[c.key];
+      const label = t(c.labelKey);
+      const totalValue = n(sys.totals[c.key]);
 
       return {
         ...c,
         label,
         ...colors,
-        base,
-        extra,
-        total: base + extra,
+        attr,
+        sources,
         totalValue,
-        charBonus: n(attr.charBonus),
-        saveBonus: n(attr.saveBonus),
-        charBonusBase: isNpc ? n(attr.charBonusBase) : undefined,
-        saveBonusBase: isNpc ? n(attr.saveBonusBase) : undefined,
-        saveLabel: localize("character.saveThrow", { attribute: label }),
+        extraTotal: sources ? sumAttributeExtraSources(sources.extra) : n(attr.extra),
+        charBonusTotal: n(attr.charBonus),
+        saveBonusTotal: n(attr.saveBonus),
+        valueTotal: sources ? sumAttributeValueSources(sources.value) : totalValue,
+        charBonusSources: sources?.charBonus,
+        saveBonusSources: sources?.saveBonus,
+        saveLabel: localize('character.saveThrow', { attribute: label }),
+        extraTitle: localize('character.additionalAttribute', { attribute: label }),
       };
     }),
   );
 
-  function updateBase(key: string, value: number) {
-    actor.update({ [`system.attributes.${key}.value`]: value });
+  function isOpen(key: AttributeKey, section: AttributeSection): boolean {
+    return openCell?.key === key && openCell?.section === section;
   }
 
-  function updateAttr(key: string, field: string, value: number) {
+  function toggleCell(key: AttributeKey, section: AttributeSection) {
+    if (isOpen(key, section)) {
+      openCell = null;
+    } else {
+      openCell = { key, section };
+    }
+  }
+
+  function closePopup() {
+    openCell = null;
+  }
+
+  function popupId(key: AttributeKey, section: AttributeSection): string {
+    return `attr-${key}-${section}`;
+  }
+
+  function updateAttr(key: AttributeKey, field: string, value: number) {
     actor.update({ [`system.attributes.${key}.${field}`]: value });
   }
-
-  const onChangeValue = (key: string, ev: Event, field: string = "value") => {
-    const value = Number((ev.currentTarget as HTMLInputElement).value);
-    if (field === "value") {
-      updateBase(key, value);
-    } else {
-      updateAttr(key, field, value);
-    }
-  };
 </script>
 
 <div class="stats-panel general-panel">
-  {#each columns as col}
+  {#each columns as col (col.key)}
     <div class="stat-col flexcol" style="--dark:{col.dark}; --light:{col.light}; --hover:{col.hover};">
       <div class="cell header">{col.label}</div>
       <div class="cell value">
-        <Input
-          class="stat-input"
-          variant="underline"
-          type="number"
-          value={col.base}
-          min="-999"
-          max="999"
-          onchange={(e) => onChangeValue(col.key, e)}
-        />
-        {#if col.totalValue !== undefined && col.totalValue !== col.base}
-          <span class="total-indicator">({col.totalValue})</span>
+        {#if col.sources}
+          <AttributeStatCell
+            value={col.valueTotal}
+            popupId={popupId(col.key, 'value')}
+            isOpen={isOpen(col.key, 'value')}
+            onToggle={() => toggleCell(col.key, 'value')}
+            onClose={closePopup}
+          >
+            {#snippet popupContent()}
+              <AttributeBaseDetailContent
+                titleKey={col.labelKey}
+                sources={col.sources.value}
+                total={col.valueTotal}
+                onBaseChange={(value) => updateAttr(col.key, 'value', value)}
+              />
+            {/snippet}
+          </AttributeStatCell>
+        {:else}
+          {col.valueTotal}
         {/if}
       </div>
 
-      <div class="cell subheader">{localize("character.additionalAttribute", { attribute: col.label })}</div>
+      <div class="cell subheader">{col.extraTitle}</div>
       <div class="cell value">
-        {#if isNpc}
-          <Input
-            class="stat-input"
-            variant="underline"
-            type="number"
-            value={col.extra}
-            min="-999"
-            max="999"
-            onchange={(e) => onChangeValue(col.key, e, "extra")}
-          />
+        {#if col.sources}
+          <AttributeStatCell
+            value={col.extraTotal}
+            popupId={popupId(col.key, 'extra')}
+            isOpen={isOpen(col.key, 'extra')}
+            onToggle={() => toggleCell(col.key, 'extra')}
+            onClose={closePopup}
+          >
+            {#snippet popupContent()}
+              <AttributeExtraDetailContent
+                title={col.extraTitle}
+                sources={col.sources.extra}
+                onExtraChange={(value) => updateAttr(col.key, 'extra', value)}
+              />
+            {/snippet}
+          </AttributeStatCell>
         {:else}
-          {col.extra}
+          {col.extraTotal}
         {/if}
       </div>
 
-      <div class="cell subheader">{t("character.attributeBonus")}</div>
+      <div class="cell subheader">{t('character.attributeBonus')}</div>
       <div class="cell value">
-        {#if isNpc && col.charBonusBase !== undefined}
-          <Input
-            class="stat-input"
-            variant="underline"
-            type="number"
-            value={col.charBonusBase}
-            min="-999"
-            max="999"
-            onchange={(e) => onChangeValue(col.key, e, "charBonusBase")}
-          />({col.charBonus})
+        {#if col.charBonusSources}
+          <AttributeStatCell
+            value={col.charBonusTotal}
+            popupId={popupId(col.key, 'charBonus')}
+            isOpen={isOpen(col.key, 'charBonus')}
+            onToggle={() => toggleCell(col.key, 'charBonus')}
+            onClose={closePopup}
+          >
+            {#snippet popupContent()}
+              <AttributeRollDetailContent
+                titleKey={'character.attributeBonus' as I18nKey}
+                sources={col.charBonusSources}
+                total={col.charBonusTotal}
+                onExtraChange={(value) => updateAttr(col.key, 'charBonusBase', value)}
+              />
+            {/snippet}
+          </AttributeStatCell>
         {:else}
-          {col.charBonus}
+          {col.charBonusTotal}
         {/if}
       </div>
 
       <div class="cell subheader">{col.saveLabel}</div>
       <div class="cell value">
-        {#if isNpc && col.saveBonusBase !== undefined}
-          <Input
-            class="stat-input"
-            variant="underline"
-            type="number"
-            value={col.saveBonusBase}
-            min="-999"
-            max="999"
-            onchange={(e) => onChangeValue(col.key, e, "saveBonusBase")}
-          />({col.saveBonus})
+        {#if col.saveBonusSources}
+          <AttributeStatCell
+            value={col.saveBonusTotal}
+            popupId={popupId(col.key, 'saveBonus')}
+            isOpen={isOpen(col.key, 'saveBonus')}
+            onToggle={() => toggleCell(col.key, 'saveBonus')}
+            onClose={closePopup}
+          >
+            {#snippet popupContent()}
+              <AttributeRollDetailContent
+                title={col.saveLabel}
+                sources={col.saveBonusSources}
+                total={col.saveBonusTotal}
+                onExtraChange={(value) => updateAttr(col.key, 'saveBonusBase', value)}
+              />
+            {/snippet}
+          </AttributeStatCell>
         {:else}
-          {col.saveBonus}
+          {col.saveBonusTotal}
         {/if}
       </div>
     </div>
@@ -199,16 +235,6 @@
     background: var(--light);
     color: #000;
     gap: 0.25rem;
-  }
-
-  .total-indicator {
-    font-size: 0.85em;
-    opacity: 0.75;
-    font-weight: 600;
-  }
-
-  .cell :global(.stat-input) {
-    width: 2.5rem;
   }
 
   @media (max-width: 900px) {

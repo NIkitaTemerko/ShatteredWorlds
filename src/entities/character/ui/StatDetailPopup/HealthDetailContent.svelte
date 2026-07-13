@@ -1,52 +1,80 @@
 <script lang="ts">
   import {
     HEALTH_STAT_SOURCE_KEYS,
+    STAT_SOURCE_KEYS,
     type HealthStatSourceKey,
     type HealthStatSources,
-  } from '../../../../documents/Actor/types/ShwActorSystem';
-  import { t } from '../../../../shared/i18n';
-  import type { I18nKey } from '../../../../shared/i18n';
-  import { untrack } from 'svelte';
+    type StatSourceKey,
+    type StatSourceValues,
+  } from "../../../../documents/Actor/types/ShwActorSystem";
+  import { t } from "../../../../shared/i18n";
+  import type { I18nKey } from "../../../../shared/i18n";
+  import { untrack } from "svelte";
 
   interface Props {
     sources: HealthStatSources;
     total: number;
+    barrierValue?: number;
+    barrierSources?: StatSourceValues;
+    barrierTotal?: number;
     onExtraChange: (value: number) => void;
+    onBarrierExtraChange?: (value: number) => void;
   }
 
-  let { sources, total, onExtraChange }: Props = $props();
+  let {
+    sources,
+    total,
+    barrierValue = 0,
+    barrierSources,
+    barrierTotal = 0,
+    onExtraChange,
+    onBarrierExtraChange,
+  }: Props = $props();
 
   let localExtra = $state(untrack(() => sources.extra));
+  let localBarrierExtra = $state(untrack(() => barrierSources?.extra ?? 0));
 
   $effect(() => {
     localExtra = sources.extra;
   });
 
-  const sourceLabelKeys: Record<HealthStatSourceKey, I18nKey> = {
-    base: 'character.statSources.base',
-    equipment: 'character.statSources.equipment',
-    abilities: 'character.statSources.abilities',
-    extra: 'character.statSources.extra',
+  $effect(() => {
+    localBarrierExtra = barrierSources?.extra ?? 0;
+  });
+
+  const healthSourceLabelKeys: Record<HealthStatSourceKey, I18nKey> = {
+    base: "character.statSources.base",
+    equipment: "character.statSources.equipment",
+    abilities: "character.statSources.abilities",
+    extra: "character.statSources.extra",
   };
 
-  function decrement(e: Event) {
+  const barrierSourceLabelKeys: Record<StatSourceKey, I18nKey> = {
+    base: "character.statSources.base",
+    growth: "character.statSources.growth",
+    equipment: "character.statSources.equipment",
+    abilities: "character.statSources.abilities",
+    extra: "character.statSources.extra",
+  };
+
+  function decrementHealthExtra(e: Event) {
     e.stopPropagation();
     const next = localExtra - 1;
     localExtra = next;
     onExtraChange(next);
   }
 
-  function increment(e: Event) {
+  function incrementHealthExtra(e: Event) {
     e.stopPropagation();
     const next = localExtra + 1;
     localExtra = next;
     onExtraChange(next);
   }
 
-  function handleExtraInput(e: Event) {
+  function handleHealthExtraInput(e: Event) {
     e.stopPropagation();
     const input = e.currentTarget as HTMLInputElement;
-    let value = Number.parseInt(input.value, 10);
+    const value = Number.parseInt(input.value, 10);
     if (Number.isNaN(value)) {
       input.value = String(localExtra);
       return;
@@ -55,33 +83,63 @@
     input.value = String(value);
     onExtraChange(value);
   }
+
+  function decrementBarrierExtra(e: Event) {
+    e.stopPropagation();
+    if (!onBarrierExtraChange) return;
+    const next = localBarrierExtra - 1;
+    localBarrierExtra = next;
+    onBarrierExtraChange(next);
+  }
+
+  function incrementBarrierExtra(e: Event) {
+    e.stopPropagation();
+    if (!onBarrierExtraChange) return;
+    const next = localBarrierExtra + 1;
+    localBarrierExtra = next;
+    onBarrierExtraChange(next);
+  }
+
+  function handleBarrierExtraInput(e: Event) {
+    e.stopPropagation();
+    if (!onBarrierExtraChange) return;
+    const input = e.currentTarget as HTMLInputElement;
+    const value = Number.parseInt(input.value, 10);
+    if (Number.isNaN(value)) {
+      input.value = String(localBarrierExtra);
+      return;
+    }
+    localBarrierExtra = value;
+    input.value = String(value);
+    onBarrierExtraChange(value);
+  }
 </script>
 
 <div class="stat-detail-content">
   <header class="stat-detail-header">
-    <h3 class="stat-detail-title">{t('character.health.max')}</h3>
+    <h3 class="stat-detail-title">{t("character.health.max")}</h3>
   </header>
 
   <div class="stat-detail-rows">
     {#each HEALTH_STAT_SOURCE_KEYS as sourceKey (sourceKey)}
-      {#if sourceKey === 'extra'}
+      {#if sourceKey === "extra"}
         <div class="stat-detail-row stat-detail-row--extra">
-          <span class="stat-detail-label">{t(sourceLabelKeys[sourceKey])}</span>
+          <span class="stat-detail-label">{t(healthSourceLabelKeys[sourceKey])}</span>
           <div class="extra-controls">
-            <button type="button" class="extra-btn" onclick={decrement}>−</button>
+            <button type="button" class="extra-btn" onclick={decrementHealthExtra}>−</button>
             <input
               type="number"
               class="extra-input"
               value={localExtra}
-              oninput={handleExtraInput}
+              oninput={handleHealthExtraInput}
               onclick={(e) => e.stopPropagation()}
             />
-            <button type="button" class="extra-btn" onclick={increment}>+</button>
+            <button type="button" class="extra-btn" onclick={incrementHealthExtra}>+</button>
           </div>
         </div>
       {:else}
         <div class="stat-detail-row">
-          <span class="stat-detail-label">{t(sourceLabelKeys[sourceKey])}</span>
+          <span class="stat-detail-label">{t(healthSourceLabelKeys[sourceKey])}</span>
           <span class="stat-detail-value">{sources[sourceKey]}</span>
         </div>
       {/if}
@@ -89,9 +147,51 @@
   </div>
 
   <footer class="stat-detail-footer">
-    <span class="stat-detail-label">{t('character.statTotal')}</span>
+    <span class="stat-detail-label">{t("character.statTotal")}</span>
     <span class="stat-detail-total">{total}</span>
   </footer>
+
+  {#if barrierSources}
+    <header class="stat-detail-header stat-detail-header--section">
+      <h3 class="stat-detail-title">{t("character.barrier.max")}</h3>
+    </header>
+
+    <div class="stat-detail-row">
+      <span class="stat-detail-label">{t("character.barrier.current")}</span>
+      <span class="stat-detail-value">{barrierValue}</span>
+    </div>
+
+    <div class="stat-detail-rows">
+      {#each STAT_SOURCE_KEYS as sourceKey (sourceKey)}
+        {#if sourceKey === "extra"}
+          <div class="stat-detail-row stat-detail-row--extra">
+            <span class="stat-detail-label">{t(barrierSourceLabelKeys[sourceKey])}</span>
+            <div class="extra-controls">
+              <button type="button" class="extra-btn" onclick={decrementBarrierExtra}>−</button>
+              <input
+                type="number"
+                class="extra-input"
+                value={localBarrierExtra}
+                oninput={handleBarrierExtraInput}
+                onclick={(e) => e.stopPropagation()}
+              />
+              <button type="button" class="extra-btn" onclick={incrementBarrierExtra}>+</button>
+            </div>
+          </div>
+        {:else}
+          <div class="stat-detail-row">
+            <span class="stat-detail-label">{t(barrierSourceLabelKeys[sourceKey])}</span>
+            <span class="stat-detail-value">{barrierSources[sourceKey]}</span>
+          </div>
+        {/if}
+      {/each}
+    </div>
+
+    <footer class="stat-detail-footer">
+      <span class="stat-detail-label">{t("character.statTotal")}</span>
+      <span class="stat-detail-total">{barrierTotal}</span>
+    </footer>
+  {/if}
 </div>
 
 <style>
@@ -105,6 +205,10 @@
     margin-bottom: 0.5rem;
     padding-bottom: 0.5rem;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .stat-detail-header--section {
+    margin-top: 0.75rem;
   }
 
   .stat-detail-title {

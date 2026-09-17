@@ -1,0 +1,23 @@
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  color: var(--shw-color-text, #e8e4f0);
+  font-family: var(--shw-font, "Tektur Variable", "Tektur", sans-serif);
+  background:
+    radial-gradient(900px 500px at 20% 15%, rgb(120 60 180 / 35%), transparent 55%),
+    radial-gradient(700px 480px at 85% 75%, rgb(40 90 140 / 28%), transparent 50%),
+    radial-gradient(600px 400px at 50% 100%, rgb(180 100 40 / 12%), transparent 45%),
+    linear-gradient(160deg, #1a1228 0%, #0c0a12 45%, #12101a 100%);
+  background-attachment: fixed;
+}
+
+#storybook-root {
+  min-width: 12rem;
+  padding: 1.5rem;
+}
+
+/* Make glass blur obvious in canvas */
+.sb-show-main {
+  background: inherit;
+}

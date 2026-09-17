@@ -1,6 +1,5 @@
 @import "@fontsource-variable/tektur/wght.css";
-
-
+@import "./shared/ui/tokens.css";
 
 /* ============================================================
    CUSTOM SCROLLBAR STYLING

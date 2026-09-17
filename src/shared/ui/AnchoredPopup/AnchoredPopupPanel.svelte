@@ -9,16 +9,18 @@
   let { children, class: className = '' }: Props = $props();
 </script>
 
-<div class="anchored-popup-panel {className}">
+<div class="shw-anchored-popup-panel {className}">
   {@render children()}
 </div>
 
 <style>
-  .anchored-popup-panel {
+  .shw-anchored-popup-panel {
     min-width: 180px;
-    background: #fff;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--shw-color-border-bright, #6e6488);
+    border-radius: 0;
+    background: rgb(28 24 40 / 96%);
+    color: var(--shw-color-text, #e8e4f0);
+    box-shadow: var(--shw-shadow-panel, 0 10px 28px rgb(0 0 0 / 40%));
+    padding: 0.5rem;
   }
 </style>

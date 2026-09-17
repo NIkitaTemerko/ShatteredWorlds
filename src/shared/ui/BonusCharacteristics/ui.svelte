@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { StatModifier } from "../../../documents/Item/types/AbilityDataTypes";
   import type { CharacterStatPath } from "../../model/characterStatPaths";
-  import type { I18nKey } from "../../i18n";
   import { CHARACTER_STAT_OPTIONS } from "../../model/characterStatPaths";
   import { localize, t } from "../../i18n";
   import ActionIcon from "../ActionIcon/ui.svelte";
@@ -156,8 +155,10 @@
   }
 
   .modifier-stat {
+    font-family: var(--shw-font, inherit);
     font-size: 13px;
-    font-weight: 500;
+    font-weight: 600;
+    color: var(--shw-color-text, #e8e4f0);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -185,8 +186,9 @@
   }
 
   .no-stats-available {
+    font-family: var(--shw-font, inherit);
     font-size: 12px;
-    opacity: 0.7;
+    color: var(--shw-color-text-muted, #9a93ad);
     text-align: center;
     padding: 0.5rem;
   }

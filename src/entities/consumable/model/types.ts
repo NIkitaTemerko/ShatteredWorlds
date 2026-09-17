@@ -1,5 +1,3 @@
-import type { I18nKey } from '../../../shared/i18n';
-
 export type ActivationType = 'action' | 'bonus' | 'reaction';
 export type PerType = 'charges' | 'uses' | 'turns';
 export type RarityType = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
@@ -16,7 +14,5 @@ export interface UsesData {
   per: PerType;
 }
 
-export interface SelectOption<T = string> {
-  value: T;
-  label: string;
-}
+export type { SelectOption } from '../../../shared/ui/SelectInput/types';
+

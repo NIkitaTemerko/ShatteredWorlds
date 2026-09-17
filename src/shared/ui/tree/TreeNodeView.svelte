@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
+  import { DropdownMenu } from 'bits-ui';
   import { t } from '../../../shared/i18n';
-  import { AnchoredPopup, closeActivePopup } from '../AnchoredPopup';
   import ActionIcon from '../ActionIcon/ui.svelte';
   import { HoverTooltip } from '../HoverTooltip';
   import TreeNodeViewSelf from './TreeNodeView.svelte';
@@ -45,10 +45,9 @@
 
   let isDragOver = $state(false);
   let menuOpen = $state(false);
-  let menuBtnEl: HTMLElement | undefined = $state();
 
   const hasChildren = $derived(Boolean(node.children?.length));
-  const indent = $derived(level * 16);
+  const indent = $derived(level * 12);
   const isLeaf = $derived(!hasChildren);
 
   const showBurgerMenu = $derived(!!contextMenu);
@@ -76,14 +75,6 @@
   function handleEditClick(e: Event) {
     e.stopPropagation();
     onEdit?.(node, e);
-  }
-
-  function toggleMenu(e: Event) {
-    e.stopPropagation();
-    if (!menuOpen) {
-      closeActivePopup();
-    }
-    menuOpen = !menuOpen;
   }
 
   function closeMenu() {
@@ -163,20 +154,20 @@
     tabindex="0"
   >
     {#if hasChildren}
-      <span class="tree-chevron" class:expanded={isExpanded}>
-        <i class="fas fa-chevron-right"></i>
-      </span>
+      <span class="tree-chevron" class:expanded={isExpanded} aria-hidden="true"></span>
     {:else}
-      <span class="tree-spacer"></span>
+      <span class="tree-chevron-slot" aria-hidden="true"></span>
     {/if}
 
-    {#if node.icon}
-      {#if node.icon.startsWith('fas ') || node.icon.startsWith('far ') || node.icon.startsWith('fab ')}
-        <i class="{node.icon} tree-icon-font"></i>
-      {:else}
-        <img src={node.icon} alt="" class="tree-icon-img" />
+    <span class="tree-icon-slot" aria-hidden={!node.icon}>
+      {#if node.icon}
+        {#if node.icon.startsWith('fas ') || node.icon.startsWith('far ') || node.icon.startsWith('fab ')}
+          <i class="{node.icon} tree-icon-font"></i>
+        {:else}
+          <img src={node.icon} alt="" class="tree-icon-img" />
+        {/if}
       {/if}
-    {/if}
+    </span>
 
     <span class="tree-label">
       {node.label}
@@ -194,26 +185,23 @@
 
     <div class="tree-actions">
       {#if showBurgerMenu && isLeaf && contextMenu}
-        <div class="burger-menu-container" data-popup-id={node.id} bind:this={menuBtnEl}>
-          <ActionIcon onclick={toggleMenu} aria-label="Menu" title="Menu" variant="ghost" size="sm" class="menu-action">
-            {#snippet icon()}
+        <DropdownMenu.Root bind:open={menuOpen}>
+          <DropdownMenu.Trigger
+            class="shw-action-icon variant-ghost size-sm menu-action"
+            aria-label="Menu"
+            title="Menu"
+            onclick={(e) => e.stopPropagation()}
+          >
+            <span class="shw-action-icon__glyph" aria-hidden="true">
               <i class="fas fa-bars"></i>
-            {/snippet}
-          </ActionIcon>
-        </div>
-        <AnchoredPopup
-          open={menuOpen}
-          anchorEl={menuBtnEl}
-          onClose={closeMenu}
-          popupId={node.id}
-          triggerMode="hover"
-          role="menu"
-          panelClass="anchored-popup-panel--bare"
-        >
-          {#snippet children()}
-            {@render contextMenu({ node, close: closeMenu })}
-          {/snippet}
-        </AnchoredPopup>
+            </span>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Portal>
+            <DropdownMenu.Content class="shw-dropdown-content" sideOffset={4} align="end">
+              {@render contextMenu({ node, close: closeMenu })}
+            </DropdownMenu.Content>
+          </DropdownMenu.Portal>
+        </DropdownMenu.Root>
       {:else if onEdit && (isDynamicTree || isLeaf)}
         <ActionIcon
           onclick={handleEditClick}
@@ -304,20 +292,28 @@
   .tree-node-content {
     display: flex;
     align-items: center;
-    padding: 0.5rem 0.75rem;
+    gap: 0.35rem;
+    min-height: 1.75rem;
+    padding: 0.2rem 0.35rem;
+    border: 1px solid transparent;
+    border-radius: 0;
+    color: var(--shw-color-text, #e8e4f0);
     cursor: pointer;
-    border-radius: 4px;
     transition:
       background-color 0.15s,
+      border-color 0.15s,
       box-shadow 0.15s;
-    min-height: 36px;
+  }
+
+  .tree-node-content:focus-visible {
+    outline: none;
+    box-shadow: var(--shw-focus-ring);
   }
 
   .tree-node-content.drag-over {
-    background-color: rgba(222, 184, 135, 0.4);
-    box-shadow:
-      0 0 0 2px rgba(222, 184, 135, 0.6),
-      0 4px 12px rgba(222, 184, 135, 0.4);
+    border-color: var(--shw-color-tertiary-bright, #4ec4b6);
+    background: color-mix(in srgb, var(--shw-color-tertiary) 28%, transparent);
+    box-shadow: var(--shw-inner-glow);
   }
 
   .tree-actions {
@@ -328,79 +324,107 @@
     transition: opacity 0.2s;
   }
 
-  .tree-node-content:hover .tree-actions {
+  .tree-node-content:hover .tree-actions,
+  .tree-node-content:focus-within .tree-actions {
     opacity: 1;
   }
 
   .tree-node-content:hover {
-    background-color: rgba(222, 184, 135, 0.25);
+    background: var(--shw-glass-fill);
   }
 
   .tree-node-content.selected {
-    background-color: rgba(222, 184, 135, 0.35);
+    border-color: color-mix(in srgb, var(--shw-color-primary-bright) 45%, transparent);
+    background: var(--shw-glass-fill-tint);
+    box-shadow: var(--shw-inner-glow);
   }
 
   .tree-node.highlighted .tree-node-content {
-    background-color: rgba(222, 184, 135, 0.5);
+    border-color: var(--shw-color-primary-bright);
+    background: var(--shw-glass-fill-strong);
     animation: pulse 1s ease-in-out;
   }
 
   @keyframes pulse {
     0%,
     100% {
-      background-color: rgba(222, 184, 135, 0.5);
+      background: var(--shw-glass-fill-strong);
     }
     50% {
-      background-color: rgba(210, 180, 140, 0.7);
+      background: color-mix(in srgb, var(--shw-color-primary) 40%, transparent);
     }
   }
 
-  .tree-chevron {
+  .tree-chevron,
+  .tree-chevron-slot {
     display: inline-flex;
+    flex-shrink: 0;
     align-items: center;
     justify-content: center;
-    width: 16px;
-    height: 16px;
-    margin-right: 0.25rem;
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+
+  .tree-chevron {
     transition: transform 0.15s;
+  }
+
+  .tree-chevron::before {
+    content: '';
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 3.5px 0 3.5px 5px;
+    border-color: transparent transparent transparent var(--shw-color-text-muted, #9a93ad);
   }
 
   .tree-chevron.expanded {
     transform: rotate(90deg);
   }
 
-  .tree-spacer {
-    display: inline-block;
-    width: 16px;
-    margin-right: 0.25rem;
+  .tree-icon-slot {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    height: 1rem;
   }
 
   .tree-icon-img {
-    width: 24px;
-    height: 24px;
+    display: block;
+    width: 1rem;
+    height: 1rem;
     object-fit: cover;
-    border-radius: 3px;
-    margin-right: 0.5rem;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 1px;
+    border: 1px solid var(--shw-color-border, #4a425c);
   }
 
   .tree-icon-font {
-    width: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    height: 1rem;
+    color: var(--shw-color-primary-bright, #b57aef);
+    font-size: 12px;
     text-align: center;
-    margin-right: 0.5rem;
-    color: #666;
-    font-size: 16px;
   }
 
   .tree-label {
+    font-family: var(--shw-font, inherit);
     font-size: 14px;
-    color: #1a1a1a;
-    font-weight: 500;
+    font-weight: 600;
+    color: var(--shw-color-text, #e8e4f0);
+  }
+
+  .tree-node-content:not(.is-leaf) .tree-label {
+    color: var(--shw-color-text-muted, #9a93ad);
   }
 
   .drag-indicator {
     margin-left: 0.5rem;
-    color: #10b981;
+    color: var(--shw-color-tertiary-bright, #4ec4b6);
     font-size: 16px;
     animation: pulse-icon 0.6s ease-in-out infinite;
   }
@@ -418,39 +442,33 @@
   }
 
   .badge-indicator {
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
+    margin-left: 0.45rem;
     flex-shrink: 0;
+    box-shadow: 0 0 8px currentColor;
   }
 
   .tree-node-content :global(.edit-action),
-  .tree-node-content :global(.delete-action) {
-    transition:
-      opacity 0.15s,
-      color 0.15s;
-    color: #64748b;
-  }
-
+  .tree-node-content :global(.delete-action),
   .tree-node-content :global(.menu-action) {
     transition:
       opacity 0.15s,
       color 0.15s;
-    color: #64748b;
+    color: var(--shw-color-text-muted, #9a93ad);
   }
 
   .tree-node-content :global(.menu-action:hover) {
-    color: #374151;
+    color: var(--shw-color-text, #e8e4f0);
   }
 
   .tree-node-content :global(.edit-action:hover) {
-    color: #2563eb;
+    color: var(--shw-color-primary-bright, #b57aef);
   }
 
   .tree-node-content :global(.delete-action:hover) {
-    color: #dc2626;
+    color: #f07178;
   }
 
   .delete-action-wrapper {
@@ -462,7 +480,7 @@
   }
 
   .delete-action-wrapper--disabled :global(.delete-action:hover) {
-    color: #64748b;
+    color: var(--shw-color-text-muted, #9a93ad);
   }
 
   .burger-menu-container {
@@ -474,11 +492,15 @@
     flex-direction: column;
   }
 
-  :global(.anchored-popup-panel--bare) {
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    min-width: 0;
-    padding: 0;
+  :global(.shw-dropdown-content) {
+    z-index: var(--shw-z-popover, 100000);
+    min-width: 11rem;
+    border: 1px solid var(--shw-color-border-bright, #6e6488);
+    border-radius: 0;
+    background: rgb(28 24 40 / 96%);
+    color: var(--shw-color-text, #e8e4f0);
+    box-shadow: var(--shw-shadow-panel, 0 10px 28px rgb(0 0 0 / 40%));
+    outline: none;
+    padding: 0.25rem;
   }
 </style>

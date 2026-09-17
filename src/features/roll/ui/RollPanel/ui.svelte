@@ -1,32 +1,43 @@
 <script lang="ts">
-  import type { ShwActor } from "../../../../documents/Actor/ShwActor";
-  import type { RollMode, RollType, RollTypeConfig } from "../../../../entities/character/model";
-  import { ROLL_TYPE_CONFIGS } from "../../../../entities/character/model";
-  import { t } from "../../../../shared/i18n";
-  import { Input } from "../../../../shared/ui/Input";
+  import type { ShwActor } from '../../../../documents/Actor/ShwActor';
+  import type { RollMode, RollType } from '../../../../entities/character/model';
+  import { ROLL_TYPE_CONFIGS } from '../../../../entities/character/model';
+  import { t } from '../../../../shared/i18n';
+  import { Input } from '../../../../shared/ui/Input';
 
   interface Props {
-    actor: ShwActor<"character" | "npc">;
+    actor: ShwActor<'character' | 'npc'>;
   }
 
   let { actor }: Props = $props();
 
-  let activeTab = $state<RollType>("natural");
-  let mode = $state<RollMode>("normal");
+  let activeTab = $state<RollType>('natural');
+  let mode = $state<RollMode>('normal');
   let natRoll = $state(20);
   let rollBonus = $state(0);
   let actions = $state(1);
 
-  const activeConfig = $derived(ROLL_TYPE_CONFIGS.find((t) => t.id === activeTab));
+  /** Crystal accents per roll type (icons/underline only — shared glass fill) */
+  const ACCENTS: Record<RollType, string> = {
+    natural: '#4ec4b6',
+    fortune: '#e0b44a',
+    force: '#f07178',
+    finesse: '#4ec4b6',
+    will: '#b57aef',
+    presence: '#c4bdd4',
+  };
+
+  const accent = $derived(ACCENTS[activeTab]);
 </script>
 
-<div class="roll-panel">
+<div class="roll-panel" style="--accent:{accent}">
   <div class="tabs">
-    {#each ROLL_TYPE_CONFIGS as tab}
+    {#each ROLL_TYPE_CONFIGS as tab (tab.id)}
       <button
         type="button"
-        class="tab {activeTab === tab.id ? 'active' : ''}"
-        style="--dark:{tab.colors.dark}; --light:{tab.colors.light}; --hover:{tab.colors.hover};"
+        class="tab"
+        class:active={activeTab === tab.id}
+        style="--tab-accent:{ACCENTS[tab.id]}"
         onclick={() => (activeTab = tab.id)}
       >
         {t(tab.label)}
@@ -34,70 +45,67 @@
     {/each}
   </div>
 
-  <div
-    class="actions"
-    style="--dark:{activeConfig?.colors.dark}; --light:{activeConfig?.colors.light}; --hover:{activeConfig?.colors
-      .hover};"
-  >
-    <div class="roll-value">
-      <label>
-        {t("roll.base")}
-        <Input variant="underline" class="roll-input" type="number" bind:value={natRoll} min="0" max="999" />
-      </label>
-    </div>
-    <div class="roll-value bonus">
-      <label>
-        {t("roll.bonus")}
-        <Input variant="underline" class="roll-input" type="number" bind:value={rollBonus} min="0" max="999" />
-      </label>
-    </div>
-    <div class="roll-value">
-      <label>
-        {t("roll.actions")}
-        <Input variant="underline" class="roll-input" type="number" bind:value={actions} min="0" max="999" />
-      </label>
-    </div>
+  <div class="actions">
+    <label class="field">
+      <span class="field-label">{t('roll.base')}</span>
+      <Input variant="underline" class="roll-input" type="number" bind:value={natRoll} min="0" max="999" />
+    </label>
+
+    <label class="field field--accent">
+      <span class="field-label">{t('roll.bonus')}</span>
+      <Input variant="underline" class="roll-input" type="number" bind:value={rollBonus} min="0" max="999" />
+    </label>
+
+    <label class="field">
+      <span class="field-label">{t('roll.actions')}</span>
+      <Input variant="underline" class="roll-input" type="number" bind:value={actions} min="0" max="999" />
+    </label>
 
     <button
-      class="roll constructor"
+      class="roll-btn"
       type="button"
-      aria-label={t("roll.rollLabel")}
+      aria-label={t('roll.rollLabel')}
       onclick={() => actor.roll(activeTab, false, mode, natRoll, rollBonus, actions)}
     >
-      <i class="fa-solid fa-dice-d20" style="color: white"></i>
+      <i class="fa-solid fa-dice-d20" aria-hidden="true"></i>
     </button>
-    {#if activeTab !== "natural"}
+
+    {#if activeTab !== 'natural'}
       <button
-        class="roll constructor"
+        class="roll-btn"
         type="button"
-        aria-label={t("roll.saveRollLabel")}
+        aria-label={t('roll.saveRollLabel')}
         onclick={() => actor.roll(activeTab, true, mode, natRoll, rollBonus, actions)}
       >
-        <i class="fa-solid fa-shield" style="color: white"></i>
+        <i class="fa-solid fa-shield" aria-hidden="true"></i>
       </button>
     {/if}
-    <div class="switch natural">
+
+    <div class="mode-switch" role="group" aria-label={t('roll.normal')}>
       <button
-        class="adv {mode === 'adv' ? 'active' : ''}"
+        class="mode-btn"
+        class:active={mode === 'adv'}
         type="button"
-        aria-label={t("roll.advantage")}
-        onclick={() => (mode = "adv")}
+        aria-label={t('roll.advantage')}
+        onclick={() => (mode = 'adv')}
       >
         ▲
       </button>
       <button
-        class="norm {mode === 'normal' ? 'active' : ''}"
+        class="mode-btn"
+        class:active={mode === 'normal'}
         type="button"
-        aria-label={t("roll.normal")}
-        onclick={() => (mode = "normal")}
+        aria-label={t('roll.normal')}
+        onclick={() => (mode = 'normal')}
       >
         ●
       </button>
       <button
-        class="dis {mode === 'dis' ? 'active' : ''}"
+        class="mode-btn"
+        class:active={mode === 'dis'}
         type="button"
-        aria-label={t("roll.disadvantage")}
-        onclick={() => (mode = "dis")}
+        aria-label={t('roll.disadvantage')}
+        onclick={() => (mode = 'dis')}
       >
         ▼
       </button>
@@ -109,138 +117,133 @@
   .roll-panel {
     display: flex;
     flex-direction: column;
-    background: var(--color-border-light-3);
-    padding-top: 5px;
+    border: 1px solid var(--shw-color-border-bright, #6e6488);
+    box-shadow: var(--shw-shadow-panel);
+    font-family: var(--shw-font, inherit);
+    color: var(--shw-color-text, #e8e4f0);
+    overflow: hidden;
   }
 
   .tabs {
     display: flex;
-    gap: 0;
-    padding: 0;
+    gap: 1px;
+    background: var(--shw-color-border, #4a425c);
   }
 
   .tab {
-    flex: 1;
-    padding: 8px;
-    border-radius: 0;
-    background: var(--light);
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    color: #000;
+    flex: 1 1 0;
+    min-width: 0;
     margin: 0;
+    padding: 0.55rem 0.25rem;
+    border: none;
+    border-radius: 0;
+    background: rgb(28 24 40 / 90%);
+    color: var(--shw-color-text-muted, #9a93ad);
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.15;
+    cursor: pointer;
+    transition:
+      background 0.12s ease,
+      color 0.12s ease;
   }
 
   .tab:hover {
-    background: var(--hover);
+    background: color-mix(in srgb, var(--tab-accent) 22%, #1c1828);
+    color: var(--shw-color-text, #e8e4f0);
   }
 
   .tab.active {
-    background: var(--dark);
-    color: #fff;
+    background: var(--shw-glass-fill-strong, rgb(90 50 140 / 42%));
+    color: var(--shw-color-text, #e8e4f0);
+    box-shadow: inset 0 -2px 0 var(--tab-accent);
   }
 
   .actions {
-    background: var(--light);
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 80px;
-    width: 100%;
-    padding: 0;
+    align-items: stretch;
+    gap: 1px;
+    background: var(--shw-color-border, #4a425c);
+    min-height: 4.5rem;
   }
 
-  .roll-value {
-    min-width: 5rem;
-    background: var(--light);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 1rem;
-  }
-
-  .roll-value :global(.roll-input) {
-    width: 2.5rem;
-  }
-
-  .roll-value.bonus {
-    background-color: var(--dark);
-    color: #fff;
-    height: 100%;
-  }
-
-  .roll {
-    --color-shadow-primary: transparent;
+  .field {
     flex: 1 1 0;
-    border: none;
-    border-radius: 0;
-    padding: 0.3rem;
-    height: 100%;
-    font-size: var(--font-size-12);
-    cursor: pointer;
-    background-color: var(--dark);
-    margin: 0;
-  }
-
-  .roll i {
-    font-size: 14px;
-    width: 16px;
-    text-align: center;
-  }
-
-  .roll.constructor i {
-    font-size: 30px;
-    width: 36px;
-    text-align: center;
-  }
-
-  .roll:hover {
-    background: var(--hover);
-  }
-
-  .switch {
-    --color-shadow-primary: transparent;
+    min-width: 0;
     display: flex;
     flex-direction: column;
-    flex: 1 1 0;
-    margin: 0;
-    margin-left: -1px;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    padding: 0.5rem 0.35rem;
+    background: var(--shw-glass-fill-tint, rgb(72 48 112 / 32%));
   }
 
-  .switch button {
-    --color-shadow-primary: transparent;
-    outline: none;
+  .field--accent {
+    background: color-mix(in srgb, var(--accent) 28%, #1c1828);
+  }
+
+  .field-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--shw-color-text-muted, #9a93ad);
+    white-space: nowrap;
+  }
+
+  .field :global(.roll-input) {
+    width: 3rem;
+    max-width: 100%;
+  }
+
+  .roll-btn {
+    flex: 0 0 3.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
     border: none;
     border-radius: 0;
-    padding: 0.15rem;
-    font-size: var(--font-size-12);
+    background: color-mix(in srgb, var(--accent) 45%, #1c1828);
+    color: var(--shw-color-text, #e8e4f0);
     cursor: pointer;
-    background: var(--light);
-    color: #888;
+  }
+
+  .roll-btn:hover {
+    background: color-mix(in srgb, var(--accent) 60%, #1c1828);
+  }
+
+  .roll-btn i {
+    font-size: 1.35rem;
+  }
+
+  .mode-switch {
+    flex: 0 0 2.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--shw-color-border, #4a425c);
+  }
+
+  .mode-btn {
+    flex: 1;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: var(--shw-glass-fill-tint, rgb(72 48 112 / 32%));
+    color: var(--shw-color-text-muted, #9a93ad);
+    font-size: 10px;
     line-height: 1;
-    width: 100%;
+    cursor: pointer;
   }
 
-  .switch button:hover {
-    background: var(--hover);
+  .mode-btn:hover {
+    color: var(--shw-color-text, #e8e4f0);
   }
 
-  .switch button.active {
-    box-shadow: none;
-    background: var(--dark);
-  }
-
-  .switch button.active:hover {
-    background: var(--hover);
-  }
-
-  .switch.natural {
-    flex: 0 1 0;
-    min-width: 5rem;
-    height: 100%;
-  }
-
-  .switch.natural > button {
-    flex-grow: 1;
+  .mode-btn.active {
+    background: color-mix(in srgb, var(--accent) 40%, #1c1828);
+    color: var(--shw-color-text, #e8e4f0);
   }
 </style>

@@ -72,24 +72,25 @@
     padding: 0.75rem;
     min-width: 220px;
     max-width: 260px;
-    background: #fff;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    font: inherit;
+    background: rgb(28 24 40 / 96%);
+    border: 1px solid var(--shw-color-border-bright, #6e6488);
+    border-radius: 0;
+    box-shadow: var(--shw-shadow-panel);
+    font-family: var(--shw-font, inherit);
+    color: var(--shw-color-text, #e8e4f0);
   }
 
   .coefficient-panel-header {
     margin-bottom: 0.5rem;
     padding-bottom: 0.5rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid var(--shw-color-border, #4a425c);
   }
 
   .coefficient-panel-title {
     margin: 0;
     font-size: 14px;
     font-weight: 700;
-    color: #1a1a1a;
+    color: var(--shw-color-text, #e8e4f0);
     font-family: inherit;
   }
 
@@ -105,18 +106,18 @@
   .stat-detail-row--final {
     margin-top: 0.35rem;
     padding-top: 0.5rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-top: 1px solid var(--shw-color-border, #4a425c);
     margin-bottom: 0;
     font-weight: 700;
   }
 
   .stat-detail-label {
-    color: #374151;
+    color: var(--shw-color-text-muted, #9a93ad);
   }
 
   .stat-detail-value {
     font-weight: 600;
-    color: #1a1a1a;
+    color: var(--shw-color-text, #e8e4f0);
     font-variant-numeric: tabular-nums;
   }
 
@@ -127,10 +128,10 @@
   }
 
   .final-value-controls :global(.copy-action) {
-    color: #64748b;
+    color: var(--shw-color-text-muted, #9a93ad);
   }
 
   .final-value-controls :global(.copy-action:hover) {
-    color: #374151;
+    color: var(--shw-color-primary-bright, #b57aef);
   }
 </style>

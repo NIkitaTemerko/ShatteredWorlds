@@ -77,11 +77,15 @@
   .stat-tile {
     display: flex;
     align-items: center;
-    gap: 4px;
-    padding: 4px 6px;
-    height: 40px;
-    line-height: 1;
-    background: #d1f7e4;
+    gap: 0.4rem;
+    padding: 0.4rem 0.55rem;
+    min-height: 2.5rem;
+    line-height: 1.1;
+    background: var(--shw-glass-fill-tint, rgb(72 48 112 / 32%));
+    border: 1px solid var(--shw-color-border, #4a425c);
+    border-radius: 0;
+    font-family: var(--shw-font, inherit);
+    color: var(--shw-color-text, #e8e4f0);
   }
 
   .stat-tile i {
@@ -92,17 +96,22 @@
   }
 
   .label {
-    flex: 1 0 auto;
+    flex: 1 1 auto;
+    min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    color: var(--shw-color-text-muted, #9a93ad);
+    font-size: 13px;
   }
 
   .value {
     flex: 0 0 auto;
     min-width: 1.5rem;
     text-align: center;
+    font-weight: 700;
     font-variant-numeric: tabular-nums;
+    color: var(--shw-color-text, #e8e4f0);
   }
 
   .stat-menu-container {
@@ -111,10 +120,10 @@
 
   .stat-tile :global(.menu-action) {
     transition: color 0.15s;
-    color: #64748b;
+    color: var(--shw-color-text-muted, #9a93ad);
   }
 
   .stat-tile :global(.menu-action:hover) {
-    color: #374151;
+    color: var(--shw-color-primary-bright, #b57aef);
   }
 </style>

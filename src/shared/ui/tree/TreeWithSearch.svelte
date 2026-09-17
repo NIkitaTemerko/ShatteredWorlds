@@ -183,6 +183,11 @@
     position: relative;
     display: flex;
     align-items: center;
+    width: 100%;
+  }
+
+  .search-input-wrapper :global(.shw-autocomplete-root) {
+    width: 100%;
   }
 
   .search-icon {

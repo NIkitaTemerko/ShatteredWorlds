@@ -88,6 +88,8 @@
     user-select: none;
     font-size: 14px;
     font-weight: 600;
+    font-family: var(--shw-font, inherit);
+    color: var(--shw-color-text, #e8e4f0);
     padding: 4px 0;
   }
 
@@ -98,6 +100,8 @@
     padding: 4px 6px;
     height: 40px;
     line-height: 1;
+    border: 1px solid var(--shw-color-border, #4a425c);
+    border-radius: 0;
   }
 
   .stat-tile i {
@@ -111,11 +115,11 @@
   }
 
   .stat-tile.editable {
-    background: #cfe2ff;
+    background: var(--shw-glass-fill-strong, rgb(90 50 140 / 42%));
   }
 
   .stat-tile.readonly {
-    background: #d1f7e4;
+    background: var(--shw-glass-fill, rgb(255 255 255 / 7%));
   }
 
   .label {
@@ -123,12 +127,14 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    color: var(--shw-color-text-muted, #9a93ad);
   }
 
   .value {
     flex: 0 1 auto;
     width: 2.5rem;
     text-align: center;
+    color: var(--shw-color-text, #e8e4f0);
   }
 
   :global(.stat-tile .stat-input) {
@@ -136,6 +142,7 @@
     border: none;
     border-bottom: 1px solid transparent;
     font: inherit;
+    color: inherit;
     padding: 0;
     outline: none;
     width: 2.5rem;
@@ -143,6 +150,6 @@
   }
 
   :global(.stat-tile .stat-input:focus) {
-    border-bottom-color: var(--color-border-highlight, #666);
+    border-bottom-color: var(--shw-color-primary-bright, #b57aef);
   }
 </style>

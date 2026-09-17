@@ -13,18 +13,49 @@
 
   interface TabColors {
     icon: string;
-    light: string;
-    dark: string;
+    fill: string;
+    accent: string;
     hover: string;
   }
 
+  /** Crystal accents — shared glass fill, unique icon/active rim */
   const TAB_COLORS: Record<CharacterTab, TabColors> = {
-    stats: { icon: '#198754', light: '#d1f7e4', dark: '#198754', hover: '#4db083' },
-    inventory: { icon: '#fd7e14', light: '#ffe5cc', dark: '#fd7e14', hover: '#ff9a4d' },
-    equipment: { icon: '#6c757d', light: '#dee2e6', dark: '#6c757d', hover: '#a5acb2' },
-    spells: { icon: '#6f42c1', light: '#e8d9f5', dark: '#6f42c1', hover: '#9966cc' },
-    abilities: { icon: '#dc3545', light: '#f8d7da', dark: '#dc3545', hover: '#e15361' },
-    consumable: { icon: '#f08c00', light: '#ffd580', dark: '#f08c00', hover: '#ffae40' },
+    stats: {
+      icon: '#4ec4b6',
+      fill: 'rgb(28 24 40 / 85%)',
+      accent: '#2a9b8f',
+      hover: 'rgb(42 155 143 / 22%)',
+    },
+    inventory: {
+      icon: '#e0b44a',
+      fill: 'rgb(28 24 40 / 85%)',
+      accent: '#c4922a',
+      hover: 'rgb(196 146 42 / 22%)',
+    },
+    equipment: {
+      icon: '#c4bdd4',
+      fill: 'rgb(28 24 40 / 85%)',
+      accent: '#8b4fc9',
+      hover: 'rgb(139 79 201 / 22%)',
+    },
+    spells: {
+      icon: '#b57aef',
+      fill: 'rgb(28 24 40 / 85%)',
+      accent: '#8b4fc9',
+      hover: 'rgb(139 79 201 / 28%)',
+    },
+    abilities: {
+      icon: '#f07178',
+      fill: 'rgb(28 24 40 / 85%)',
+      accent: '#d4555c',
+      hover: 'rgb(240 113 120 / 22%)',
+    },
+    consumable: {
+      icon: '#e0b44a',
+      fill: 'rgb(28 24 40 / 85%)',
+      accent: '#c4922a',
+      hover: 'rgb(196 146 42 / 22%)',
+    },
   };
 </script>
 
@@ -38,8 +69,8 @@
       <Tabs.Trigger
         value={id}
         class="shw-sheet-tab"
-        style="--icon:{TAB_COLORS[id].icon}; --light:{TAB_COLORS[id].light}; --dark:{TAB_COLORS[id]
-          .dark}; --hover:{TAB_COLORS[id].hover};"
+        style="--icon:{TAB_COLORS[id].icon}; --fill:{TAB_COLORS[id].fill}; --accent:{TAB_COLORS[id]
+          .accent}; --hover:{TAB_COLORS[id].hover};"
         data-tab={id}
         title={label}
       >
@@ -56,12 +87,12 @@
   }
 
   :global(.shw-sheet-tabs) {
-    --color-shadow-primary: transparent;
     display: flex;
-    gap: 0;
-    padding: 0 0 4px;
-    background: var(--color-border-light-3);
-    border: none;
+    gap: 1px;
+    padding: 0;
+    background: var(--shw-color-border, #4a425c);
+    border: 1px solid var(--shw-color-border-bright, #6e6488);
+    box-shadow: var(--shw-shadow-panel);
   }
 
   :global(.shw-sheet-tab) {
@@ -69,18 +100,22 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: 0.35rem;
     margin: 0;
-    padding: 8px;
+    padding: 0.65rem 0.35rem;
     border: none;
     border-radius: 0;
-    background: var(--light);
-    color: #000;
-    font-size: 10px;
-    font-weight: bold;
-    line-height: 1;
+    background: var(--fill);
+    color: var(--shw-color-text-muted, #9a93ad);
+    font-family: var(--shw-font, inherit);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.1;
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition:
+      background 0.12s ease,
+      color 0.12s ease,
+      box-shadow 0.12s ease;
   }
 
   :global(.shw-sheet-tab i) {
@@ -91,14 +126,16 @@
 
   :global(.shw-sheet-tab:hover) {
     background: var(--hover);
+    color: var(--shw-color-text, #e8e4f0);
   }
 
   :global(.shw-sheet-tab[data-state='active']) {
-    background: var(--dark);
-    color: #fff;
+    background: var(--shw-glass-fill-strong, rgb(90 50 140 / 42%));
+    color: var(--shw-color-text, #e8e4f0);
+    box-shadow: inset 0 -2px 0 var(--accent);
   }
 
   :global(.shw-sheet-tab[data-state='active'] i) {
-    color: #fff;
+    color: var(--icon);
   }
 </style>

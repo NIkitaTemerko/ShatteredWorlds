@@ -5,7 +5,7 @@
 
   let modifiers = $state<StatModifier[]>([
     { stat: 'attributes.fortune.value', mode: 'add', value: 2 },
-    { stat: 'health.max', mode: 'mul', value: 1.5 },
+    { stat: 'totals.health', mode: 'mul', value: 1.5 },
   ]);
 
   function handleAdd(stat: CharacterStatPath) {

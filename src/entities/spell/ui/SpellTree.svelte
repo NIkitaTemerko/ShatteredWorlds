@@ -58,6 +58,9 @@
 </script>
 
 <div class="spell-tree">
+  <div class="spell-count-bar">
+    <span class="spell-count">{spellCount} {getPluralForm(spellCount)}</span>
+  </div>
   <div class="search-wrapper">
     <TreeWithSearch
       items={flatItems}
@@ -68,9 +71,6 @@
       onDelete={handleDelete}
       onStateChange={handleStateChange}
     />
-    <div class="spell-count-bar">
-      <span class="spell-count">{spellCount} {getPluralForm(spellCount)}</span>
-    </div>
   </div>
 </div>
 
@@ -78,8 +78,9 @@
   .spell-tree {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    gap: 0.5rem;
     width: 100%;
+    min-height: 12rem;
   }
 
   .search-wrapper {
@@ -93,15 +94,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0.5rem;
-    background: rgba(147, 51, 234, 0.15);
-    border-radius: 4px;
-    margin-bottom: 0.5rem;
+    padding: 0.45rem;
+    background: var(--shw-glass-fill-tint, rgb(72 48 112 / 32%));
+    border: 1px solid var(--shw-color-border, #4a425c);
+    border-radius: 0;
   }
 
   .spell-count {
     font-size: 13px;
-    color: #1a1a1a;
+    color: var(--shw-color-text, #e8e4f0);
     font-weight: 600;
+    font-family: var(--shw-font, inherit);
   }
 </style>

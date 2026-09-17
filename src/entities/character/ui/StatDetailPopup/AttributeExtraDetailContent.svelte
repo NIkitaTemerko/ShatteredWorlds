@@ -115,22 +115,23 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    padding: 0.75rem;
+    padding: 0.25rem 0.25rem 0.35rem;
     min-width: 220px;
     max-width: 280px;
-    font: inherit;
+    font-family: var(--shw-font, inherit);
+    color: var(--shw-color-text, #e8e4f0);
   }
 
   .stat-detail-header {
     padding-bottom: 0.5rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid var(--shw-color-border, #4a425c);
   }
 
   .stat-detail-title {
     margin: 0;
     font-size: 14px;
     font-weight: 700;
-    color: #1a1a1a;
+    color: var(--shw-color-text, #e8e4f0);
     font-family: inherit;
   }
 
@@ -149,13 +150,13 @@
   }
 
   .stat-detail-label {
-    color: #374151;
+    color: var(--shw-color-text-muted, #9a93ad);
   }
 
   .stat-detail-value,
   .stat-detail-total {
     font-weight: 600;
-    color: #1a1a1a;
+    color: var(--shw-color-text, #e8e4f0);
     font-variant-numeric: tabular-nums;
   }
 
@@ -164,7 +165,7 @@
     flex-direction: column;
     gap: 0.35rem;
     padding-top: 0.5rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-top: 1px solid var(--shw-color-border, #4a425c);
   }
 
   .stat-detail-footer {
@@ -182,7 +183,7 @@
     gap: 0.5rem;
     font-size: 13px;
     font-weight: 600;
-    color: #374151;
+    color: var(--shw-color-text-muted, #9a93ad);
   }
 
   .coefficient-row-main {
@@ -208,7 +209,7 @@
     border: none;
     border-radius: 50%;
     background: transparent;
-    color: #94a3b8;
+    color: var(--shw-color-text-muted, #9a93ad);
     cursor: help;
     font: inherit;
     line-height: 1;
@@ -216,7 +217,7 @@
 
   .info-tooltip-trigger:hover,
   .info-tooltip-trigger:focus-visible {
-    color: #64748b;
+    color: var(--shw-color-primary-bright, #b57aef);
   }
 
   .info-tooltip-icon {
@@ -232,9 +233,10 @@
     width: max-content;
     max-width: 220px;
     padding: 0.35rem 0.5rem;
-    border-radius: 4px;
-    background: #1a1a1a;
-    color: #fff;
+    border-radius: 0;
+    background: var(--shw-color-surface-raised, #262033);
+    border: 1px solid var(--shw-color-border, #4a425c);
+    color: var(--shw-color-text, #e8e4f0);
     font-size: 12px;
     font-weight: 500;
     line-height: 1.35;
@@ -253,7 +255,7 @@
   }
 
   .coefficient-row :global(.submenu-toggle) {
-    color: #64748b;
+    color: var(--shw-color-text-muted, #9a93ad);
   }
 
   .submenu-toggle-icon {

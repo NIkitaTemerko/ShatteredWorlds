@@ -1,11 +1,10 @@
 /**
- * Локализация через нативный Foundry VTT API
- * Все переводы хранятся в lang/ru.json с префиксом SHW
+ * Локализация через нативный Foundry VTT API.
+ * Вне Foundry (Storybook) — fallback на lang/ru.json.
  */
 
-import type translations from '../../../lang/ru.json';
+import translations from '../../../lang/ru.json';
 
-// Рекурсивный тип для получения всех путей к листовым значениям (без ограничения глубины)
 type PathsToStringProps<T, Prefix extends string = ''> = T extends string
   ? Prefix
   : T extends object
@@ -17,23 +16,34 @@ type PathsToStringProps<T, Prefix extends string = ''> = T extends string
       }[Extract<keyof T, string>]
     : never;
 
-// Извлекаем все пути из объекта SHW
 export type I18nKey = PathsToStringProps<(typeof translations)['SHW']>;
+
+function lookupShw(key: string): string | undefined {
+  const parts = key.split('.');
+  let cur: unknown = translations.SHW;
+  for (const part of parts) {
+    if (!cur || typeof cur !== 'object' || !(part in cur)) return undefined;
+    cur = (cur as Record<string, unknown>)[part];
+  }
+  return typeof cur === 'string' ? cur : undefined;
+}
+
+function formatTemplate(template: string, data?: Record<string, string>): string {
+  if (!data) return template;
+  return template.replace(/\{(\w+)\}/g, (_, name: string) => data[name] ?? `{${name}}`);
+}
 
 /**
  * Получить перевод через Foundry i18n с автодополнением ключей
- * @param key - Ключ перевода (например, 'attributes.fortune')
- * @param data - Данные для подстановки в шаблон (например, {attribute: 'Сила'})
- * @returns Переведённая строка
  */
 export function localize(key: I18nKey, data?: Record<string, string>): string {
   const fullKey = `SHW.${key}`;
-  const result =
-    typeof game !== 'undefined' && game.i18n
-      ? (game.i18n.format(fullKey, data) ?? fullKey)
-      : fullKey;
-  // Если результат совпадает с ключом (перевод не найден), возвращаем исходный ключ без префикса
-  return result === fullKey ? key : result;
+  if (typeof game !== 'undefined' && game.i18n) {
+    const result = game.i18n.format(fullKey, data) ?? fullKey;
+    if (result !== fullKey) return result;
+  }
+  const fallback = lookupShw(key);
+  return fallback ? formatTemplate(fallback, data) : key;
 }
 
 /**
@@ -41,12 +51,11 @@ export function localize(key: I18nKey, data?: Record<string, string>): string {
  */
 export function t(key: I18nKey): string {
   const fullKey = `SHW.${key}`;
-  const result =
-    typeof game !== 'undefined' && game.i18n
-      ? (game.i18n.localize(fullKey) ?? fullKey)
-      : fullKey;
-  // Если результат совпадает с ключом (перевод не найден), возвращаем исходный ключ без префикса
-  return result === fullKey ? key : result;
+  if (typeof game !== 'undefined' && game.i18n) {
+    const result = game.i18n.localize(fullKey) ?? fullKey;
+    if (result !== fullKey) return result;
+  }
+  return lookupShw(key) ?? key;
 }
 
 /**

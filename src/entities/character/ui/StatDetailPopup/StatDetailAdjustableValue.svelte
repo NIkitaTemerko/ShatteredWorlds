@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { untrack } from "svelte";
+  import { untrack } from 'svelte';
 
   interface Props {
     value: number;
@@ -67,31 +67,43 @@
     justify-content: center;
     width: 24px;
     height: 24px;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    border-radius: 4px;
-    background: transparent;
+    border: 1px solid var(--shw-color-border, #4a425c);
+    border-radius: 0;
+    background: var(--shw-glass-fill, rgb(255 255 255 / 7%));
     cursor: pointer;
     font-size: 14px;
-    color: #374151;
+    font-family: var(--shw-font, inherit);
+    color: var(--shw-color-text, #e8e4f0);
     padding: 0;
     line-height: 1;
+    transition:
+      background-color 0.12s ease,
+      border-color 0.12s ease;
   }
 
   .extra-btn:hover {
-    background-color: rgba(222, 184, 135, 0.25);
+    background: var(--shw-glass-fill-tint, rgb(72 48 112 / 32%));
+    border-color: var(--shw-color-primary, #8b4fc9);
   }
 
   .extra-input {
     width: 40px;
     height: 24px;
     text-align: center;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    border-radius: 4px;
+    border: 1px solid var(--shw-color-border, #4a425c);
+    border-radius: 0;
     font-size: 13px;
-    color: #374151;
-    background: transparent;
+    font-family: var(--shw-font, inherit);
+    color: var(--shw-color-text, #e8e4f0);
+    background: var(--shw-glass-fill, rgb(255 255 255 / 7%));
     padding: 0;
     -moz-appearance: textfield;
+  }
+
+  .extra-input:focus {
+    outline: none;
+    border-color: var(--shw-color-primary-bright, #b57aef);
+    box-shadow: var(--shw-focus-ring);
   }
 
   .extra-input::-webkit-inner-spin-button,

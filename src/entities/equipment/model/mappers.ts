@@ -17,7 +17,8 @@ export function mapEquipmentToFlatItems(items: ShwItem[]): FlatItem[] {
     .map((item) => {
       const system = item.system as EquipmentSystem;
       const slot = system.slot ?? 'body';
-      const path: string[] = [t(EQUIPMENT_SLOT_KEYS[slot] as I18nKey), item.name];
+      const slotKey = EQUIPMENT_SLOT_KEYS[slot] ?? EQUIPMENT_SLOT_KEYS.body;
+      const path: string[] = [t(slotKey as I18nKey), item.name];
       const rarity = system.rarity ?? 'common';
 
       return {

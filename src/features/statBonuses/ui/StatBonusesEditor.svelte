@@ -23,7 +23,10 @@
     onUpdate,
     title = t("ability.passiveDetails.statBonuses"),
     subtitle = t("ability.passiveDetails.bonusesInfo"),
-    colors = { dark: "#10B981", light: "#D1FAE5" },
+    colors = {
+      dark: 'var(--shw-color-primary, #8b4fc9)',
+      light: 'var(--shw-glass-fill-tint, rgb(72 48 112 / 32%))',
+    },
   }: Props = $props();
 
   const modifiers = $derived(statBonuses?.modifiers ?? []);
@@ -81,18 +84,27 @@
   }
 
   .section-header {
-    background: var(--dark);
-    color: #000;
-    padding: 0.35rem 0.5rem;
+    box-sizing: border-box;
+    background: color-mix(in srgb, var(--dark) 55%, #1c1828);
+    color: var(--shw-color-text, #e8e4f0);
+    padding: 0.4rem 0.65rem;
     font-weight: 700;
-    font-size: var(--font-size-14);
+    font-size: 13px;
+    font-family: var(--shw-font, inherit);
+    text-align: left;
+    border: 1px solid var(--shw-color-border-bright, #6e6488);
+    border-bottom: none;
   }
 
-  :global(.full-width) {
-    width: 100%;
+  /* та же левая кромка, что у body / section-header */
+  section :global(.stat-header) {
+    text-align: left;
+    padding-left: 0.65rem;
+    padding-right: 0.65rem;
   }
 
-  :global(.full-width .bonus-characteristics) {
-    width: 100%;
+  section :global(.stat-body) {
+    padding-left: 0.65rem;
+    padding-right: 0.65rem;
   }
 </style>

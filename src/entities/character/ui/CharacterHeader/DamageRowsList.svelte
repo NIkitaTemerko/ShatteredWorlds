@@ -250,15 +250,13 @@
   }
 
   .damage-row-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.35rem;
+    display: block;
     box-sizing: border-box;
     margin-bottom: 0.35rem;
-    padding: 0.4rem 0.45rem;
-    background: #fff;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 4px;
+    padding: 0.45rem 0.5rem;
+    background: var(--shw-glass-fill-tint, rgb(72 48 112 / 32%));
+    border: 1px solid var(--shw-color-border, #4a425c);
+    border-radius: 0;
     cursor: grab;
   }
 
@@ -271,7 +269,8 @@
   }
 
   .item.ghost .damage-row-item {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+    box-shadow: var(--shw-shadow-panel);
+    border-color: var(--shw-color-primary-bright, #b57aef);
     cursor: grabbing;
   }
 

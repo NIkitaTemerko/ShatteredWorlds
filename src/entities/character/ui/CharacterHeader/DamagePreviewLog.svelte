@@ -128,7 +128,8 @@
     gap: 0.4rem;
     padding-bottom: 0.15rem;
     font-size: 13px;
-    color: #374151;
+    font-family: var(--shw-font, inherit);
+    color: var(--shw-color-text-muted, #9a93ad);
     font-variant-numeric: tabular-nums;
   }
 
@@ -137,12 +138,12 @@
   }
 
   .damage-log-entry + .damage-log-entry {
-    border-top: 1px dashed rgba(0, 0, 0, 0.08);
+    border-top: 1px dashed var(--shw-color-border, #4a425c);
   }
 
   .damage-log-entry-header {
     font-weight: 700;
-    color: #1a1a1a;
+    color: var(--shw-color-text, #e8e4f0);
     margin-bottom: 0.25rem;
   }
 
@@ -154,23 +155,23 @@
 
   .damage-log-line--hp {
     font-weight: 600;
-    color: #d7263d;
+    color: #f07178;
   }
 
   .damage-log-line--muted {
-    color: #6b7280;
+    color: var(--shw-color-text-muted, #9a93ad);
     font-size: 12px;
   }
 
   .damage-log-muted {
-    color: #6b7280;
+    color: var(--shw-color-text-muted, #9a93ad);
   }
 
   .damage-log-footer {
     margin-top: 0.25rem;
     padding-top: 0.45rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-top: 1px solid var(--shw-color-border, #4a425c);
     font-weight: 700;
-    color: #1a1a1a;
+    color: var(--shw-color-text, #e8e4f0);
   }
 </style>

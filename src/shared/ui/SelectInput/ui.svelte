@@ -102,6 +102,11 @@
 
 <style>
   .shw-select-root.full-width {
+    display: block;
+    width: 100%;
+  }
+
+  .shw-select-root.full-width :global(.shw-select-trigger) {
     width: 100%;
   }
 
@@ -111,7 +116,6 @@
     justify-content: space-between;
     gap: 0.5rem;
     box-sizing: border-box;
-    min-width: 10rem;
     min-height: var(--shw-size-md, 2rem);
     margin: 0;
     padding: 0.45rem 0.75rem;
@@ -121,6 +125,7 @@
     font-size: var(--font-size-14, 14px);
     font-weight: 600;
     line-height: 1.5;
+    text-align: left;
     color: var(--shw-color-text, inherit);
     cursor: pointer;
     outline: none;
@@ -130,8 +135,8 @@
       background-color 0.15s ease;
   }
 
-  :global(.shw-select-trigger.full-width) {
-    width: 100%;
+  :global(.shw-select-trigger:not(.full-width)) {
+    min-width: 10rem;
   }
 
   :global(.shw-select-trigger.variant-ghost) {

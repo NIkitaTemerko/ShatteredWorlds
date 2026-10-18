@@ -1,7 +1,9 @@
 <script lang="ts">
   import {
     attributeCoefficientValue,
+    healthCoefficientValue,
     scaleAttributeCoefficients,
+    scaleHealthCoefficients,
   } from "../../../../shared/helpers/Character/coefficients";
   import { t } from "../../../../shared/i18n";
   import { ActionIcon } from "../../../../shared/ui/ActionIcon";
@@ -9,14 +11,21 @@
 
   interface Props {
     statTotal: number;
+    kind?: "attribute" | "health";
   }
 
-  let { statTotal }: Props = $props();
+  let { statTotal, kind = "attribute" }: Props = $props();
 
   let count = $state(1);
 
-  const unitCoefficient = $derived(attributeCoefficientValue(statTotal));
-  const scaledValue = $derived(scaleAttributeCoefficients(count, statTotal));
+  const unitCoefficient = $derived(
+    kind === "health" ? healthCoefficientValue(statTotal) : attributeCoefficientValue(statTotal),
+  );
+  const scaledValue = $derived(
+    kind === "health"
+      ? scaleHealthCoefficients(count, statTotal)
+      : scaleAttributeCoefficients(count, statTotal),
+  );
 
   async function copyToClipboard(e: Event) {
     e.stopPropagation();

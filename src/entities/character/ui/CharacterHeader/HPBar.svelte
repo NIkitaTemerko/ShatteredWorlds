@@ -191,11 +191,12 @@
     <span bind:this={damageAnchorEl}>
       <ActionIcon
         title={t("character.applyDamage")}
+        aria-label={t("character.applyDamage")}
         onclick={toggleDamagePopup}
         onkeydown={(e) => e.key === "Enter" && toggleDamagePopup(e)}
       >
         {#snippet icon()}
-          <i class="fas fa-sword damage-icon"></i>
+          <i class="fas fa-sword damage-icon" aria-hidden="true"></i>
         {/snippet}
       </ActionIcon>
     </span>
@@ -227,7 +228,7 @@
     flex-grow: 1;
     width: 200px;
     height: 20px;
-    border: 1px solid var(--color-border-light-2);
+    border: 1px solid var(--shw-color-border-bright, #6e6488);
     overflow: hidden;
     background: #ff9aa5;
   }
@@ -245,7 +246,7 @@
 
   .barrier-segment {
     background: rgba(13, 202, 240, 0.25);
-    border-left: 1px solid rgba(0, 0, 0, 0.12);
+    border-left: 1px solid var(--shw-color-border, #4a425c);
   }
 
   .hp-fill,
@@ -292,10 +293,11 @@
     margin: 0 0.15rem 0 0;
     padding: 0.1rem 0.35rem;
     border: none;
-    border-bottom: 1px solid var(--color-border-light-2, rgba(0, 0, 0, 0.2));
+    border-bottom: 1px solid var(--shw-color-border, #4a425c);
     border-radius: 0;
     background: transparent;
     font: inherit;
+    font-family: var(--shw-font, inherit);
     line-height: 1;
     font-variant-numeric: tabular-nums;
     color: inherit;
@@ -307,11 +309,11 @@
   }
 
   .hp-current-input:hover {
-    border-bottom-color: var(--color-border-dark, rgba(0, 0, 0, 0.4));
+    border-bottom-color: var(--shw-color-border-bright, #6e6488);
   }
 
   .hp-current-input:focus {
-    border-bottom-color: var(--color-primary, #0066cc);
+    border-bottom-color: var(--shw-color-primary-bright, #b57aef);
     box-shadow: none;
   }
 
@@ -334,25 +336,32 @@
     margin-left: 0.5rem;
   }
 
-  .health-icon {
-    cursor: pointer;
-    font-size: var(--font-size-18);
-    line-height: 1;
-    color: #d7263d;
+  /* Color on the ActionIcon itself — FA ::before inherits it */
+  .hp-actions :global(.shw-action-icon:has(.health-icon)) {
+    color: #ff5c70;
   }
 
-  .health-icon:hover {
-    color: #b01e32;
+  .hp-actions :global(.shw-action-icon:has(.health-icon):hover) {
+    color: #ff8a98;
+  }
+
+  .hp-actions :global(.shw-action-icon:has(.damage-icon)) {
+    color: #f2ecff;
+  }
+
+  .hp-actions :global(.shw-action-icon:has(.damage-icon):hover) {
+    color: #ff5c70;
+  }
+
+  .health-icon {
+    font-size: var(--font-size-18);
+    line-height: 1;
+    color: inherit;
   }
 
   .damage-icon {
-    cursor: pointer;
     font-size: var(--font-size-18);
     line-height: 1;
-    transform: rotate(-135deg);
-  }
-
-  .damage-icon:hover {
-    color: #d7263d;
+    color: inherit;
   }
 </style>

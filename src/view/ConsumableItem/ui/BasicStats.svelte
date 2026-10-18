@@ -41,7 +41,7 @@
     </div>
   </div>
 
-  <div class="stat-col" style="--dark: #EAB308; --light: #FEF9C3">
+  <div class="stat-col" style="--dark: #c4922a; --light: rgb(196 146 42 / 28%)">
     <div class="stat-header">{t("item.basicStats.price")}</div>
     <div class="stat-body">
       <Input
@@ -56,7 +56,7 @@
     </div>
   </div>
 
-  <div class="stat-col" style="--dark: #6B7280; --light: #F3F4F6">
+  <div class="stat-col" style="--dark: #6e6488; --light: rgb(74 66 92 / 35%)">
     <div class="stat-header">{t("item.basicStats.weight")}</div>
     <div class="stat-body">
       <Input
@@ -72,7 +72,7 @@
     </div>
   </div>
 
-  <div class="stat-col" style="--dark: #3B82F6; --light: #DBEAFE">
+  <div class="stat-col" style="--dark: #4ec4b6; --light: rgb(78 196 182 / 28%)">
     <div class="stat-header">{t("item.basicStats.stack")}</div>
     <div class="stat-body">
       <Input

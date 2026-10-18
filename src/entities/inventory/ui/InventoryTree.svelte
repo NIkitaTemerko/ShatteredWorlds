@@ -46,10 +46,13 @@
   }
 
   onMount(() => {
+    // Storybook / non-Foundry hosts have no Hooks global.
+    if (typeof Hooks === "undefined") return;
     Hooks.on("updateItem", onItemUpdate);
   });
 
   onDestroy(() => {
+    if (typeof Hooks === "undefined") return;
     Hooks.off("updateItem", onItemUpdate);
   });
 

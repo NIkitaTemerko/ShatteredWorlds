@@ -96,7 +96,7 @@
 <div class="stats-panel general-panel">
   {#each columns as col (col.key)}
     <div class="stat-col flexcol" style="--dark:{col.dark}; --light:{col.light}; --hover:{col.hover};">
-      <div class="cell header">{col.label}</div>
+      <div class="cell header" title={col.label}>{col.label}</div>
       <div class="cell value">
         {#if col.sources}
           <AttributeStatCell
@@ -120,7 +120,7 @@
         {/if}
       </div>
 
-      <div class="cell subheader">{col.extraTitle}</div>
+      <div class="cell subheader" title={col.extraTitle}>{col.extraTitle}</div>
       <div class="cell value">
         {#if col.sources}
           <AttributeStatCell
@@ -143,7 +143,7 @@
         {/if}
       </div>
 
-      <div class="cell subheader">{t('character.attributeBonus')}</div>
+      <div class="cell subheader" title={t('character.attributeBonus')}>{t('character.attributeBonus')}</div>
       <div class="cell value">
         {#if col.charBonusSources}
           <AttributeStatCell
@@ -167,7 +167,7 @@
         {/if}
       </div>
 
-      <div class="cell subheader">{col.saveLabel}</div>
+      <div class="cell subheader" title={col.saveLabel}>{col.saveLabel}</div>
       <div class="cell value">
         {#if col.saveBonusSources}
           <AttributeStatCell
@@ -196,54 +196,55 @@
 
 <style>
   .stats-panel {
-    display: flex;
-    flex-direction: column;
-    background: var(--color-border-light-3);
-  }
-
-  .general-panel {
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-rows: repeat(8, auto);
     gap: 2px;
+    background: var(--shw-color-border, #4a425c);
+    border: 1px solid var(--shw-color-border-bright, #6e6488);
+    font-family: var(--shw-font, inherit);
   }
 
   .stat-col {
-    flex: 1 1 0;
-    min-width: 6rem;
-  }
-
-  .stat-col:last-child {
-    border-right: none;
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: 1 / span 8;
+    min-width: 0;
   }
 
   .cell {
-    padding: 0.35rem 0.25rem;
+    box-sizing: border-box;
+    padding: 0.3rem 0.2rem;
     display: flex;
     justify-content: center;
     align-items: center;
     font-weight: 700;
     width: 100%;
-    font-size: var(--font-size-14);
+    min-width: 0;
+    font-size: 13px;
+    line-height: 1.15;
+    text-align: center;
   }
 
   .header,
   .subheader {
-    background: var(--dark);
-    color: #000;
+    background: color-mix(in srgb, var(--dark, var(--shw-color-primary)) 55%, #1c1828);
+    color: var(--shw-color-text, #e8e4f0);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .subheader {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
   }
 
   .value {
-    background: var(--light);
-    color: #000;
-    gap: 0.25rem;
-  }
-
-  @media (max-width: 900px) {
-    .stats-panel {
-      flex-wrap: wrap;
-    }
-    .stat-col {
-      flex: 1 1 45%;
-      margin-bottom: 4px;
-    }
+    background: var(--shw-glass-fill-tint, rgb(72 48 112 / 32%));
+    color: var(--shw-color-text, #e8e4f0);
+    gap: 0.15rem;
+    min-height: 2rem;
   }
 </style>

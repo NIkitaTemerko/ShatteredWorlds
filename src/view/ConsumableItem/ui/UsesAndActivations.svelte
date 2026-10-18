@@ -59,7 +59,7 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 2px;
-    background: var(--color-border-light-3);
+    background: var(--shw-color-border, #4a425c);
     padding: 0;
   }
 </style>

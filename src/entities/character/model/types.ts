@@ -59,13 +59,13 @@ export interface AttributeColumn {
   hover: string;
 }
 
-/** Constants for attribute colors */
+/** Constants for attribute colors — crystal triad */
 export const ATTRIBUTE_COLORS: Record<AttributeKey, AttributeColors> = {
-  fortune: { dark: '#f08c00', light: '#ffd580', hover: '#ffae40' },
-  force: { dark: '#d7263d', light: '#ff9aa5', hover: '#eb607f' },
-  finesse: { dark: '#198754', light: '#80d9b3', hover: '#4db083' },
-  will: { dark: '#8e44ad', light: '#c39bd3', hover: '#a86fc0' },
-  presence: { dark: '#6c757d', light: '#dee2e6', hover: '#a5acb2' },
+  fortune: { dark: '#c4922a', light: 'rgb(196 146 42 / 28%)', hover: '#e0b44a' },
+  force: { dark: '#c45a6a', light: 'rgb(196 90 106 / 28%)', hover: '#e07a88' },
+  finesse: { dark: '#2a9b8f', light: 'rgb(42 155 143 / 28%)', hover: '#4ec4b6' },
+  will: { dark: '#8b4fc9', light: 'rgb(139 79 201 / 28%)', hover: '#b57aef' },
+  presence: { dark: '#6e6488', light: 'rgb(74 66 92 / 35%)', hover: '#9a93ad' },
 };
 
 /** Constants for roll types (labels are i18n keys) */
@@ -73,7 +73,7 @@ export const ROLL_TYPE_CONFIGS: RollTypeConfig[] = [
   {
     id: 'natural',
     label: 'attributes.natural',
-    colors: { dark: '#3498db', light: '#87ceeb', hover: '#5dade2' },
+    colors: { dark: '#4ec4b6', light: 'rgb(78 196 182 / 28%)', hover: '#2a9b8f' },
   },
   { id: 'fortune', label: 'attributes.fortune', colors: ATTRIBUTE_COLORS.fortune },
   { id: 'force', label: 'attributes.force', colors: ATTRIBUTE_COLORS.force },
@@ -106,17 +106,17 @@ export const ADDITIONAL_ATTRIBUTE_ICONS: Record<keyof AdditionalAttributes, stri
   massCategory: 'fas fa-weight-hanging',
 };
 
-/** Icon colors for additional attributes */
+/** Icon colors for additional attributes — crystal triad */
 export const ADDITIONAL_ATTRIBUTE_COLORS: Record<keyof AdditionalAttributes, string> = {
-  actions: '#198754',
-  bonusActions: '#0d6efd',
-  reactions: '#dc3545',
-  impulse: '#fd7e14',
-  barrier: '#0dcaf0',
-  psiDefense: '#8e44ad',
-  range: '#198754',
-  initiative: '#6f42c1',
-  damageReduction: '#6f42c1',
-  armorClass: '#6c757d',
-  massCategory: '#795548',
+  actions: '#2a9b8f',
+  bonusActions: '#4ec4b6',
+  reactions: '#c45a6a',
+  impulse: '#c4922a',
+  barrier: '#4ec4b6',
+  psiDefense: '#8b4fc9',
+  range: '#2a9b8f',
+  initiative: '#b57aef',
+  damageReduction: '#6e6488',
+  armorClass: '#9a93ad',
+  massCategory: '#c4922a',
 };

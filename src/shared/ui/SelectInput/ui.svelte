@@ -181,8 +181,10 @@
   }
 
   .shw-select-caret {
-    color: var(--shw-color-text-muted, #9a93ad);
-    font-size: 0.75em;
+    color: var(--shw-color-text, #e8e4f0);
+    opacity: 0.85;
+    font-size: 0.85em;
+    line-height: 1;
   }
 
   :global(.shw-select-content) {

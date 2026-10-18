@@ -223,8 +223,9 @@ button::after,
 
 /* Character and Item Sheets - only content area, not header */
 .window-app.sheet .window-content {
-  background: #b4b3ba;
+  background: var(--shw-color-bg, #12101a);
   background-image: none;
+  color: var(--shw-color-text, #e8e4f0);
 }
 
 /* Chat Messages */

@@ -238,6 +238,8 @@
     flex-direction: column;
     gap: 0.35rem;
     overflow: hidden;
+    font-family: var(--shw-font, inherit);
+    color: var(--shw-color-text, #e8e4f0);
   }
 
   .damage-popup-body {
@@ -254,7 +256,7 @@
     overflow: auto;
     overscroll-behavior: contain;
     scrollbar-width: thin;
-    scrollbar-color: rgba(0, 0, 0, 0.16) transparent;
+    scrollbar-color: var(--shw-color-border-bright, #6e6488) transparent;
   }
 
   .scroll-area::-webkit-scrollbar {
@@ -267,12 +269,12 @@
   }
 
   .scroll-area::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.16);
-    border-radius: 999px;
+    background: var(--shw-color-border, #4a425c);
+    border-radius: 0;
   }
 
   .scroll-area::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.28);
+    background: var(--shw-color-border-bright, #6e6488);
   }
 
   .damage-popup-footer {
@@ -288,10 +290,11 @@
     justify-content: space-between;
     gap: 0.75rem;
     padding: 0.35rem 0.45rem;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
+    border: 1px solid var(--shw-color-border, #4a425c);
+    border-radius: 0;
+    background: var(--shw-glass-fill, rgb(255 255 255 / 7%));
     font-size: 13px;
-    color: #374151;
+    color: var(--shw-color-text, #e8e4f0);
   }
 
   .one-time-barrier-label {
@@ -303,13 +306,14 @@
     width: 100%;
     min-height: 2.15rem;
     box-sizing: border-box;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
-    background: transparent;
+    border: 1px solid var(--shw-color-border, #4a425c);
+    border-radius: 0;
+    background: var(--shw-glass-fill, rgb(255 255 255 / 7%));
     cursor: pointer;
     font-size: 13px;
     font-weight: 600;
-    color: #374151;
+    font-family: var(--shw-font, inherit);
+    color: var(--shw-color-text, #e8e4f0);
     font-variant-numeric: tabular-nums;
     text-align: left;
     padding: 0.35rem 0.45rem;
@@ -328,15 +332,16 @@
   }
 
   .preview-toggle:hover {
-    background: rgba(0, 0, 0, 0.03);
+    background: var(--shw-glass-fill-tint, rgb(72 48 112 / 32%));
+    border-color: var(--shw-color-primary, #8b4fc9);
   }
 
   .pane-resizer {
     height: 7px;
     margin: 0;
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-    background: rgba(0, 0, 0, 0.03);
+    border-top: 1px solid var(--shw-color-border, #4a425c);
+    border-bottom: 1px solid var(--shw-color-border, #4a425c);
+    background: var(--shw-glass-fill, rgb(255 255 255 / 7%));
     cursor: row-resize;
     touch-action: none;
     position: relative;
@@ -359,17 +364,17 @@
     top: 50%;
     width: 36px;
     height: 3px;
-    border-radius: 999px;
-    background: rgba(0, 0, 0, 0.18);
+    border-radius: 0;
+    background: var(--shw-color-border-bright, #6e6488);
     transform: translate(-50%, -50%);
   }
 
   .pane-resizer:hover {
     background: linear-gradient(
       180deg,
-      rgba(0, 102, 204, 0.06),
-      rgba(0, 102, 204, 0.14) 45%,
-      rgba(0, 102, 204, 0.06)
+      rgb(139 79 201 / 10%),
+      rgb(139 79 201 / 22%) 45%,
+      rgb(139 79 201 / 10%)
     );
   }
 
@@ -377,7 +382,7 @@
     overflow: auto;
     overscroll-behavior: contain;
     scrollbar-width: thin;
-    scrollbar-color: rgba(0, 0, 0, 0.16) transparent;
+    scrollbar-color: var(--shw-color-border-bright, #6e6488) transparent;
   }
 
   .preview-log-scroll::-webkit-scrollbar {
@@ -390,28 +395,30 @@
   }
 
   .preview-log-scroll::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.16);
-    border-radius: 999px;
+    background: var(--shw-color-border, #4a425c);
+    border-radius: 0;
   }
 
   .preview-log-scroll::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.28);
+    background: var(--shw-color-border-bright, #6e6488);
   }
 
   .add-entry-btn,
   .apply-btn {
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    border-radius: 4px;
-    background: transparent;
+    border: 1px solid var(--shw-color-border, #4a425c);
+    border-radius: 0;
+    background: var(--shw-glass-fill, rgb(255 255 255 / 7%));
     cursor: pointer;
     font-size: 13px;
+    font-family: var(--shw-font, inherit);
     padding: 0.3rem 0.45rem;
-    color: #374151;
+    color: var(--shw-color-text, #e8e4f0);
   }
 
   .add-entry-btn:hover,
   .apply-btn:hover:not(:disabled) {
-    background: rgba(222, 184, 135, 0.25);
+    background: var(--shw-glass-fill-tint, rgb(72 48 112 / 32%));
+    border-color: var(--shw-color-primary-bright, #b57aef);
   }
 
   .apply-btn:disabled {

@@ -57,8 +57,9 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.15rem;
+    gap: 0.1rem;
     width: 100%;
+    min-width: 0;
   }
 
   .stat-value {
@@ -72,11 +73,14 @@
   }
 
   .stat-cell :global(.menu-action) {
+    width: 1.25rem;
+    height: 1.25rem;
+    font-size: 11px;
     transition: color 0.15s;
-    color: #64748b;
+    color: var(--shw-color-text, #e8e4f0);
   }
 
   .stat-cell :global(.menu-action:hover) {
-    color: #374151;
+    color: var(--shw-color-primary-bright, #b57aef);
   }
 </style>

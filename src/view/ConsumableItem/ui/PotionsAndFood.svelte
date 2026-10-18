@@ -43,8 +43,8 @@
 {#if system.consumableType === "potion" || system.consumableType === "food"}
   <section class="effects-section">
     {#if system.consumableType === "food" && system.nutrition !== undefined}
-      <div class="nutrition-section" style="background: var(--color-border-light-3)">
-        <div class="section-header" style="background: #f08c00">
+      <div class="nutrition-section">
+        <div class="section-header" style="--dark: var(--shw-color-secondary)">
           <h3>{t("item.potionFood.nutritionTitle")}</h3>
         </div>
         <div class="nutrition-grid">
@@ -177,35 +177,42 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem;
-    background: var(--light, #666);
-    color: #000;
+    padding: 0.4rem 0.65rem;
+    background: color-mix(in srgb, var(--dark, var(--shw-color-secondary)) 55%, #1c1828);
+    color: var(--shw-color-text, #e8e4f0);
+    border: 1px solid var(--shw-color-border-bright, #6e6488);
+    border-bottom: none;
   }
 
   .section-header h3 {
     margin: 0;
-    font-size: var(--font-size-16);
+    font-size: 14px;
     font-weight: 700;
+    font-family: var(--shw-font, inherit);
   }
 
   .section-title {
-    font-size: 20px;
+    font-size: 14px;
     font-weight: 700;
   }
 
   .add-btn {
-    background: rgba(0, 0, 0, 0.2);
-    color: #000;
-    border: none;
+    background: var(--shw-glass-fill, rgb(255 255 255 / 7%));
+    color: var(--shw-color-text, #e8e4f0);
+    border: 1px solid var(--shw-color-border, #4a425c);
     padding: 0.25rem 0.75rem;
     cursor: pointer;
     font-weight: 600;
-    font-size: var(--font-size-12);
-    transition: background 0.2s;
+    font-size: 12px;
+    font-family: var(--shw-font, inherit);
+    transition:
+      background 0.2s,
+      border-color 0.2s;
   }
 
   .add-btn:hover {
-    background: rgba(0, 0, 0, 0.3);
+    background: var(--shw-glass-fill-tint, rgb(72 48 112 / 32%));
+    border-color: var(--shw-color-primary-bright, #b57aef);
   }
 
   .nutrition-section {
@@ -217,23 +224,24 @@
   .nutrition-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 2px;
-    padding: 2px;
-    background: var(--color-border-light-3);
+    gap: 1px;
+    background: var(--shw-color-border, #4a425c);
+    border: 1px solid var(--shw-color-border-bright, #6e6488);
+    border-top: none;
   }
 
   .nutrition-item {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
-    background: #ffd580;
+    background: var(--shw-glass-fill-tint, rgb(72 48 112 / 32%));
     padding: 0.5rem;
   }
 
   .nutrition-label {
     font-weight: 700;
-    font-size: var(--font-size-12);
-    color: #000;
+    font-size: 12px;
+    color: var(--shw-color-text, #e8e4f0);
     text-align: center;
   }
 
@@ -241,18 +249,16 @@
     display: grid;
     grid-template-columns: 1fr 40px;
     gap: 4px;
-
     align-items: stretch;
-    background-color: var(--light);
   }
 
   .delete-btn {
     margin: 0;
-    background: rgba(200, 0, 0, 0.3);
-    border: none;
-    font-size: 2rem;
+    background: rgb(196 90 106 / 28%);
+    border: 1px solid var(--shw-color-border, #4a425c);
+    font-size: 1.5rem;
     font-weight: 700;
-    color: rgba(200, 0, 0, 0.6);
+    color: #e07a88;
     cursor: pointer;
     transition: all 0.2s;
     display: flex;
@@ -262,12 +268,7 @@
   }
 
   .delete-btn:hover {
-    background: rgba(200, 0, 0, 0.15);
-    color: #c00;
-  }
-
-  .stat-header {
-    background: var(--dark, #666);
-    color: #000;
+    background: rgb(196 90 106 / 40%);
+    color: #ff9aa5;
   }
 </style>

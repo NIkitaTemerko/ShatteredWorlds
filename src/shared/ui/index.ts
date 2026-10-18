@@ -7,6 +7,7 @@ export { HoverTooltip } from './HoverTooltip';
 export { Input } from './Input';
 export { ReactiveDocumentWrapper } from './ReactiveDocumentWrapper';
 export { SelectInput } from './SelectInput';
+export { SheetDescription } from './sheet';
 export { Tree, TreeWithSearch } from './tree';
 export type { ContextMenuArgs, FlatItem, TreeNode } from './tree';
 export type { SelectOption } from './SelectInput';

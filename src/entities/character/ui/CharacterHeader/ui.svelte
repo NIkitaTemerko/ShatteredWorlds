@@ -149,8 +149,8 @@
 
   .profile-img {
     flex: 0 0 72px;
-    border: 1px solid var(--color-border-light-1);
-    border-radius: 3px;
+    border: 1px solid var(--shw-color-border-bright, #6e6488);
+    border-radius: 0;
     object-fit: cover;
     cursor: pointer;
     height: 100%;

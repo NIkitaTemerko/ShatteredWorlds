@@ -46,7 +46,7 @@
       </div>
     </div>
 
-    <div class="stat-col" style="--dark: #EAB308; --light: #FEF9C3">
+    <div class="stat-col" style="--dark: #c4922a; --light: rgb(196 146 42 / 28%)">
       <div class="stat-header">{t("item.basicStats.price")}</div>
       <div class="stat-body">
         <Input
@@ -61,7 +61,7 @@
       </div>
     </div>
 
-    <div class="stat-col" style="--dark: #6B7280; --light: #F3F4F6">
+    <div class="stat-col" style="--dark: #6e6488; --light: rgb(74 66 92 / 35%)">
       <div class="stat-header">{t("item.basicStats.weight")}</div>
       <div class="stat-body">
         <Input
@@ -129,7 +129,7 @@
   </StatsCard>
 
   <!-- Описание -->
-  <section class="description" style="--dark: #6B7280; --light: #F3F4F6">
+  <section class="description" style="--dark: #6e6488; --light: rgb(74 66 92 / 35%)">
     <div class="section-header">{t("item.description.title")}</div>
     <textarea
       bind:value={system.description}
@@ -160,11 +160,15 @@
   }
 
   .description .section-header {
-    background: var(--dark);
-    color: #000;
-    padding: 0.35rem 0.5rem;
+    box-sizing: border-box;
+    background: color-mix(in srgb, var(--dark, var(--shw-color-primary)) 55%, #1c1828);
+    color: var(--shw-color-text, #e8e4f0);
+    padding: 0.4rem 0.65rem;
+    border: 1px solid var(--shw-color-border-bright, #6e6488);
+    border-bottom: none;
     font-weight: 700;
-    font-size: var(--font-size-14);
+    font-size: 13px;
+    font-family: var(--shw-font, inherit);
   }
 
   .description textarea {

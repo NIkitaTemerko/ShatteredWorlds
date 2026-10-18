@@ -61,14 +61,21 @@
       <li>Widgets/EquipmentTree</li>
     </ul>
 
-    <h2>Needs actor fixture</h2>
+    <h2>Sheets (Foundry frame)</h2>
     <ul>
-      <li>HPBar, CharacterHeader, DamagePopupContent</li>
-      <li>AttributeStats / AdditionalStats grids</li>
-      <li>CharacterInventory / Equipment / Spells / Abilities shells</li>
+      <li>Sheets/Character</li>
+      <li>Sheets/Ability</li>
+      <li>Sheets/Spell</li>
+      <li>Sheets/Equipment</li>
+      <li>Sheets/Consumable</li>
+    </ul>
+
+    <h2>Still needs deeper fixtures</h2>
+    <ul>
       <li>InventoryTree (Foundry Hooks)</li>
       <li>ReactiveDocumentWrapper</li>
       <li>BookLayout + editMode</li>
+      <li>Sheets/Npc, Sheets/Resource</li>
     </ul>
   </div>
 </Story>

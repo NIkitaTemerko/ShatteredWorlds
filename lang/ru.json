@@ -300,7 +300,7 @@
       "nameLabel": "Имя:",
       "levelLabel": "Предел",
       "applyDamage": "Нанести урон",
-      "attributeBonus": "Бонус характеристики",
+      "attributeBonus": "Бонус хар-ки",
       "additionalAttribute": "Доп. {attribute}",
       "saveThrow": "СБ‑{attribute}",
       "statInfo": "Подробнее о стате",

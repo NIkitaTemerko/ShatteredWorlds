@@ -1,0 +1,51 @@
+/* Shared crystal section chrome for document sheets */
+
+.shw-sheet-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  background: transparent;
+  font-family: var(--shw-font, inherit);
+}
+
+.shw-sheet-section__header,
+.shw-sheet-section .section-header {
+  box-sizing: border-box;
+  background: color-mix(in srgb, var(--dark, var(--shw-color-primary)) 55%, #1c1828);
+  color: var(--shw-color-text, #e8e4f0);
+  padding: 0.4rem 0.65rem;
+  border: 1px solid var(--shw-color-border-bright, #6e6488);
+  border-bottom: none;
+  font-weight: 700;
+  font-size: 13px;
+  font-family: var(--shw-font, inherit);
+}
+
+.shw-sheet-section__body,
+.shw-sheet-section textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 100px;
+  margin: 0;
+  padding: 0.55rem 0.65rem;
+  resize: vertical;
+  border: 1px solid var(--shw-color-border-bright, #6e6488);
+  border-radius: 0;
+  background: var(--shw-glass-fill-tint, rgb(72 48 112 / 32%));
+  color: var(--shw-color-text, #e8e4f0);
+  font-family: var(--shw-font, inherit);
+  font-size: 14px;
+  line-height: 1.45;
+  outline: none;
+  box-shadow: var(--shw-inner-glow);
+}
+
+.shw-sheet-section textarea::placeholder {
+  color: var(--shw-color-text-muted, #9a93ad);
+}
+
+.shw-sheet-section textarea:focus {
+  border-color: var(--shw-color-primary-bright, #b57aef);
+  box-shadow: var(--shw-inner-glow), var(--shw-bloom);
+}

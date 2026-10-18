@@ -152,5 +152,5 @@ src/
 > Удачных приключений в обломках миров! 🚀
 
 <!-- manifest-start -->
-**Changelog**: [v0.12.17](https://github.com/NIkitaTemerko/ShatteredWorlds/releases/tag/v0.12.17)
+**Changelog**: [v0.12.18](https://github.com/NIkitaTemerko/ShatteredWorlds/releases/tag/v0.12.18)
 <!-- manifest-end -->

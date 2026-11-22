@@ -13,11 +13,11 @@
   <div class="sheets-index">
     <h1>Sheets</h1>
     <p>
-      Full Foundry-framed document sheets. Each story mounts the real
+      Interactive document sheets. Stories mount the real
       <code>Root*Shell</code> inside an appv1 window chrome emulator.
     </p>
     <ul>
-      <li><strong>Character</strong> — 800×770 actor sheet</li>
+      <li><strong>Character</strong> — Penpot UI, 800×960: character, items, spells, abilities, editing and resource states</li>
       <li><strong>Ability</strong> — 600×700 item sheet</li>
       <li><strong>Spell</strong> — 600×700 item sheet</li>
       <li><strong>Equipment</strong> — 600×650 item sheet</li>

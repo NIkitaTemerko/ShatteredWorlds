@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { AttributeRollSources } from '../../../../documents/Actor/types/ShwActorSystem';
-  import AttributeRollDetailContent from './AttributeRollDetailContent.svelte';
+  import type { AttributeRollSources } from '../../../../../documents/Actor/types/ShwActorSystem';
+  import AttributeRollDetailContent from '../content/AttributeRollDetailContent.svelte';
 
   let sources = $state<AttributeRollSources>({
     base: 2,

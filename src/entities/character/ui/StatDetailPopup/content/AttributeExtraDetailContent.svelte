@@ -1,12 +1,12 @@
 <script lang="ts">
-  import type { AttributeExtraSources } from '../../../../documents/Actor/types/ShwActorSystem';
-  import { ATTRIBUTE_EXTRA_SOURCE_KEYS } from '../../../../documents/Actor/types/ShwActorSystem';
-  import { sumAttributeExtraSources } from '../../../../shared/helpers/Character/collectStatBonusesBySource';
-  import { t } from '../../../../shared/i18n';
-  import type { I18nKey } from '../../../../shared/i18n';
-  import { ActionIcon } from '../../../../shared/ui/ActionIcon';
-  import CoefficientCalculationPanel from './CoefficientCalculationPanel.svelte';
-  import StatDetailAdjustableValue from './StatDetailAdjustableValue.svelte';
+  import type { AttributeExtraSources } from '../../../../../documents/Actor/types/ShwActorSystem';
+  import { ATTRIBUTE_EXTRA_SOURCE_KEYS } from '../../../../../documents/Actor/types/ShwActorSystem';
+  import { sumAttributeExtraSources } from '../../../../../shared/helpers/Character/collectStatBonusesBySource';
+  import { t } from '../../../../../shared/i18n';
+  import type { I18nKey } from '../../../../../shared/i18n';
+  import { ActionIcon } from '../../../../../shared/ui/ActionIcon';
+  import CoefficientCalculationPanel from '../controls/CoefficientCalculationPanel.svelte';
+  import StatDetailAdjustableValue from '../controls/StatDetailAdjustableValue.svelte';
 
   interface Props {
     titleKey?: I18nKey;

@@ -81,7 +81,7 @@
 
     {#each consEffects as eff, idx}
       <div class="effect-card-wrapper">
-        <StatsCard columns={item.system.consumableType === "potion" ? 2 : 3}>
+        <StatsCard columns={system.consumableType === "potion" ? 2 : 3}>
           <div class="stat-col">
             <div class="stat-header">
               {system.consumableType === "potion" ? t("item.potionFood.effectType") : t("item.potionFood.effectBonus")}

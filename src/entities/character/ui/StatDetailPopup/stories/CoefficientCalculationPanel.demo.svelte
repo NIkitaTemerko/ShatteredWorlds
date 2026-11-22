@@ -1,5 +1,5 @@
 <script lang="ts">
-  import CoefficientCalculationPanel from './CoefficientCalculationPanel.svelte';
+  import CoefficientCalculationPanel from '../controls/CoefficientCalculationPanel.svelte';
 </script>
 
 <div class="frame">

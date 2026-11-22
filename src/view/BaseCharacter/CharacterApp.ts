@@ -9,7 +9,8 @@ export class CharacterApp extends SvelteActorSheet {
     const options = SvelteActorSheet.defaultOptions;
     return foundry.utils.mergeObject(options, {
       width: 800,
-      height: 770,
+      // 960px design plus the native title and frame; avoid a tiny outer overflow.
+      height: 1008,
       resizable: false,
     });
   }

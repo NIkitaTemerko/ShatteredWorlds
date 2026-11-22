@@ -11,6 +11,7 @@
   ],
   "imports": {},
   "dependencies": {
+    "@fontsource-variable/inter-tight": "^5.3.0",
     "@fontsource-variable/tektur": "^5.2.7",
     "@sveltejs/vite-plugin-svelte": "^6.2.4",
     "bits-ui": "^2.19.0",
@@ -52,6 +53,7 @@
     "pack": "npm run build && zip -r shattered-worlds.zip dist/ data/ lang/ templates/ template.json system.json",
     "bump:patch": "npm version patch --no-git-tag-version && node scripts/update-system-version.js && node scripts/update-readme.js",
     "bump:minor": "npm version minor --no-git-tag-version && node scripts/update-system-version.js && node scripts/update-readme.js",
-    "bump:major": "npm version major --no-git-tag-version && node scripts/update-system-version.js && node scripts/update-readme.js"
+    "bump:major": "npm version major --no-git-tag-version && node scripts/update-system-version.js && node scripts/update-readme.js",
+    "test:character-ui": "node --experimental-strip-types scripts/verify-character-ui.mjs"
   }
 }

@@ -1,45 +1,84 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import type { ShwActor } from '../../documents/Actor/ShwActor';
+  import { createCharacterShowcase } from '../../storybook/fixtures/characterShowcase';
   import { FoundryWindow } from '../../storybook/foundry';
-  import {
-    createAbilityItemFixture,
-    createCharacterActorFixture,
-    createConsumableItemFixture,
-    createEquipmentItemFixture,
-    createMutableDoc,
-    createSpellItemFixture,
-  } from '../../storybook/fixtures';
-  import RootCharacterShell from './ui/RootCharacterShell.svelte';
-
-  const sampleItems = [
-    createAbilityItemFixture({ name: 'Удар искры' }),
-    createSpellItemFixture({ name: 'Spark', category: 'elemental' }),
-    createSpellItemFixture({ id: 'story-spell-2', name: 'Ward', category: 'holy' }),
-    createEquipmentItemFixture({ name: 'Кольчуга путника' }),
-    createConsumableItemFixture({ name: 'Огненная бомба' }),
-  ];
-
-  let actor = $state(
-    createMutableDoc(createCharacterActorFixture({ items: sampleItems }), (next) => {
-      actor = next as unknown as ShwActor<'character'>;
-    }) as unknown as ShwActor<'character'>,
-  );
+  import RootCharacterShell, { type SheetSection } from './ui/RootCharacterShell.svelte';
+  let {
+    initialTab = 'stats',
+    initialEditing = false,
+    resourceState = 'normal',
+    foundryFrame = false,
+    windowHeight = 1008,
+  }: {
+    initialTab?: SheetSection;
+    initialEditing?: boolean;
+    resourceState?: 'normal' | 'empty' | 'overcharge';
+    foundryFrame?: boolean;
+    windowHeight?: number;
+  } = $props();
+  let actor = $state<ShwActor<'character'>>();
+  let notification = $state('');
+  let showcase: ReturnType<typeof createCharacterShowcase>;
+  $effect(() => {
+    const state = resourceState;
+    untrack(() => {
+      showcase = createCharacterShowcase((next) => {
+        actor = next;
+        notification = showcase.getNotification();
+      }, state);
+      actor = showcase.actor;
+      notification = '';
+    });
+  });
 </script>
 
 <div class="stage">
-  <FoundryWindow title={actor.name} width={800} height={770} kind="actor">
-    <RootCharacterShell {actor} />
-  </FoundryWindow>
+  {#if actor}
+    {@const currentActor = actor}
+    {#snippet sheet()}
+      {#key `${initialTab}-${initialEditing}`}<RootCharacterShell
+          actor={currentActor}
+          {initialTab}
+          {initialEditing}
+        />{/key}
+    {/snippet}
+    <div class="character-preview">
+      {#if foundryFrame}
+        <FoundryWindow title={actor.name} width={800} height={windowHeight} kind="actor">
+          {@render sheet()}
+        </FoundryWindow>
+      {:else}
+        {@render sheet()}
+      {/if}
+    </div>
+  {/if}
+  {#if notification}<output class="story-notification" aria-live="polite">{notification}</output
+    >{/if}
 </div>
 
 <style>
   .stage {
     box-sizing: border-box;
-    width: 100%;
     min-height: 100vh;
-    padding: 1.5rem;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    padding: 24px;
+    background: #100f16;
+  }
+  .character-preview {
+    width: 800px;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+  .story-notification {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    max-width: 420px;
+    padding: 12px 20px;
+    border: 1px solid #ba98f3;
+    border-radius: 8px;
+    background: #1d1a28;
+    color: #f1eef7;
+    font-family: var(--shw-font);
   }
 </style>

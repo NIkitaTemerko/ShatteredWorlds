@@ -2,9 +2,9 @@
   import {
     attributeCoefficientValue,
     scaleAttributeCoefficients,
-  } from "../../../../shared/helpers/Character/coefficients";
-  import { t } from "../../../../shared/i18n";
-  import { ActionIcon } from "../../../../shared/ui/ActionIcon";
+  } from "../../../../../shared/helpers/Character/coefficients";
+  import { t } from "../../../../../shared/i18n";
+  import { ActionIcon } from "../../../../../shared/ui/ActionIcon";
   import StatDetailAdjustableValue from "./StatDetailAdjustableValue.svelte";
 
   interface Props {

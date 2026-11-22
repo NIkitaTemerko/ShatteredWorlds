@@ -15,7 +15,7 @@
   font-family: var(--shw-font, "Tektur Variable", "Tektur", sans-serif);
 }
 
-.app.window-app.sheet * {
+.app.window-app.sheet *:not(:where(.shw-character, .shw-character *)) {
   border-radius: 0;
 }
 

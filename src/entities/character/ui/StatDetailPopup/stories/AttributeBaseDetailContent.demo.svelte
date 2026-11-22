@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { AttributeValueSources } from '../../../../documents/Actor/types/ShwActorSystem';
-  import AttributeBaseDetailContent from './AttributeBaseDetailContent.svelte';
+  import type { AttributeValueSources } from '../../../../../documents/Actor/types/ShwActorSystem';
+  import AttributeBaseDetailContent from '../content/AttributeBaseDetailContent.svelte';
 
   let sources = $state<AttributeValueSources>({
     base: 10,

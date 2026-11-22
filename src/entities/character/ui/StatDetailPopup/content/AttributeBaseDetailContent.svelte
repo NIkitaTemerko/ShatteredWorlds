@@ -1,10 +1,10 @@
 <script lang="ts">
   import type {
     AttributeValueSources,
-  } from '../../../../documents/Actor/types/ShwActorSystem';
-  import { ATTRIBUTE_VALUE_SOURCE_KEYS } from '../../../../documents/Actor/types/ShwActorSystem';
-  import { t } from '../../../../shared/i18n';
-  import type { I18nKey } from '../../../../shared/i18n';
+  } from '../../../../../documents/Actor/types/ShwActorSystem';
+  import { ATTRIBUTE_VALUE_SOURCE_KEYS } from '../../../../../documents/Actor/types/ShwActorSystem';
+  import { t } from '../../../../../shared/i18n';
+  import type { I18nKey } from '../../../../../shared/i18n';
   import { untrack } from 'svelte';
 
   interface Props {

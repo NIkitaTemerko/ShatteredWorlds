@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { StatSourceValues } from '../../../../documents/Actor/types/ShwActorSystem';
-  import StatDetailContent from './StatDetailContent.svelte';
+  import type { StatSourceValues } from '../../../../../documents/Actor/types/ShwActorSystem';
+  import StatDetailContent from '../content/StatDetailContent.svelte';
 
   let sources = $state<StatSourceValues>({
     base: 2,

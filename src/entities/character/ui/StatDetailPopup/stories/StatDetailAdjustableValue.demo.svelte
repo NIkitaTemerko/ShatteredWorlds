@@ -1,5 +1,5 @@
 <script lang="ts">
-  import StatDetailAdjustableValue from './StatDetailAdjustableValue.svelte';
+  import StatDetailAdjustableValue from '../controls/StatDetailAdjustableValue.svelte';
 
   let value = $state(3);
 </script>

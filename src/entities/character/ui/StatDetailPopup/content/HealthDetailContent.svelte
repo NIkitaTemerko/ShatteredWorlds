@@ -6,9 +6,9 @@
     type HealthStatSources,
     type StatSourceKey,
     type StatSourceValues,
-  } from "../../../../documents/Actor/types/ShwActorSystem";
-  import { t } from "../../../../shared/i18n";
-  import type { I18nKey } from "../../../../shared/i18n";
+  } from "../../../../../documents/Actor/types/ShwActorSystem";
+  import { t } from "../../../../../shared/i18n";
+  import type { I18nKey } from "../../../../../shared/i18n";
   import { untrack } from "svelte";
 
   interface Props {

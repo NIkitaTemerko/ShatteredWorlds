@@ -1,12 +1,12 @@
 <script lang="ts">
-  import type { StatSourceKey } from '../../../../documents/Actor/types/ShwActorSystem';
+  import type { StatSourceKey } from '../../../../../documents/Actor/types/ShwActorSystem';
   import {
     NPC_STAT_SOURCE_KEYS,
     STAT_SOURCE_KEYS,
-  } from '../../../../documents/Actor/types/ShwActorSystem';
-  import { t } from '../../../../shared/i18n';
-  import type { I18nKey } from '../../../../shared/i18n';
-  import type { StatSourceValues } from '../../../../documents/Actor/types/ShwActorSystem';
+  } from '../../../../../documents/Actor/types/ShwActorSystem';
+  import { t } from '../../../../../shared/i18n';
+  import type { I18nKey } from '../../../../../shared/i18n';
+  import type { StatSourceValues } from '../../../../../documents/Actor/types/ShwActorSystem';
 
   interface Props {
     titleKey: I18nKey;

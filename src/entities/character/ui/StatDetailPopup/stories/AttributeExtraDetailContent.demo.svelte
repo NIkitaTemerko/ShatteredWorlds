@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { AttributeExtraSources } from '../../../../documents/Actor/types/ShwActorSystem';
-  import AttributeExtraDetailContent from './AttributeExtraDetailContent.svelte';
+  import type { AttributeExtraSources } from '../../../../../documents/Actor/types/ShwActorSystem';
+  import AttributeExtraDetailContent from '../content/AttributeExtraDetailContent.svelte';
 
   let sources = $state<AttributeExtraSources>({
     equipment: 1,

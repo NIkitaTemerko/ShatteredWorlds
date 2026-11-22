@@ -1,0 +1,25 @@
+/* Foundry v13's host defaults that affect embedded controls. Keep this fixture
+   below unlayered system styles, as Foundry's elements.forms layer is in the app.
+   Scoped to window emulators; standalone component stories keep their own host. */
+@layer shw-foundry-forms {
+  .window-app button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 32px;
+    height: 32px;
+    gap: 4px;
+    padding: 0 8px;
+    font-family: sans-serif;
+    transition: 0.5s;
+  }
+
+  .window-app button > * {
+    pointer-events: none;
+  }
+
+  .window-app button.active,
+  .window-app button:focus {
+    outline: 1px solid #ba98f3;
+  }
+}

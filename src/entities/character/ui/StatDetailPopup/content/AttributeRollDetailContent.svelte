@@ -1,9 +1,9 @@
 <script lang="ts">
-  import type { AttributeRollSources } from '../../../../documents/Actor/types/ShwActorSystem';
-  import { ATTRIBUTE_ROLL_SOURCE_KEYS } from '../../../../documents/Actor/types/ShwActorSystem';
-  import { t } from '../../../../shared/i18n';
-  import type { I18nKey } from '../../../../shared/i18n';
-  import StatDetailAdjustableValue from './StatDetailAdjustableValue.svelte';
+  import type { AttributeRollSources } from '../../../../../documents/Actor/types/ShwActorSystem';
+  import { ATTRIBUTE_ROLL_SOURCE_KEYS } from '../../../../../documents/Actor/types/ShwActorSystem';
+  import { t } from '../../../../../shared/i18n';
+  import type { I18nKey } from '../../../../../shared/i18n';
+  import StatDetailAdjustableValue from '../controls/StatDetailAdjustableValue.svelte';
 
   interface Props {
     titleKey?: I18nKey;

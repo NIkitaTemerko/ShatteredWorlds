@@ -3,7 +3,7 @@
   import { AnchoredPopup } from '../../../../shared/ui/AnchoredPopup';
   import type { StatSourceValues } from '../../../../documents/Actor/types/ShwActorSystem';
   import { ADDITIONAL_ATTRIBUTE_LABELS } from '../../../../shared/model/constants';
-  import StatDetailContent from './StatDetailContent.svelte';
+  import StatDetailContent from './content/StatDetailContent.svelte';
 
   interface Props {
     open: boolean;

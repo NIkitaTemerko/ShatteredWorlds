@@ -124,7 +124,6 @@
       <Combobox.Content
         class="shw-autocomplete-content"
         sideOffset={4}
-        onOpenAutoFocus={(event) => event.preventDefault()}
       >
         <Combobox.Viewport class="shw-autocomplete-viewport">
           {#each bitsItems as item (item.value)}

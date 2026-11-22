@@ -1,6 +1,7 @@
 import type { Preview } from '@storybook/svelte';
-import '@fontsource-variable/tektur/wght.css';
-import '../src/shared/ui/tokens.css';
+// Include the production cascade so Storybook exposes conflicts with system styles.
+import '../src/main.css';
+import './foundry-form-defaults.css';
 import './foundry-stubs';
 import './foundry-fa-pro-shim.css';
 import './preview.css';

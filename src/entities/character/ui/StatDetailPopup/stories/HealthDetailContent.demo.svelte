@@ -2,8 +2,8 @@
   import type {
     HealthStatSources,
     StatSourceValues,
-  } from '../../../../documents/Actor/types/ShwActorSystem';
-  import HealthDetailContent from './HealthDetailContent.svelte';
+  } from '../../../../../documents/Actor/types/ShwActorSystem';
+  import HealthDetailContent from '../content/HealthDetailContent.svelte';
 
   let sources = $state<HealthStatSources>({
     base: 20,

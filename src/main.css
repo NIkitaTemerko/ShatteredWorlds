@@ -86,10 +86,11 @@ html {
   font-family: 'Tektur Variable', ui-sans-serif, system-ui, sans-serif;
 }
 
-/* Apply to all elements including Svelte scoped styles, but exclude icons */
-.window-app *:not(i):not([class*="fa-"]):not([class*="fas"]):not([class*="far"]):not([class*="fab"]),
-.sheet *:not(i):not([class*="fa-"]):not([class*="fas"]):not([class*="far"]):not([class*="fab"]),
-.application *:not(i):not([class*="fa-"]):not([class*="fas"]):not([class*="far"]):not([class*="fab"]) {
+/* Legacy sheets inherit Tektur; the character shell owns its typography, including
+   Inter Tight labels and Tektur numbers. Do not override that boundary. */
+.window-app *:not(i):not([class*="fa-"]):not([class*="fas"]):not([class*="far"]):not([class*="fab"]):not(:where(.shw-character, .shw-character *)),
+.sheet *:not(i):not([class*="fa-"]):not([class*="fas"]):not([class*="far"]):not([class*="fab"]):not(:where(.shw-character, .shw-character *)),
+.application *:not(i):not([class*="fa-"]):not([class*="fas"]):not([class*="far"]):not([class*="fab"]):not(:where(.shw-character, .shw-character *)) {
   font-family: inherit;
 }
 

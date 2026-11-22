@@ -17,6 +17,10 @@ body {
   padding: 1.5rem;
 }
 
+.sb-show-main.sb-main-fullscreen #storybook-root {
+  padding: 0;
+}
+
 /* Make glass blur obvious in canvas */
 .sb-show-main {
   background: inherit;

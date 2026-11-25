@@ -286,5 +286,5 @@ export function prepareCharacterDerivedData(sys: ShwActorSystem, actor: ShwActor
   );
   syncResourceTotals(sys, progression, bonuses, itemBonusesBySource);
   // The compact resource UI can grant a temporary reserve above the normal barrier.
-  syncBarrierValue(sys, true);
+  syncBarrierValue(sys);
 }

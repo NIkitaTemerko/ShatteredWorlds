@@ -37,7 +37,8 @@
         system.attributes.force.charBonusBase = 9;
         system.attributes.force.saveBonusBase = 7;
         system.attributes.fortune.value = 20;
-        system.attributes.fortune.extra = 80;
+        system.attributes.fortune.extra = state === 'empty' ? 0 : 80;
+        if (state === 'empty') system.health.value = 0;
         const fixture = { ...base, type: 'npc' as const, system };
         const refresh = (next: typeof fixture) => {
           prepareNpcDerivedData(next.system);

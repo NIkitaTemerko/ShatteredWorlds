@@ -796,8 +796,6 @@
       "applyDamage": "Apply damage",
       "armorDefense": "Armor",
       "psiDefense": "Psi defense",
-      "healLimit": "Up to maximum health",
-      "barrierNoLimit": "HP stays unchanged. May exceed the normal reserve.",
       "kind": "Type",
       "applicationParameters": "Application parameters",
       "effectsAndCosts": "Effects, formulas and costs",

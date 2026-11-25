@@ -173,7 +173,7 @@ Storybook; перезагрузка возвращает исходный при
 а в Foundry используют обычный `actor.roll`.
 
 ```bash
-pnpm test:character-ui
+pnpm test:character
 pnpm tsc:check
 pnpm build-storybook
 ```

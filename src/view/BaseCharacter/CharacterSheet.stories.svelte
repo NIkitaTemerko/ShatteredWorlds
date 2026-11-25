@@ -1,6 +1,6 @@
 <script module>
   import { defineMeta } from '@storybook/addon-svelte-csf';
-  import { expect, within, userEvent } from 'storybook/test';
+  import { expect, within, userEvent, waitForElementToBeRemoved } from 'storybook/test';
   import CharacterSheetDemo from './CharacterSheet.demo.svelte';
   const { Story } = defineMeta({
     title: 'Sheets/Character',
@@ -73,6 +73,11 @@
     await expect(canvas.getByRole('button', { name: 'Напор: СБ', exact: true })).toHaveTextContent('7');
     await expect(canvas.getByText('Обыч. барьер', { exact: true }).parentElement).toHaveTextContent('40');
 
+    const bonus = canvas.getByRole('spinbutton', { name: 'Доп. бонус', exact: true });
+    await userEvent.clear(bonus);
+    await userEvent.type(bonus, '-8');
+    await expect(canvas.getByText('Бросок: 1d20 + 1 · Спасбросок: 1d20 - 1')).toBeVisible();
+
     await userEvent.click(canvas.getByRole('button', { name: 'Напор: Доп.', exact: true }));
     const sources = within(canvas.getByRole('dialog', { name: 'Источники и коэффициенты · Напор' }));
     await expect(sources.queryByText('Экипировка', { exact: true })).toBeNull();
@@ -110,20 +115,28 @@
     await expect(coefficients.getByRole('heading', { name: 'Результат: 9' })).toBeVisible();
     await userEvent.click(coefficients.getByRole('button', { name: 'Закрыть', exact: true }));
 
-    await userEvent.click(canvas.getByRole('button', { name: 'Макс. здоровье', exact: true }));
+    await userEvent.click(canvas.getByRole('button', { name: 'Барьер', exact: true }));
+    const barrierPanel = within(canvas.getByRole('dialog', { name: 'Барьер', exact: true }));
+    await expect(barrierPanel.getByText('Текущий барьер 40')).toBeVisible();
+    await expect(barrierPanel.getByRole('heading', { name: 'Обыч. барьер' })).toBeVisible();
+    await expect(barrierPanel.queryByText('Экипировка', { exact: true })).toBeNull();
+
+    await userEvent.click(canvas.getByRole('button', { name: 'ОЗ', exact: true }));
     const currentHealth = canvas.getByRole('spinbutton', { name: 'Здоровье', exact: true });
     await userEvent.clear(currentHealth);
     await userEvent.type(currentHealth, '27');
     await userEvent.tab();
     await expect(canvas.getByText('27 / 40', { exact: true })).toBeVisible();
-    const healthPanel = within(canvas.getByRole('dialog', { name: 'Макс. здоровье' }));
+    const healthPanel = within(canvas.getByRole('dialog', { name: 'Здоровье' }));
     await userEvent.click(healthPanel.getByRole('button', { name: 'Закрыть', exact: true }));
     await userEvent.click(canvas.getByRole('button', { name: 'Лечение', exact: true }));
     const healingPanel = within(canvas.getByRole('dialog', { name: 'Лечение' }));
     await expect(healingPanel.getByText('1КЗ = 4', { exact: true })).toBeVisible();
+    await expect(healingPanel.queryByText(/Как рассчитано/)).toBeNull();
     const amount = healingPanel.getByRole('spinbutton', { name: 'Количество коэффициентов' });
     await userEvent.clear(amount);
     await userEvent.type(amount, '3');
+    await expect(healingPanel.getByRole('button', { name: 'Скопировать 12' })).toBeEnabled();
     await userEvent.click(healingPanel.getByRole('button', { name: 'Применить', exact: true }));
     await expect(canvas.getByText('39 / 40', { exact: true })).toBeVisible();
   }}
@@ -178,6 +191,51 @@
 <Story name="Foundry window" args={{ foundryFrame: true }} />
 <Story name="Foundry items" args={{ foundryFrame: true, initialTab: 'inventory' }} />
 <Story name="Foundry compact window" args={{ foundryFrame: true, windowHeight: 720 }} />
+
+<Story
+  name="NPC barrier with zero reserve"
+  args={{ npc: true, resourceState: 'empty', foundryFrame: true }}
+  play={async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const addBarrier = canvas.getByRole('button', { name: 'Добавить барьер', exact: true });
+    await userEvent.click(addBarrier);
+    const dialog = canvas.getByRole('dialog', { name: 'Добавить барьер' });
+    const panel = within(dialog);
+    const amount = panel.getByRole('spinbutton', { name: 'Количество' });
+    await expect(panel.getByText('Обыч. барьер: 0')).toBeVisible();
+    await expect(panel.queryByText(/Как рассчитано/)).toBeNull();
+    await userEvent.clear(amount);
+    await userEvent.type(amount, '5');
+    await expect(panel.getByRole('heading', { name: '0 → 5' })).toBeVisible();
+    await Promise.all([
+      waitForElementToBeRemoved(dialog),
+      userEvent.click(panel.getByRole('button', { name: 'Применить', exact: true })),
+    ]);
+    await userEvent.click(addBarrier);
+    await expect(canvas.getByRole('heading', { name: '5 → 6' })).toBeVisible();
+  }}
+/>
+<Story
+  name="Foundry edit current health"
+  args={{ foundryFrame: true }}
+  play={async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: 'ОЗ', exact: true }));
+    const healthPanel = within(canvas.getByRole('dialog', { name: 'Здоровье', exact: true }));
+    await expect(healthPanel.getByRole('heading', { name: 'Макс. здоровье' })).toBeVisible();
+    await expect(healthPanel.queryByRole('heading', { name: 'Обыч. барьер' })).toBeNull();
+    const health = canvas.getByRole('spinbutton', { name: 'Здоровье', exact: true });
+    await userEvent.clear(health);
+    await userEvent.type(health, '27{Enter}');
+    await expect(canvas.getByText('27 / 50', { exact: true })).toBeVisible();
+
+    await userEvent.click(canvas.getByRole('button', { name: 'Барьер', exact: true }));
+    const barrierPanel = within(canvas.getByRole('dialog', { name: 'Барьер', exact: true }));
+    await expect(barrierPanel.getByRole('heading', { name: 'Обыч. барьер' })).toBeVisible();
+    await expect(barrierPanel.getByText('Экипировка', { exact: true })).toBeVisible();
+    await expect(barrierPanel.queryByRole('heading', { name: 'Макс. здоровье' })).toBeNull();
+  }}
+/>
 
 <Story
   name="Foundry damage"

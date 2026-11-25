@@ -26,28 +26,14 @@
 
     <h2>Features</h2>
     <ul>
-      <li>Widgets/TabNavigation</li>
       <li>Widgets/UsesControl</li>
       <li>Widgets/ActivationControl</li>
       <li>Widgets/StatBonusesEditor</li>
     </ul>
 
-    <h2>Entities · stats & damage</h2>
+    <h2>Entities · stats</h2>
     <ul>
       <li>Widgets/StatsCard</li>
-      <li>Widgets/AttributeStatCell</li>
-      <li>Widgets/StatTile</li>
-      <li>Widgets/LegacyAdditionalStats</li>
-      <li>Widgets/StatDetailAdjustableValue</li>
-      <li>Widgets/StatDetailContent</li>
-      <li>Widgets/AttributeBaseDetailContent</li>
-      <li>Widgets/AttributeExtraDetailContent</li>
-      <li>Widgets/AttributeRollDetailContent</li>
-      <li>Widgets/HealthDetailContent</li>
-      <li>Widgets/CoefficientCalculationPanel</li>
-      <li>Widgets/DamageRowItem</li>
-      <li>Widgets/DamageRowsList</li>
-      <li>Widgets/DamagePreviewLog</li>
     </ul>
 
     <h2>Entities · menus & trees</h2>
@@ -74,7 +60,6 @@
       <li>InventoryTree (Foundry Hooks)</li>
       <li>ReactiveDocumentWrapper</li>
       <li>BookLayout + editMode</li>
-      <li>Sheets/Npc, Sheets/Resource</li>
     </ul>
   </div>
 </Story>

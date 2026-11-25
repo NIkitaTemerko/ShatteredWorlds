@@ -8,18 +8,14 @@ export function ensureBarrierField(sys: ActorSystemWithBarrier): void {
   }
 }
 
-export function syncBarrierValue(sys: ActorSystemWithBarrier, allowOvercharge = false): void {
+export function syncBarrierValue(sys: ActorSystemWithBarrier): void {
   ensureBarrierField(sys);
   const maxBarrier = sys.totals?.barrier ?? 0;
   const current = Math.max(0, sys.barrier.value);
-  sys.barrier.value = allowOvercharge ? current : Math.min(current, maxBarrier);
-
   const combatActive =
     typeof game !== 'undefined' &&
     !!(game.combat as { started?: boolean } | null | undefined)?.started;
-  if (!combatActive) {
-    sys.barrier.value = allowOvercharge ? Math.max(maxBarrier, current) : maxBarrier;
-  }
+  sys.barrier.value = combatActive ? current : Math.max(maxBarrier, current);
 }
 
 export function clampMassCategoryTotal(sys: ActorSystemWithBarrier): void {

@@ -41,11 +41,11 @@
           <Input
             type="number"
             min="0"
-            value={system.range.radius ?? 0}
+            value={system.castTime ?? 0}
             variant="underline"
             textAlign="center"
             fullWidth
-            onchange={(e) => onUpdate("range.radius", Number(e.currentTarget.value))}
+            onchange={(e) => onUpdate("castTime", Number(e.currentTarget.value))}
           />
         </div>
       </div>

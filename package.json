@@ -54,6 +54,6 @@
     "bump:patch": "npm version patch --no-git-tag-version && node scripts/update-system-version.js && node scripts/update-readme.js",
     "bump:minor": "npm version minor --no-git-tag-version && node scripts/update-system-version.js && node scripts/update-readme.js",
     "bump:major": "npm version major --no-git-tag-version && node scripts/update-system-version.js && node scripts/update-readme.js",
-    "test:character-ui": "node --experimental-strip-types scripts/verify-character-ui.mjs"
+    "test:character": "node --experimental-strip-types --test tests/character-mechanics.test.mjs"
   }
 }

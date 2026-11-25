@@ -796,8 +796,6 @@
       "applyDamage": "Применить урон",
       "armorDefense": "Защита",
       "psiDefense": "Пси-защита",
-      "healLimit": "До максимума здоровья",
-      "barrierNoLimit": "ОЗ не меняются. Можно превысить обычный запас.",
       "kind": "Тип",
       "applicationParameters": "Параметры применения",
       "effectsAndCosts": "Эффекты, формулы и затраты",

@@ -45,14 +45,14 @@
         /></label
       >
       {#if system.range.kind === 'area'}<label class="form-field"
-          >{t('ability.activeDetails.areaRadius')}<input
+          >{t('common.radius')}<input
             type="number"
             min="0"
             bind:value={system.range.radius}
           /></label
         >{/if}
       <label class="form-field"
-        >{t('newUi.target')}<select bind:value={system.targeting.targetType}
+        >{t('ability.activeDetails.targetType')}<select bind:value={system.targeting.targetType}
           >{#each TARGET_TYPES as option}<option value={option.value}
               >{t(option.label as I18nKey)}</option
             >{/each}</select
@@ -125,7 +125,7 @@
             />{/if}
           {#if effect.type === 'movement' && effect.movement}
             <label class="form-field"
-              >{t('newUi.kind')}<select bind:value={effect.movement.kind}
+              >{t('item.potionFood.effectType')}<select bind:value={effect.movement.kind}
                 >{#each ['dash', 'teleport', 'push', 'pull'] as kind}<option value={kind}
                     >{t(`newUi.move_${kind}` as I18nKey)}</option
                   >{/each}</select
@@ -151,7 +151,7 @@
               /></label
             >
             <label class="form-field"
-              >{t('newUi.duration')}<input
+              >{t('common.duration')}<input
                 type="number"
                 min="0"
                 bind:value={effect.summon.duration.value}
@@ -168,7 +168,7 @@
             onclick={() => {
               if (system.category === 'active')
                 system.effects = system.effects.filter((_, i) => i !== index);
-            }}>{t('newUi.delete')}</button
+            }}>{t('common.delete')}</button
           >
         </div>
       {/each}
@@ -217,7 +217,7 @@
           class="danger-button"
           onclick={() =>
             (system.resourceCosts = system.resourceCosts?.filter((_, i) => i !== index))}
-          >{t('newUi.delete')}</button
+          >{t('common.delete')}</button
         >
       </div>
     {/each}

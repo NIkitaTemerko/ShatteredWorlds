@@ -22,7 +22,7 @@
 {#if system.consumableType === "scroll" && system?.spell !== undefined && system?.requirements !== undefined}
   <StatsCard columns={3}>
     <div class="stat-col">
-      <div class="stat-header">{t("item.scroll.spellName")}</div>
+      <div class="stat-header">{t("spell.header.namePlaceholder")}</div>
       <div class="stat-body">
         <Input
           type="text"
@@ -36,7 +36,7 @@
     </div>
 
     <div class="stat-col">
-      <div class="stat-header">{t("item.scroll.level")}</div>
+      <div class="stat-header">{t("character.utility.level")}</div>
       <div class="stat-body">
         <Input
           type="number"
@@ -80,7 +80,7 @@
     </div>
 
     <div class="stat-col">
-      <div class="stat-header">{t("item.scroll.difficulty")}</div>
+      <div class="stat-header">{t("common.difficulty")}</div>
       <div class="stat-body">
         <Input
           type="number"

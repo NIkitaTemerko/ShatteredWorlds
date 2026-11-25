@@ -70,7 +70,7 @@
 <div class="damage-calculator">
   <p class="muted">
     {t('newUi.hp')}
-    {combatState.health} / {actor.system.totals.health} · {t('newUi.barrier')}
+    {combatState.health} / {actor.system.totals.health} · {t('additionalAttributes.barrier')}
     {combatState.barrier}
   </p>
   <div class="damage-entry-list">
@@ -163,7 +163,7 @@
           >{entry.order}. {t(getDamageTypeDefinition(entry.type).labelKey)} · {entry.raw}</strong
         >
         <p>
-          {t('newUi.barrier')}: −{entry.barrierAbsorbed} · {t('character.damage.oneTimeBarrier')}: −{entry.oneTimeBarrierAbsorbed}
+          {t('additionalAttributes.barrier')}: −{entry.barrierAbsorbed} · {t('character.damage.oneTimeBarrier')}: −{entry.oneTimeBarrierAbsorbed}
         </p>
         {#each entry.defenseSteps as step}<p>
             {t(
@@ -182,6 +182,6 @@
   <button type="button" class="primary wide" disabled={busy || !canApply} onclick={apply}
     >{t('newUi.applyDamage')}{#if canApply}: −{combatState.health - result.finalHealth}
       {t('newUi.hp')}, −{result.barrierLost}
-      {t('newUi.barrier')}{/if}</button
+      {t('additionalAttributes.barrier')}{/if}</button
   >
 </div>

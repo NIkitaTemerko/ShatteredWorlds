@@ -364,7 +364,7 @@
         >
           {#if changingEquipment && item.type === 'equipment'}<input
               type="checkbox"
-              aria-label={`${t(isItemEquipped(item) ? 'newUi.unequip' : 'newUi.equip')} · ${item.name}`}
+              aria-label={`${t(isItemEquipped(item) ? 'characterEquipment.menu.unequip' : 'inventory.menu.equip')} · ${item.name}`}
               checked={pending.some(candidate => candidate.id === item.id)}
               onchange={(e) => selectEquipment(item, e.currentTarget.checked)}
             />{/if}
@@ -385,7 +385,7 @@
               class="outline-button item-action"
               disabled={busy}
               onclick={() => perform(() => setItemEquipped(item, !isItemEquipped(item)))}
-              >{t(isItemEquipped(item) ? 'newUi.unequip' : 'newUi.equip')}</button
+              >{t(isItemEquipped(item) ? 'characterEquipment.menu.unequip' : 'inventory.menu.equip')}</button
             >
           {:else}<button type="button" class="outline-button item-action" onclick={() => open(item)}
               >{t('newUi.open')}</button
@@ -437,7 +437,7 @@
     }}
   >
     {#each pending as item}<p>
-        {t(changes[item.id!] ? 'newUi.equip' : 'newUi.unequip')} · {item.name}
+        {t(changes[item.id!] ? 'inventory.menu.equip' : 'characterEquipment.menu.unequip')} · {item.name}
       </p>{/each}
     <button type="button" class="primary wide" disabled={busy} onclick={applyEquipment}
       >{t('newUi.apply')}</button
@@ -446,7 +446,7 @@
 {/if}
 {#if selected}
   <SheetPanel
-    title={editDescription ? t('newUi.edit') + ' · ' + selected.name : selected.name}
+    title={editDescription ? t('common.edit') + ' · ' + selected.name : selected.name}
     onClose={closeSelected}
   >
     {#if discardPrompt}
@@ -456,7 +456,7 @@
           type="button"
           class="primary"
           disabled={busy}
-          onclick={() => perform(saveSelected, true)}>{t('newUi.saveChanges')}</button
+          onclick={() => perform(saveSelected, true)}>{t('common.save')}</button
         ><button
           type="button"
           class="outline-button"
@@ -481,7 +481,7 @@
           <label class="form-field">{t('newUi.itemName')}<input bind:value={draftName} /></label>
           {#if selected.type === 'ability'}<div class="item-edit-types">
               <label class="form-field"
-                >{t('ability.header.categoryLabel')}<select
+                >{t('common.categoryLabel')}<select
                   bind:value={draftCategory}
                   onchange={changeAbilityCategory}
                   >{#each ABILITY_CATEGORIES as option}<option value={option.value}
@@ -490,7 +490,7 @@
                 ></label
               >
               <label class="form-field"
-                >{t('newUi.kind')}<select bind:value={draftKind}
+                >{t('item.potionFood.effectType')}<select bind:value={draftKind}
                   >{#each draftCategory === 'active' ? ACTIVE_KINDS : PASSIVE_KINDS as option}<option
                       value={option.value}>{t(option.label as I18nKey)}</option
                     >{/each}</select
@@ -513,7 +513,7 @@
               perform(async () => {
                 await saveSelected();
                 editDescription = false;
-              })}>{t('newUi.saveChanges')}</button
+              })}>{t('common.save')}</button
           >
           <button
             type="button"
@@ -535,7 +535,7 @@
             disabled={busy}
             onclick={() =>
               perform(() => setItemEquipped(selected!, !isItemEquipped(selected!)), true)}
-            >{t(isItemEquipped(selected) ? 'newUi.unequip' : 'newUi.equip')}</button
+            >{t(isItemEquipped(selected) ? 'characterEquipment.menu.unequip' : 'inventory.menu.equip')}</button
           >
           {#if section === 'inventory'}<button
               type="button"
@@ -548,7 +548,7 @@
             >{/if}
         </div>
       {/if}
-      {#if deleting}<p>{t('newUi.deleteConfirm')} «{selected.name}»?</p>
+      {#if deleting}<p>{t('common.delete')} «{selected.name}»?</p>
         <div class="panel-actions">
           <button type="button" class="outline-button" onclick={() => (deleting = false)}
             >{t('newUi.cancel')}</button
@@ -556,7 +556,7 @@
             type="button"
             class="danger-button"
             disabled={busy}
-            onclick={() => perform(() => selected!.delete(), true)}>{t('newUi.delete')}</button
+            onclick={() => perform(() => selected!.delete(), true)}>{t('common.delete')}</button
           >
         </div>
       {:else if !editDescription}<div class="panel-actions">
@@ -569,9 +569,9 @@
               onclick={() => {
                 if (editDescription && isDirty()) discardPrompt = true;
                 else editDescription = !editDescription;
-              }}>{t('newUi.edit')}</button
+              }}>{t('common.edit')}</button
             ><button type="button" class="danger-button" onclick={() => (deleting = true)}
-              >{t('newUi.delete')}</button
+              >{t('common.delete')}</button
             >{/if}
         </div>{/if}
       {#if section === 'inventory' && selected.type === 'consumable' && 'quantity' in selected.system}<label

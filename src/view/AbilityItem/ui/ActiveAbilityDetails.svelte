@@ -89,7 +89,7 @@
 
       {#if system.range.kind === "area"}
         <div class="stat-col" style="--dark: #c4922a; --light: rgb(196 146 42 / 28%)">
-          <div class="stat-header">{t("ability.activeDetails.areaRadius")}</div>
+          <div class="stat-header">{t("common.radius")}</div>
           <div class="stat-body">
             <Input
               type="number"

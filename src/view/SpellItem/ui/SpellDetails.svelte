@@ -4,6 +4,7 @@
   import { StatsCard } from "../../../entities/consumable";
   import { t } from "../../../shared/i18n";
   import { Input, SelectInput } from "../../../shared/ui";
+  import { ACTION_TYPES, AREA_SHAPES, RANGE_KINDS, TARGET_TYPES } from "../../AbilityItem/constants/abilityConstants";
 
   interface Props {
     item: ShwItem;
@@ -21,16 +22,11 @@
 
   <StatsCard columns={2}>
     <div class="stat-col" style="--dark: #c45a6a; --light: rgb(196 90 106 / 28%)">
-      <div class="stat-header">{t("spell.actionType.label")}</div>
+      <div class="stat-header">{t("ability.activeDetails.actionType")}</div>
       <div class="stat-body">
         <SelectInput
           value={system.actionType}
-          options={[
-            { value: "action", label: "spell.actionType.action" },
-            { value: "bonus", label: "spell.actionType.bonus" },
-            { value: "reaction", label: "spell.actionType.reaction" },
-            { value: "free", label: "spell.actionType.free" },
-          ]}
+          options={ACTION_TYPES}
           variant="underline"
           fullWidth
           onchange={(e) => onUpdate("actionType", e.currentTarget.value)}
@@ -39,7 +35,7 @@
     </div>
 
     <div class="stat-col" style="--dark: #2a9b8f; --light: rgb(42 155 143 / 28%)">
-      <div class="stat-header">{t("spell.castTime")}</div>
+      <div class="stat-header">{t("ability.advancedSettings.castTime")}</div>
       <div class="stat-body">
         <Input
           type="number"
@@ -57,20 +53,15 @@
 
 <!-- RANGE & TARGETING -->
 <section style="--dark: #c4922a; --light: rgb(196 146 42 / 28%)">
-  <div class="section-header">{t("spell.range.title")}</div>
+  <div class="section-header">{t("ability.activeDetails.range")}</div>
 
   <StatsCard columns={3}>
     <div class="stat-col" style="--dark: #c4922a; --light: rgb(196 146 42 / 28%)">
-      <div class="stat-header">{t("spell.rangeKind.label")}</div>
+      <div class="stat-header">{t("ability.activeDetails.rangeKind")}</div>
       <div class="stat-body">
         <SelectInput
           value={system.range.kind}
-          options={[
-            { value: "self", label: "spell.rangeKind.self" },
-            { value: "melee", label: "spell.rangeKind.melee" },
-            { value: "ranged", label: "spell.rangeKind.ranged" },
-            { value: "area", label: "spell.rangeKind.area" },
-          ]}
+          options={RANGE_KINDS}
           variant="underline"
           fullWidth
           onchange={(e) => onUpdate("range.kind", e.currentTarget.value)}
@@ -80,7 +71,7 @@
 
     {#if system.range.kind !== "self" && system.range.kind !== "area"}
       <div class="stat-col" style="--dark: #c4922a; --light: rgb(196 146 42 / 28%)">
-        <div class="stat-header">{t("spell.range.distance")}</div>
+        <div class="stat-header">{t("ability.activeDetails.rangeDistance")}</div>
         <div class="stat-body">
           <Input
             type="number"
@@ -97,7 +88,7 @@
 
     {#if system.range.kind === "area"}
       <div class="stat-col" style="--dark: #c4922a; --light: rgb(196 146 42 / 28%)">
-        <div class="stat-header">{t("spell.range.radius")}</div>
+        <div class="stat-header">{t("common.radius")}</div>
         <div class="stat-body">
           <Input
             type="number"
@@ -112,15 +103,11 @@
       </div>
 
       <div class="stat-col" style="--dark: #c4922a; --light: rgb(196 146 42 / 28%)">
-        <div class="stat-header">{t("spell.range.shape")}</div>
+        <div class="stat-header">{t("ability.activeDetails.areaShape")}</div>
         <div class="stat-body">
           <SelectInput
             value={system.range.shape || "circle"}
-            options={[
-              { value: "circle", label: "spell.range.shapeCircle" },
-              { value: "cone", label: "spell.range.shapeCone" },
-              { value: "line", label: "spell.range.shapeLine" },
-            ]}
+            options={AREA_SHAPES}
             variant="underline"
             fullWidth
             onchange={(e) => onUpdate("range.shape", e.currentTarget.value)}
@@ -136,12 +123,7 @@
       <div class="stat-body">
         <SelectInput
           value={system.targeting.targetType}
-          options={[
-            { value: "self", label: "spell.targetType.self" },
-            { value: "ally", label: "spell.targetType.ally" },
-            { value: "enemy", label: "spell.targetType.enemy" },
-            { value: "any", label: "spell.targetType.any" },
-          ]}
+          options={TARGET_TYPES}
           variant="underline"
           fullWidth
           onchange={(e) => onUpdate("targeting.targetType", e.currentTarget.value)}
@@ -150,7 +132,7 @@
     </div>
 
     <div class="stat-col" style="--dark: #4ec4b6; --light: rgb(78 196 182 / 28%)">
-      <div class="stat-header">{t("spell.maxTargets")}</div>
+      <div class="stat-header">{t("ability.activeDetails.maxTargets")}</div>
       <div class="stat-body">
         <Input
           type="number"
@@ -169,7 +151,7 @@
     </div>
 
     <div class="stat-col" style="--dark: #4ec4b6; --light: rgb(78 196 182 / 28%)">
-      <div class="stat-header">{t("spell.requiresLOS")}</div>
+      <div class="stat-header">{t("ability.advancedSettings.requiresLOS")}</div>
       <div class="stat-body">
         <input
           type="checkbox"
@@ -184,11 +166,11 @@
 
 <!-- USES & TOGGLES -->
 <section style="--dark: #8b4fc9; --light: rgb(139 79 201 / 28%)">
-  <div class="section-header">{t("spell.uses.title")}</div>
+  <div class="section-header">{t("ability.advancedSettings.uses")}</div>
 
   <StatsCard columns={2}>
     <div class="stat-col" style="--dark: #b57aef; --light: rgb(181 122 239 / 28%)">
-      <div class="stat-header">{t("spell.usesPerRest")}</div>
+      <div class="stat-header">{t("ability.advancedSettings.usesPerRest")}</div>
       <div class="stat-body">
         <Input
           type="number"
@@ -207,7 +189,7 @@
     </div>
 
     <div class="stat-col" style="--dark: #b57aef; --light: rgb(181 122 239 / 28%)">
-      <div class="stat-header">{t("spell.usesPerEncounter")}</div>
+      <div class="stat-header">{t("ability.advancedSettings.usesPerEncounter")}</div>
       <div class="stat-body">
         <Input
           type="number"
@@ -226,7 +208,7 @@
     </div>
 
     <div class="stat-col" style="--dark: #8b4fc9; --light: rgb(139 79 201 / 28%)">
-      <div class="stat-header">{t("spell.channeled")}</div>
+      <div class="stat-header">{t("ability.advancedSettings.channeled")}</div>
       <div class="stat-body">
         <input
           type="checkbox"
@@ -238,7 +220,7 @@
     </div>
 
     <div class="stat-col" style="--dark: #8b4fc9; --light: rgb(139 79 201 / 28%)">
-      <div class="stat-header">{t("spell.togglable")}</div>
+      <div class="stat-header">{t("ability.advancedSettings.togglable")}</div>
       <div class="stat-body">
         <input
           type="checkbox"

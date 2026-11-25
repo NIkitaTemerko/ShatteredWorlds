@@ -98,7 +98,7 @@
   {#if isNpc || tab === 'main'}
     <div class="editor-table">
       <div class="editor-row table-head">
-        <span>{t('newUi.parameter')}</span><span>{t('newUi.base')}</span>
+        <span>{t('newUi.parameter')}</span><span>{t('character.statSources.base')}</span>
         <span>{t('newUi.manualExtra')}</span>
         <span>{t('newUi.bonus')} +</span>
         <span>{t('newUi.save')} +</span>
@@ -108,7 +108,7 @@
           <span>{t(`attributes.${key}`)}</span
           >{#each attributeFields as field}<input
               type="number"
-              aria-label={`${t(`attributes.${key}`)} ${t(field === 'value' ? 'newUi.base' : field === 'extra' ? 'newUi.manualExtra' : field === 'charBonusBase' ? 'newUi.bonus' : 'newUi.save')}`}
+              aria-label={`${t(`attributes.${key}`)} ${t(field === 'value' ? 'character.statSources.base' : field === 'extra' ? 'newUi.manualExtra' : field === 'charBonusBase' ? 'newUi.bonus' : 'newUi.save')}`}
               bind:value={attributes[key][field]}
             />{/each}<strong class="coefficient"
             >{attributeCoefficientValue(

@@ -12,11 +12,11 @@ import { EQUIPMENT_SLOT_KEYS } from '../model/constants';
 // Ключи локализации для типов предметов
 const itemTypeKeys: Record<string, I18nKey> = {
   consumable: 'inventory.categories.consumable',
-  ability: 'inventory.categories.ability',
+  ability: 'newUi.abilities',
   weapon: 'inventory.categories.weapon',
   equipment: 'inventory.categories.equipment',
   treasure: 'inventory.categories.treasure',
-  spell: 'tabs.spells',
+  spell: 'newUi.spells',
   resource: 'inventory.categories.resource',
 };
 

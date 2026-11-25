@@ -84,7 +84,7 @@
         <StatsCard columns={system.consumableType === "potion" ? 2 : 3}>
           <div class="stat-col">
             <div class="stat-header">
-              {system.consumableType === "potion" ? t("item.potionFood.effectType") : t("item.potionFood.effectBonus")}
+              {system.consumableType === "potion" ? t("item.potionFood.effectType") : t("newUi.bonus")}
             </div>
             <div class="stat-body">
               {#if system.consumableType === "potion"}
@@ -129,7 +129,7 @@
           </div>
 
           <div class="stat-col">
-            <div class="stat-header">{t("item.potionFood.effectDuration")}</div>
+            <div class="stat-header">{t("common.duration")}</div>
             <div class="stat-body">
               <Input
                 type="number"

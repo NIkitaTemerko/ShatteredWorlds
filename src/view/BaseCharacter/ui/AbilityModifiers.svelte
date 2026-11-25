@@ -8,7 +8,7 @@
   <div class="item-edit-fields damage-step">
     <label class="form-field">{t('newUi.parameter')}<input bind:value={modifier.stat} /></label>
     <label class="form-field"
-      >{t('newUi.operation')}<select bind:value={modifier.mode}
+      >{t('common.operation')}<select bind:value={modifier.mode}
         ><option value="add">+</option><option value="mul">×</option><option value="override"
           >=</option
         ></select
@@ -23,7 +23,7 @@
       type="button"
       class="danger-button"
       onclick={() => (block.modifiers = block.modifiers.filter((_, i) => i !== index))}
-      >{t('newUi.delete')}</button
+      >{t('common.delete')}</button
     >
   </div>
 {/each}

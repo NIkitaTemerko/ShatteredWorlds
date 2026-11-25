@@ -51,7 +51,7 @@
 >
   <header class="panel-heading">
     <h2>{title}</h2>
-    <button class="icon-button" type="button" aria-label={t('newUi.close')} onclick={onClose}
+    <button class="icon-button" type="button" aria-label={t('common.close')} onclick={onClose}
       >×</button
     >
   </header>

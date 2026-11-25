@@ -138,7 +138,7 @@
         <button
           type="button"
           class="clear-button"
-          aria-label={t('inventory.clearSearch')}
+          aria-label={t('common.clearSearch')}
           onclick={() => {
             searchQuery = '';
             jumpValue = '';

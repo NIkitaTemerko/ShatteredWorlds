@@ -85,7 +85,7 @@
       </div>
       {#if openIndex === index}<div class="item-effect-fields modifier-fields">
         <ItemField label={t('itemUi.parameter')} value={modifier.stat} {options} {disabled} onChange={value => changeModifier(index, { stat: String(value) })} />
-        <ItemField label={t('itemUi.operation')} value={modifier.mode} {disabled}
+        <ItemField label={t('common.operation')} value={modifier.mode} {disabled}
           options={[{ value: 'add', label: '+' }, { value: 'mul', label: '×' }, { value: 'override', label: '=' }]}
           onChange={value => changeModifier(index, { mode: value as StatModifier['mode'] })} />
         <ItemField label={t('itemUi.value')} type="number" value={modifier.value} {disabled} onChange={value => changeModifier(index, { value: Number(value) })} />

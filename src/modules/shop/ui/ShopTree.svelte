@@ -190,7 +190,7 @@
           },
         },
         cancel: {
-          label: t("shop.dialogs.cancel"),
+          label: t("common.cancel"),
         },
       },
       default: "add",

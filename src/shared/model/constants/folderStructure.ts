@@ -37,7 +37,7 @@ export const FOLDER_STRUCTURE: Record<string, FolderDefinition> = {
     },
   },
   ability: {
-    rootKey: 'SHW.inventory.categories.ability',
+    rootKey: 'SHW.newUi.abilities',
     subtypeField: 'category',
     subfolders: {
       active: 'SHW.ability.category.active',
@@ -45,7 +45,7 @@ export const FOLDER_STRUCTURE: Record<string, FolderDefinition> = {
     },
   },
   spell: {
-    rootKey: 'SHW.tabs.spells',
+    rootKey: 'SHW.newUi.spells',
     subtypeField: 'category',
     subfolders: {
       code: 'SHW.spell.category.code',

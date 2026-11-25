@@ -12,7 +12,7 @@
   const panelTitles = {
     speed: 'character.utility.speed',
     health: 'character.health.current',
-    barrier: 'newUi.barrier',
+    barrier: 'additionalAttributes.barrier',
     heal: 'newUi.heal',
     addBarrier: 'newUi.addBarrier',
     damage: 'character.applyDamage',
@@ -123,7 +123,7 @@
   <button
     type="button"
     class="icon-button sheet-close"
-    aria-label={t('newUi.close')}
+    aria-label={t('common.close')}
     onclick={() => actor.sheet?.close()}>×</button
   >
 </div>
@@ -150,7 +150,7 @@
         class:triple={overcharge >= 3}
       >
         <button type="button" class="text-button" onclick={() => (panel = 'barrier')}
-          >{t('newUi.barrier')}</button
+          >{t('additionalAttributes.barrier')}</button
         ><strong
           >{barrier}{#if overcharge > 1}
             · ×{Number(overcharge.toFixed(1))}{/if}</strong
@@ -271,7 +271,7 @@
     {:else if panel === 'damage'}
       <CharacterDamagePanel {actor} onApplied={() => (panel = null)} />
     {:else}
-      <p class="muted">{t('newUi.hp')} {hp} / {maxHp} · {t('newUi.barrier')} {barrier}</p>
+      <p class="muted">{t('newUi.hp')} {hp} / {maxHp} · {t('additionalAttributes.barrier')} {barrier}</p>
       <div class="form-field">
         <label for={amountId}>
           {panel === 'heal' ? t('newUi.coefficientCount') : t('newUi.amount')}

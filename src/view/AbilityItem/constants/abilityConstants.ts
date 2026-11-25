@@ -9,8 +9,8 @@ export const ACTIVE_KINDS = [
   { value: 'support', label: 'ability.activeKind.support' },
   { value: 'debuff', label: 'ability.activeKind.debuff' },
   { value: 'control', label: 'ability.activeKind.control' },
-  { value: 'movement', label: 'ability.activeKind.movement' },
-  { value: 'summon', label: 'ability.activeKind.summon' },
+  { value: 'movement', label: 'newUi.effect_movement' },
+  { value: 'summon', label: 'newUi.effect_summon' },
   { value: 'utility', label: 'ability.activeKind.utility' },
 ];
 

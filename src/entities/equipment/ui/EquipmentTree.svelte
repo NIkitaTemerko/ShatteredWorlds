@@ -30,15 +30,15 @@
     const lastTwoDigits = count % 100;
 
     if (lastTwoDigits >= 11 && lastTwoDigits <= 14) {
-      return t("characterEquipment.itemPlurals.many");
+      return t("inventory.itemPlurals.many");
     }
     if (lastDigit === 1) {
-      return t("characterEquipment.itemPlurals.one");
+      return t("inventory.itemPlurals.one");
     }
     if (lastDigit >= 2 && lastDigit <= 4) {
-      return t("characterEquipment.itemPlurals.few");
+      return t("inventory.itemPlurals.few");
     }
-    return t("characterEquipment.itemPlurals.many");
+    return t("inventory.itemPlurals.many");
   }
 
   function handleEdit(node: TreeNode, e: Event) {
@@ -64,7 +64,7 @@
     if (onSelectItem) {
       menuItems.push({
         type: "action",
-        label: t("inventory.menu.edit"),
+        label: t("common.edit"),
         icon: "fas fa-edit",
         onClick: (e: Event) => {
           e.stopPropagation();

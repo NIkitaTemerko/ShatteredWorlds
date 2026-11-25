@@ -29,7 +29,7 @@
   let queue: Promise<void> = Promise.resolve();
   const rarityOptions = [...RARITY_TYPES.slice(0, 3), { value: 'epic', label: 'itemUi.epic' }, ...RARITY_TYPES.slice(3)];
   const category = $derived(equipment
-    ? `${t('itemUi.equipment')} · ${resolveLabel(EQUIPMENT_SLOTS.find(slot => slot.value === equipment.slot)?.label ?? equipment.slot)}`
+    ? `${t('inventory.categories.equipment')} · ${resolveLabel(EQUIPMENT_SLOTS.find(slot => slot.value === equipment.slot)?.label ?? equipment.slot)}`
     : consumable ? resolveLabel(CONSUMABLE_TYPES.find(type => type.value === consumable.consumableType)?.label ?? consumable.consumableType)
     : resource ? resolveLabel(getCategoryOptions().find(c => c.value === resource.category)?.label ?? resource.category) : '');
   const icon = $derived(equipment ? 'fa-shield-alt' : resource ? 'fa-gem' : consumable?.consumableType === 'bomb' ? 'fa-bomb' : consumable?.consumableType === 'scroll' ? 'fa-scroll' : consumable?.consumableType === 'food' ? 'fa-bread-slice' : consumable?.consumableType === 'poison' ? 'fa-skull-crossbones' : 'fa-flask');
@@ -141,8 +141,8 @@
     <aside class="item-properties" aria-label={t('itemUi.properties')}>
       <section><h2>{t('itemUi.properties')}</h2>
         {#if equipment}<ItemField label={t('equipment.header.slotLabel')} value={equipment.slot} options={EQUIPMENT_SLOTS} disabled={readonly} onChange={v => update('slot', v)} />
-        {:else if consumable}<ItemField label={t('item.header.typeLabel')} value={consumable.consumableType} options={CONSUMABLE_TYPES} disabled={readonly || saving > 0} onChange={requestType} />
-        {:else if resource}<ItemField label={t('resource.header.categoryLabel')} value={resource.category} options={getCategoryOptions()} disabled={readonly} onChange={v => update('category', v)} />{/if}
+        {:else if consumable}<ItemField label={t('common.typeLabel')} value={consumable.consumableType} options={CONSUMABLE_TYPES} disabled={readonly || saving > 0} onChange={requestType} />
+        {:else if resource}<ItemField label={t('common.categoryLabel')} value={resource.category} options={getCategoryOptions()} disabled={readonly} onChange={v => update('category', v)} />{/if}
         <ItemField label={t('item.basicStats.rarity')} value={system.rarity} options={rarityOptions} disabled={readonly} onChange={v => update('rarity', v)} />
         {#if equipment}<ItemField label={t('equipment.stats.armorClass')} type="number" min={0} value={equipment.armorClass} disabled={readonly} onChange={v => update('armorClass', v)} />{/if}
         <ItemField label={t('item.basicStats.price')} type="number" min={0} value={system.price} disabled={readonly} onChange={v => update('price', v)} />
@@ -151,8 +151,8 @@
           <ItemField label={t('item.basicStats.stack')} type="number" min={1} step={1} value={consumable.stackLimit} disabled={readonly} onChange={v => update('stackLimit', v)} />
         {/if}
       </section>
-      {#if consumable}<section><h2>{t('itemUi.activation')}</h2><div class="item-activation-fields">
-          <ItemField label={t('itemUi.action')} value={consumable.activation.type} options={ACTIVATION_TYPES} disabled={readonly} onChange={v => update('activation.type', v)} />
+      {#if consumable}<section><h2>{t('controls.activation')}</h2><div class="item-activation-fields">
+          <ItemField label={t('ability.actionType.action')} value={consumable.activation.type} options={ACTIVATION_TYPES} disabled={readonly} onChange={v => update('activation.type', v)} />
           <ItemField label={t('itemUi.cost')} type="number" min={0} step={1} value={consumable.activation.cost} disabled={readonly} onChange={v => update('activation.cost', v)} />
         </div></section>
         <section><h2>{t('itemUi.uses')}</h2><div class="item-uses-fields">

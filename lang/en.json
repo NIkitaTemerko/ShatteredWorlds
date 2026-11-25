@@ -311,6 +311,7 @@
         "final": "Final coefficient",
         "calculation": "Coefficient calculation",
         "info": "The coefficient is 25% of the additional attribute",
+        "healthInfo": "The health coefficient is 10% of maximum HP",
         "formula": "Extra total {total} ÷ 4 = {result}"
       },
       "barrier": {

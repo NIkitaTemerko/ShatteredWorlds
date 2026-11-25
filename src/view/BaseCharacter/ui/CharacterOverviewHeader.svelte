@@ -286,7 +286,9 @@
           <button type="button" class="outline-button" onclick={() => (amount = (amount || 0) + 1)}
             >+</button
           >
-          <span>{panel === 'heal' ? `1КЗ = ${healUnit}` : `${t('newUi.normalBarrier')}: ${maxBarrier}`}</span>
+          <span title={panel === 'heal' ? t('character.coefficient.healthInfo') : undefined}>
+            {panel === 'heal' ? `1КЗ = ${healUnit}` : `${t('newUi.normalBarrier')}: ${maxBarrier}`}
+          </span>
         </div>
       </div>
       <h2>

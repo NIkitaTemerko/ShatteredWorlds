@@ -711,16 +711,6 @@
   white-space: pre-wrap;
   font-size: 16px;
 }
-.shw-character .sheet-panel > .stat-detail-content,
-.shw-character .sheet-panel > .damage-popup {
-  width: 100%;
-  min-width: 0;
-  max-width: 100%;
-  padding: 0;
-  border: 0;
-  box-shadow: none;
-  background: transparent;
-}
 .shw-character .source-link {
   display: flex;
   justify-content: space-between;
@@ -836,6 +826,9 @@
 }
 .shw-character .attribute-table + .derived-stats {
   min-height: 144px;
+}
+.shw-character .npc-editor > h3 {
+  margin-top: 20px;
 }
 .shw-character .section-heading:has(+ .attribute-table) > .outline-button {
   width: 274px;

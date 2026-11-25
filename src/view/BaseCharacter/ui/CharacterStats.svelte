@@ -22,7 +22,7 @@
     'range',
     'massCategory',
   ] as const;
-  let { actor }: { actor: ShwActor<'character'> } = $props();
+  let { actor }: { actor: ShwActor } = $props();
   let selected = $state<AttributeKey>('force');
   let field = $state<
     'value' | 'extra' | 'coefficient' | 'charBonus' | 'saveBonus' | 'overview' | null
@@ -165,6 +165,7 @@
     {:else if sources}
       <SourceBreakdown
         sources={sources[field]}
+        includeItemSources={actor.type === 'character'}
         total={sourceTotal}
         editable={field === 'value' ? 'base' : 'extra'}
         fromAttribute={field === 'charBonus' || field === 'saveBonus'}
@@ -184,6 +185,7 @@
   >
     <SourceBreakdown
       sources={actor.system.additionalStatSources[additionalKey]}
+      includeItemSources={actor.type === 'character'}
       total={actor.system.totals[additionalKey]}
       onChange={(value) =>
         actor.update({ [`system.additionalAttributes.${additionalKey}`]: value })}

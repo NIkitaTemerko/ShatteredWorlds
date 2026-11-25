@@ -6,6 +6,7 @@
     editable = 'extra',
     onChange,
     fromAttribute = false,
+    includeItemSources = true,
   }: {
     sources: {
       base?: number;
@@ -18,11 +19,17 @@
     editable?: string;
     onChange: (value: number) => unknown;
     fromAttribute?: boolean;
+    includeItemSources?: boolean;
   } = $props();
+  const rows = $derived(
+    Object.entries(sources).filter(
+      ([key]) => includeItemSources || (key !== 'equipment' && key !== 'abilities'),
+    ),
+  );
 </script>
 
 <div class="source-breakdown">
-  {#each Object.entries(sources) as [key, value]}
+  {#each rows as [key, value]}
     <div class="source-value-row">
       <span
         >{t(

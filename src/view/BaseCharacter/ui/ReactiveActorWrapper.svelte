@@ -5,7 +5,7 @@
   import RootCharacterShell from "./RootCharacterShell.svelte";
 
   interface Props {
-    getActor: () => ShwActor<"character">;
+    getActor: () => ShwActor<"character"> | ShwActor<"npc">;
   }
 
   let { getActor }: Props = $props();

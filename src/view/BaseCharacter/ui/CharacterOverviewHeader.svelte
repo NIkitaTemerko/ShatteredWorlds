@@ -9,11 +9,17 @@
     actor,
     editing,
     onEdit,
-  }: { actor: ShwActor<'character'>; editing: boolean; onEdit: () => void } = $props();
+  }: {
+    actor: ShwActor;
+    editing: boolean;
+    onEdit: () => void;
+  } = $props();
+  const amountId = $props.id();
   let panel = $state<'speed' | 'health' | 'heal' | 'barrier' | 'damage' | null>(null);
   let amount = $state(1);
   let busy = $state(false);
   let error = $state('');
+  const isNpc = $derived(actor.type === 'npc');
   const hp = $derived(Math.max(0, actor.system.health.value));
   const maxHp = $derived(Math.max(0, actor.system.totals.health));
   const barrier = $derived(Math.max(0, actor.system.barrier.value));
@@ -22,9 +28,12 @@
   const hpWidth = $derived(Math.max(30, (maxHp / longest) * 100));
   const barrierWidth = $derived(Math.max(30, (maxBarrier / longest) * 100));
   const overcharge = $derived(maxBarrier > 0 ? barrier / maxBarrier : 0);
+  const healUnit = $derived(healthCoefficientValue(maxHp));
   const healed = $derived(
-    Math.min(maxHp, hp + Math.max(0, amount || 0) * healthCoefficientValue(maxHp)),
+    Math.min(maxHp, hp + Math.max(0, amount || 0) * healUnit),
   );
+  const addedBarrier = $derived(barrier + Math.max(0, amount || 0));
+  const nextBarrier = $derived(isNpc ? Math.min(maxBarrier, addedBarrier) : addedBarrier);
   const initials = $derived(
     actor.name
       .split(/\s+/)
@@ -32,6 +41,22 @@
       .map((word) => word[0])
       .join(''),
   );
+  function updateSpeedExtra(value: number) {
+    const { base, growth } = actor.system.speedStatSources;
+    return actor.update(
+      isNpc
+        ? { 'system.utility.speed': base + growth + value }
+        : { 'system.utility.speedExtra': value },
+    );
+  }
+  function updateCurrentHealth(event: Event & { currentTarget: HTMLInputElement }) {
+    const input = event.currentTarget;
+    const value = input.valueAsNumber;
+    const nextHealth = Number.isFinite(value) ? Math.min(maxHp, Math.max(0, Math.trunc(value))) : hp;
+    input.value = String(nextHealth);
+    if (nextHealth !== hp) actor.update({ 'system.health.value': nextHealth });
+  }
+
   async function applyResource() {
     busy = true;
     error = '';
@@ -39,7 +64,7 @@
       await actor.update(
         panel === 'heal'
           ? { 'system.health.value': healed }
-          : { 'system.barrier.value': barrier + Math.max(0, amount || 0) },
+          : { 'system.barrier.value': nextBarrier },
       );
       panel = null;
     } catch (e) {
@@ -77,10 +102,8 @@
   <div class="character-identity">
     <h1>{actor.name}</h1>
     <div class="identity-meta">
-      <span>{t('newUi.level')} {actor.system.utility.level}</span><button
-        type="button"
-        class="text-button"
-        onclick={() => (panel = 'speed')}
+      <span>{t('newUi.level')} {actor.system.utility.level}</span>
+      <button type="button" class="text-button" onclick={() => (panel = 'speed')}
         >{t('character.utility.speed')} {actor.system.totals.speed} ›</button
       >
     </div>
@@ -162,22 +185,40 @@
     wide={panel === 'damage'}
     onClose={() => { panel = null; }}
   >
-    {#if panel === 'speed' && actor.system.speedStatSources}
-      <SourceBreakdown
-        sources={actor.system.speedStatSources}
-        total={actor.system.totals.speed}
-        onChange={(value) => actor.update({ 'system.utility.speedExtra': value })}
-      />
-    {:else if panel === 'health' && actor.system.healthStatSources}
+    {#if panel === 'speed'}
+      {#if actor.system.speedStatSources}
+        <SourceBreakdown
+          sources={actor.system.speedStatSources}
+          total={actor.system.totals.speed}
+          includeItemSources={!isNpc}
+          onChange={updateSpeedExtra}
+        />
+      {/if}
+    {:else if panel === 'health'}
       <h3>{t('character.health.max')}</h3>
-      <SourceBreakdown
-        sources={actor.system.healthStatSources}
-        total={maxHp}
-        onChange={(value) => actor.update({ 'system.health.extra': value })}
-      />
+      {#if isNpc}
+        <p>{maxHp}</p>
+        <label class="form-field">
+          {t('character.health.current')}
+          <input
+            type="number"
+            min="0"
+            max={maxHp}
+            value={hp}
+            onchange={updateCurrentHealth}
+          />
+        </label>
+      {:else if actor.system.healthStatSources}
+        <SourceBreakdown
+          sources={actor.system.healthStatSources}
+          total={maxHp}
+          onChange={(value) => actor.update({ 'system.health.extra': value })}
+        />
+      {/if}
       {#if actor.system.additionalStatSources?.barrier}<h3>{t('newUi.normalBarrier')}</h3>
         <SourceBreakdown
           sources={actor.system.additionalStatSources.barrier}
+          includeItemSources={!isNpc}
           total={maxBarrier}
           onChange={(value) => actor.update({ 'system.additionalAttributes.barrier': value })}
         />{/if}
@@ -185,44 +226,50 @@
       <CharacterDamagePanel {actor} onApplied={() => (panel = null)} />
     {:else}
       <p class="muted">{t('newUi.hp')} {hp} / {maxHp} · {t('newUi.barrier')} {barrier}</p>
-      <label class="form-field"
-        >{panel === 'heal' ? t('newUi.coefficientCount') : t('newUi.amount')}
-        <div class="number-stepper coefficient-stepper">
-          <button
-            type="button"
-            class="outline-button"
-            onclick={() => (amount = Math.max(0, (amount || 0) - 1))}>−</button
-          >
-          <input type="number" min="0" step="1" bind:value={amount} />
-          <button type="button" class="outline-button" onclick={() => (amount = (amount || 0) + 1)}
-            >+</button
-          >
-          <span
-            >{panel === 'heal'
-              ? `1КЗ = ${healthCoefficientValue(maxHp)}`
-              : `${t('newUi.normalBarrier')}: ${maxBarrier}`}</span
-          >
-        </div>
-      </label>
+      <div class="form-field">
+        <label for={amountId}>
+          {panel === 'heal' ? t('newUi.coefficientCount') : t('newUi.amount')}
+        </label>
+        {#if isNpc}
+          <input id={amountId} type="number" min="0" step="1" bind:value={amount} />
+          {#if panel === 'heal'}<span>1КЗ = {healUnit}</span>{/if}
+        {:else}
+          <div class="number-stepper coefficient-stepper">
+            <button
+              type="button"
+              class="outline-button"
+              onclick={() => (amount = Math.max(0, (amount || 0) - 1))}>−</button
+            >
+            <input id={amountId} type="number" min="0" step="1" bind:value={amount} />
+            <button type="button" class="outline-button" onclick={() => (amount = (amount || 0) + 1)}
+              >+</button
+            >
+            <span>{panel === 'heal' ? `1КЗ = ${healUnit}` : `${t('newUi.normalBarrier')}: ${maxBarrier}`}</span>
+          </div>
+        {/if}
+      </div>
       <h2>
-        {panel === 'heal' ? hp : barrier} → {panel === 'heal'
-          ? healed
-          : barrier + Math.max(0, amount || 0)}
+        {panel === 'heal' ? hp : barrier} → {panel === 'heal' ? healed : nextBarrier}
       </h2>
-      <p class="muted">{t(panel === 'heal' ? 'newUi.healLimit' : 'newUi.barrierNoLimit')}</p>
-      <details class="calculation-details">
-        <summary>{t('newUi.howCalculated')} ›</summary>
-        <p>
-          {panel === 'heal'
-            ? `${hp} + ${Math.max(0, amount || 0)} × ${healthCoefficientValue(maxHp)} → ${healed}`
-            : `${barrier} + ${Math.max(0, amount || 0)}`}
-        </p>
-      </details>
+      {#if panel === 'heal' || !isNpc}
+        <p class="muted">{t(panel === 'heal' ? 'newUi.healLimit' : 'newUi.barrierNoLimit')}</p>
+      {/if}
+      {#if !isNpc}
+        <details class="calculation-details">
+          <summary>{t('newUi.howCalculated')} ›</summary>
+          <p>
+            {panel === 'heal'
+              ? `${hp} + ${Math.max(0, amount || 0)} × ${healUnit} → ${healed}`
+              : `${barrier} + ${Math.max(0, amount || 0)}`}
+          </p>
+        </details>
+      {/if}
       {#if error}<p role="alert">{error}</p>{/if}
       <button
         type="button"
         class="primary wide"
-        disabled={busy || !(amount > 0) || (panel === 'heal' && healed === hp)}
+        disabled={busy || !(amount > 0) || (isNpc && !Number.isInteger(amount)) ||
+          (panel === 'heal' ? healed === hp : nextBarrier === barrier)}
         onclick={applyResource}>{t('newUi.apply')}</button
       >
     {/if}

@@ -8,7 +8,7 @@
   } from '../../../shared/model/damage/damageTypeConfig';
   import type { DamageEntry } from '../../../shared/model/damage/types';
   import { t } from '../../../shared/i18n';
-  let { actor, onApplied }: { actor: ShwActor<'character'>; onApplied: () => void } = $props();
+  let { actor, onApplied }: { actor: ShwActor; onApplied: () => void } = $props();
   let nextId = 0;
   const createRow = (): DamageEntry => ({
     id: `damage-${nextId++}`,

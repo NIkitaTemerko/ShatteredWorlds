@@ -1,7 +1,11 @@
 <script lang="ts">
   import { untrack } from 'svelte';
   import type { ShwActor } from '../../documents/Actor/ShwActor';
+  import type { ShwNpcSystem } from '../../documents/Actor/types/ShwActorSystem';
+  import { prepareNpcDerivedData } from '../../shared/helpers/Npc/prepareNpcDerivedData';
+  import { createCharacterActorFixture } from '../../storybook/fixtures/characterActor';
   import { createCharacterShowcase } from '../../storybook/fixtures/characterShowcase';
+  import { createMutableDoc } from '../../storybook/fixtures/createMutableDoc';
   import { FoundryWindow } from '../../storybook/foundry';
   import RootCharacterShell, { type SheetSection } from './ui/RootCharacterShell.svelte';
   let {
@@ -10,25 +14,44 @@
     resourceState = 'normal',
     foundryFrame = false,
     windowHeight = 1008,
+    npc = false,
   }: {
     initialTab?: SheetSection;
     initialEditing?: boolean;
     resourceState?: 'normal' | 'empty' | 'overcharge';
     foundryFrame?: boolean;
     windowHeight?: number;
+    npc?: boolean;
   } = $props();
-  let actor = $state<ShwActor<'character'>>();
+  let actor = $state<ShwActor<'character'> | ShwActor<'npc'>>();
   let notification = $state('');
-  let showcase: ReturnType<typeof createCharacterShowcase>;
   $effect(() => {
     const state = resourceState;
+    const isNpc = npc;
     untrack(() => {
-      showcase = createCharacterShowcase((next) => {
+      notification = '';
+      if (isNpc) {
+        const base = createCharacterActorFixture({ name: 'Страж' });
+        const system: ShwNpcSystem = base.system;
+        // Manual bonuses and extras are stored on the NPC itself.
+        system.attributes.force.charBonusBase = 9;
+        system.attributes.force.saveBonusBase = 7;
+        system.attributes.fortune.value = 20;
+        system.attributes.fortune.extra = 80;
+        const fixture = { ...base, type: 'npc' as const, system };
+        const refresh = (next: typeof fixture) => {
+          prepareNpcDerivedData(next.system);
+          actor = { ...next } as unknown as ShwActor<'npc'>;
+        };
+        const doc = createMutableDoc(fixture, refresh);
+        refresh(doc);
+        return;
+      }
+      const showcase = createCharacterShowcase((next) => {
         actor = next;
         notification = showcase.getNotification();
       }, state);
       actor = showcase.actor;
-      notification = '';
     });
   });
 </script>

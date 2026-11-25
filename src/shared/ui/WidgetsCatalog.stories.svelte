@@ -27,7 +27,6 @@
     <h2>Features</h2>
     <ul>
       <li>Widgets/TabNavigation</li>
-      <li>Widgets/RollPanel</li>
       <li>Widgets/UsesControl</li>
       <li>Widgets/ActivationControl</li>
       <li>Widgets/StatBonusesEditor</li>

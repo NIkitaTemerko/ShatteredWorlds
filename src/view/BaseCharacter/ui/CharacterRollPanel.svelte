@@ -3,7 +3,7 @@
   import type { RollType, RollMode } from '../../../entities/character/model';
   import { ROLL_TYPE_CONFIGS } from '../../../entities/character/model';
   import { t } from '../../../shared/i18n';
-  let { actor }: { actor: ShwActor<'character'> } = $props();
+  let { actor }: { actor: ShwActor } = $props();
   let attribute = $state<RollType>('force');
   let mode = $state<RollMode>('normal');
   let dice = $state(20);

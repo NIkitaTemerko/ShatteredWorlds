@@ -61,6 +61,74 @@
 
 <Story name="Default" />
 <Story
+  name="NPC"
+  args={{ npc: true, foundryFrame: true }}
+  play={async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.queryByRole('navigation')).toBeNull();
+    await expect(canvas.getByRole('table')).toBeVisible();
+    await expect(canvas.getByRole('button', { name: 'Бросить', exact: true })).toBeVisible();
+    await expect(canvas.getByRole('columnheader', { name: 'Коэфф.' })).toBeVisible();
+    await expect(canvas.getByRole('button', { name: 'Напор: Бонус', exact: true })).toHaveTextContent('9');
+    await expect(canvas.getByRole('button', { name: 'Напор: СБ', exact: true })).toHaveTextContent('7');
+    await expect(canvas.getByText('Обыч. барьер', { exact: true }).parentElement).toHaveTextContent('40');
+
+    await userEvent.click(canvas.getByRole('button', { name: 'Напор: Доп.', exact: true }));
+    const sources = within(canvas.getByRole('dialog', { name: 'Источники и коэффициенты · Напор' }));
+    await expect(sources.queryByText('Экипировка', { exact: true })).toBeNull();
+    await expect(sources.queryByText('Способности', { exact: true })).toBeNull();
+    await userEvent.click(sources.getByRole('button', { name: 'Закрыть', exact: true }));
+
+    await userEvent.click(canvas.getByRole('button', { name: 'Правка персонажа', exact: true }));
+    await expect(canvas.queryByRole('button', { name: /^Дополнительные/ })).toBeNull();
+    const force = canvas.getByRole('spinbutton', { name: 'Напор База', exact: true });
+    const extraForce = canvas.getByRole('spinbutton', { name: 'Напор Ручн. доп.', exact: true });
+    const speed = canvas.getByRole('spinbutton', { name: 'Скорость', exact: true });
+    const maxHealth = canvas.getByRole('spinbutton', { name: 'Макс. здоровье', exact: true });
+    const actions = canvas.getByRole('spinbutton', { name: 'Действия', exact: true });
+    await userEvent.clear(force);
+    await userEvent.type(force, '25');
+    await userEvent.clear(extraForce);
+    await userEvent.type(extraForce, '14');
+    await userEvent.clear(speed);
+    await userEvent.type(speed, '35');
+    await userEvent.clear(maxHealth);
+    await userEvent.type(maxHealth, '40');
+    await userEvent.clear(actions);
+    await userEvent.type(actions, '3');
+    await userEvent.click(canvas.getByRole('button', { name: 'Применить', exact: true }));
+    await expect(canvas.getByRole('button', { name: /Скорость 35/ })).toBeVisible();
+    await expect(canvas.getByRole('button', { name: 'Напор: Бонус', exact: true })).toHaveTextContent('14');
+    await expect(canvas.getByRole('button', { name: 'Напор: СБ', exact: true })).toHaveTextContent('12');
+    await expect(canvas.getByRole('button', { name: 'Напор: Коэфф.', exact: true })).toHaveTextContent('3');
+    await expect(canvas.getByText('Импульс', { exact: true }).parentElement).toHaveTextContent('1');
+    await expect(canvas.getByText('Действия', { exact: true }).parentElement).toHaveTextContent('3');
+    await expect(canvas.getByText('18 / 40', { exact: true })).toBeVisible();
+
+    await userEvent.click(canvas.getByRole('button', { name: 'Напор: Коэфф.', exact: true }));
+    const coefficients = within(canvas.getByRole('dialog', { name: 'Коэффициенты · Напор' }));
+    await expect(coefficients.getByRole('heading', { name: 'Результат: 9' })).toBeVisible();
+    await userEvent.click(coefficients.getByRole('button', { name: 'Закрыть', exact: true }));
+
+    await userEvent.click(canvas.getByRole('button', { name: 'Макс. здоровье', exact: true }));
+    const currentHealth = canvas.getByRole('spinbutton', { name: 'Здоровье', exact: true });
+    await userEvent.clear(currentHealth);
+    await userEvent.type(currentHealth, '27');
+    await userEvent.tab();
+    await expect(canvas.getByText('27 / 40', { exact: true })).toBeVisible();
+    const healthPanel = within(canvas.getByRole('dialog', { name: 'Макс. здоровье' }));
+    await userEvent.click(healthPanel.getByRole('button', { name: 'Закрыть', exact: true }));
+    await userEvent.click(canvas.getByRole('button', { name: 'Лечение', exact: true }));
+    const healingPanel = within(canvas.getByRole('dialog', { name: 'Лечение' }));
+    await expect(healingPanel.getByText('1КЗ = 4', { exact: true })).toBeVisible();
+    const amount = healingPanel.getByRole('spinbutton', { name: 'Количество коэффициентов' });
+    await userEvent.clear(amount);
+    await userEvent.type(amount, '3');
+    await userEvent.click(healingPanel.getByRole('button', { name: 'Применить', exact: true }));
+    await expect(canvas.getByText('39 / 40', { exact: true })).toBeVisible();
+  }}
+/>
+<Story
   name="Independent sheets"
   asChild
   play={async ({ canvasElement }) => {

@@ -24,3 +24,6 @@ export class CharacterApp extends SvelteActorSheet {
     return super.getData();
   }
 }
+
+// Keep the registered sheet ID used by existing NPCs.
+export class NpcApp extends CharacterApp {}

@@ -74,6 +74,9 @@
 </script>
 
 <div class="ability-tree">
+  <div class="ability-count-bar">
+    <span class="ability-count">{abilityCount} {getPluralForm(abilityCount)}</span>
+  </div>
   <div class="search-wrapper">
     <TreeWithSearch
       items={flatItems}
@@ -85,9 +88,6 @@
       onDelete={handleDelete}
       onStateChange={handleStateChange}
     />
-    <div class="ability-count-bar">
-      <span class="ability-count">{abilityCount} {getPluralForm(abilityCount)}</span>
-    </div>
   </div>
 </div>
 
@@ -95,8 +95,9 @@
   .ability-tree {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    gap: 0.5rem;
     width: 100%;
+    min-height: 12rem;
   }
 
   .search-wrapper {
@@ -110,15 +111,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0.5rem;
-    background: rgba(59, 130, 246, 0.15);
-    border-radius: 4px;
-    margin-bottom: 0.5rem;
+    padding: 0.45rem;
+    background: var(--shw-glass-fill-tint, rgb(72 48 112 / 32%));
+    border: 1px solid var(--shw-color-border, #4a425c);
+    border-radius: 0;
   }
 
   .ability-count {
     font-size: 13px;
-    color: #1a1a1a;
+    color: var(--shw-color-text, #e8e4f0);
     font-weight: 600;
+    font-family: var(--shw-font, inherit);
   }
 </style>

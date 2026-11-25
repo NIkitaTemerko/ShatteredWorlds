@@ -30,7 +30,7 @@
   }
 </script>
 
-<div class="uses-control" style="--dark: #8B5CF6; --light: #EDE9FE">
+<div class="uses-control">
   <div class="control-header">
     <span class="control-label">{t("controls.uses")}</span>
   </div>
@@ -65,15 +65,19 @@
     display: flex;
     flex-direction: column;
     gap: 0;
+    border: 1px solid var(--shw-color-border-bright, #6e6488);
+    box-shadow: var(--shw-shadow-panel);
+    font-family: var(--shw-font, inherit);
   }
 
   .control-header {
-    background: var(--dark, #666);
-    color: #000;
-    padding: 0.35rem 0.25rem;
+    background: var(--shw-glass-fill-strong, rgb(90 50 140 / 42%));
+    color: var(--shw-color-text, #e8e4f0);
+    padding: 0.4rem 0.35rem;
     font-weight: 700;
-    font-size: var(--font-size-14, 14px);
+    font-size: 13px;
     text-align: center;
+    border-bottom: 1px solid var(--shw-color-border, #4a425c);
   }
 
   .control-label {
@@ -83,35 +87,35 @@
   .control-body {
     display: flex;
     flex-direction: column;
-    gap: 0;
-    background: var(--light, #f0f0f0);
-    padding: 0.35rem 0.25rem;
+    gap: 0.35rem;
+    background: var(--shw-glass-fill-tint, rgb(72 48 112 / 32%));
+    padding: 0.45rem 0.35rem;
+    overflow: hidden;
+    min-width: 0;
   }
 
   .uses-inputs {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    background: transparent;
-    padding: 0;
+    justify-content: center;
+    gap: 0.35rem;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
   }
 
-  .uses-inputs :global(.uses-input) {
-    flex: 1 1 0%;
+  .uses-inputs :global(.uses-input),
+  .uses-inputs :global(.shw-input-root) {
+    flex: 0 1 3.5rem;
+    width: 3.5rem;
+    min-width: 0;
+    max-width: 3.5rem;
   }
 
   .divider {
+    flex: 0 0 auto;
     font-weight: 700;
     pointer-events: none;
-    color: #000;
-  }
-
-  .control-body :global(.shw-select) {
-    background: transparent;
-  }
-
-  .control-body :global(.shw-input) {
-    background: transparent;
-    padding: 0.25rem 0;
+    color: var(--shw-color-text-muted, #9a93ad);
   }
 </style>

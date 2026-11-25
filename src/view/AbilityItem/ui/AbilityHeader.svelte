@@ -47,7 +47,7 @@
     />
 
     <div class="type-wrapper">
-      <span class="type-label">{t("ability.header.categoryLabel")}</span>
+      <span class="type-label">{t("common.categoryLabel")}</span>
       <SelectInput
         value={system.category}
         options={ABILITY_CATEGORIES}
@@ -57,7 +57,7 @@
     </div>
 
     <div class="type-wrapper">
-      <span class="kind-label">{t("ability.header.kindLabel")}</span>
+      <span class="kind-label">{t("common.typeLabel")}</span>
       <SelectInput
         value={system.category === "active" ? system.activeKind : system.passiveKind}
         options={kindOptions}

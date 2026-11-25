@@ -162,7 +162,7 @@
           },
         },
         cancel: {
-          label: t("shop.dialogs.cancel"),
+          label: t("common.cancel"),
         },
       },
       default: "ok",
@@ -232,7 +232,7 @@
           },
         },
         cancel: {
-          label: t("shop.dialogs.cancel"),
+          label: t("common.cancel"),
         },
       },
       default: "ok",

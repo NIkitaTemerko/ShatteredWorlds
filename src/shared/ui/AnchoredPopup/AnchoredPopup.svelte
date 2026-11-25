@@ -3,6 +3,7 @@
 </script>
 
 <script lang="ts">
+  import { Popover } from 'bits-ui';
   import type { Snippet } from 'svelte';
 
   interface Props {
@@ -27,9 +28,6 @@
     panelClass = '',
   }: Props = $props();
 
-  let top = $state(0);
-  let left = $state(0);
-  let popupEl = $state<HTMLElement | null>(null);
   let leaveTimer: ReturnType<typeof setTimeout> | null = null;
 
   function cancelLeaveTimer() {
@@ -39,106 +37,84 @@
     }
   }
 
-  function handleMouseLeave() {
+  function scheduleClose() {
     if (triggerMode !== 'hover') return;
     cancelLeaveTimer();
-    leaveTimer = setTimeout(() => {
-      onClose();
-    }, 300);
+    leaveTimer = setTimeout(() => onClose(), 300);
   }
 
-  function handleMouseEnter() {
-    cancelLeaveTimer();
-  }
-
-  function portal(node: HTMLElement) {
-    document.body.appendChild(node);
-    return {
-      destroy() {
-        node.remove();
-      },
-    };
-  }
-
-  function isEventInsidePopup(event: Event, currentPopupId: string): boolean {
-    const target = event.target;
-    if (target instanceof Node) {
-      if (popupEl?.contains(target)) return true;
-      if (anchorEl?.contains(target)) return true;
-    }
-
-    const path = event.composedPath();
-    if (anchorEl && path.includes(anchorEl)) return true;
-    return path.some(
-      (node) =>
-        node instanceof Element && node.getAttribute('data-popup-id') === currentPopupId,
-    );
+  function handleOpenChange(next: boolean) {
+    if (!next) onClose();
   }
 
   $effect(() => {
-    if (!open) return;
+    if (!open) {
+      cancelLeaveTimer();
+      return;
+    }
 
     closeActivePopup();
     setActivePopupClose(onClose);
 
-    if (anchorEl) {
-      const rect = anchorEl.getBoundingClientRect();
-      top = rect.bottom + 2;
-      left = rect.left + rect.width / 2;
-
-      if (triggerMode === 'hover') {
-        anchorEl.addEventListener('mouseenter', handleMouseEnter);
-        anchorEl.addEventListener('mouseleave', handleMouseLeave);
-      }
+    if (triggerMode === 'hover' && anchorEl) {
+      anchorEl.addEventListener('mouseenter', cancelLeaveTimer);
+      anchorEl.addEventListener('mouseleave', scheduleClose);
     }
 
-    const currentPopupId = popupId;
-    const handleDocPointerDown = (e: PointerEvent) => {
-      if (isEventInsidePopup(e, currentPopupId)) return;
-      onClose();
-    };
-
-    const timeoutId = setTimeout(() => {
-      document.addEventListener('pointerdown', handleDocPointerDown, true);
-    }, 0);
-
     return () => {
-      clearTimeout(timeoutId);
       cancelLeaveTimer();
-      document.removeEventListener('pointerdown', handleDocPointerDown, true);
-      if (anchorEl && triggerMode === 'hover') {
-        anchorEl.removeEventListener('mouseenter', handleMouseEnter);
-        anchorEl.removeEventListener('mouseleave', handleMouseLeave);
+      if (triggerMode === 'hover' && anchorEl) {
+        anchorEl.removeEventListener('mouseenter', cancelLeaveTimer);
+        anchorEl.removeEventListener('mouseleave', scheduleClose);
       }
       setActivePopupClose(null);
     };
   });
 </script>
 
-{#if open}
-  <div
-    bind:this={popupEl}
-    use:portal
-    data-popup-id={popupId}
-    {role}
-    tabindex="-1"
-    style="position: fixed; top: {top}px; left: {left}px; transform: translateX(-50%); z-index: 999999; pointer-events: auto;"
-    onpointerdown={(e) => e.stopPropagation()}
-    onmouseleave={handleMouseLeave}
-    onmouseenter={handleMouseEnter}
-  >
-    <div class="anchored-popup-panel {panelClass}">
+<Popover.Root {open} onOpenChange={handleOpenChange}>
+  <Popover.Portal>
+    <Popover.Content
+      class="shw-anchored-popup {panelClass}"
+      data-popup-id={popupId}
+      {role}
+      customAnchor={anchorEl}
+      side="bottom"
+      align="center"
+      sideOffset={2}
+      trapFocus={false}
+      preventScroll={false}
+      onInteractOutside={(event) => {
+        if (anchorEl && event.target instanceof Node && anchorEl.contains(event.target)) {
+          event.preventDefault();
+        }
+      }}
+      onmouseenter={cancelLeaveTimer}
+      onmouseleave={scheduleClose}
+    >
       {@render children()}
-    </div>
-  </div>
-{/if}
+    </Popover.Content>
+  </Popover.Portal>
+</Popover.Root>
 
 <style>
-  .anchored-popup-panel {
+  :global(.shw-anchored-popup) {
+    z-index: var(--shw-z-popover, 100000);
     min-width: 180px;
-    background: #fff;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--shw-color-border-bright, #6e6488);
+    border-radius: 0;
+    background: rgb(28 24 40 / 96%);
+    color: var(--shw-color-text, #e8e4f0);
+    box-shadow: var(--shw-shadow-panel, 0 10px 28px rgb(0 0 0 / 40%));
+    outline: none;
+    padding: 0.5rem;
+  }
+
+  :global(.shw-anchored-popup.anchored-popup-panel--bare) {
+    min-width: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    box-shadow: none;
   }
 </style>

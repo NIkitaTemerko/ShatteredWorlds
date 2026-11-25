@@ -1,7 +1,7 @@
 import type { ShwActor } from '../../../documents/Actor/ShwActor';
 import type { ActorCombatState } from '../../model/damage/types';
 
-export function getActorCombatState(actor: ShwActor<'character'> | ShwActor<'npc'>): ActorCombatState {
+export function getActorCombatState(actor: ShwActor): ActorCombatState {
   const sys = actor.system;
   const totals = sys.totals;
   const attrs = sys.additionalAttributes;

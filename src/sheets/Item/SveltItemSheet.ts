@@ -17,6 +17,18 @@ export class ShwItemSheet extends foundry.appv1.sheets.ItemSheet {
 
   /** Потомок должен объявить:  static Shell = RootItemShell; */
   static Shell: Component<any>;
+  static preserveSvelteOnUpdate = false;
+
+  override render(force?: boolean, options?: object): this {
+    if ((this.constructor as typeof ShwItemSheet).preserveSvelteOnUpdate && this.rendered && !force) {
+      // Keep Foundry's UUID link inside the title while updating its text.
+      const title = this.element.find('.window-title')[0];
+      const text = Array.from(title?.childNodes ?? []).find(node => node.nodeType === Node.TEXT_NODE);
+      if (text) text.textContent = this.title;
+      return this;
+    }
+    return super.render(force, options);
+  }
 
   static override get defaultOptions() {
     return foundry.utils.mergeObject(foundry.appv1.sheets.ItemSheet.defaultOptions, {

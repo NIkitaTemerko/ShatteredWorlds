@@ -21,12 +21,13 @@ export const saveTypes = [
   { value: 'presence', label: 'присутствие' },
 ];
 
+/** Crystal triad accents for consumable type chrome. */
 export const typeColors = {
-  potion: { dark: '#198754', light: '#80d9b3' },
-  bomb: { dark: '#d7263d', light: '#ff9aa5' },
-  scroll: { dark: '#8e44ad', light: '#c39bd3' },
-  food: { dark: '#f08c00', light: '#ffd580' },
-  poison: { dark: '#6c757d', light: '#dee2e6' },
+  potion: { dark: '#2a9b8f', light: 'rgb(42 155 143 / 28%)' },
+  bomb: { dark: '#c45a6a', light: 'rgb(196 90 106 / 28%)' },
+  scroll: { dark: '#8b4fc9', light: 'rgb(139 79 201 / 28%)' },
+  food: { dark: '#c4922a', light: 'rgb(196 146 42 / 28%)' },
+  poison: { dark: '#6e6488', light: 'rgb(74 66 92 / 35%)' },
 };
 
 export const activationTypes = [

@@ -1,5 +1,20 @@
 {
   "SHW": {
+    "common": {
+      "delete": "Удалить",
+      "clearSearch": "Очистить поиск",
+      "difficulty": "Сложность",
+      "radius": "Радиус",
+      "save": "Сохранить",
+      "categoryLabel": "Категория:",
+      "duration": "Длительность",
+      "typeLabel": "Тип:",
+      "deleteItemConfirmation": "Вы уверены, что хотите удалить <strong>{name}</strong>?",
+      "cancel": "Отмена",
+      "close": "Закрыть",
+      "operation": "Операция",
+      "edit": "Редактировать"
+    },
     "attributes": {
       "natural": "Натуральный",
       "fortune": "Фортуна",
@@ -24,10 +39,7 @@
     },
     "tabs": {
       "stats": "Статистика",
-      "inventory": "Инвентарь",
-      "equipment": "Экипировка",
-      "spells": "Заклинания",
-      "abilities": "Способности"
+      "inventory": "Инвентарь"
     },
     "additionalAttributes": {
       "actions": "Действия",
@@ -87,8 +99,7 @@
     },
     "item": {
       "header": {
-        "namePlaceholder": "Название предмета",
-        "typeLabel": "Тип:"
+        "namePlaceholder": "Название предмета"
       },
       "description": {
         "title": "Описание",
@@ -102,26 +113,17 @@
         "stack": "Стек"
       },
       "bomb": {
-        "damage": "Урон",
         "damageType": "Тип урона",
-        "radius": "Радиус",
-        "save": "Спасбросок",
-        "difficulty": "Сложность"
+        "save": "Спасбросок"
       },
       "poison": {
         "initialDamage": "Начальный урон",
         "repeatDamage": "Повтор. урон",
-        "duration": "Длительность",
-        "save": "Спасбросок",
-        "difficulty": "Сложность",
         "application": "Применение"
       },
       "scroll": {
-        "spellName": "Название заклинания",
-        "level": "Уровень",
         "school": "Школа",
-        "requiredAttribute": "Треб. характеристика",
-        "difficulty": "Сложность"
+        "requiredAttribute": "Треб. характеристика"
       },
       "potionFood": {
         "nutritionTitle": "Пищевая ценность",
@@ -130,9 +132,7 @@
         "effectsTitle": "Эффекты",
         "addEffect": "+ Добавить",
         "effectType": "Тип",
-        "effectBonus": "Бонус",
         "effectStrength": "Сила",
-        "effectDuration": "Длительность",
         "effectAttribute": "Атрибут",
         "defaultEffect": "бафф"
       }
@@ -174,18 +174,11 @@
       "linkedAbilityDeleteHint": "Эта способность привязана к экипировке. Удалите привязку на листе предмета.",
       "menu": {
         "unequip": "Снять"
-      },
-      "itemPlurals": {
-        "one": "предмет",
-        "few": "предмета",
-        "many": "предметов"
       }
     },
     "ability": {
       "header": {
-        "namePlaceholder": "Название способности",
-        "categoryLabel": "Категория:",
-        "kindLabel": "Тип:"
+        "namePlaceholder": "Название способности"
       },
       "category": {
         "active": "Активные",
@@ -197,8 +190,6 @@
         "support": "Поддержка",
         "debuff": "Дебафф",
         "control": "Контроль",
-        "movement": "Перемещение",
-        "summon": "Призыв",
         "utility": "Утилита"
       },
       "passiveKind": {
@@ -234,7 +225,6 @@
         "range": "Дальность и цели",
         "rangeKind": "Дальность",
         "rangeDistance": "Расстояние",
-        "areaRadius": "Радиус",
         "areaShape": "Форма",
         "targetType": "Цель",
         "maxTargets": "Макс. целей"
@@ -300,7 +290,7 @@
       "nameLabel": "Имя:",
       "levelLabel": "Предел",
       "applyDamage": "Нанести урон",
-      "attributeBonus": "Бонус характеристики",
+      "attributeBonus": "Бонус хар-ки",
       "additionalAttribute": "Доп. {attribute}",
       "saveThrow": "СБ‑{attribute}",
       "statInfo": "Подробнее о стате",
@@ -320,9 +310,8 @@
         "copy": "Копировать",
         "final": "Конечный коэффициент",
         "calculation": "Расчёт коэффициента",
-        "info": "Коэффициент составляет 25% от дополнительной характеристики",
-        "healthInfo": "Коэффициент здоровья составляет 10% от максимального HP",
-        "formula": "Итог доп. {total} ÷ 4 = {result}"
+        "info": "1К = {percent}% от значения в колонке «Доп.» с округлением вниз. В расчёт берётся не больше {max}.",
+        "healthInfo": "Коэффициент здоровья составляет 10% от максимального HP"
       },
       "barrier": {
         "current": "Текущий барьер",
@@ -330,7 +319,6 @@
       },
       "damage": {
         "addEntry": "+ Добавить урон",
-        "apply": "Применить",
         "preview": "Предпросмотр: −{barrier} барьер, −{health} HP",
         "previewWithOneTimeBarrier": "Предпросмотр: −{oneTimeBarrier} разовый барьер, −{barrier} барьер, −{health} HP",
         "oneTimeBarrier": "Разовый барьер",
@@ -368,10 +356,6 @@
       }
     },
     "roll": {
-      "base": "База",
-      "bonus": "Бонус",
-      "actions": "Действия",
-      "rollLabel": "Бросок",
       "saveRollLabel": "Бросок защиты",
       "advantage": "Преимущество",
       "normal": "Обычный",
@@ -387,12 +371,9 @@
       "searchPlaceholder": "Поиск предметов...",
       "itemsCount": "{count}",
       "deleteConfirmTitle": "Удалить предмет",
-      "deleteConfirmContent": "Вы уверены, что хотите удалить <strong>{name}</strong>?",
       "deleteItem": "Удалить предмет",
-      "clearSearch": "Очистить поиск",
       "categories": {
         "consumable": "Расходники",
-        "ability": "Способности",
         "weapon": "Оружие",
         "equipment": "Снаряжение",
         "treasure": "Сокровища",
@@ -411,21 +392,17 @@
         "many": "предметов"
       },
       "menu": {
-        "edit": "Редактировать",
         "duplicate": "Дублировать",
         "quantity": "Кол-во",
-        "equip": "Надеть",
-        "delete": "Удалить"
+        "equip": "Надеть"
       }
     },
     "abilities": {
       "searchPlaceholder": "Поиск способностей...",
       "abilitiesCount": "{count} способностей",
       "deleteConfirmTitle": "Удалить способность",
-      "deleteConfirmContent": "Вы уверены, что хотите удалить <strong>{name}</strong>?",
       "deleteAbility": "Удалить способность",
       "equipmentLinkedDeleteTooltip": "Способность от экипировки ({equipment}). Чтобы убрать её, снимите предмет.",
-      "clearSearch": "Очистить поиск",
       "abilityPlurals": {
         "one": "способность",
         "few": "способности",
@@ -434,9 +411,7 @@
     },
     "spell": {
       "header": {
-        "namePlaceholder": "Название заклинания",
-        "categoryLabel": "Категория:",
-        "kindLabel": "Тип:"
+        "namePlaceholder": "Название заклинания"
       },
       "category": {
         "code": "Кодовая",
@@ -445,57 +420,10 @@
         "holy": "Святая",
         "arcane": "Магическая"
       },
-      "spellKind": {
-        "attack": "Атака",
-        "heal": "Лечение",
-        "support": "Поддержка",
-        "debuff": "Дебафф",
-        "control": "Контроль",
-        "movement": "Перемещение",
-        "summon": "Призыв",
-        "utility": "Утилита"
-      },
       "currentRank": "Текущий ранг",
       "maxRank": "Макс. ранг",
-      "actionType": {
-        "label": "Тип действия",
-        "action": "Действие",
-        "bonus": "Бонус",
-        "reaction": "Реакция",
-        "free": "Свободное"
-      },
-      "castTime": "Время каста",
-      "rangeKind": {
-        "label": "Дальность",
-        "self": "На себя",
-        "melee": "Ближний бой",
-        "ranged": "Дальний бой",
-        "area": "Область"
-      },
-      "range": {
-        "distance": "Расстояние",
-        "title": "Дальность и цели",
-        "radius": "Радиус",
-        "shape": "Форма",
-        "shapeCircle": "Круг",
-        "shapeCone": "Конус",
-        "shapeLine": "Линия"
-      },
       "targetType": {
-        "label": "Тип цели",
-        "self": "Себя",
-        "ally": "Союзник",
-        "enemy": "Враг",
-        "any": "Любой"
-      },
-      "maxTargets": "Макс. целей",
-      "requiresLOS": "Требует видимость",
-      "channeled": "Поддерживаемая",
-      "togglable": "Переключаемая",
-      "usesPerRest": "Использ./отдых",
-      "usesPerEncounter": "Использ./бой",
-      "uses": {
-        "title": "Использования и переключения"
+        "label": "Тип цели"
       },
       "details": {
         "title": "Детали заклинания"
@@ -505,9 +433,7 @@
       "searchPlaceholder": "Поиск заклинаний...",
       "spellsCount": "{count} заклинаний",
       "deleteConfirmTitle": "Удалить заклинание",
-      "deleteConfirmContent": "Вы уверены, что хотите удалить <strong>{name}</strong>?",
       "deleteSpell": "Удалить заклинание",
-      "clearSearch": "Очистить поиск",
       "spellPlurals": {
         "one": "заклинание",
         "few": "заклинания",
@@ -518,13 +444,10 @@
       "merchantItem": {
         "title": "Редактировать предмет",
         "merchant": "Торговец",
-        "price": "Цена",
         "quantity": "Количество",
         "quantityHelp": "-1 для неограниченного количества",
         "quantityPlaceholder": "-1 для неограниченного",
         "pricePlaceholder": "Цена предмета",
-        "cancel": "Отмена",
-        "save": "Сохранить",
         "unknownItem": "Неизвестный предмет",
         "errorOpenItem": "Не удалось открыть предмет"
       },
@@ -555,7 +478,6 @@
         "merchantLocation": "Локация торговца:",
         "rootLocation": "(Корень)",
         "create": "Создать",
-        "cancel": "Отмена",
         "add": "Добавить",
         "priceLabel": "Цена:",
         "quantityLabel": "Количество (-1 для неограниченного):",
@@ -585,13 +507,6 @@
       "copyForAi": "Скопировать для ИИ",
       "placeholder": "Или вставьте JSON массив предметов здесь...",
       "typesForSchema": "Типы в схеме",
-      "types": {
-        "consumable": "Расходники",
-        "ability": "Способности",
-        "spell": "Заклинания",
-        "equipment": "Снаряжение",
-        "resource": "Ресурсы"
-      },
       "skipImages": "Пропустить изображения",
       "error": "Ошибка:",
       "copyFailed": "Не удалось скопировать в буфер обмена",
@@ -615,7 +530,6 @@
       "validate": "Проверить",
       "dryRun": "Сухой прогон",
       "importBtn": "Импортировать",
-      "close": "Закрыть",
       "processing": "...",
       "parseError": "Ошибка парсинга",
       "importSuccess": "Импорт: {created} создано, {updated} обновлено",
@@ -624,7 +538,6 @@
     "resource": {
       "header": {
         "namePlaceholder": "Название ресурса",
-        "categoryLabel": "Категория:",
         "typeLabel": "Тип ресурса",
         "typePlaceholder": "Выберите или введите тип..."
       },
@@ -693,13 +606,170 @@
         "placeholderKey": "Ключ",
         "placeholderName": "Название",
         "placeholderIcon": "fa-solid fa-gem",
-        "save": "Сохранить",
         "saving": "Сохранение...",
         "reset": "Сбросить",
         "unsaved": "Несохранённые изменения",
         "saved": "Настройки ресурсов сохранены",
         "saveError": "Ошибка сохранения настроек"
       }
+    },
+    "newUi": {
+      "sections": "Разделы персонажа",
+      "stats": "Персонаж",
+      "inventory": "Вещи",
+      "spells": "Заклинания",
+      "abilities": "Способности",
+      "editCharacter": "Правка персонажа",
+      "level": "Предел",
+      "hp": "ОЗ",
+      "addBarrier": "Добавить барьер",
+      "heal": "Лечение",
+      "coefficientCount": "Количество коэффициентов",
+      "amount": "Количество",
+      "result": "Результат",
+      "apply": "Применить",
+      "attributes": "Характеристики",
+      "sources": "Источники и коэффициенты",
+      "parameter": "Параметр",
+      "total": "Знач.",
+      "extra": "Доп.",
+      "coefficient": "Коэфф.",
+      "bonus": "Бонус",
+      "save": "СБ",
+      "normalBarrier": "Обыч. барьер",
+      "coefficients": "Коэффициенты",
+      "sourcesHint": "Выберите показатель в таблице, чтобы посмотреть его источники или рассчитать коэффициенты.",
+      "howCalculated": "Как рассчитано",
+      "copy": "Скопировать",
+      "copied": "Скопировано",
+      "roll": "Бросок",
+      "attribute": "Характеристика",
+      "die": "Кость",
+      "rollBonus": "Доп. бонус",
+      "rollCount": "Бросков",
+      "formula": "Формула",
+      "rollMode": "Режим броска",
+      "editHint": "Все параметры — в разделах ниже. Изменения применяются вместе.",
+      "mainAttributes": "Основные",
+      "additionalAttributes": "Дополнительные",
+      "manualExtra": "Ручн. доп.",
+      "speedExtra": "Ручной бонус скорости",
+      "healthExtra": "Ручной бонус ОЗ",
+      "cancel": "Отменить",
+      "invalidValues": "Введите имя и конечные числовые значения. Предел должен быть не меньше 1.",
+      "changeEquipment": "Сменить экипировку",
+      "search": "Название или описание",
+      "allSchools": "Все школы",
+      "all": "Все",
+      "equipped": "Надето",
+      "backpack": "В рюкзаке",
+      "own": "Свои",
+      "fromEquipment": "От экипировки",
+      "collapseAll": "Свернуть всё",
+      "equipmentHint": "В разделе «Надето» отметьте, что снять. В рюкзаке отметьте, что надеть.",
+      "source": "Источник",
+      "ownAbility": "Собственная способность",
+      "open": "Открыть",
+      "noResults": "Ничего не найдено. Попробуйте другой запрос.",
+      "empty": "Здесь пока ничего нет.",
+      "selectedChanges": "Изменений",
+      "reviewChanges": "Проверить выбранную смену",
+      "noDescription": "Описание не добавлено.",
+      "fullSheet": "Карточка",
+      "linkedHint": "Способность получена от надетой экипировки. Измените предмет-источник, чтобы убрать её.",
+      "bonusActionsShort": "Бонусные",
+      "absorptionShort": "Поглощение",
+      "rangeShort": "Бон. дальность",
+      "massShort": "Масса",
+      "executeRoll": "Бросить",
+      "saveRoll": "Спасбросок",
+      "unsavedChanges": "Сохранить изменения?",
+      "discard": "Не сохранять",
+      "return": "Вернуться",
+      "damageRow": "Строка урона",
+      "reorderDamage": "Переставить строку (стрелки вверх/вниз)",
+      "damageType": "Тип урона",
+      "fallHeight": "Высота падения",
+      "damageAmount": "Урон",
+      "removeDamage": "Удалить строку",
+      "oneSequenceOnly": "Только для этой последовательности",
+      "addDamageRow": "Добавить строку",
+      "applyDamage": "Применить урон",
+      "armorDefense": "Защита",
+      "psiDefense": "Пси-защита",
+      "applicationParameters": "Параметры применения",
+      "effectsAndCosts": "Эффекты, формулы и затраты",
+      "maxTargets": "Максимум целей (all — все)",
+      "effect": "Эффект",
+      "effect_damage": "Урон",
+      "effect_heal": "Лечение",
+      "effect_buff": "Усиление",
+      "effect_debuff": "Ослабление",
+      "effect_movement": "Перемещение",
+      "effect_summon": "Призыв",
+      "effect_custom": "Особый",
+      "resource": "Затраты ресурса",
+      "resource_divinity": "Божественность",
+      "resource_karma": "Карма",
+      "resource_mana": "Мана",
+      "resource_void": "Пустота",
+      "resource_energy": "Энергия",
+      "resource_stack": "Заряды",
+      "itemName": "Название",
+      "condition": "Условие",
+      "move_dash": "Рывок",
+      "move_teleport": "Телепортация",
+      "move_push": "Отталкивание",
+      "move_pull": "Притягивание",
+      "creatureId": "ID существа",
+      "hasUnsavedChanges": "Есть несохранённые изменения"
+    },
+    "itemUi": {
+      "properties": "Свойства",
+      "catalog": "Предмет",
+      "saving": "Сохранение…",
+      "saveFailed": "Не удалось сохранить изменения. Повторите попытку.",
+      "retry": "Повторить",
+      "editImage": "Изменить изображение",
+      "itemName": "Название предмета",
+      "noBonuses": "Нет бонусов",
+      "addBonus": "Добавить бонус",
+      "bonusHint": "Добавьте параметр, который изменяет предмет.",
+      "parameter": "Параметр",
+      "value": "Значение",
+      "removeBonus": "Удалить бонус",
+      "linked": "Связанные предметы",
+      "dropHint": "Перетащите способность или заклинание",
+      "dropSource": "Из каталога Foundry",
+      "missingLink": "Связанный предмет удалён",
+      "removeLink": "Удалить связь",
+      "wrongDrop": "Можно связать только способности и заклинания из каталога мира.",
+      "duplicateLink": "Этот предмет уже связан.",
+      "addEffect": "Добавить эффект",
+      "removeEffect": "Удалить эффект",
+      "noEffects": "Нет эффектов",
+      "instant": "Мгновенно",
+      "primaryEffect": "Основной эффект",
+      "areaDamage": "Урон по области",
+      "poisonDamage": "Поражение ядом",
+      "changeType": "Сменить вид расходника?",
+      "changeTypeHint": "Общие свойства сохранятся. Эффекты и специальные параметры будут заменены значениями нового вида.",
+      "confirmType": "Сменить вид",
+      "autoSave": "Изменения сохраняются автоматически",
+      "typeHint": "Выберите готовый тип или введите собственное название.",
+      "stock": "Запас",
+      "readonly": "Только просмотр",
+      "cure": "Исцеление состояния",
+      "initialRecurring": "Начальный → периодический урон",
+      "explosion": "Параметры взрыва",
+      "poisonParameters": "Урон и применение",
+      "requirements": "Требования к использованию",
+      "epic": "Эпический",
+      "cost": "Стоимость",
+      "uses": "Использования",
+      "remaining": "Осталось",
+      "maximum": "Максимум",
+      "unit": "Единица"
     }
   }
 }

@@ -22,7 +22,7 @@
 {#if system.consumableType === "bomb" && system.damage !== undefined && system.save !== undefined}
   <StatsCard columns={3} borderColor="rgba(215, 38, 61, 0.5)">
     <div class="stat-col">
-      <div class="stat-header">{t("item.bomb.damage")}</div>
+      <div class="stat-header">{t("newUi.damageAmount")}</div>
       <div class="stat-body">
         <Input
           type="number"
@@ -50,7 +50,7 @@
     </div>
 
     <div class="stat-col">
-      <div class="stat-header">{t("item.bomb.radius")}</div>
+      <div class="stat-header">{t("common.radius")}</div>
       <div class="stat-body">
         <Input
           type="number"
@@ -78,7 +78,7 @@
     </div>
 
     <div class="stat-col">
-      <div class="stat-header">{t("item.bomb.difficulty")}</div>
+      <div class="stat-header">{t("common.difficulty")}</div>
       <div class="stat-body">
         <Input
           type="number"

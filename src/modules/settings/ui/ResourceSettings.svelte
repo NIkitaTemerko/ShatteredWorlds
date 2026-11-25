@@ -111,7 +111,7 @@
       {/if}
       <button type="button" onclick={persistence.handleSave} disabled={persistence.isSaving || !persistence.hasChanges}>
         <i class="fas fa-save"></i>
-        {persistence.isSaving ? t("settings.resources.saving") : t("settings.resources.save")}
+        {persistence.isSaving ? t("settings.resources.saving") : t("common.save")}
       </button>
     </div>
   </footer>

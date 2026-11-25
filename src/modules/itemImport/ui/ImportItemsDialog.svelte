@@ -3,7 +3,7 @@
   import { generateSchemaPrompt, generateErrorPrompt, generateIconsPrompt } from "../prompts";
   import { IMPORT_ITEM_TYPES } from "../model";
   import type { ValidationReport, ImportReport, ShwItemType } from "../model";
-  import { t, localize } from "../../../shared/i18n";
+  import { t, localize, type I18nKey } from "../../../shared/i18n";
   import { loadFoundryIcons } from "../../../shared/data/foundryIconsLoader";
   import { getSchemas } from "../model/schemas";
 
@@ -25,6 +25,13 @@
   let errorMessage = $state("");
   let copySuccess = $state("");
   let selectedType = $state<ShwItemType>(IMPORT_ITEM_TYPES[0]);
+  const itemTypeLabels: Record<ShwItemType, I18nKey> = {
+    consumable: "inventory.categories.consumable",
+    ability: "newUi.abilities",
+    spell: "newUi.spells",
+    equipment: "inventory.categories.equipment",
+    resource: "inventory.categories.resource",
+  };
 
   function selectType(type: ShwItemType) {
     selectedType = type;
@@ -122,7 +129,7 @@
         <div class="type-chips">
           {#each IMPORT_ITEM_TYPES as type}
             <button class="type-chip" class:active={selectedType === type} onclick={() => selectType(type)}>
-              {t(`import.types.${type}`)}
+              {t(itemTypeLabels[type])}
             </button>
           {/each}
         </div>
@@ -243,7 +250,7 @@
       <button onclick={() => runImport(false)} disabled={!jsonText || isProcessing} class="btn-primary">
         {isProcessing ? t("import.processing") : t("import.importBtn")}
       </button>
-      <button onclick={onClose} disabled={isProcessing} class="btn-cancel">{t("import.close")}</button>
+      <button onclick={onClose} disabled={isProcessing} class="btn-cancel">{t("common.close")}</button>
     </div>
   </div>
 </div>

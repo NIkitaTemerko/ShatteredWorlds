@@ -152,5 +152,34 @@ src/
 > Удачных приключений в обломках миров! 🚀
 
 <!-- manifest-start -->
-**Changelog**: [v0.12.18](https://github.com/NIkitaTemerko/ShatteredWorlds/releases/tag/v0.12.18)
+**Changelog**: [v0.13.0](https://github.com/NIkitaTemerko/ShatteredWorlds/releases/tag/v0.13.0)
 <!-- manifest-end -->
+
+## Storybook — новый интерфейс персонажа
+
+```bash
+pnpm storybook
+```
+
+Откройте [Sheets / Character](http://localhost:6006/?path=/story/sheets-character--default).
+Истории `Items`, `Spells`, `Abilities`, `Edit character`, `Empty health` и
+`Barrier overcharge` показывают актуальные экраны Penpot и состояния ресурсов.
+Истории `Foundry window` и `Foundry items` используют оконную оболочку, стили
+системы и характерные стили кнопок Foundry. В них автоматически проверяются
+шрифты, высота кнопок ресурсов и выравнивание строк предметов.
+В демонстрации работают поиск, фильтры, описания, правка, надевание/снятие,
+пакетная смена экипировки, лечение и расчёт урона. Изменения остаются в памяти
+Storybook; перезагрузка возвращает исходный пример. Броски показывают уведомление,
+а в Foundry используют обычный `actor.roll`.
+
+```bash
+pnpm test:character
+pnpm tsc:check
+pnpm build-storybook
+```
+
+Панели нового листа также доступны отдельными историями: **Foundry damage**, **Foundry fall damage**,
+**Foundry sources**, **Foundry coefficient**, **Foundry healing**, **Foundry ability editor**.
+Урон использует общий боевой расчёт и новый интерфейс строк; перетаскивание и стрелки вверх/вниз
+на маркере меняют порядок применения. Правка способности сохраняет черновик целиком по кнопке
+«Сохранить»; смена вкладки предупреждает о несохранённых изменениях.

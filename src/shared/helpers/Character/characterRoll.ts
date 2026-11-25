@@ -1,7 +1,11 @@
 import type { ShwActor } from '../../../documents/Actor/ShwActor';
-import type { ShwActorSystem } from '../../../documents/Actor/types/ShwActorSystem';
 import { localize, t } from '../../i18n';
 import { STAT_NAME_KEYS } from '../../model/constants/characterDefaults';
+import {
+  buildCharacterRollExpression,
+  type RollAttribute,
+  type RollMode,
+} from './buildCharacterRollExpression';
 
 interface RollResultLike {
   total?: number | null;
@@ -18,45 +22,23 @@ const hasPoolRolls = (term: unknown): term is PoolTermLike => {
   return Array.isArray(maybeTerm.rolls);
 };
 
-function buildDiceFormula(advantage: 'adv' | 'dis' | 'normal', diceSize: number): string {
-  if (advantage === 'adv') {
-    return `2d${diceSize}kh1`;
-  }
-  if (advantage === 'dis') {
-    return `2d${diceSize}kl1`;
-  }
-  return `1d${diceSize}`;
-}
-
-function getBonus(
-  actor: ShwActor,
-  key: keyof ShwActorSystem['attributes'] | 'natural',
-  isSave: boolean,
-) {
-  if (key === 'natural') {
-    return 0;
-  }
-
-  return isSave ? actor.system.attributes[key].saveBonus : actor.system.attributes[key].charBonus;
-}
-
 export async function characterRoll(
   actor: ShwActor,
   isSave: boolean,
-  key: keyof ShwActorSystem['attributes'] | 'natural',
-  advantage: 'adv' | 'dis' | 'normal' = 'normal',
+  key: RollAttribute,
+  advantage: RollMode = 'normal',
   rollValue: number = 20,
   bonus?: number,
   actions?: number,
 ) {
-  const core = buildDiceFormula(advantage, rollValue);
-
-  const mod = getBonus(actor, key, isSave);
-
-  // Add bonus only if it's a non-zero number
-  const bonusStr = bonus && bonus > 0 ? ` + ${bonus}` : '';
-  const modStr = mod ? ` + ${mod}` : '';
-  const expr = `${core}${bonusStr}${modStr}`;
+  const expr = buildCharacterRollExpression(
+    actor.system.attributes,
+    key,
+    isSave,
+    advantage,
+    rollValue,
+    bonus,
+  );
   const count = Number(actions ?? 1);
 
   // формируем формулу: одиночный бросок или пул { expr, expr, ... }

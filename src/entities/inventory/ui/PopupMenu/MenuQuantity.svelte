@@ -90,41 +90,44 @@
     justify-content: space-between;
     padding: 0.4rem 0.75rem;
     gap: 0.5rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    border-top: 1px solid var(--shw-color-border, #4a425c);
+    border-bottom: 1px solid var(--shw-color-border, #4a425c);
   }
 
   .popup-menu-quantity__label {
     font-size: 13px;
-    color: #374151;
+    color: var(--shw-color-text, #e8e4f0);
     white-space: nowrap;
   }
 
   .popup-menu-quantity__controls {
     display: flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.35rem;
   }
 
   .popup-menu-quantity__btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    border-radius: 4px;
-    background: transparent;
+    box-sizing: border-box;
+    width: 1.75rem;
+    height: 1.75rem;
+    border: 1px solid var(--shw-color-border, #4a425c);
+    border-radius: 0;
+    background: var(--shw-glass-fill, rgb(255 255 255 / 7%));
     cursor: pointer;
     font-size: 14px;
-    color: #374151;
-    transition: background-color 0.15s;
+    font-family: var(--shw-font, inherit);
+    color: var(--shw-color-text, #e8e4f0);
+    transition: background-color 0.15s, border-color 0.15s;
     padding: 0;
     line-height: 1;
   }
 
   .popup-menu-quantity__btn:hover:not(:disabled) {
-    background-color: rgba(222, 184, 135, 0.25);
+    background: var(--shw-glass-fill-tint, rgb(72 48 112 / 32%));
+    border-color: var(--shw-color-primary, #8b4fc9);
   }
 
   .popup-menu-quantity__btn:disabled {
@@ -133,14 +136,16 @@
   }
 
   .popup-menu-quantity__input {
-    width: 40px;
-    height: 24px;
+    box-sizing: border-box;
+    width: 2.5rem;
+    height: 1.75rem;
     text-align: center;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    border-radius: 4px;
+    border: 1px solid var(--shw-color-border, #4a425c);
+    border-radius: 0;
     font-size: 13px;
-    color: #374151;
-    background: transparent;
+    font-family: var(--shw-font, inherit);
+    color: var(--shw-color-text, #e8e4f0);
+    background: var(--shw-glass-fill, rgb(255 255 255 / 7%));
     padding: 0;
     -moz-appearance: textfield;
   }

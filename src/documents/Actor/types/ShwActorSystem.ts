@@ -43,9 +43,6 @@ interface AdditionalAttributes {
   massCategory: number;
 }
 
-/** MVP-источники additional-статов, порядок = порядок строк в попапе */
-export type StatSourceKey = 'base' | 'growth' | 'equipment' | 'abilities' | 'extra';
-
 export interface StatSourceValues {
   base: number;
   growth: number;
@@ -57,32 +54,12 @@ export interface StatSourceValues {
 /** Runtime-only: разбивка additional-статов по источникам */
 export type AdditionalStatSources = Record<keyof AdditionalAttributes, StatSourceValues>;
 
-export type HealthStatSourceKey = 'base' | 'equipment' | 'abilities' | 'extra';
-
 export interface HealthStatSources {
   base: number;
   equipment: number;
   abilities: number;
   extra: number;
 }
-
-export const HEALTH_STAT_SOURCE_KEYS: HealthStatSourceKey[] = [
-  'base',
-  'equipment',
-  'abilities',
-  'extra',
-];
-
-export const STAT_SOURCE_KEYS: StatSourceKey[] = [
-  'base',
-  'growth',
-  'equipment',
-  'abilities',
-  'extra',
-];
-
-/** Упрощённая разбивка additional-статов для NPC */
-export const NPC_STAT_SOURCE_KEYS: StatSourceKey[] = ['base', 'growth', 'extra'];
 
 export type AttributeKey = keyof Attributes<unknown>;
 
@@ -114,25 +91,6 @@ export interface AttributeStatSourceBreakdown {
 
 /** Runtime-only: разбивка основных атрибутов по источникам */
 export type AttributeStatSources = Record<AttributeKey, AttributeStatSourceBreakdown>;
-
-export const ATTRIBUTE_VALUE_SOURCE_KEYS: (keyof AttributeValueSources)[] = [
-  'base',
-  'equipment',
-  'abilities',
-];
-
-export const ATTRIBUTE_EXTRA_SOURCE_KEYS: (keyof AttributeExtraSources)[] = [
-  'equipment',
-  'abilities',
-  'extra',
-];
-
-export const ATTRIBUTE_ROLL_SOURCE_KEYS: (keyof AttributeRollSources)[] = [
-  'base',
-  'equipment',
-  'abilities',
-  'extra',
-];
 
 interface UtilityFields {
   speed: number;

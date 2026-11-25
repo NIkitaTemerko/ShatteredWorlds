@@ -50,7 +50,7 @@
     </div>
 
     <div class="stat-col">
-      <div class="stat-header">{t("item.poison.duration")}</div>
+      <div class="stat-header">{t("common.duration")}</div>
       <div class="stat-body">
         <Input
           type="number"
@@ -65,7 +65,7 @@
     </div>
 
     <div class="stat-col">
-      <div class="stat-header">{t("item.poison.save")}</div>
+      <div class="stat-header">{t("item.bomb.save")}</div>
       <div class="stat-body">
         <SelectInput
           value={system.save.type}
@@ -78,7 +78,7 @@
     </div>
 
     <div class="stat-col">
-      <div class="stat-header">{t("item.poison.difficulty")}</div>
+      <div class="stat-header">{t("common.difficulty")}</div>
       <div class="stat-body">
         <Input
           type="number"

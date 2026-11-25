@@ -9,14 +9,14 @@ import type { CharacterStatPath } from '../../model/characterStatPaths';
 import { STAT_KEYS } from '../../model/constants/actorKeys';
 import {
   ADDITIONAL_STAT_BASE,
+  type AdditionalStatBaseKey,
   ALL_ADDITIONAL_KEYS,
   HEALTH_BASE,
   SPEED_BASE,
-  type AdditionalStatBaseKey,
 } from '../../model/constants/characterDefaults';
 import {
-  calculateAttributeProgressionBonuses,
   type AttributeProgressionBonuses,
+  calculateAttributeProgressionBonuses,
 } from './attributeProgression';
 import {
   applyManualItemBonuses,
@@ -25,18 +25,19 @@ import {
   sumItemBonuses,
 } from './calculateItemBonuses';
 import {
+  ATTRIBUTE_COEFFICIENT_MAX,
+  attributeCoefficientValue,
+  healthCoefficientValue,
+} from './coefficients';
+import {
   collectStatBonusesBySource,
+  sumAttributeExtraSources,
   sumBonusForAdditionalStat,
   sumBonusForAttributeField,
-  sumAttributeExtraSources,
   sumBonusForHealth,
   sumHealthStatSources,
   sumStatSources,
 } from './collectStatBonusesBySource';
-import {
-  attributeCoefficientValue,
-  healthCoefficientValue,
-} from './coefficients';
 import { clampMassCategoryTotal, syncBarrierValue } from './syncBarrierValue';
 
 function ensureTotals(
@@ -47,9 +48,9 @@ function ensureTotals(
   }
 }
 
-function ensureAdditionalStatSources(
-  sys: ShwActorSystem,
-): asserts sys is ShwActorSystem & { additionalStatSources: ShwActorSystem['additionalStatSources'] } {
+function ensureAdditionalStatSources(sys: ShwActorSystem): asserts sys is ShwActorSystem & {
+  additionalStatSources: ShwActorSystem['additionalStatSources'];
+} {
   if (!sys.additionalStatSources) {
     sys.additionalStatSources = {} as ShwActorSystem['additionalStatSources'];
   }
@@ -216,15 +217,16 @@ function syncAttributeCoefficients(
   for (const k of STAT_KEYS) {
     const sources = sys.attributeStatSources?.[k];
     const extraTotal = sources ? sumAttributeExtraSources(sources.extra) : sys.attributes[k].extra;
-    sys.attributes[k].coefficient =
-      attributeCoefficientValue(extraTotal) +
-      getItemBonus(bonuses, `attributes.${k}.coefficient`);
+    sys.attributes[k].coefficient = Math.min(
+      ATTRIBUTE_COEFFICIENT_MAX,
+      attributeCoefficientValue(extraTotal) + getItemBonus(bonuses, `attributes.${k}.coefficient`),
+    );
   }
 }
 
-function ensureAttributeStatSources(
-  sys: ShwActorSystem,
-): asserts sys is ShwActorSystem & { attributeStatSources: ShwActorSystem['attributeStatSources'] } {
+function ensureAttributeStatSources(sys: ShwActorSystem): asserts sys is ShwActorSystem & {
+  attributeStatSources: ShwActorSystem['attributeStatSources'];
+} {
   if (!sys.attributeStatSources) {
     sys.attributeStatSources = {} as ShwActorSystem['attributeStatSources'];
   }
@@ -289,5 +291,6 @@ export function prepareCharacterDerivedData(sys: ShwActorSystem, actor: ShwActor
     fortuneExtra,
   );
   syncResourceTotals(sys, progression, bonuses, itemBonusesBySource);
+  // The compact resource UI can grant a temporary reserve above the normal barrier.
   syncBarrierValue(sys);
 }

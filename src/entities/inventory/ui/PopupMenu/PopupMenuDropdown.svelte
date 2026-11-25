@@ -22,14 +22,10 @@
 
 <style>
   .popup-menu-dropdown {
-    min-width: 180px;
-    background: #fff;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    padding: 0.25rem 0;
     display: flex;
     flex-direction: column;
     align-items: stretch;
+    min-width: 180px;
+    padding: 0.15rem 0;
   }
 </style>

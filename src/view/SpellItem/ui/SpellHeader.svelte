@@ -3,6 +3,7 @@
   import type { SpellCategory, SpellKind } from "../../../documents/Item/types/SpellDataTypes";
   import { t } from "../../../shared/i18n";
   import { Input, SelectInput } from "../../../shared/ui";
+  import { ACTIVE_KINDS } from "../../AbilityItem/constants/abilityConstants";
 
   interface Props {
     item: ShwItem;
@@ -21,17 +22,6 @@
     { value: "dark", label: "spell.category.dark" },
     { value: "holy", label: "spell.category.holy" },
     { value: "arcane", label: "spell.category.arcane" },
-  ];
-
-  const SPELL_KINDS = [
-    { value: "attack", label: "spell.spellKind.attack" },
-    { value: "heal", label: "spell.spellKind.heal" },
-    { value: "support", label: "spell.spellKind.support" },
-    { value: "debuff", label: "spell.spellKind.debuff" },
-    { value: "control", label: "spell.spellKind.control" },
-    { value: "movement", label: "spell.spellKind.movement" },
-    { value: "summon", label: "spell.spellKind.summon" },
-    { value: "utility", label: "spell.spellKind.utility" },
   ];
 
   function handleCategoryChange(event: Event) {
@@ -59,7 +49,7 @@
     />
 
     <div class="type-wrapper">
-      <span class="type-label">{t("spell.header.categoryLabel")}</span>
+      <span class="type-label">{t("common.categoryLabel")}</span>
       <SelectInput
         value={system.category}
         options={SPELL_CATEGORIES}
@@ -69,8 +59,8 @@
     </div>
 
     <div class="type-wrapper">
-      <span class="kind-label">{t("spell.header.kindLabel")}</span>
-      <SelectInput value={system.spellKind} options={SPELL_KINDS} variant="underline" onchange={handleKindChange} />
+      <span class="kind-label">{t("common.typeLabel")}</span>
+      <SelectInput value={system.spellKind} options={ACTIVE_KINDS} variant="underline" onchange={handleKindChange} />
     </div>
   </div>
 </header>

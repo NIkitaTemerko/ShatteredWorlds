@@ -1,5 +1,20 @@
 {
   "SHW": {
+    "common": {
+      "delete": "Delete",
+      "clearSearch": "Clear search",
+      "difficulty": "Difficulty",
+      "radius": "Radius",
+      "save": "Save",
+      "categoryLabel": "Category:",
+      "duration": "Duration",
+      "typeLabel": "Type:",
+      "deleteItemConfirmation": "Are you sure you want to delete <strong>{name}</strong>?",
+      "cancel": "Cancel",
+      "close": "Close",
+      "operation": "Operation",
+      "edit": "Edit"
+    },
     "attributes": {
       "natural": "Natural",
       "fortune": "Fortune",
@@ -24,10 +39,7 @@
     },
     "tabs": {
       "stats": "Statistics",
-      "inventory": "Inventory",
-      "equipment": "Equipment",
-      "spells": "Spells",
-      "abilities": "Abilities"
+      "inventory": "Inventory"
     },
     "additionalAttributes": {
       "actions": "Actions",
@@ -87,8 +99,7 @@
     },
     "item": {
       "header": {
-        "namePlaceholder": "Item Name",
-        "typeLabel": "Type:"
+        "namePlaceholder": "Item Name"
       },
       "description": {
         "title": "Description",
@@ -102,26 +113,17 @@
         "stack": "Stack"
       },
       "bomb": {
-        "damage": "Damage",
         "damageType": "Damage Type",
-        "radius": "Radius",
-        "save": "Save",
-        "difficulty": "Difficulty"
+        "save": "Save"
       },
       "poison": {
         "initialDamage": "Initial Damage",
         "repeatDamage": "Repeat Damage",
-        "duration": "Duration",
-        "save": "Save",
-        "difficulty": "Difficulty",
         "application": "Application"
       },
       "scroll": {
-        "spellName": "Spell Name",
-        "level": "Level",
         "school": "School",
-        "requiredAttribute": "Required Attribute",
-        "difficulty": "Difficulty"
+        "requiredAttribute": "Required Attribute"
       },
       "potionFood": {
         "nutritionTitle": "Nutrition",
@@ -130,9 +132,7 @@
         "effectsTitle": "Effects",
         "addEffect": "+ Add",
         "effectType": "Type",
-        "effectBonus": "Bonus",
         "effectStrength": "Strength",
-        "effectDuration": "Duration",
         "effectAttribute": "Attribute",
         "defaultEffect": "buff"
       }
@@ -174,18 +174,11 @@
       "linkedAbilityDeleteHint": "This ability is linked to equipment. Remove the link on the equipment sheet.",
       "menu": {
         "unequip": "Unequip"
-      },
-      "itemPlurals": {
-        "one": "item",
-        "few": "items",
-        "many": "items"
       }
     },
     "ability": {
       "header": {
-        "namePlaceholder": "Ability Name",
-        "categoryLabel": "Category:",
-        "kindLabel": "Type:"
+        "namePlaceholder": "Ability Name"
       },
       "category": {
         "active": "Active",
@@ -197,8 +190,6 @@
         "support": "Support",
         "debuff": "Debuff",
         "control": "Control",
-        "movement": "Movement",
-        "summon": "Summon",
         "utility": "Utility"
       },
       "passiveKind": {
@@ -234,7 +225,6 @@
         "range": "Range & Targeting",
         "rangeKind": "Range",
         "rangeDistance": "Distance",
-        "areaRadius": "Radius",
         "areaShape": "Shape",
         "targetType": "Target",
         "maxTargets": "Max Targets"
@@ -320,8 +310,8 @@
         "copy": "Copy",
         "final": "Final coefficient",
         "calculation": "Coefficient calculation",
-        "info": "The coefficient is 25% of the additional attribute",
-        "formula": "Extra total {total} ÷ 4 = {result}"
+        "info": "1 coefficient = {percent}% of the Extra column value, rounded down. The calculation uses at most {max}.",
+        "healthInfo": "The health coefficient is 10% of maximum HP"
       },
       "barrier": {
         "current": "Current barrier",
@@ -329,7 +319,6 @@
       },
       "damage": {
         "addEntry": "+ Add damage",
-        "apply": "Apply",
         "preview": "Preview: −{barrier} barrier, −{health} HP",
         "previewWithOneTimeBarrier": "Preview: −{oneTimeBarrier} temp barrier, −{barrier} barrier, −{health} HP",
         "oneTimeBarrier": "One-time barrier",
@@ -367,10 +356,6 @@
       }
     },
     "roll": {
-      "base": "Base",
-      "bonus": "Bonus",
-      "actions": "Actions",
-      "rollLabel": "Roll",
       "saveRollLabel": "Save Roll",
       "advantage": "Advantage",
       "normal": "Normal",
@@ -386,9 +371,7 @@
       "searchPlaceholder": "Search items...",
       "itemsCount": "{count} items",
       "deleteConfirmTitle": "Delete Item",
-      "deleteConfirmContent": "Are you sure you want to delete <strong>{name}</strong>?",
       "deleteItem": "Delete item",
-      "clearSearch": "Clear search",
       "itemPlurals": {
         "one": "item",
         "few": "items",
@@ -396,7 +379,6 @@
       },
       "categories": {
         "consumable": "Consumables",
-        "ability": "Abilities",
         "weapon": "Weapons",
         "equipment": "Equipment",
         "treasure": "Treasure",
@@ -410,21 +392,17 @@
         "poison": "Poisons"
       },
       "menu": {
-        "edit": "Edit",
         "duplicate": "Duplicate",
         "quantity": "Qty",
-        "equip": "Equip",
-        "delete": "Delete"
+        "equip": "Equip"
       }
     },
     "abilities": {
       "searchPlaceholder": "Search abilities...",
       "abilitiesCount": "{count} abilities",
       "deleteConfirmTitle": "Delete Ability",
-      "deleteConfirmContent": "Are you sure you want to delete <strong>{name}</strong>?",
       "deleteAbility": "Delete ability",
       "equipmentLinkedDeleteTooltip": "Ability from equipment ({equipment}). To remove it, unequip the item.",
-      "clearSearch": "Clear search",
       "abilityPlurals": {
         "one": "ability",
         "few": "abilities",
@@ -433,9 +411,7 @@
     },
     "spell": {
       "header": {
-        "namePlaceholder": "Spell Name",
-        "categoryLabel": "Category:",
-        "kindLabel": "Type:"
+        "namePlaceholder": "Spell Name"
       },
       "category": {
         "code": "Code",
@@ -444,57 +420,10 @@
         "holy": "Holy",
         "arcane": "Arcane"
       },
-      "spellKind": {
-        "attack": "Attack",
-        "heal": "Heal",
-        "support": "Support",
-        "debuff": "Debuff",
-        "control": "Control",
-        "movement": "Movement",
-        "summon": "Summon",
-        "utility": "Utility"
-      },
       "currentRank": "Current Rank",
       "maxRank": "Max Rank",
-      "actionType": {
-        "label": "Action Type",
-        "action": "Action",
-        "bonus": "Bonus",
-        "reaction": "Reaction",
-        "free": "Free"
-      },
-      "castTime": "Cast Time",
-      "rangeKind": {
-        "label": "Range",
-        "self": "Self",
-        "melee": "Melee",
-        "ranged": "Ranged",
-        "area": "Area"
-      },
-      "range": {
-        "distance": "Distance",
-        "title": "Range & Targeting",
-        "radius": "Radius",
-        "shape": "Shape",
-        "shapeCircle": "Circle",
-        "shapeCone": "Cone",
-        "shapeLine": "Line"
-      },
       "targetType": {
-        "label": "Target Type",
-        "self": "Self",
-        "ally": "Ally",
-        "enemy": "Enemy",
-        "any": "Any"
-      },
-      "maxTargets": "Max Targets",
-      "requiresLOS": "Requires LOS",
-      "channeled": "Channeled",
-      "togglable": "Togglable",
-      "usesPerRest": "Uses/Rest",
-      "usesPerEncounter": "Uses/Encounter",
-      "uses": {
-        "title": "Uses & Toggles"
+        "label": "Target Type"
       },
       "details": {
         "title": "Spell Details"
@@ -504,9 +433,7 @@
       "searchPlaceholder": "Search spells...",
       "spellsCount": "{count} spells",
       "deleteConfirmTitle": "Delete Spell",
-      "deleteConfirmContent": "Are you sure you want to delete <strong>{name}</strong>?",
       "deleteSpell": "Delete spell",
-      "clearSearch": "Clear search",
       "spellPlurals": {
         "one": "spell",
         "few": "spells",
@@ -517,13 +444,10 @@
       "merchantItem": {
         "title": "Edit Item",
         "merchant": "Merchant",
-        "price": "Price",
         "quantity": "Quantity",
         "quantityHelp": "-1 for unlimited quantity",
         "quantityPlaceholder": "-1 for unlimited",
         "pricePlaceholder": "Item price",
-        "cancel": "Cancel",
-        "save": "Save",
         "unknownItem": "Unknown item",
         "errorOpenItem": "Failed to open item"
       },
@@ -554,7 +478,6 @@
         "merchantLocation": "Merchant location:",
         "rootLocation": "(Root)",
         "create": "Create",
-        "cancel": "Cancel",
         "add": "Add",
         "priceLabel": "Price:",
         "quantityLabel": "Quantity (-1 for unlimited):",
@@ -584,13 +507,6 @@
       "copyForAi": "Copy for AI",
       "placeholder": "Or paste JSON array of items here...",
       "typesForSchema": "Types in schema",
-      "types": {
-        "consumable": "Consumables",
-        "ability": "Abilities",
-        "spell": "Spells",
-        "equipment": "Equipment",
-        "resource": "Resources"
-      },
       "skipImages": "Skip images",
       "error": "Error:",
       "copyFailed": "Failed to copy to clipboard",
@@ -614,7 +530,6 @@
       "validate": "Validate",
       "dryRun": "Dry run",
       "importBtn": "Import",
-      "close": "Close",
       "processing": "...",
       "parseError": "Parse error",
       "importSuccess": "Import: {created} created, {updated} updated",
@@ -623,7 +538,6 @@
     "resource": {
       "header": {
         "namePlaceholder": "Resource Name",
-        "categoryLabel": "Category:",
         "typeLabel": "Resource Type",
         "typePlaceholder": "Select or enter type..."
       },
@@ -692,13 +606,170 @@
         "placeholderKey": "Key",
         "placeholderName": "Name",
         "placeholderIcon": "fa-solid fa-gem",
-        "save": "Save",
         "saving": "Saving...",
         "reset": "Reset",
         "unsaved": "Unsaved changes",
         "saved": "Resource settings saved",
         "saveError": "Error saving settings"
       }
+    },
+    "newUi": {
+      "sections": "Character sections",
+      "stats": "Character",
+      "inventory": "Items",
+      "spells": "Spells",
+      "abilities": "Abilities",
+      "editCharacter": "Edit character",
+      "level": "Level",
+      "hp": "HP",
+      "addBarrier": "Add barrier",
+      "heal": "Healing",
+      "coefficientCount": "Coefficient count",
+      "amount": "Amount",
+      "result": "Result",
+      "apply": "Apply",
+      "attributes": "Attributes",
+      "sources": "Sources and coefficients",
+      "parameter": "Parameter",
+      "total": "Total",
+      "extra": "Extra",
+      "coefficient": "Coeff.",
+      "bonus": "Bonus",
+      "save": "Save",
+      "normalBarrier": "Normal barrier",
+      "coefficients": "Coefficients",
+      "sourcesHint": "Select a table value to inspect its sources or calculate coefficients.",
+      "howCalculated": "How calculated",
+      "copy": "Copy",
+      "copied": "Copied",
+      "roll": "Roll",
+      "attribute": "Attribute",
+      "die": "Die",
+      "rollBonus": "Extra bonus",
+      "rollCount": "Rolls",
+      "formula": "Formula",
+      "rollMode": "Roll mode",
+      "editHint": "Edit the fields below. Changes are applied together.",
+      "mainAttributes": "Main",
+      "additionalAttributes": "Additional",
+      "manualExtra": "Manual extra",
+      "speedExtra": "Manual speed bonus",
+      "healthExtra": "Manual HP bonus",
+      "cancel": "Cancel",
+      "invalidValues": "Enter a name and finite numeric values. Level must be at least 1.",
+      "changeEquipment": "Change equipment",
+      "search": "Name or description",
+      "allSchools": "All schools",
+      "all": "All",
+      "equipped": "Equipped",
+      "backpack": "In backpack",
+      "own": "Owned",
+      "fromEquipment": "From equipment",
+      "collapseAll": "Collapse all",
+      "equipmentHint": "Under Equipped, select what to take off. In the backpack, select what to equip.",
+      "source": "Source",
+      "ownAbility": "Owned ability",
+      "open": "Open",
+      "noResults": "No results. Try another search.",
+      "empty": "Nothing here yet.",
+      "selectedChanges": "Changes",
+      "reviewChanges": "Review equipment changes",
+      "noDescription": "No description yet.",
+      "fullSheet": "Full sheet",
+      "linkedHint": "Granted by equipped gear. Change the source item to remove it.",
+      "bonusActionsShort": "Bonus actions",
+      "absorptionShort": "Absorption",
+      "rangeShort": "Range bonus",
+      "massShort": "Mass",
+      "executeRoll": "Roll",
+      "saveRoll": "Saving throw",
+      "unsavedChanges": "Save changes?",
+      "discard": "Discard",
+      "return": "Return",
+      "damageRow": "Damage row",
+      "reorderDamage": "Reorder row (up/down arrows)",
+      "damageType": "Damage type",
+      "fallHeight": "Fall height",
+      "damageAmount": "Damage",
+      "removeDamage": "Remove row",
+      "oneSequenceOnly": "Only for this sequence",
+      "addDamageRow": "Add row",
+      "applyDamage": "Apply damage",
+      "armorDefense": "Armor",
+      "psiDefense": "Psi defense",
+      "applicationParameters": "Application parameters",
+      "effectsAndCosts": "Effects, formulas and costs",
+      "maxTargets": "Maximum targets (all)",
+      "effect": "Effect",
+      "effect_damage": "Damage",
+      "effect_heal": "Healing",
+      "effect_buff": "Buff",
+      "effect_debuff": "Debuff",
+      "effect_movement": "Movement",
+      "effect_summon": "Summon",
+      "effect_custom": "Custom",
+      "resource": "Resource cost",
+      "resource_divinity": "Divinity",
+      "resource_karma": "Karma",
+      "resource_mana": "Mana",
+      "resource_void": "Void",
+      "resource_energy": "Energy",
+      "resource_stack": "Stacks",
+      "itemName": "Name",
+      "condition": "Condition",
+      "move_dash": "Dash",
+      "move_teleport": "Teleport",
+      "move_push": "Push",
+      "move_pull": "Pull",
+      "creatureId": "Creature ID",
+      "hasUnsavedChanges": "Unsaved changes"
+    },
+    "itemUi": {
+      "properties": "Properties",
+      "catalog": "Item",
+      "saving": "Saving…",
+      "saveFailed": "Could not save changes. Please retry.",
+      "retry": "Retry",
+      "editImage": "Change image",
+      "itemName": "Item name",
+      "noBonuses": "No bonuses",
+      "addBonus": "Add bonus",
+      "bonusHint": "Add a stat modified by this item.",
+      "parameter": "Stat",
+      "value": "Value",
+      "removeBonus": "Remove bonus",
+      "linked": "Linked items",
+      "dropHint": "Drop an ability or spell here",
+      "dropSource": "From the Foundry world directory",
+      "missingLink": "Linked item was deleted",
+      "removeLink": "Unlink item",
+      "wrongDrop": "Only abilities and spells from the world directory can be linked.",
+      "duplicateLink": "This item is already linked.",
+      "addEffect": "Add effect",
+      "removeEffect": "Remove effect",
+      "noEffects": "No effects",
+      "instant": "Instant",
+      "primaryEffect": "Primary effect",
+      "areaDamage": "Area damage",
+      "poisonDamage": "Poison damage",
+      "changeType": "Change consumable type?",
+      "changeTypeHint": "Common properties will be kept. Effects and type-specific settings will be replaced with defaults for the new type.",
+      "confirmType": "Change type",
+      "autoSave": "Changes are saved automatically",
+      "typeHint": "Select a preset or enter a custom type.",
+      "stock": "Stock",
+      "readonly": "Read only",
+      "cure": "Cure condition",
+      "initialRecurring": "Initial → recurring damage",
+      "explosion": "Explosion settings",
+      "poisonParameters": "Damage and application",
+      "requirements": "Usage requirements",
+      "epic": "Epic",
+      "cost": "Cost",
+      "uses": "Uses",
+      "remaining": "Remaining",
+      "maximum": "Maximum",
+      "unit": "Unit"
     }
   }
 }

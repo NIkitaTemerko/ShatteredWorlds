@@ -11,10 +11,9 @@ import { ensureFolderStructure, getTargetFolderId, handleAddItem } from './share
 import { handleCombatTurnChangeBarrierRestore, restoreBarrierForCombatant } from './shared/helpers/Character/restoreBarrierOnCombatTurn';
 import { runWorldDataMigration } from './shared/helpers/runWorldDataMigration';
 import { AbilityItemApp } from './view/AbilityItem/ItemApp';
-import { CharacterApp } from './view/BaseCharacter/CharacterApp.js';
+import { CharacterApp, NpcApp } from './view/BaseCharacter/CharacterApp.js';
 import { ConsumableItemApp } from './view/ConsumableItem/ItemApp';
 import { EquipmentItemApp } from './view/EquipmentItem/ItemApp';
-import { NpcApp } from './view/NpcCharacter/NpcApp';
 import { ResourceItemApp } from './view/ResourceItem/ItemApp';
 import { SpellItemApp } from './view/SpellItem/ItemApp';
 import './main.css';

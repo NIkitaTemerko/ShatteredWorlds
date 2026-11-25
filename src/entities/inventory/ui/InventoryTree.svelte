@@ -46,10 +46,13 @@
   }
 
   onMount(() => {
+    // Storybook / non-Foundry hosts have no Hooks global.
+    if (typeof Hooks === "undefined") return;
     Hooks.on("updateItem", onItemUpdate);
   });
 
   onDestroy(() => {
+    if (typeof Hooks === "undefined") return;
     Hooks.off("updateItem", onItemUpdate);
   });
 
@@ -86,7 +89,7 @@
     if (onSelectItem) {
       menuItems.push({
         type: "action",
-        label: t("inventory.menu.edit"),
+        label: t("common.edit"),
         icon: "fas fa-edit",
         onClick: (e: Event) => {
           e.stopPropagation();
@@ -122,7 +125,7 @@
     if (onDeleteItem) {
       menuItems.push({
         type: "action",
-        label: t("inventory.menu.delete"),
+        label: t("common.delete"),
         icon: "fas fa-trash",
         danger: true,
         onClick: (e: Event) => {

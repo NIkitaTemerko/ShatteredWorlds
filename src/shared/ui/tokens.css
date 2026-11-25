@@ -1,0 +1,52 @@
+/* Shattered Worlds — crystal UI tokens (amethyst triad) */
+
+:root,
+.shw-ui {
+  /* Primary — amethyst */
+  --shw-color-primary: #8b4fc9;
+  --shw-color-primary-bright: #b57aef;
+  --shw-color-primary-deep: #5a2d8a;
+  --shw-color-primary-glow: rgb(139 79 201 / 55%);
+
+  /* Secondary — amber / gold (triad) */
+  --shw-color-secondary: #c4922a;
+  --shw-color-secondary-bright: #e0b44a;
+  --shw-color-secondary-deep: #8a6418;
+  --shw-color-secondary-glow: rgb(196 146 42 / 45%);
+
+  /* Tertiary — teal / ice-green (triad) */
+  --shw-color-tertiary: #2a9b8f;
+  --shw-color-tertiary-bright: #4ec4b6;
+  --shw-color-tertiary-deep: #1a6b63;
+
+  /* Neutrals — coal / quartz */
+  --shw-color-bg: #12101a;
+  --shw-color-surface: #1c1828;
+  --shw-color-surface-raised: #262033;
+  --shw-color-border: #4a425c;
+  --shw-color-border-bright: #6e6488;
+  --shw-color-text: #e8e4f0;
+  --shw-color-text-muted: #9a93ad;
+  --shw-color-text-inverse: #12101a;
+
+  /* Translucent fills (no backdrop-filter) */
+  --shw-glass-fill: rgb(255 255 255 / 7%);
+  --shw-glass-fill-tint: rgb(72 48 112 / 32%);
+  --shw-glass-fill-strong: rgb(90 50 140 / 42%);
+  --shw-rim-light: rgb(255 255 255 / 45%);
+  --shw-rim-shadow: rgb(0 0 0 / 35%);
+  --shw-bloom: 0 0 18px var(--shw-color-primary-glow);
+  --shw-inner-glow: inset 0 1px 0 var(--shw-rim-light), inset 0 -1px 0 var(--shw-rim-shadow);
+  --shw-focus-ring: 0 0 0 2px var(--shw-color-bg), 0 0 0 4px var(--shw-color-primary-glow);
+  --shw-shadow-panel: 0 10px 28px rgb(0 0 0 / 40%), 0 0 24px var(--shw-color-primary-glow);
+
+  --shw-font: "Tektur Variable", "Tektur", sans-serif;
+  --shw-z-popover: 100000;
+
+  --shw-size-sm: 1.5rem;
+  --shw-size-md: 2rem;
+  --shw-size-lg: 2.5rem;
+  --shw-pad-sm: 0.35rem 0.7rem;
+  --shw-pad-md: 0.55rem 1rem;
+  --shw-pad-lg: 0.7rem 1.25rem;
+}

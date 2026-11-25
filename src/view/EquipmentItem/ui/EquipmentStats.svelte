@@ -38,7 +38,7 @@
     </div>
   </div>
 
-  <div class="stat-col" style="--dark: #10B981; --light: #D1FAE5">
+  <div class="stat-col" style="--dark: #2a9b8f; --light: rgb(42 155 143 / 28%)">
     <div class="stat-header">{t("equipment.stats.armorClass")}</div>
     <div class="stat-body">
       <Input
@@ -53,7 +53,7 @@
     </div>
   </div>
 
-  <div class="stat-col" style="--dark: #EAB308; --light: #FEF9C3">
+  <div class="stat-col" style="--dark: #c4922a; --light: rgb(196 146 42 / 28%)">
     <div class="stat-header">{t("item.basicStats.price")}</div>
     <div class="stat-body">
       <Input
@@ -70,7 +70,7 @@
 </StatsCard>
 
 <StatsCard columns={1}>
-  <div class="stat-col" style="--dark: #6B7280; --light: #F3F4F6">
+  <div class="stat-col" style="--dark: #6e6488; --light: rgb(74 66 92 / 35%)">
     <div class="stat-header">{t("item.basicStats.weight")}</div>
     <div class="stat-body">
       <Input

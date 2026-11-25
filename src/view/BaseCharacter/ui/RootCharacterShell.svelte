@@ -1,54 +1,57 @@
 <script lang="ts">
-  import type { ShwActor } from "../../../documents/Actor/ShwActor";
-  import type { CharacterTab } from "../../../entities/character";
-  import {
-    AdditionalStats,
-    AttributeStats,
-    CharacterAbilities,
-    CharacterEquipment,
-    CharacterHeader,
-    CharacterInventory,
-    CharacterSpells,
-  } from "../../../entities/character";
-  import { TabNavigation } from "../../../features/navigation";
-  import { RollPanel } from "../../../features/roll";
-  import type { AdditionalAttributes } from "../../../shared/model/types";
-
+  import { untrack } from 'svelte';
+  import { createSheetEvents } from './sheetEvents';
+  import type { ShwActor } from '../../../documents/Actor/ShwActor';
+  import { t } from '../../../shared/i18n';
+  import CharacterOverviewHeader from './CharacterOverviewHeader.svelte';
+  import CharacterStats from './CharacterStats.svelte';
+  import CharacterCollections from './CharacterCollections.svelte';
+  import CharacterEditor from './CharacterEditor.svelte';
+  import './character-sheet.css';
+  export type SheetSection = 'stats' | 'inventory' | 'spells' | 'abilities';
   interface Props {
-    actor: ShwActor<"character">;
+    actor: ShwActor<'character'> | ShwActor<'npc'>;
+    initialTab?: SheetSection;
+    initialEditing?: boolean;
   }
-
-  let { actor }: Props = $props();
-
-  let activeTab = $state<CharacterTab>("stats");
-
-  function handleTabChange(tab: CharacterTab) {
-    activeTab = tab;
+  let { actor, initialTab = 'stats', initialEditing = false }: Props = $props();
+  const sheetEvents = createSheetEvents();
+  let activeTab = $state<SheetSection>(untrack(() => initialTab));
+  let editing = $state(untrack(() => initialEditing));
+  function navigate(action: () => void) {
+    if (
+      sheetEvents.dispatchEvent(
+        new CustomEvent('shw-character-navigate', { cancelable: true, detail: action }),
+      )
+    )
+      action();
   }
-
-  function handleAdditionalStatsUpdate(key: keyof AdditionalAttributes, value: number) {
-    actor.update({ [`system.additionalAttributes.${String(key)}`]: value });
-  }
+  const tabs = ['stats', 'inventory', 'spells', 'abilities'] as const;
 </script>
 
-<CharacterHeader {actor} />
-
-<TabNavigation {activeTab} onTabChange={handleTabChange} />
-
-{#if activeTab === "stats"}
-  <section>
-    <AttributeStats {actor} />
-    <RollPanel {actor} />
-  </section>
-  <AdditionalStats actor={actor} onUpdate={handleAdditionalStatsUpdate} />
-{:else if activeTab === "inventory"}
-  <CharacterInventory {actor} />
-{:else if activeTab === "spells"}
-  <CharacterSpells {actor} />
-{:else if activeTab === "abilities"}
-  <CharacterAbilities {actor} />
-{:else if activeTab === "equipment"}
-  <CharacterEquipment {actor} />
-{:else}
-  <div>test</div>
-{/if}
+<div class="shw-character">
+  <CharacterOverviewHeader {actor} {editing} onEdit={() => navigate(() => (editing = !editing))} />
+  {#if editing}
+    <CharacterEditor {actor} onClose={() => (editing = false)} />
+  {:else}
+    {#if actor.type === 'character'}
+      <nav class="character-tabs" aria-label={t('newUi.sections')}>
+        {#each tabs as tab}
+          <button
+            type="button"
+            class:active={activeTab === tab}
+            aria-current={activeTab === tab ? 'page' : undefined}
+            onclick={() => navigate(() => (activeTab = tab))}>{t(`newUi.${tab}`)}</button
+          >
+        {/each}
+      </nav>
+    {/if}
+    <main class="character-content">
+      {#if actor.type === 'npc' || activeTab === 'stats'}
+        <CharacterStats {actor} />
+      {:else}
+        {#key activeTab}<CharacterCollections {actor} section={activeTab} />{/key}
+      {/if}
+    </main>
+  {/if}
+</div>

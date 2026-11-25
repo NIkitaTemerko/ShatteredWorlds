@@ -70,7 +70,7 @@
   }
 </script>
 
-<section style="--dark: #8B5CF6; --light: #EDE9FE">
+<section style="--dark: #8b4fc9; --light: rgb(139 79 201 / 28%)">
   <div class="section-header">{t("equipment.linkedItems.title")}</div>
 
   <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -108,20 +108,25 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
+    font-family: var(--shw-font, inherit);
   }
 
   .section-header {
-    background: var(--dark);
-    color: #000;
-    padding: 0.35rem 0.5rem;
+    box-sizing: border-box;
+    background: color-mix(in srgb, var(--dark, var(--shw-color-primary)) 55%, #1c1828);
+    color: var(--shw-color-text, #e8e4f0);
+    padding: 0.4rem 0.65rem;
+    border: 1px solid var(--shw-color-border-bright, #6e6488);
+    border-bottom: none;
     font-weight: 700;
-    font-size: var(--font-size-14);
+    font-size: 13px;
+    font-family: var(--shw-font, inherit);
   }
 
   .drop-zone {
-    background: var(--light);
-    border: 2px dashed var(--dark);
-    border-radius: 4px;
+    background: var(--shw-glass-fill-tint, rgb(72 48 112 / 32%));
+    border: 1px dashed var(--shw-color-border-bright, #6e6488);
+    border-radius: 0;
     min-height: 60px;
     padding: 8px;
     display: flex;
@@ -134,8 +139,8 @@
     align-items: center;
     justify-content: center;
     min-height: 44px;
-    opacity: 0.6;
-    font-size: var(--font-size-12);
+    color: var(--shw-color-text-muted, #9a93ad);
+    font-size: 12px;
   }
 
   .linked-list {
@@ -152,42 +157,44 @@
     align-items: center;
     gap: 8px;
     padding: 4px 6px;
-    background: rgba(255, 255, 255, 0.5);
-    border-radius: 4px;
+    background: var(--shw-glass-fill, rgb(255 255 255 / 7%));
+    border: 1px solid var(--shw-color-border, #4a425c);
+    border-radius: 0;
+    color: var(--shw-color-text, #e8e4f0);
   }
 
   .linked-item.missing {
-    background: rgba(220, 38, 38, 0.1);
-    border: 1px dashed #DC2626;
+    background: rgb(196 90 106 / 18%);
+    border: 1px dashed #c45a6a;
   }
 
   .linked-item img {
     flex-shrink: 0;
-    border-radius: 3px;
+    border-radius: 0;
   }
 
   .linked-name {
     flex: 1;
-    font-size: var(--font-size-12);
+    font-size: 12px;
     font-weight: 600;
   }
 
   .linked-name.error {
-    color: #DC2626;
+    color: #e07a88;
     font-style: italic;
     font-weight: 400;
   }
 
   .linked-name :global(.linked-type) {
-    font-size: var(--font-size-11);
+    font-size: 11px;
     font-weight: 400;
-    opacity: 0.6;
+    color: var(--shw-color-text-muted, #9a93ad);
   }
 
   .remove-btn {
     background: none;
     border: none;
-    color: #DC2626;
+    color: #e07a88;
     cursor: pointer;
     font-size: 12px;
     padding: 2px 6px;

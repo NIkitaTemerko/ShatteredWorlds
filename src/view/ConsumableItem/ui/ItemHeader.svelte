@@ -39,9 +39,9 @@
     />
 
     <div class="type-wrapper">
-      <span class="type-label">{t("item.header.typeLabel")}</span>
+      <span class="type-label">{t("common.typeLabel")}</span>
       <SelectInput
-        value={item.system.consumableType}
+        value={system.consumableType}
         options={CONSUMABLE_TYPES}
         variant="underline"
         onchange={handleTypeChange}

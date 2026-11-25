@@ -23,7 +23,7 @@
   }
 </script>
 
-<div class="activation-control" style="--dark: #6B7280; --light: #F3F4F6">
+<div class="activation-control">
   <div class="control-header">
     <span class="control-label">{t("controls.activation")}</span>
   </div>
@@ -51,15 +51,19 @@
     display: flex;
     flex-direction: column;
     gap: 0;
+    border: 1px solid var(--shw-color-border-bright, #6e6488);
+    box-shadow: var(--shw-shadow-panel);
+    font-family: var(--shw-font, inherit);
   }
 
   .control-header {
-    background: var(--dark, #666);
-    color: #000;
-    padding: 0.35rem 0.25rem;
+    background: var(--shw-glass-fill-strong, rgb(90 50 140 / 42%));
+    color: var(--shw-color-text, #e8e4f0);
+    padding: 0.4rem 0.35rem;
     font-weight: 700;
-    font-size: var(--font-size-14, 14px);
+    font-size: 13px;
     text-align: center;
+    border-bottom: 1px solid var(--shw-color-border, #4a425c);
   }
 
   .control-label {
@@ -69,17 +73,8 @@
   .control-body {
     display: flex;
     flex-direction: column;
-    gap: 0;
-    background: var(--light, #f0f0f0);
-    padding: 0.35rem 0.25rem;
-  }
-
-  .control-body :global(.shw-select) {
-    background: transparent;
-  }
-
-  .control-body :global(.shw-input) {
-    background: transparent;
-    padding: 0.25rem 0;
+    gap: 0.35rem;
+    background: var(--shw-glass-fill-tint, rgb(72 48 112 / 32%));
+    padding: 0.45rem 0.35rem;
   }
 </style>

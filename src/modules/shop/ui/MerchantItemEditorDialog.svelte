@@ -74,7 +74,7 @@
     </div>
 
     <div class="form-group">
-      <label for="item-price">{t("shop.merchantItem.price")}</label>
+      <label for="item-price">{t("item.basicStats.price")}</label>
       <Input
         id="item-price"
         type="number"
@@ -101,8 +101,8 @@
   </div>
 
   <div class="editor-footer">
-    <button type="button" class="cancel-button" onclick={handleCancel}>{t("shop.merchantItem.cancel")}</button>
-    <button type="button" class="save-button" onclick={handleSave}>{t("shop.merchantItem.save")}</button>
+    <button type="button" class="cancel-button" onclick={handleCancel}>{t("common.cancel")}</button>
+    <button type="button" class="save-button" onclick={handleSave}>{t("common.save")}</button>
   </div>
 </div>
 

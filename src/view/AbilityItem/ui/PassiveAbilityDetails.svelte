@@ -23,11 +23,11 @@
 
 {#if system.category === "passive"}
   <!-- MODE -->
-  <section style="--dark: #2563EB; --light: #DBEAFE">
+  <section style="--dark: #4ec4b6; --light: rgb(78 196 182 / 28%)">
     <div class="section-header">{t("ability.passiveDetails.title")}</div>
 
     <StatsCard columns={1}>
-      <div class="stat-col" style="--dark: #2563EB; --light: #DBEAFE">
+      <div class="stat-col" style="--dark: #4ec4b6; --light: rgb(78 196 182 / 28%)">
         <div class="stat-header">{t("ability.passiveDetails.mode")}</div>
         <div class="stat-body">
           <SelectInput
@@ -54,11 +54,11 @@
 
   <!-- AURA (for aura kind) -->
   {#if system.passiveKind === "aura" && system.aura}
-    <section style="--dark: #F59E0B; --light: #FEF3C7">
+    <section style="--dark: #c4922a; --light: rgb(196 146 42 / 28%)">
       <div class="section-header">{t("ability.passiveDetails.aura")}</div>
 
       <StatsCard columns={3}>
-        <div class="stat-col" style="--dark: #F59E0B; --light: #FEF3C7">
+        <div class="stat-col" style="--dark: #c4922a; --light: rgb(196 146 42 / 28%)">
           <div class="stat-header">{t("ability.passiveDetails.auraRadius")}</div>
           <div class="stat-body">
             <Input
@@ -73,7 +73,7 @@
           </div>
         </div>
 
-        <div class="stat-col" style="--dark: #F59E0B; --light: #FEF3C7">
+        <div class="stat-col" style="--dark: #c4922a; --light: rgb(196 146 42 / 28%)">
           <div class="stat-header">{t("ability.passiveDetails.auraShape")}</div>
           <div class="stat-body">
             <SelectInput
@@ -86,7 +86,7 @@
           </div>
         </div>
 
-        <div class="stat-col" style="--dark: #F59E0B; --light: #FEF3C7">
+        <div class="stat-col" style="--dark: #c4922a; --light: rgb(196 146 42 / 28%)">
           <div class="stat-header">{t("ability.passiveDetails.auraAffect")}</div>
           <div class="stat-body">
             <SelectInput
@@ -101,7 +101,7 @@
       </StatsCard>
 
       <StatsCard columns={2}>
-        <div class="stat-col" style="--dark: #8B5CF6; --light: #EDE9FE">
+        <div class="stat-col" style="--dark: #8b4fc9; --light: rgb(139 79 201 / 28%)">
           <div class="stat-header">{t("ability.passiveDetails.isToggle")}</div>
           <div class="stat-body">
             <input
@@ -113,7 +113,7 @@
           </div>
         </div>
 
-        <div class="stat-col" style="--dark: #8B5CF6; --light: #EDE9FE">
+        <div class="stat-col" style="--dark: #8b4fc9; --light: rgb(139 79 201 / 28%)">
           <div class="stat-header">{t("ability.passiveDetails.requiresConcentration")}</div>
           <div class="stat-body">
             <input
@@ -130,11 +130,11 @@
 
   <!-- TRIGGERS (for triggered kind) -->
   {#if system.passiveKind === "triggered"}
-    <section style="--dark: #DC2626; --light: #FEE2E2">
+    <section style="--dark: #c45a6a; --light: rgb(196 90 106 / 28%)">
       <div class="section-header">{t("ability.passiveDetails.triggers")}</div>
 
       <StatsCard columns={1}>
-        <div class="stat-col full" style="--dark: #DC2626; --light: #FEE2E2">
+        <div class="stat-col full" style="--dark: #c45a6a; --light: rgb(196 90 106 / 28%)">
           <div class="stat-header">{t("ability.passiveDetails.triggerInfo")}</div>
           <div class="stat-body">
             <span style="font-size: 12px; opacity: 0.8;">
@@ -157,11 +157,15 @@
   }
 
   .section-header {
-    background: var(--dark);
-    color: #000;
-    padding: 0.35rem 0.5rem;
+    box-sizing: border-box;
+    background: color-mix(in srgb, var(--dark, var(--shw-color-primary)) 55%, #1c1828);
+    color: var(--shw-color-text, #e8e4f0);
+    padding: 0.4rem 0.65rem;
+    border: 1px solid var(--shw-color-border-bright, #6e6488);
+    border-bottom: none;
     font-weight: 700;
-    font-size: var(--font-size-14);
+    font-size: 13px;
+    font-family: var(--shw-font, inherit);
   }
 
   .checkbox {

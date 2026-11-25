@@ -1,31 +1,40 @@
 <script lang="ts">
-  import type { HTMLInputAttributes } from "svelte/elements";
+  import type { HTMLInputAttributes } from 'svelte/elements';
+
   interface Props extends HTMLInputAttributes {
     value?: string | number;
     background?: string;
-    textAlign?: "left" | "center" | "right";
+    textAlign?: 'left' | 'center' | 'right';
     fullWidth?: boolean;
-    variant?: "default" | "underline";
+    /**
+     * ghost — только нижняя линия (дефолт)
+     * outline — рамка
+     * underline / default — алиасы ghost (обратная совместимость)
+     */
+    variant?: 'ghost' | 'outline' | 'underline' | 'default';
   }
 
   let {
-    value = $bindable(""),
-    background = "transparent",
-    textAlign = "center",
+    value = $bindable(''),
+    background,
+    textAlign = 'center',
     fullWidth = false,
-    variant = "default",
-    class: className = "",
-    type = "text",
+    variant = 'ghost',
+    class: className = '',
+    type = 'text',
     ...restProps
   }: Props = $props();
+
+  const fieldVariant = $derived(
+    variant === 'outline' ? 'outline' : 'ghost',
+  );
 </script>
 
 <input
   bind:value
   {type}
-  class="shw-input {className}"
+  class="shw-input variant-{fieldVariant} {className}"
   class:full-width={fullWidth}
-  class:variant-underline={variant === "underline"}
   style:background
   style:text-align={textAlign}
   {...restProps}
@@ -33,71 +42,73 @@
 
 <style>
   .shw-input {
-    /* Base styles */
+    box-sizing: border-box;
+    width: auto;
+    min-height: var(--shw-size-md, 2rem);
+    margin: 0;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0;
+    font-family: var(--shw-font, inherit);
     font-size: var(--font-size-14, 14px);
     font-weight: 400;
     line-height: 1.5;
-
-    /* Spacing */
-    padding: 0.5rem 0.75rem;
-
-    /* Border & background */
-    border: 1px solid var(--color-border-light-2, rgba(0, 0, 0, 0.2));
-    border-radius: 4px;
-    background: transparent;
-
-    /* Transitions */
-    transition: all 0.2s ease;
-
-    /* Misc */
+    color: var(--shw-color-text, inherit);
     outline: none;
-    color: inherit;
-  }
-
-  .shw-input:hover {
-    border-color: var(--color-border-dark, rgba(0, 0, 0, 0.4));
-  }
-
-  .shw-input:focus {
-    border-color: var(--color-primary, #0066cc);
-    box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.1);
-  }
-
-  .shw-input:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    background: rgba(0, 0, 0, 0.05);
+    background: transparent;
+    transition:
+      border-color 0.15s ease,
+      box-shadow 0.15s ease,
+      background-color 0.15s ease;
   }
 
   .shw-input.full-width {
     width: 100%;
   }
 
-  /* Number input specific */
-  .shw-input[type="number"] {
+  /* ghost — underline field */
+  .shw-input.variant-ghost {
+    border: none;
+    border-bottom: 1px solid var(--shw-color-border);
+    box-shadow: none;
+  }
+
+  .shw-input.variant-ghost:hover:not(:disabled) {
+    border-bottom-color: var(--shw-color-border-bright);
+  }
+
+  .shw-input.variant-ghost:focus {
+    border-bottom-color: var(--shw-color-primary);
+  }
+
+  /* outline — rimmed field */
+  .shw-input.variant-outline {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--shw-color-border);
+    background: var(--shw-glass-fill);
+    box-shadow: var(--shw-inner-glow);
+  }
+
+  .shw-input.variant-outline:hover:not(:disabled) {
+    border-color: var(--shw-color-border-bright);
+  }
+
+  .shw-input.variant-outline:focus {
+    border-color: var(--shw-color-primary-bright);
+    box-shadow: var(--shw-inner-glow), var(--shw-bloom);
+  }
+
+  .shw-input:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  .shw-input[type='number'] {
     appearance: textfield;
   }
 
-  .shw-input[type="number"]::-webkit-inner-spin-button,
-  .shw-input[type="number"]::-webkit-outer-spin-button {
+  .shw-input[type='number']::-webkit-inner-spin-button,
+  .shw-input[type='number']::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
-  }
-
-  /* Underline variant */
-  .shw-input.variant-underline {
-    border: none;
-    border-bottom: 1px solid var(--color-border-light-2, rgba(0, 0, 0, 0.2));
-    border-radius: 0;
-    padding: 0.25rem 0.5rem;
-  }
-
-  .shw-input.variant-underline:hover {
-    border-bottom-color: var(--color-border-dark, rgba(0, 0, 0, 0.4));
-  }
-
-  .shw-input.variant-underline:focus {
-    border-bottom-color: var(--color-primary, #0066cc);
-    box-shadow: none;
   }
 </style>

@@ -60,7 +60,7 @@
     />
 
     <div class="header-category">
-      <span class="category-label">{t("resource.header.categoryLabel")}</span>
+      <span class="category-label">{t("common.categoryLabel")}</span>
       <SelectInput
         value={system.category}
         options={getCategoryOptions()}

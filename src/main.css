@@ -1,6 +1,5 @@
 @import "@fontsource-variable/tektur/wght.css";
-
-
+@import "./shared/ui/tokens.css";
 
 /* ============================================================
    CUSTOM SCROLLBAR STYLING
@@ -87,10 +86,11 @@ html {
   font-family: 'Tektur Variable', ui-sans-serif, system-ui, sans-serif;
 }
 
-/* Apply to all elements including Svelte scoped styles, but exclude icons */
-.window-app *:not(i):not([class*="fa-"]):not([class*="fas"]):not([class*="far"]):not([class*="fab"]),
-.sheet *:not(i):not([class*="fa-"]):not([class*="fas"]):not([class*="far"]):not([class*="fab"]),
-.application *:not(i):not([class*="fa-"]):not([class*="fas"]):not([class*="far"]):not([class*="fab"]) {
+/* Legacy sheets inherit Tektur; the new shells own their typography, including
+   Inter Tight labels and Tektur numbers. Do not override that boundary. */
+.window-app *:not(i):not([class*="fa-"]):not([class*="fas"]):not([class*="far"]):not([class*="fab"]):not(:where(.shw-character, .shw-character *, .shw-item-v2, .shw-item-v2 *)),
+.sheet *:not(i):not([class*="fa-"]):not([class*="fas"]):not([class*="far"]):not([class*="fab"]):not(:where(.shw-character, .shw-character *, .shw-item-v2, .shw-item-v2 *)),
+.application *:not(i):not([class*="fa-"]):not([class*="fas"]):not([class*="far"]):not([class*="fab"]):not(:where(.shw-character, .shw-character *, .shw-item-v2, .shw-item-v2 *)) {
   font-family: inherit;
 }
 
@@ -224,8 +224,9 @@ button::after,
 
 /* Character and Item Sheets - only content area, not header */
 .window-app.sheet .window-content {
-  background: #b4b3ba;
+  background: var(--shw-color-bg, #12101a);
   background-image: none;
+  color: var(--shw-color-text, #e8e4f0);
 }
 
 /* Chat Messages */

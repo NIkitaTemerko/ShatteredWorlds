@@ -30,15 +30,15 @@
     const lastTwoDigits = count % 100;
 
     if (lastTwoDigits >= 11 && lastTwoDigits <= 14) {
-      return t("characterEquipment.itemPlurals.many");
+      return t("inventory.itemPlurals.many");
     }
     if (lastDigit === 1) {
-      return t("characterEquipment.itemPlurals.one");
+      return t("inventory.itemPlurals.one");
     }
     if (lastDigit >= 2 && lastDigit <= 4) {
-      return t("characterEquipment.itemPlurals.few");
+      return t("inventory.itemPlurals.few");
     }
-    return t("characterEquipment.itemPlurals.many");
+    return t("inventory.itemPlurals.many");
   }
 
   function handleEdit(node: TreeNode, e: Event) {
@@ -64,7 +64,7 @@
     if (onSelectItem) {
       menuItems.push({
         type: "action",
-        label: t("inventory.menu.edit"),
+        label: t("common.edit"),
         icon: "fas fa-edit",
         onClick: (e: Event) => {
           e.stopPropagation();
@@ -94,6 +94,9 @@
 {/snippet}
 
 <div class="equipment-tree">
+  <div class="item-count-bar">
+    <span class="item-count">{itemCount} {getPluralForm(itemCount)}</span>
+  </div>
   <div class="search-wrapper">
     <TreeWithSearch
       items={flatItems}
@@ -105,9 +108,6 @@
       onStateChange={handleStateChange}
       contextMenu={onUnequipItem ? equipmentContextMenu : undefined}
     />
-    <div class="item-count-bar">
-      <span class="item-count">{itemCount} {getPluralForm(itemCount)}</span>
-    </div>
   </div>
 </div>
 
@@ -115,8 +115,9 @@
   .equipment-tree {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    gap: 0.5rem;
     width: 100%;
+    min-height: 12rem;
   }
 
   .search-wrapper {
@@ -130,15 +131,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0.5rem;
-    background: rgba(139, 92, 246, 0.15);
-    border-radius: 4px;
-    margin-bottom: 0.5rem;
+    padding: 0.45rem;
+    background: var(--shw-glass-fill-tint, rgb(72 48 112 / 32%));
+    border: 1px solid var(--shw-color-border, #4a425c);
+    border-radius: 0;
   }
 
   .item-count {
     font-size: 13px;
-    color: #1a1a1a;
+    color: var(--shw-color-text, #e8e4f0);
     font-weight: 600;
+    font-family: var(--shw-font, inherit);
   }
 </style>

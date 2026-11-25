@@ -3,13 +3,14 @@ import ReactiveItemWrapper from './ui/ReactiveItemWrapper.svelte';
 
 export class EquipmentItemApp extends ShwItemSheet {
   static Shell = ReactiveItemWrapper;
+  static preserveSvelteOnUpdate = true;
 
   static override get defaultOptions() {
     const options = ShwItemSheet.defaultOptions;
     return foundry.utils.mergeObject(options, {
-      width: 600 as 500,
-      height: 650 as 500,
-      resizable: false,
+      width: 860 as 500,
+      height: 790 as 500,
+      resizable: true,
     });
   }
 

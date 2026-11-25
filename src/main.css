@@ -86,11 +86,11 @@ html {
   font-family: 'Tektur Variable', ui-sans-serif, system-ui, sans-serif;
 }
 
-/* Legacy sheets inherit Tektur; the character shell owns its typography, including
+/* Legacy sheets inherit Tektur; the new shells own their typography, including
    Inter Tight labels and Tektur numbers. Do not override that boundary. */
-.window-app *:not(i):not([class*="fa-"]):not([class*="fas"]):not([class*="far"]):not([class*="fab"]):not(:where(.shw-character, .shw-character *)),
-.sheet *:not(i):not([class*="fa-"]):not([class*="fas"]):not([class*="far"]):not([class*="fab"]):not(:where(.shw-character, .shw-character *)),
-.application *:not(i):not([class*="fa-"]):not([class*="fas"]):not([class*="far"]):not([class*="fab"]):not(:where(.shw-character, .shw-character *)) {
+.window-app *:not(i):not([class*="fa-"]):not([class*="fas"]):not([class*="far"]):not([class*="fab"]):not(:where(.shw-character, .shw-character *, .shw-item-v2, .shw-item-v2 *)),
+.sheet *:not(i):not([class*="fa-"]):not([class*="fas"]):not([class*="far"]):not([class*="fab"]):not(:where(.shw-character, .shw-character *, .shw-item-v2, .shw-item-v2 *)),
+.application *:not(i):not([class*="fa-"]):not([class*="fas"]):not([class*="far"]):not([class*="fab"]):not(:where(.shw-character, .shw-character *, .shw-item-v2, .shw-item-v2 *)) {
   font-family: inherit;
 }
 

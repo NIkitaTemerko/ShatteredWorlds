@@ -41,7 +41,7 @@ function deepMerge(target: PlainObject, source: PlainObject): PlainObject {
 }
 
 export type MutableDoc<T extends object> = T & {
-  update: (data?: object) => Promise<MutableDoc<T>>;
+  update: (data?: object, options?: { recursive?: boolean }) => Promise<MutableDoc<T>>;
 };
 
 /**
@@ -54,8 +54,10 @@ export function createMutableDoc<T extends object>(
 ): MutableDoc<T> {
   const doc = initial as MutableDoc<T>;
 
-  doc.update = async (data?: object) => {
-    const merged = deepMerge(doc as unknown as PlainObject, (data ?? {}) as PlainObject);
+  doc.update = async (data?: object, options?: { recursive?: boolean }) => {
+    const merged = options?.recursive === false
+      ? { ...doc, ...data }
+      : deepMerge(doc as unknown as PlainObject, (data ?? {}) as PlainObject);
     Object.assign(doc, merged);
     onChange(doc);
     return doc;

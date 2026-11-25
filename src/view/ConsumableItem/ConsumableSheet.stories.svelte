@@ -12,3 +12,8 @@
 </script>
 
 <Story name="Default" />
+
+<Story name="Potion" args={{ consumableType: 'potion' }} />
+<Story name="Poison" args={{ consumableType: 'poison' }} />
+<Story name="Scroll" args={{ consumableType: 'scroll' }} />
+<Story name="Food" args={{ consumableType: 'food' }} />

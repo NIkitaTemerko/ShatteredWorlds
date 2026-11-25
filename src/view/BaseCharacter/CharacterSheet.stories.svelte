@@ -112,7 +112,13 @@
 
     await userEvent.click(canvas.getByRole('button', { name: 'Напор: Коэфф.', exact: true }));
     const coefficients = within(canvas.getByRole('dialog', { name: 'Коэффициенты · Напор' }));
-    await expect(coefficients.getByRole('heading', { name: 'Результат: 9' })).toBeVisible();
+    await expect(coefficients.getByRole('heading', { name: 'Результат: 3' })).toBeVisible();
+    await expect(coefficients.getByText(/25% от значения в колонке «Доп.» с округлением вниз/)).toBeVisible();
+    const coefficientCount = coefficients.getByRole('spinbutton', { name: 'Количество коэффициентов' });
+    await expect(coefficientCount).toHaveValue(1);
+    await userEvent.clear(coefficientCount);
+    await userEvent.type(coefficientCount, '5');
+    await expect(coefficients.getByRole('heading', { name: 'Результат: 15' })).toBeVisible();
     await userEvent.click(coefficients.getByRole('button', { name: 'Закрыть', exact: true }));
 
     await userEvent.click(canvas.getByRole('button', { name: 'Барьер', exact: true }));
@@ -273,7 +279,26 @@
   play={async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole('button', { name: 'Напор: Коэфф.', exact: true }));
-    await expect(canvas.getByRole('heading', { name: 'Результат: 12' })).toBeVisible();
+    await expect(canvas.getByRole('heading', { name: 'Результат: 4' })).toBeVisible();
+    await userEvent.click(canvas.getByRole('button', { name: 'Закрыть', exact: true }));
+
+    const extra = canvas.getByRole('button', { name: 'Напор: Доп.', exact: true });
+    await userEvent.click(extra);
+    const sources = within(canvas.getByRole('dialog', { name: 'Источники и коэффициенты · Напор' }));
+    const manualExtra = sources.getByRole('spinbutton', { name: 'Доп', exact: true });
+    await userEvent.clear(manualExtra);
+    await userEvent.type(manualExtra, '240');
+    await userEvent.tab();
+    await expect(extra).toHaveTextContent('252');
+    await userEvent.click(sources.getByRole('button', { name: 'Закрыть', exact: true }));
+
+    await userEvent.click(canvas.getByRole('button', { name: 'Напор: Коэфф.', exact: true }));
+    const coefficients = within(canvas.getByRole('dialog', { name: 'Коэффициенты · Напор' }));
+    await expect(coefficients.getByRole('heading', { name: 'Результат: 50' })).toBeVisible();
+    const count = coefficients.getByRole('spinbutton', { name: 'Количество коэффициентов' });
+    await userEvent.clear(count);
+    await userEvent.type(count, '3');
+    await expect(coefficients.getByRole('heading', { name: 'Результат: 150' })).toBeVisible();
   }}
 />
 

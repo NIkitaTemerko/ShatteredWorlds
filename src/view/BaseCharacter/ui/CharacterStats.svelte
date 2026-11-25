@@ -1,10 +1,15 @@
 <script lang="ts">
   import type { ShwActor } from '../../../documents/Actor/ShwActor';
   import type { AttributeKey } from '../../../documents/Actor/types/ShwActorSystem';
-  import { t } from '../../../shared/i18n';
+  import { localize, t } from '../../../shared/i18n';
   import { ADDITIONAL_ATTRIBUTE_LABELS } from '../../../shared/model/constants';
   import { sumAttributeExtraSources } from '../../../shared/helpers/Character/collectStatBonusesBySource';
-  import { attributeCoefficientValue } from '../../../shared/helpers/Character/coefficients';
+  import {
+    ATTRIBUTE_COEFFICIENT_MAX_BASE,
+    ATTRIBUTE_COEFFICIENT_RATIO,
+    attributeCoefficientValue,
+    scaleAttributeCoefficients,
+  } from '../../../shared/helpers/Character/coefficients';
   import SourceBreakdown from './SourceBreakdown.svelte';
   import SheetPanel from './SheetPanel.svelte';
   import CharacterRollPanel from './CharacterRollPanel.svelte';
@@ -23,12 +28,14 @@
     'massCategory',
   ] as const;
   let { actor }: { actor: ShwActor } = $props();
+  const countId = $props.id();
+  const coefficientPercent = String(ATTRIBUTE_COEFFICIENT_RATIO * 100);
   let selected = $state<AttributeKey>('force');
   let field = $state<
     'value' | 'extra' | 'coefficient' | 'charBonus' | 'saveBonus' | 'overview' | null
   >(null);
   let additionalKey = $state<(typeof additional)[number] | null>(null);
-  let count = $state(3);
+  let count = $state(1);
   let copied = $state(false);
   const attr = $derived(actor.system.attributes[selected]);
   const sources = $derived(actor.system.attributeStatSources?.[selected]);
@@ -37,6 +44,10 @@
     return s ? sumAttributeExtraSources(s.extra) : actor.system.attributes[key].extra;
   };
   const coefficient = (key: AttributeKey) => attributeCoefficientValue(extra(key));
+  const selectedExtra = $derived(extra(selected));
+  const unitCoefficient = $derived(attributeCoefficientValue(selectedExtra));
+  const coefficientCount = $derived(Math.max(0, count || 0));
+  const coefficientResult = $derived(scaleAttributeCoefficients(coefficientCount, selectedExtra));
   const sourceTotal = $derived(
     field === 'value'
       ? actor.system.totals[selected]
@@ -49,11 +60,12 @@
   function open(key: AttributeKey, next: typeof field) {
     selected = key;
     field = next;
+    if (next === 'coefficient') count = 1;
     copied = false;
   }
   async function copyResult() {
     try {
-      await navigator.clipboard.writeText(String(coefficient(selected) * Math.max(0, count || 0)));
+      await navigator.clipboard.writeText(String(coefficientResult));
       copied = true;
     } catch {
       copied = false;
@@ -138,29 +150,38 @@
         >{/each}
       <p class="muted">{t('newUi.sourcesHint')}</p>
     {:else if field === 'coefficient'}
-      <label class="form-field"
-        >{t('newUi.coefficientCount')}
+      <div class="form-field">
+        <label for={countId}>{t('newUi.coefficientCount')}</label>
         <div class="number-stepper coefficient-stepper">
           <button
             type="button"
             class="outline-button"
             onclick={() => (count = Math.max(0, (count || 0) - 1))}>−</button
           >
-          <input type="number" min="0" step="1" bind:value={count} />
+          <input
+            id={countId}
+            type="number"
+            min="0"
+            step="1"
+            aria-describedby={`${countId}-hint`}
+            bind:value={count}
+          />
           <button type="button" class="outline-button" onclick={() => (count = (count || 0) + 1)}
             >+</button
           >
-          <span>1К = {coefficient(selected)}</span>
+          <span>1К = {unitCoefficient}</span>
         </div>
-      </label>
-      <h2>{t('newUi.result')}: {coefficient(selected) * Math.max(0, count || 0)}</h2>
-      <details>
-        <summary>{t('newUi.howCalculated')}</summary>
-        <p>{extra(selected)} × 25% = {coefficient(selected)}</p>
-      </details>
+      </div>
+      <h2>{t('newUi.result')}: {coefficientResult}</h2>
+      <p id={`${countId}-hint`} class="muted">
+        {localize('character.coefficient.info', {
+          percent: coefficientPercent,
+          max: String(ATTRIBUTE_COEFFICIENT_MAX_BASE),
+        })}
+      </p>
       <button type="button" class="primary wide" onclick={copyResult}
         >{t(copied ? 'newUi.copied' : 'newUi.copy')}
-        {coefficient(selected) * Math.max(0, count || 0)}</button
+        {coefficientResult}</button
       >
     {:else if sources}
       <SourceBreakdown

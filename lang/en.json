@@ -310,9 +310,8 @@
         "copy": "Copy",
         "final": "Final coefficient",
         "calculation": "Coefficient calculation",
-        "info": "The coefficient is 25% of the additional attribute",
-        "healthInfo": "The health coefficient is 10% of maximum HP",
-        "formula": "Extra total {total} ÷ 4 = {result}"
+        "info": "1 coefficient = {percent}% of the Extra column value, rounded down. The calculation uses at most {max}.",
+        "healthInfo": "The health coefficient is 10% of maximum HP"
       },
       "barrier": {
         "current": "Current barrier",

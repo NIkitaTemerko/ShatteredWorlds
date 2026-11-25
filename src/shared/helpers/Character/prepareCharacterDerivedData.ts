@@ -24,7 +24,11 @@ import {
   getItemBonus,
   sumItemBonuses,
 } from './calculateItemBonuses';
-import { attributeCoefficientValue, healthCoefficientValue } from './coefficients';
+import {
+  ATTRIBUTE_COEFFICIENT_MAX,
+  attributeCoefficientValue,
+  healthCoefficientValue,
+} from './coefficients';
 import {
   collectStatBonusesBySource,
   sumAttributeExtraSources,
@@ -213,8 +217,10 @@ function syncAttributeCoefficients(
   for (const k of STAT_KEYS) {
     const sources = sys.attributeStatSources?.[k];
     const extraTotal = sources ? sumAttributeExtraSources(sources.extra) : sys.attributes[k].extra;
-    sys.attributes[k].coefficient =
-      attributeCoefficientValue(extraTotal) + getItemBonus(bonuses, `attributes.${k}.coefficient`);
+    sys.attributes[k].coefficient = Math.min(
+      ATTRIBUTE_COEFFICIENT_MAX,
+      attributeCoefficientValue(extraTotal) + getItemBonus(bonuses, `attributes.${k}.coefficient`),
+    );
   }
 }
 

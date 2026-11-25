@@ -152,7 +152,7 @@ src/
 > Удачных приключений в обломках миров! 🚀
 
 <!-- manifest-start -->
-**Changelog**: [v0.12.18](https://github.com/NIkitaTemerko/ShatteredWorlds/releases/tag/v0.12.18)
+**Changelog**: [v0.13.0](https://github.com/NIkitaTemerko/ShatteredWorlds/releases/tag/v0.13.0)
 <!-- manifest-end -->
 
 ## Storybook — новый интерфейс персонажа
